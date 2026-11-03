@@ -473,50 +473,35 @@
       const nick = document.getElementById('loginNick').value.trim();
       const pass = document.getElementById('loginPassword').value;
 
-      // Obtener el perfil asociado al nick
-      const { data: profile, error: profError } = await client
-        .from('profiles')
-        .select('id, username')
-        .eq('username', nick)
-        .single();
+      // Consultar el correo real del usuario en la base de datos
+      const { data: userEmail, error: rpcError } = await client
+        .rpc('get_user_email_by_nick', { target_nick: nick });
 
-      if (profError || !profile) {
-        alert("El nick no existe. Revisa la escritura o crea una cuenta.");
+      if (rpcError || !userEmail) {
+        alert("El nick no fue encontrado. Verifica la ortografía o crea tu cuenta en 'Crear Cuenta'.");
         return;
       }
 
-      // Autenticar: Supabase requiere email, por lo que usamos el user_id para autenticar vía auth.users
-      // Si la metadata contiene el email o usamos el ID:
-      const { data: sessionData, error: authError } = await client.auth.signInWithPassword({
-        // Si el usuario se registró con nick, podemos intentar el login con su identificador
-        email: `${nick.toLowerCase()}@comunion.local`, // Fallback si se usa email sintético
+      // Autenticar formalmente con el correo obtenido
+      const { data, error } = await client.auth.signInWithPassword({
+        email: userEmail,
         password: pass
       });
 
-      // Si no usó email sintético, consultamos con el correo que registró:
-      if (authError) {
-        // En caso de que se haya registrado con su email personal real,
-        // intentamos autenticar con la sesión estándar por email guardado:
-        const res = await client.rpc('get_user_email_by_nick', { target_nick: nick });
-        if (res.data) {
-          const retry = await client.auth.signInWithPassword({ email: res.data, password: pass });
-          if (retry.error) {
-            alert("Contraseña incorrecta.");
-            return;
-          }
-          localStorage.removeItem('guest_user');
-          location.reload();
-          return;
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          alert("Contraseña incorrecta para el usuario @" + nick);
+        } else if (error.message.includes('Email not confirmed')) {
+          alert("Debes confirmar tu correo electrónico antes de ingresar (o desactiva 'Confirm email' en el panel de Supabase).");
+        } else {
+          alert("Error de autenticación: " + error.message);
         }
-
-        alert("Error al iniciar sesión: " + authError.message);
         return;
       }
 
       localStorage.removeItem('guest_user');
       location.reload();
     });
-
     // 2. Registro de Usuario
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
