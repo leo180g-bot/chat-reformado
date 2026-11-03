@@ -23,6 +23,8 @@
     .header-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
     .btn-action { background: #334155; border: 1px solid #475569; color: #f8fafc; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
     .btn-action:hover { background: #475569; }
+    .btn-action.btn-danger { background: #7f1d1d; border-color: #991b1b; color: #fecaca; }
+    .btn-action.btn-danger:hover { background: #991b1b; }
 
     /* Estructura Principal */
     .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
@@ -100,17 +102,16 @@
     .btn-primary { width: 100%; padding: 12px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; }
     .btn-primary:hover { background: #0369a1; }
 
-    /* --- Adaptaciones Responsive Móviles --- */
+    /* Adaptaciones Móviles */
     @media (max-width: 768px) {
       header { padding: 8px 12px; }
-      .header-text p.subtitle { display: none; } /* Ocultar subtítulo largo en móviles */
-      .btn-label-desktop { display: none; } /* Ocultar texto de botones, dejar iconos */
+      .header-text p.subtitle { display: none; }
+      .btn-label-desktop { display: none; }
       
-      /* Sidebar como drawer emergente en móvil */
       aside.users-sidebar { position: absolute; right: 0; top: 0; bottom: 0; z-index: 40; transform: translateX(100%); transition: transform 0.25s ease; box-shadow: -4px 0 15px rgba(0,0,0,0.5); width: 220px; }
       aside.users-sidebar.mobile-open { transform: translateX(0); }
       
-      .font-select { display: none; } /* En pantallas muy pequeñas simplifica la barra */
+      .font-select { display: none; }
       .emoji-picker { right: 8px; bottom: 58px; max-width: 290px; }
       .msg { max-width: 95%; }
     }
@@ -125,14 +126,16 @@
     <div class="header-actions">
       <!-- Conmutador de Sonido -->
       <button class="btn-action" id="toggleSoundBtn" title="Activar/Desactivar sonido">🔔 <span class="btn-label-desktop">Audio</span></button>
-      <!-- Botón de Conectados (útil en móvil para ver la lista) -->
+      <!-- Botón de Conectados -->
       <button class="btn-action" id="toggleUsersMobileBtn" title="Ver conectados">👥 <span id="mobileCount">0</span></button>
       <!-- Botón QR -->
       <button class="btn-action" id="openQrBtn" title="Código QR">📱 <span class="btn-label-desktop">QR</span></button>
       <!-- Botón Normas -->
       <button class="btn-action" id="openRulesBtn" title="Normas">📜 <span class="btn-label-desktop">Normas</span></button>
       <!-- Botón Perfil -->
-      <button class="btn-action" id="changeUserBtn" title="Cambiar Usuario">👤</button>
+      <button class="btn-action" id="changeUserBtn" title="Cambiar Alias">👤</button>
+      <!-- Botón Salir -->
+      <button class="btn-action btn-danger" id="logoutBtn" title="Salir del chat">🚪 <span class="btn-label-desktop">Salir</span></button>
     </div>
   </header>
 
@@ -140,7 +143,7 @@
     <div class="chat-container">
       <div id="chat-box"></div>
       
-      <!-- Panel de más de 40 Emojis -->
+      <!-- Panel de Emojis -->
       <div class="emoji-picker" id="emojiPicker">
         <button type="button" class="emoji-item" title="Biblia">📖</button>
         <button type="button" class="emoji-item" title="Oración">🙏</button>
@@ -185,7 +188,7 @@
         <button type="button" class="emoji-item" title="Bendición">🎉</button>
       </div>
 
-      <!-- Barra de envío con controles -->
+      <!-- Barra de envío -->
       <form id="chat-form">
         <div class="input-wrapper">
           <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
@@ -311,7 +314,7 @@
     let roomChannel = null;
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
 
-    // --- Motor de Audio Nativo (Web Audio API) ---
+    // --- Motor de Audio Nativo ---
     let audioCtx = null;
     function getAudioContext() {
       if (!audioCtx) {
@@ -323,7 +326,6 @@
       return audioCtx;
     }
 
-    // Sonido mensaje estándar (Tono suave)
     function playMessageSound() {
       if (!isSoundEnabled) return;
       try {
@@ -331,8 +333,8 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); // A5
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1);
         gain.gain.setValueAtTime(0.08, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
         osc.connect(gain);
@@ -342,7 +344,6 @@
       } catch (e) {}
     }
 
-    // Sonido mención (@Usuario) (Campanilla doble)
     function playMentionSound() {
       if (!isSoundEnabled) return;
       try {
@@ -363,7 +364,6 @@
       } catch (e) {}
     }
 
-    // Botón Conmutador de Sonido
     const toggleSoundBtn = document.getElementById('toggleSoundBtn');
     function updateSoundBtn() {
       toggleSoundBtn.innerHTML = isSoundEnabled ? '🔔 <span class="btn-label-desktop">Audio</span>' : '🔕 <span class="btn-label-desktop">Mudo</span>';
@@ -376,12 +376,11 @@
       if (isSoundEnabled) playMessageSound();
     };
 
-    // Alternar barra de usuarios en móviles
     document.getElementById('toggleUsersMobileBtn').onclick = () => {
       usersSidebar.classList.toggle('mobile-open');
     };
 
-    // --- Modal del Código QR ---
+    // --- Modal QR ---
     const qrModal = document.getElementById('qrModal');
     document.getElementById('openQrBtn').onclick = () => qrModal.classList.add('open');
     document.getElementById('closeQrBtn').onclick = () => qrModal.classList.remove('open');
@@ -472,8 +471,6 @@
     function appendMessage(data, isLive = false) {
       const div = document.createElement('div');
       const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
-      
-      // Comprobar si el mensaje contiene una mención a este usuario
       const isMention = currentUser && data.content && data.content.toLowerCase().includes(currentUser.toLowerCase()) && data.username !== currentUser;
 
       div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''}`;
@@ -488,7 +485,6 @@
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Reproducción de sonido para mensajes nuevos en vivo
       if (isLive && data.username !== currentUser) {
         if (isMention) {
           playMentionSound();
@@ -519,7 +515,6 @@
           <div class="user-item-name"><span class="online-dot"></span>${escapeHtml(u.username)}</div>
           <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
         `;
-        // Al tocar un usuario, lo menciona automáticamente en el campo de texto
         li.onclick = () => {
           contentInput.value += `@${u.username} `;
           contentInput.focus();
@@ -559,6 +554,25 @@
         initRealtime();
       }
     }
+
+    // --- Botón Salir del Chat ---
+    document.getElementById('logoutBtn').onclick = async () => {
+      if (confirm('¿Deseas salir del chat y cerrar tu sesión actual?')) {
+        if (roomChannel) {
+          await roomChannel.untrack();
+          roomChannel.unsubscribe();
+        }
+        localStorage.removeItem('chat_username');
+        localStorage.removeItem('chat_doctrine');
+        currentUser = '';
+        currentDoctrine = 'Reformada';
+        document.getElementById('inputUsername').value = '';
+        usersList.innerHTML = '';
+        usersCount.textContent = '0';
+        mobileCount.textContent = '0';
+        loginModal.classList.add('open');
+      }
+    };
 
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -604,7 +618,6 @@
 
       if (!content || !currentUser) return;
 
-      // Asegurar que el contexto de audio esté listo con la interacción del usuario
       getAudioContext();
 
       contentInput.value = '';
