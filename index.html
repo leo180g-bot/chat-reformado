@@ -86,11 +86,11 @@
   <div class="main-container">
     <div class="chat-container">
       <div id="chat-box"></div>
-      <form id="chat-form">
-        <div class="user-tag" id="currentProfileTag">Participando como: ...</div>
-        <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
-        <button type="submit">Enviar</button>
-      </form>
+    <!-- AHORA -->
+<form id="chat-form">
+  <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
+  <button type="submit">Enviar</button>
+</form>
     </div>
 
     <!-- Barra lateral derecha -->
@@ -249,15 +249,14 @@
       });
     }
 
-    function checkUserProfile() {
-      if (!currentUser) {
-        loginModal.classList.add('open');
-      } else {
-        loginModal.classList.remove('open');
-        profileTag.textContent = `${currentUser} [${currentDoctrine}] • Sala General`;
-        initRealtime();
-      }
-    }
+function checkUserProfile() {
+  if (!currentUser) {
+    loginModal.classList.add('open');
+  } else {
+    loginModal.classList.remove('open');
+    initRealtime();
+  }
+}
 
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
