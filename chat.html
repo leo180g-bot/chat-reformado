@@ -293,21 +293,18 @@
     let currentUser = localStorage.getItem('chat_username') || '';
     let currentDoctrine = localStorage.getItem('chat_doctrine') || 'Reformada';
     let roomChannel = null;
+
+    // --- Reproducción de Audios MP3 ---
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
+    const sndMessage = new Audio('mensaje.mp3');
+    const sndMention = new Audio('mencion.mp3');
 
-    let audioCtx = null;
-    function getAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
-    }
+    sndMessage.volume = 0.7;
+    sndMention.volume = 0.85;
 
+    // Desbloqueo anticipado de permisos de audio para móviles y navegadores
     const unlockAudio = () => {
-      getAudioContext();
+      sndMessage.play().then(() => { sndMessage.pause(); sndMessage.currentTime = 0; }).catch(() => {});
       window.removeEventListener('click', unlockAudio);
       window.removeEventListener('keydown', unlockAudio);
       window.removeEventListener('touchstart', unlockAudio);
@@ -318,41 +315,14 @@
 
     function playMessageSound() {
       if (!isSoundEnabled) return;
-      try {
-        const ctx = getAudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.45, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.22);
-      } catch (e) {}
+      sndMessage.currentTime = 0;
+      sndMessage.play().catch(() => {});
     }
 
     function playMentionSound() {
       if (!isSoundEnabled) return;
-      try {
-        const ctx = getAudioContext();
-        const now = ctx.currentTime;
-        [784, 1046.5].forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          const start = now + (idx * 0.11);
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, start);
-          gain.gain.setValueAtTime(0.6, start);
-          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(start);
-          osc.stop(start + 0.28);
-        });
-      } catch (e) {}
+      sndMention.currentTime = 0;
+      sndMention.play().catch(() => {});
     }
 
     const toggleSoundBtn = document.getElementById('toggleSoundBtn');
@@ -595,7 +565,6 @@
 
       if (!content || !currentUser) return;
 
-      getAudioContext();
       contentInput.value = '';
 
       const { error } = await client.from('messages').insert([
