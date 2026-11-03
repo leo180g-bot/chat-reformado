@@ -40,6 +40,7 @@
     .badge-role { font-size: 0.72em; padding: 1px 5px; border-radius: 4px; font-weight: bold; }
     .badge-role.admin { background: #a16207; color: #fef08a; }
     .badge-role.moderator { background: #0369a1; color: #bae6fd; }
+    .badge-role.guest { background: #475569; color: #cbd5e1; font-style: italic; }
     .badge-doc { font-size: 0.72em; background: #1e293b; border: 1px solid #475569; padding: 1px 5px; border-radius: 4px; }
     .msg-meta .time { font-size: 0.72em; color: #64748b; margin-left: auto; }
     .msg-text { word-break: break-word; line-height: 1.4; color: var(--chat-text-color); }
@@ -87,7 +88,7 @@
     .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
 
     .auth-tabs { display: flex; border-bottom: 1px solid #334155; margin-bottom: 14px; }
-    .auth-tab { flex: 1; background: none; border: none; color: #94a3b8; padding: 8px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
+    .auth-tab { flex: 1; background: none; border: none; color: #94a3b8; padding: 8px 4px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.88rem; }
     .auth-tab.active { color: #38bdf8; border-bottom-color: #38bdf8; }
 
     .auth-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
@@ -97,6 +98,8 @@
 
     .btn-primary { width: 100%; padding: 11px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 0.95rem; cursor: pointer; }
     .btn-primary:hover { background: #0369a1; }
+    .btn-secondary { width: 100%; padding: 11px; background: #334155; border: 1px solid #475569; border-radius: 4px; color: #cbd5e1; font-weight: bold; font-size: 0.95rem; cursor: pointer; margin-top: 8px; }
+    .btn-secondary:hover { background: #475569; color: #fff; }
 
     .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; gap: 12px; }
     .qr-image-wrapper { background: #ffffff; padding: 12px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
@@ -219,16 +222,30 @@
     </aside>
   </div>
 
-  <!-- Modal Auth (Registro e Iniciar Sesión) -->
+  <!-- Modal Auth (Iniciar Sesión / Registro / Invitado) -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
       <div class="auth-tabs">
-        <button type="button" class="auth-tab active" id="tabRegister">Crear Cuenta</button>
-        <button type="button" class="auth-tab" id="tabLogin">Iniciar Sesión</button>
+        <button type="button" class="auth-tab active" id="tabLogin">Iniciar Sesión</button>
+        <button type="button" class="auth-tab" id="tabRegister">Crear Cuenta</button>
+        <button type="button" class="auth-tab" id="tabGuest">Invitado</button>
       </div>
 
-      <!-- Formulario Registro -->
-      <form id="registerForm">
+      <!-- 1. Formulario Iniciar Sesión con Nick -->
+      <form id="loginForm">
+        <div class="auth-field">
+          <label>Nick / Nombre de usuario:</label>
+          <input type="text" id="loginNick" placeholder="Tu nick registrado" required>
+        </div>
+        <div class="auth-field">
+          <label>Contraseña:</label>
+          <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">Entrar a la Sala</button>
+      </form>
+
+      <!-- 2. Formulario Registro -->
+      <form id="registerForm" style="display: none;">
         <div class="auth-field">
           <label>Nick / Nombre público:</label>
           <input type="text" id="regUsername" placeholder="Ej. Calvino_1536" required maxlength="30">
@@ -248,17 +265,28 @@
         <button type="submit" class="btn-primary" style="margin-top: 8px;">Completar Registro</button>
       </form>
 
-      <!-- Formulario Login -->
-      <form id="loginForm" style="display: none;">
+      <!-- 3. Formulario Invitado -->
+      <form id="guestForm" style="display: none;">
         <div class="auth-field">
-          <label>Correo electrónico:</label>
-          <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" required>
+          <label>Alias para esta sesión:</label>
+          <input type="text" id="guestNick" placeholder="Ej. Invitado_Berea" required maxlength="25">
         </div>
         <div class="auth-field">
-          <label>Contraseña:</label>
-          <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+          <label>Postura doctrinal o trasfondo:</label>
+          <select id="guestDoctrine">
+            <option value="Reformada">Reformado(a)</option>
+            <option value="Presbiteriano">Presbiteriano(a)</option>
+            <option value="Bautista Reformado">Bautista Reformado(a)</option>
+            <option value="Bautista General">Bautista General</option>
+            <option value="Metodista / Trad. Wesleyana">Metodista / Trad. Wesleyana</option>
+            <option value="Pentecostal">Pentecostal</option>
+            <option value="Otro trasfondo">Otro trasfondo</option>
+          </select>
         </div>
-        <button type="submit" class="btn-primary" style="margin-top: 8px;">Entrar a la Sala</button>
+        <p style="font-size: 0.78rem; color: #94a3b8; margin: 4px 0 10px 0;">
+          * Los invitados pueden leer y enviar mensajes, pero no pueden guardar configuraciones ni optar a roles de moderación.
+        </p>
+        <button type="submit" class="btn-primary">Entrar como Invitado</button>
       </form>
     </div>
   </div>
@@ -358,7 +386,6 @@
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
-    // Coloca tu clave anon/public copiada de Supabase:
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -372,6 +399,7 @@
 
     let currentSessionUser = null;
     let currentProfile = null;
+    let isGuest = false;
     let roomChannel = null;
 
     // --- Reproducción de Audios MP3 ---
@@ -419,28 +447,77 @@
       usersSidebar.classList.toggle('mobile-open');
     };
 
-    // --- Pestañas Auth ---
+    // --- Gestión de Pestañas Auth ---
     const authModal = document.getElementById('authModal');
-    const tabRegister = document.getElementById('tabRegister');
     const tabLogin = document.getElementById('tabLogin');
-    const registerForm = document.getElementById('registerForm');
+    const tabRegister = document.getElementById('tabRegister');
+    const tabGuest = document.getElementById('tabGuest');
     const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const guestForm = document.getElementById('guestForm');
 
-    tabRegister.onclick = () => {
-      tabRegister.classList.add('active');
-      tabLogin.classList.remove('active');
-      registerForm.style.display = 'block';
-      loginForm.style.display = 'none';
-    };
+    function switchAuthTab(activeBtn, showForm) {
+      [tabLogin, tabRegister, tabGuest].forEach(t => t.classList.remove('active'));
+      [loginForm, registerForm, guestForm].forEach(f => f.style.display = 'none');
+      activeBtn.classList.add('active');
+      showForm.style.display = 'block';
+    }
 
-    tabLogin.onclick = () => {
-      tabLogin.classList.add('active');
-      tabRegister.classList.remove('active');
-      loginForm.style.display = 'block';
-      registerForm.style.display = 'none';
-    };
+    tabLogin.onclick = () => switchAuthTab(tabLogin, loginForm);
+    tabRegister.onclick = () => switchAuthTab(tabRegister, registerForm);
+    tabGuest.onclick = () => switchAuthTab(tabGuest, guestForm);
 
-    // Formulario Registro
+    // 1. Iniciar Sesión por Nick
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nick = document.getElementById('loginNick').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+
+      // Obtener el perfil asociado al nick
+      const { data: profile, error: profError } = await client
+        .from('profiles')
+        .select('id, username')
+        .eq('username', nick)
+        .single();
+
+      if (profError || !profile) {
+        alert("El nick no existe. Revisa la escritura o crea una cuenta.");
+        return;
+      }
+
+      // Autenticar: Supabase requiere email, por lo que usamos el user_id para autenticar vía auth.users
+      // Si la metadata contiene el email o usamos el ID:
+      const { data: sessionData, error: authError } = await client.auth.signInWithPassword({
+        // Si el usuario se registró con nick, podemos intentar el login con su identificador
+        email: `${nick.toLowerCase()}@comunion.local`, // Fallback si se usa email sintético
+        password: pass
+      });
+
+      // Si no usó email sintético, consultamos con el correo que registró:
+      if (authError) {
+        // En caso de que se haya registrado con su email personal real,
+        // intentamos autenticar con la sesión estándar por email guardado:
+        const res = await client.rpc('get_user_email_by_nick', { target_nick: nick });
+        if (res.data) {
+          const retry = await client.auth.signInWithPassword({ email: res.data, password: pass });
+          if (retry.error) {
+            alert("Contraseña incorrecta.");
+            return;
+          }
+          localStorage.removeItem('guest_user');
+          location.reload();
+          return;
+        }
+
+        alert("Error al iniciar sesión: " + authError.message);
+        return;
+      }
+
+      localStorage.removeItem('guest_user');
+      location.reload();
+    });
+
+    // 2. Registro de Usuario
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim();
@@ -464,43 +541,63 @@
       if (error) {
         alert("Error al registrarse: " + error.message);
       } else {
+        localStorage.removeItem('guest_user');
         alert("¡Registro exitoso! Iniciando sesión...");
         location.reload();
       }
     });
 
-    // Formulario Iniciar Sesión
-    loginForm.addEventListener('submit', async (e) => {
+    // 3. Entrada como Invitado
+    guestForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPassword').value;
+      const nick = document.getElementById('guestNick').value.trim();
+      const doctrine = document.getElementById('guestDoctrine').value;
 
-      const { data, error } = await client.auth.signInWithPassword({
-        email: email,
-        password: pass
-      });
+      if (!nick) return;
 
-      if (error) {
-        alert("Error al iniciar sesión: " + error.message);
-      } else {
-        location.reload();
-      }
+      const guestData = {
+        username: nick,
+        doctrine_affinity: doctrine,
+        role: 'guest'
+      };
+
+      localStorage.setItem('guest_user', JSON.stringify(guestData));
+      location.reload();
     });
 
-    // Botón Salir
+    // Cerrar Sesión / Salir
     document.getElementById('logoutBtn').onclick = async () => {
-      if (confirm('¿Deseas cerrar tu sesión?')) {
-        await client.auth.signOut();
+      if (confirm('¿Deseas salir del chat?')) {
+        if (isGuest) {
+          localStorage.removeItem('guest_user');
+        } else {
+          await client.auth.signOut();
+        }
         window.location.href = 'index.html';
       }
     };
 
-    // Carga de sesión y perfil
+    // --- Cargar Perfil de Sesión ---
     async function loadActiveProfile() {
+      // Comprobar primero si hay un invitado activo
+      const savedGuest = localStorage.getItem('guest_user');
+      if (savedGuest) {
+        try {
+          currentProfile = JSON.parse(savedGuest);
+          isGuest = true;
+          authModal.classList.remove('open');
+          initRealtime();
+          loadMessages();
+          return;
+        } catch(e) {}
+      }
+
+      // Si no es invitado, comprobar sesión de Supabase Auth
       const { data: { session } } = await client.auth.getSession();
       
       if (!session) {
         authModal.classList.add('open');
+        switchAuthTab(tabLogin, loginForm); // Mostrar Iniciar Sesión por defecto
         return;
       }
 
@@ -528,6 +625,10 @@
     const profileModal = document.getElementById('profileModal');
     document.getElementById('openProfileBtn').onclick = () => {
       if (!currentProfile) return;
+      if (isGuest) {
+        alert("Los invitados no pueden editar su perfil. Para personalizar tus datos de forma permanente, crea una cuenta.");
+        return;
+      }
       document.getElementById('editUsername').value = currentProfile.username;
       document.getElementById('editDoctrine').value = currentProfile.doctrine_affinity;
       document.getElementById('viewRole').value = currentProfile.role.toUpperCase();
@@ -537,6 +638,8 @@
 
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (isGuest) return;
+
       const newUsername = document.getElementById('editUsername').value.trim();
       const newDoctrine = document.getElementById('editDoctrine').value;
 
@@ -562,7 +665,7 @@
       }
     });
 
-    // Modal Admin de Roles
+    // Panel Admin Roles
     const adminModal = document.getElementById('adminModal');
     document.getElementById('openAdminBtn').onclick = () => adminModal.classList.add('open');
     document.getElementById('closeAdminBtn').onclick = () => adminModal.classList.remove('open');
@@ -607,7 +710,7 @@
     document.getElementById('closeRulesBtn').onclick = () => rulesModal.classList.remove('open');
     rulesModal.onclick = (e) => { if (e.target === rulesModal) rulesModal.classList.remove('open'); };
 
-    // Control de Fuente y Color
+    // Formato de texto y tipografía
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
 
@@ -653,7 +756,7 @@
       localStorage.setItem('chat_text_color', color);
     };
 
-    // Emojis
+    // Panel Emojis
     const emojiPicker = document.getElementById('emojiPicker');
     const btnEmojiToggle = document.getElementById('btnEmojiToggle');
     btnEmojiToggle.onclick = (e) => {
@@ -695,6 +798,7 @@
       let roleBadge = '';
       if (data.role === 'admin') roleBadge = '<span class="badge-role admin">👑 Admin</span>';
       else if (data.role === 'moderator') roleBadge = '<span class="badge-role moderator">🛡️ Mod</span>';
+      else if (data.role === 'guest') roleBadge = '<span class="badge-role guest">Invitado</span>';
 
       div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''}`;
       div.innerHTML = `
@@ -736,6 +840,7 @@
         let rolePrefix = '';
         if (u.role === 'admin') rolePrefix = '👑 ';
         else if (u.role === 'moderator') rolePrefix = '🛡️ ';
+        else if (u.role === 'guest') rolePrefix = '👤 ';
 
         li.innerHTML = `
           <div class="user-item-name"><span class="online-dot"></span>${rolePrefix}${escapeHtml(u.username)}</div>
