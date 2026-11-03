@@ -28,14 +28,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
     }
 
     /* Contenedor del logo interactivo */
     .logo-wrapper {
       position: relative;
       width: 100%;
-      max-width: 380px;
+      max-width: 360px;
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
@@ -48,7 +48,6 @@
       display: block;
     }
 
-    /* Zona clicable superpuesta exactamente en el botón 'ENTRAR AL CHAT' */
     .btn-hotspot {
       position: absolute;
       bottom: 12%;
@@ -67,7 +66,29 @@
       transform: scale(1.02);
     }
 
-    /* Botón accesible inferior adicional */
+    /* Mensaje de bienvenida */
+    .welcome-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid #334155;
+      padding: 14px 18px;
+      border-radius: 10px;
+      backdrop-filter: blur(6px);
+    }
+
+    .welcome-card h2 {
+      margin: 0 0 6px 0;
+      font-size: 1.05rem;
+      color: #38bdf8;
+    }
+
+    .welcome-card p {
+      margin: 0;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    /* Botón de acceso */
     .btn-enter-fallback {
       display: inline-flex;
       align-items: center;
@@ -78,7 +99,7 @@
       color: #ffffff;
       text-decoration: none;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.98rem;
       border-radius: 8px;
       box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
       transition: transform 0.15s, box-shadow 0.2s;
@@ -92,7 +113,7 @@
     }
 
     .motto {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #94a3b8;
       font-style: italic;
       margin: 0;
@@ -104,11 +125,17 @@
   <div class="welcome-container">
     <div class="logo-wrapper">
       <img src="logo.jpeg" alt="Comunión Doctrinal - Teología Reformada" class="logo-img">
-      <!-- Clic directamente sobre el botón gráfico -->
       <a href="chat.html" class="btn-hotspot" title="Entrar al chat"></a>
     </div>
 
-    <!-- Botón directo de acceso -->
+    <!-- Tarjeta con mensaje de bienvenida -->
+    <div class="welcome-card">
+      <h2>¡Paz y gracia en Cristo!</h2>
+      <p>
+        Un rincón de comunión y análisis bíblico edificado sobre las verdades de la Reforma y abierto al diálogo fraterno entre creyentes de diversas doctrinas.
+      </p>
+    </div>
+
     <a href="chat.html" class="btn-enter-fallback">
       <span>Entrar a la Sala General</span>
       <span>➤</span>
