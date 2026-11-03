@@ -7,6 +7,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; }
+    :root {
+      --chat-font-size: 0.95rem;
+    }
     body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     
     header { background: #1e293b; padding: 12px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
@@ -18,23 +21,23 @@
     .btn-action { background: #334155; border: 1px solid #475569; color: #f8fafc; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
     .btn-action:hover { background: #475569; }
 
-    /* Disposición principal: Chat + Barra lateral */
-    .main-container { flex: 1; display: flex; overflow: hidden; }
-    .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    /* Estructura Principal */
+    .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
+    .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
     
-    #chat-box { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    #chat-box { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: var(--chat-font-size); }
     
     .msg { background: #1e293b; padding: 10px 14px; border-radius: 6px; max-width: 85%; border-left: 4px solid #64748b; }
     .msg.ref { border-left-color: #38bdf8; }
     
-    .msg-meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .msg-meta { font-size: 0.8em; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .msg-meta strong { color: #f1f5f9; }
-    .msg-meta .badge { font-size: 0.75rem; background: #334155; padding: 2px 6px; border-radius: 4px; }
-    .msg-meta .time { font-size: 0.72rem; color: #64748b; margin-left: auto; }
-    .msg-text { word-break: break-word; line-height: 1.4; }
+    .msg-meta .badge { font-size: 0.75em; background: #334155; padding: 2px 6px; border-radius: 4px; }
+    .msg-meta .time { font-size: 0.75em; color: #64748b; margin-left: auto; }
+    .msg-text { word-break: break-word; line-height: 1.45; }
 
-    /* Barra lateral derecha: Lista de usuarios */
-    aside.users-sidebar { width: 240px; background: #111827; border-left: 1px solid #334155; display: flex; flex-direction: column; flex-shrink: 0; }
+    /* Barra lateral derecha (Usuarios) */
+    aside.users-sidebar { width: 230px; background: #111827; border-left: 1px solid #334155; display: flex; flex-direction: column; flex-shrink: 0; }
     .sidebar-header { padding: 12px 14px; background: #1e293b; border-bottom: 1px solid #334155; font-size: 0.85rem; font-weight: bold; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; }
     .users-count { background: #0284c7; color: white; padding: 2px 7px; border-radius: 12px; font-size: 0.75rem; }
     .users-list { flex: 1; overflow-y: auto; padding: 10px; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
@@ -43,13 +46,29 @@
     .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; }
     .user-item-doc { font-size: 0.72rem; color: #94a3b8; margin-top: 3px; }
 
-    /* Barra de envío */
-    form#chat-form { display: flex; gap: 8px; padding: 12px 16px; background: #1e293b; border-top: 1px solid #334155; align-items: center; flex-shrink: 0; }
-    .user-tag { background: #0f172a; border: 1px solid #334155; padding: 8px 12px; border-radius: 4px; font-size: 0.82rem; color: #38bdf8; white-space: nowrap; }
-    input#content { flex: 1; padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
-    input#content:focus { outline: none; border-color: #38bdf8; }
-    button[type="submit"] { padding: 10px 16px; border-radius: 4px; border: none; background: #0284c7; color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-    button[type="submit"]:hover { background: #0369a1; }
+    /* Barra de entrada y controles a la derecha */
+    form#chat-form { display: flex; align-items: center; gap: 6px; padding: 10px 16px; background: #1e293b; border-top: 1px solid #334155; flex-shrink: 0; position: relative; }
+    .input-wrapper { flex: 1; display: flex; align-items: center; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 0 6px 0 12px; transition: border-color 0.2s; }
+    .input-wrapper:focus-within { border-color: #38bdf8; }
+    
+    input#content { flex: 1; background: transparent; border: none; color: #fff; padding: 10px 0; font-size: 0.95rem; }
+    input#content:focus { outline: none; }
+
+    /* Botones de herramientas dentro de la barra */
+    .input-toolbar { display: flex; align-items: center; gap: 4px; }
+    .tool-btn { background: transparent; border: none; color: #94a3b8; padding: 6px 8px; border-radius: 4px; font-size: 0.95rem; cursor: pointer; transition: color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; }
+    .tool-btn:hover { color: #f8fafc; background: #334155; }
+    .tool-btn.font-btn { font-weight: 700; font-size: 0.82rem; }
+
+    /* Botón Enviar */
+    button#sendBtn { padding: 9px 16px; border-radius: 6px; border: none; background: #0284c7; color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; }
+    button#sendBtn:hover { background: #0369a1; }
+
+    /* Selector emergente de Emojis */
+    .emoji-picker { display: none; position: absolute; bottom: 65px; right: 90px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; grid-template-columns: repeat(6, 1fr); gap: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 50; max-width: 250px; }
+    .emoji-picker.open { display: grid; }
+    .emoji-item { background: transparent; border: none; font-size: 1.25rem; cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.15s; }
+    .emoji-item:hover { background: #334155; }
 
     /* Modales */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; z-index: 100; padding: 16px; }
@@ -66,8 +85,9 @@
     .btn-primary { width: 100%; padding: 12px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
     .btn-primary:hover { background: #0369a1; }
 
-    @media (max-width: 640px) {
-      aside.users-sidebar { display: none; } /* En móviles oculta la barra para no apretar la pantalla */
+    @media (max-width: 680px) {
+      aside.users-sidebar { display: none; }
+      .emoji-picker { right: 20px; }
     }
   </style>
 </head>
@@ -86,11 +106,40 @@
   <div class="main-container">
     <div class="chat-container">
       <div id="chat-box"></div>
-    <!-- AHORA -->
-<form id="chat-form">
-  <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
-  <button type="submit">Enviar</button>
-</form>
+      
+      <!-- Panel emergente de Emojis -->
+      <div class="emoji-picker" id="emojiPicker">
+        <button type="button" class="emoji-item">📖</button>
+        <button type="button" class="emoji-item">🙏</button>
+        <button type="button" class="emoji-item">✝️</button>
+        <button type="button" class="emoji-item">🕊️</button>
+        <button type="button" class="emoji-item">❤️</button>
+        <button type="button" class="emoji-item">⛪</button>
+        <button type="button" class="emoji-item">👍</button>
+        <button type="button" class="emoji-item">💡</button>
+        <button type="button" class="emoji-item">🙌</button>
+        <button type="button" class="emoji-item">😊</button>
+        <button type="button" class="emoji-item">🤔</button>
+        <button type="button" class="emoji-item">✍️</button>
+      </div>
+
+      <!-- Barra de envío con controles agrupados -->
+      <form id="chat-form">
+        <div class="input-wrapper">
+          <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
+          
+          <div class="input-toolbar">
+            <button type="button" class="tool-btn font-btn" id="btnFontDec" title="Reducir fuente">A-</button>
+            <button type="button" class="tool-btn font-btn" id="btnFontInc" title="Aumentar fuente">A+</button>
+            <button type="button" class="tool-btn" id="btnEmojiToggle" title="Insertar emoji">😊</button>
+          </div>
+        </div>
+
+        <button type="submit" id="sendBtn">
+          <span>Enviar</span>
+          <span>➤</span>
+        </button>
+      </form>
     </div>
 
     <!-- Barra lateral derecha -->
@@ -157,15 +206,15 @@
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
-    // Coloca aquí tu clave anon/public copiada de Supabase:
+    // Coloca tu clave anon/public de Supabase:
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-form');
+    const contentInput = document.getElementById('content');
     const loginModal = document.getElementById('loginModal');
     const loginForm = document.getElementById('login-form');
-    const profileTag = document.getElementById('currentProfileTag');
     const usersList = document.getElementById('usersList');
     const usersCount = document.getElementById('usersCount');
 
@@ -173,6 +222,50 @@
     let currentDoctrine = localStorage.getItem('chat_doctrine') || 'Reformada';
     let roomChannel = null;
 
+    // --- Control de Tamaño de Fuente ---
+    let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
+    document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
+
+    document.getElementById('btnFontInc').onclick = () => {
+      if (currentFontSizeRem < 1.35) {
+        currentFontSizeRem = Math.round((currentFontSizeRem + 0.05) * 100) / 100;
+        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
+        localStorage.setItem('chat_font_size', currentFontSizeRem);
+      }
+    };
+
+    document.getElementById('btnFontDec').onclick = () => {
+      if (currentFontSizeRem > 0.8) {
+        currentFontSizeRem = Math.round((currentFontSizeRem - 0.05) * 100) / 100;
+        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
+        localStorage.setItem('chat_font_size', currentFontSizeRem);
+      }
+    };
+
+    // --- Selector de Emojis ---
+    const emojiPicker = document.getElementById('emojiPicker');
+    const btnEmojiToggle = document.getElementById('btnEmojiToggle');
+
+    btnEmojiToggle.onclick = (e) => {
+      e.stopPropagation();
+      emojiPicker.classList.toggle('open');
+    };
+
+    document.querySelectorAll('.emoji-item').forEach(btn => {
+      btn.onclick = () => {
+        contentInput.value += btn.textContent;
+        contentInput.focus();
+        emojiPicker.classList.remove('open');
+      };
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!emojiPicker.contains(e.target) && e.target !== btnEmojiToggle) {
+        emojiPicker.classList.remove('open');
+      }
+    });
+
+    // --- Funciones del Chat ---
     function escapeHtml(str) {
       return (str || '').replace(/[&<>'"]/g, 
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
@@ -201,7 +294,6 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Renderizar la lista lateral de usuarios conectados
     function renderOnlineUsers(presenceState) {
       usersList.innerHTML = '';
       const activeUsers = [];
@@ -232,12 +324,10 @@
         config: { presence: { key: currentUser || 'anon' } }
       });
 
-      // Escuchar nuevos mensajes
       roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
         appendMessage(payload.new);
       });
 
-      // Escuchar lista de conectados (Presence)
       roomChannel.on('presence', { event: 'sync' }, () => {
         renderOnlineUsers(roomChannel.presenceState());
       });
@@ -249,14 +339,14 @@
       });
     }
 
-function checkUserProfile() {
-  if (!currentUser) {
-    loginModal.classList.add('open');
-  } else {
-    loginModal.classList.remove('open');
-    initRealtime();
-  }
-}
+    function checkUserProfile() {
+      if (!currentUser) {
+        loginModal.classList.add('open');
+      } else {
+        loginModal.classList.remove('open');
+        initRealtime();
+      }
+    }
 
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -298,7 +388,6 @@ function checkUserProfile() {
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const contentInput = document.getElementById('content');
       const content = contentInput.value.trim();
 
       if (!content || !currentUser) return;
