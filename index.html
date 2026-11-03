@@ -9,6 +9,8 @@
     * { box-sizing: border-box; }
     :root {
       --chat-font-size: 0.95rem;
+      --chat-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --chat-text-color: #f8fafc;
     }
     body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     
@@ -25,16 +27,16 @@
     .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
     .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
     
-    #chat-box { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: var(--chat-font-size); }
+    #chat-box { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: var(--chat-font-size); font-family: var(--chat-font-family); }
     
     .msg { background: #1e293b; padding: 10px 14px; border-radius: 6px; max-width: 85%; border-left: 4px solid #64748b; }
     .msg.ref { border-left-color: #38bdf8; }
     
-    .msg-meta { font-size: 0.8em; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .msg-meta { font-size: 0.8em; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-family: system-ui, sans-serif; }
     .msg-meta strong { color: #f1f5f9; }
     .msg-meta .badge { font-size: 0.75em; background: #334155; padding: 2px 6px; border-radius: 4px; }
     .msg-meta .time { font-size: 0.75em; color: #64748b; margin-left: auto; }
-    .msg-text { word-break: break-word; line-height: 1.45; }
+    .msg-text { word-break: break-word; line-height: 1.45; color: var(--chat-text-color); }
 
     /* Barra lateral derecha (Usuarios) */
     aside.users-sidebar { width: 230px; background: #111827; border-left: 1px solid #334155; display: flex; flex-direction: column; flex-shrink: 0; }
@@ -46,29 +48,37 @@
     .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; }
     .user-item-doc { font-size: 0.72rem; color: #94a3b8; margin-top: 3px; }
 
-    /* Barra de entrada y controles a la derecha */
-    form#chat-form { display: flex; align-items: center; gap: 6px; padding: 10px 16px; background: #1e293b; border-top: 1px solid #334155; flex-shrink: 0; position: relative; }
-    .input-wrapper { flex: 1; display: flex; align-items: center; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 0 6px 0 12px; transition: border-color 0.2s; }
+    /* Barra de entrada y controles */
+    form#chat-form { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #1e293b; border-top: 1px solid #334155; flex-shrink: 0; position: relative; }
+    .input-wrapper { flex: 1; display: flex; align-items: center; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 0 8px 0 12px; transition: border-color 0.2s; }
     .input-wrapper:focus-within { border-color: #38bdf8; }
     
     input#content { flex: 1; background: transparent; border: none; color: #fff; padding: 10px 0; font-size: 0.95rem; }
     input#content:focus { outline: none; }
 
-    /* Botones de herramientas dentro de la barra */
-    .input-toolbar { display: flex; align-items: center; gap: 4px; }
-    .tool-btn { background: transparent; border: none; color: #94a3b8; padding: 6px 8px; border-radius: 4px; font-size: 0.95rem; cursor: pointer; transition: color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; }
+    /* Herramientas de fuente, color y emojis */
+    .input-toolbar { display: flex; align-items: center; gap: 6px; }
+    
+    .font-select { background: #1e293b; color: #cbd5e1; border: 1px solid #475569; border-radius: 4px; padding: 3px 6px; font-size: 0.8rem; cursor: pointer; outline: none; }
+    .font-select:hover { border-color: #38bdf8; }
+    
+    .color-picker-label { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; border: 1px solid #475569; cursor: pointer; position: relative; overflow: hidden; background: #334155; }
+    .color-picker-label input[type="color"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+    .color-indicator { width: 14px; height: 14px; border-radius: 3px; background: #f8fafc; }
+
+    .tool-btn { background: transparent; border: none; color: #94a3b8; padding: 5px 6px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; transition: color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; }
     .tool-btn:hover { color: #f8fafc; background: #334155; }
-    .tool-btn.font-btn { font-weight: 700; font-size: 0.82rem; }
+    .tool-btn.font-btn { font-weight: 700; font-size: 0.8rem; }
 
     /* Botón Enviar */
     button#sendBtn { padding: 9px 16px; border-radius: 6px; border: none; background: #0284c7; color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; }
     button#sendBtn:hover { background: #0369a1; }
 
-    /* Selector emergente de Emojis */
-    .emoji-picker { display: none; position: absolute; bottom: 65px; right: 90px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; grid-template-columns: repeat(6, 1fr); gap: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 50; max-width: 250px; }
+    /* Selector de Emojis extendido (40+ emojis) */
+    .emoji-picker { display: none; position: absolute; bottom: 65px; right: 80px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px; grid-template-columns: repeat(7, 1fr); gap: 6px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 320px; max-height: 240px; overflow-y: auto; }
     .emoji-picker.open { display: grid; }
-    .emoji-item { background: transparent; border: none; font-size: 1.25rem; cursor: pointer; padding: 4px; border-radius: 4px; transition: background 0.15s; }
-    .emoji-item:hover { background: #334155; }
+    .emoji-item { background: transparent; border: none; font-size: 1.25rem; cursor: pointer; padding: 4px; border-radius: 4px; transition: transform 0.1s, background 0.15s; display: flex; align-items: center; justify-content: center; }
+    .emoji-item:hover { background: #334155; transform: scale(1.15); }
 
     /* Modales */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; z-index: 100; padding: 16px; }
@@ -85,9 +95,10 @@
     .btn-primary { width: 100%; padding: 12px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
     .btn-primary:hover { background: #0369a1; }
 
-    @media (max-width: 680px) {
+    @media (max-width: 768px) {
       aside.users-sidebar { display: none; }
-      .emoji-picker { right: 20px; }
+      .emoji-picker { right: 10px; width: 280px; }
+      .font-select { max-width: 80px; }
     }
   </style>
 </head>
@@ -107,31 +118,84 @@
     <div class="chat-container">
       <div id="chat-box"></div>
       
-      <!-- Panel emergente de Emojis -->
+      <!-- Panel de más de 40 Emojis -->
       <div class="emoji-picker" id="emojiPicker">
-        <button type="button" class="emoji-item">📖</button>
-        <button type="button" class="emoji-item">🙏</button>
-        <button type="button" class="emoji-item">✝️</button>
-        <button type="button" class="emoji-item">🕊️</button>
-        <button type="button" class="emoji-item">❤️</button>
-        <button type="button" class="emoji-item">⛪</button>
-        <button type="button" class="emoji-item">👍</button>
-        <button type="button" class="emoji-item">💡</button>
-        <button type="button" class="emoji-item">🙌</button>
-        <button type="button" class="emoji-item">😊</button>
-        <button type="button" class="emoji-item">🤔</button>
-        <button type="button" class="emoji-item">✍️</button>
+        <!-- Escrituras y Símbolos Cristianos -->
+        <button type="button" class="emoji-item" title="Biblia">📖</button>
+        <button type="button" class="emoji-item" title="Oración">🙏</button>
+        <button type="button" class="emoji-item" title="Cruz">✝️</button>
+        <button type="button" class="emoji-item" title="Paloma / Espíritu">🕊️</button>
+        <button type="button" class="emoji-item" title="Iglesia">⛪</button>
+        <button type="button" class="emoji-item" title="Corona">👑</button>
+        <button type="button" class="emoji-item" title="Pan / Comunión">🍞</button>
+        <button type="button" class="emoji-item" title="Cáliz">🍷</button>
+        <button type="button" class="emoji-item" title="Lámpara / Luz">🕯️</button>
+        <button type="button" class="emoji-item" title="Arpa / Alabanza">🎵</button>
+        
+        <!-- Expresiones y Gestos -->
+        <button type="button" class="emoji-item" title="Alabanza">🙌</button>
+        <button type="button" class="emoji-item" title="De acuerdo">👍</button>
+        <button type="button" class="emoji-item" title="Pacto / Fraternidad">🤝</button>
+        <button type="button" class="emoji-item" title="Amor fraternal">❤️</button>
+        <button type="button" class="emoji-item" title="Gracia">🤍</button>
+        <button type="button" class="emoji-item" title="Sonrisa">😊</button>
+        <button type="button" class="emoji-item" title="Agradecido">😇</button>
+        <button type="button" class="emoji-item" title="Reflexión doctrinal">🤔</button>
+        <button type="button" class="emoji-item" title="Atento / Leyendo">🧐</button>
+        <button type="button" class="emoji-item" title="Tristeza / Petición">🥺</button>
+        <button type="button" class="emoji-item" title="Fuerza en el Señor">💪</button>
+
+        <!-- Estudio e Iluminación -->
+        <button type="button" class="emoji-item" title="Luz doctrinal">💡</button>
+        <button type="button" class="emoji-item" title="Notas teológicas">✍️</button>
+        <button type="button" class="emoji-item" title="Pergamino / Confesiones">📜</button>
+        <button type="button" class="emoji-item" title="Libros">📚</button>
+        <button type="button" class="emoji-item" title="Lupa / Exégesis">🔍</button>
+        <button type="button" class="emoji-item" title="Anuncio / Púlpito">📢</button>
+        <button type="button" class="emoji-item" title="Fuego / Avivamiento">🔥</button>
+        <button type="button" class="emoji-item" title="Agua viva">💧</button>
+        <button type="button" class="emoji-item" title="Corderito">🐑</button>
+        <button type="button" class="emoji-item" title="León de Judá">🦁</button>
+
+        <!-- Comunión y Creación -->
+        <button type="button" class="emoji-item" title="Paz">✨</button>
+        <button type="button" class="emoji-item" title="Olivo / Rama de paz">🌿</button>
+        <button type="button" class="emoji-item" title="Sol / Creación">☀️</button>
+        <button type="button" class="emoji-item" title="Estrella">⭐</button>
+        <button type="button" class="emoji-item" title="Escudo de la fe">🛡️</button>
+        <button type="button" class="emoji-item" title="Espada del Espíritu">⚔️</button>
+        <button type="button" class="emoji-item" title="Arcoíris del Pacto">🌈</button>
+        <button type="button" class="emoji-item" title="Reloj / Tiempos">⏳</button>
+        <button type="button" class="emoji-item" title="Campana">🔔</button>
+        <button type="button" class="emoji-item" title="Bendición">🎉</button>
       </div>
 
-      <!-- Barra de envío con controles agrupados -->
+      <!-- Barra de envío con controles -->
       <form id="chat-form">
         <div class="input-wrapper">
           <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
           
           <div class="input-toolbar">
-            <button type="button" class="tool-btn font-btn" id="btnFontDec" title="Reducir fuente">A-</button>
-            <button type="button" class="tool-btn font-btn" id="btnFontInc" title="Aumentar fuente">A+</button>
-            <button type="button" class="tool-btn" id="btnEmojiToggle" title="Insertar emoji">😊</button>
+            <!-- Selector de Tipo de Fuente -->
+            <select id="fontFamilySelect" class="font-select" title="Cambiar tipo de letra">
+              <option value="system-ui, sans-serif">Sans (Moderna)</option>
+              <option value="Georgia, serif">Serif (Clásica)</option>
+              <option value="'Courier New', monospace">Monospace</option>
+              <option value="'Segoe UI', Roboto, sans-serif">Segoe / Roboto</option>
+            </select>
+
+            <!-- Selector de Color de Fuente -->
+            <label class="color-picker-label" title="Cambiar color del texto">
+              <span class="color-indicator" id="colorIndicator"></span>
+              <input type="color" id="textColorPicker" value="#f8fafc">
+            </label>
+
+            <!-- Botones de Tamaño -->
+            <button type="button" class="tool-btn font-btn" id="btnFontDec" title="Reducir tamaño (A-)">A-</button>
+            <button type="button" class="tool-btn font-btn" id="btnFontInc" title="Aumentar tamaño (A+)">A+</button>
+            
+            <!-- Botón de Emojis -->
+            <button type="button" class="tool-btn" id="btnEmojiToggle" title="Emojis bíblicos y frecuentes">😊</button>
           </div>
         </div>
 
@@ -142,7 +206,7 @@
       </form>
     </div>
 
-    <!-- Barra lateral derecha -->
+    <!-- Barra lateral de usuarios -->
     <aside class="users-sidebar">
       <div class="sidebar-header">
         <span>Conectados</span>
@@ -240,6 +304,36 @@
         document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
         localStorage.setItem('chat_font_size', currentFontSizeRem);
       }
+    };
+
+    // --- Control de Tipo de Fuente (Tipografía) ---
+    const fontSelect = document.getElementById('fontFamilySelect');
+    const savedFont = localStorage.getItem('chat_font_family');
+    if (savedFont) {
+      document.documentElement.style.setProperty('--chat-font-family', savedFont);
+      fontSelect.value = savedFont;
+    }
+
+    fontSelect.onchange = (e) => {
+      const selected = e.target.value;
+      document.documentElement.style.setProperty('--chat-font-family', selected);
+      localStorage.setItem('chat_font_family', selected);
+    };
+
+    // --- Control de Color de Texto ---
+    const textColorPicker = document.getElementById('textColorPicker');
+    const colorIndicator = document.getElementById('colorIndicator');
+    const savedColor = localStorage.getItem('chat_text_color') || '#f8fafc';
+
+    document.documentElement.style.setProperty('--chat-text-color', savedColor);
+    textColorPicker.value = savedColor;
+    colorIndicator.style.background = savedColor;
+
+    textColorPicker.oninput = (e) => {
+      const color = e.target.value;
+      document.documentElement.style.setProperty('--chat-text-color', color);
+      colorIndicator.style.background = color;
+      localStorage.setItem('chat_text_color', color);
     };
 
     // --- Selector de Emojis ---
