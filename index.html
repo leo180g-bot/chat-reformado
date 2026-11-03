@@ -74,7 +74,7 @@
     button#sendBtn { padding: 9px 16px; border-radius: 6px; border: none; background: #0284c7; color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; }
     button#sendBtn:hover { background: #0369a1; }
 
-    /* Selector de Emojis extendido (40+ emojis) */
+    /* Selector de Emojis */
     .emoji-picker { display: none; position: absolute; bottom: 65px; right: 80px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px; grid-template-columns: repeat(7, 1fr); gap: 6px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 320px; max-height: 240px; overflow-y: auto; }
     .emoji-picker.open { display: grid; }
     .emoji-item { background: transparent; border: none; font-size: 1.25rem; cursor: pointer; padding: 4px; border-radius: 4px; transition: transform 0.1s, background 0.15s; display: flex; align-items: center; justify-content: center; }
@@ -88,6 +88,11 @@
     .modal-header h2 { margin: 0; font-size: 1.2rem; color: #38bdf8; }
     .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
     
+    /* Contenedor del código QR */
+    .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px 0; gap: 15px; }
+    .qr-image-wrapper { background: #ffffff; padding: 16px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+    .qr-url-text { font-size: 0.85rem; color: #38bdf8; word-break: break-all; text-decoration: none; border-bottom: 1px dashed #38bdf8; padding-bottom: 2px; }
+
     .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
     .auth-field label { font-size: 0.85rem; color: #cbd5e1; }
     .auth-field input, .auth-field select { padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
@@ -109,6 +114,8 @@
       <p class="subtitle">Eje central: Teología Reformada (Soli Deo Gloria)</p>
     </div>
     <div class="header-actions">
+      <!-- Botón del Código QR ubicado al lado izquierdo de Normas -->
+      <button class="btn-action" id="openQrBtn" title="Ver código QR para compartir">📱 Código QR</button>
       <button class="btn-action" id="openRulesBtn">📜 Normas</button>
       <button class="btn-action" id="changeUserBtn">👤 Cambiar Usuario</button>
     </div>
@@ -216,6 +223,27 @@
     </aside>
   </div>
 
+  <!-- Modal: Código QR -->
+  <div class="modal-overlay" id="qrModal">
+    <div class="modal-card" style="max-width: 380px; text-align: center;">
+      <div class="modal-header">
+        <h2>Escanear Código QR</h2>
+        <button class="close-btn" id="closeQrBtn">&times;</button>
+      </div>
+      <p style="font-size: 0.88rem; color: #cbd5e1; margin-top: 0;">
+        Apunta la cámara de tu teléfono para ingresar directamente al chat:
+      </p>
+      <div class="qr-container">
+        <div class="qr-image-wrapper">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fchat-reformado.vercel.app%2F" alt="Código QR Comunión Doctrinal" width="200" height="200" style="display: block;">
+        </div>
+        <a href="https://chat-reformado.vercel.app/" target="_blank" rel="noopener noreferrer" class="qr-url-text">
+          https://chat-reformado.vercel.app/
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal Inicial: Entrada -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-card">
@@ -285,6 +313,12 @@
     let currentUser = localStorage.getItem('chat_username') || '';
     let currentDoctrine = localStorage.getItem('chat_doctrine') || 'Reformada';
     let roomChannel = null;
+
+    // --- Modal del Código QR ---
+    const qrModal = document.getElementById('qrModal');
+    document.getElementById('openQrBtn').onclick = () => qrModal.classList.add('open');
+    document.getElementById('closeQrBtn').onclick = () => qrModal.classList.remove('open');
+    qrModal.onclick = (e) => { if (e.target === qrModal) qrModal.classList.remove('open'); };
 
     // --- Control de Tamaño de Fuente ---
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
