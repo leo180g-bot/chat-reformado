@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Comunión Doctrinal - Chat Reformado</title>
+  <title>Comunión Doctrinal - Sala General</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -10,8 +10,9 @@
     body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; height: 100vh; }
     
     header { background: #1e293b; padding: 12px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
-    .header-text h1 { margin: 0; font-size: 1.2rem; color: #38bdf8; }
-    .header-text p.subtitle { margin: 4px 0 0; font-size: 0.85rem; color: #94a3b8; }
+    .header-text h1 { margin: 0; font-size: 1.2rem; color: #38bdf8; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .room-badge { font-size: 0.75rem; background: #0369a1; color: #e0f2fe; padding: 2px 8px; border-radius: 9999px; font-weight: 500; border: 1px solid #38bdf8; }
+    .header-text p.subtitle { margin: 4px 0 0; font-size: 0.82rem; color: #94a3b8; }
     
     .header-actions { display: flex; gap: 8px; align-items: center; }
     .btn-action { background: #334155; border: 1px solid #475569; color: #f8fafc; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
@@ -31,7 +32,7 @@
     
     /* Barra inferior de envío */
     form#chat-form { display: flex; gap: 8px; padding: 12px 16px; background: #1e293b; border-top: 1px solid #334155; align-items: center; }
-    .user-tag { background: #0f172a; border: 1px solid #334155; padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; color: #38bdf8; white-space: nowrap; }
+    .user-tag { background: #0f172a; border: 1px solid #334155; padding: 8px 12px; border-radius: 4px; font-size: 0.82rem; color: #38bdf8; white-space: nowrap; }
     input#content { flex: 1; padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
     input#content:focus { outline: none; border-color: #38bdf8; }
     button[type="submit"] { padding: 10px 16px; border-radius: 4px; border: none; background: #0284c7; color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; }
@@ -45,10 +46,11 @@
     .modal-header h2 { margin: 0; font-size: 1.2rem; color: #38bdf8; }
     .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
     
-    /* Formulario de Login Inicial */
+    /* Formulario de Entrada */
     .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
     .auth-field label { font-size: 0.85rem; color: #cbd5e1; }
     .auth-field input, .auth-field select { padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
+    .auth-field input:disabled { background: #1e293b; color: #94a3b8; cursor: not-allowed; }
     .btn-primary { width: 100%; padding: 12px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
     .btn-primary:hover { background: #0369a1; }
   </style>
@@ -56,7 +58,7 @@
 <body>
   <header>
     <div class="header-text">
-      <h1>Comunión Doctrinal</h1>
+      <h1>Comunión Doctrinal <span class="room-badge">📍 Sala General</span></h1>
       <p class="subtitle">Eje central: Teología Reformada (Soli Deo Gloria)</p>
     </div>
     <div class="header-actions">
@@ -69,18 +71,18 @@
 
   <form id="chat-form">
     <div class="user-tag" id="currentProfileTag">Participando como: ...</div>
-    <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
+    <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico en Sala General..." required autocomplete="off">
     <button type="submit">Enviar</button>
   </form>
 
-  <!-- Modal Inicial: Entrada y Selección de Perfil -->
+  <!-- Modal Inicial: Entrada -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-card">
       <div class="modal-header">
         <h2>Bienvenido a Comunión Doctrinal</h2>
       </div>
-      <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0; margin-bottom: 18px;">
-        Ingresa tu nombre o alias para unirte a la conversación fraternal:
+      <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0; margin-bottom: 16px;">
+        Ingresa tu nombre o alias para ingresar a la <strong>Sala General</strong>:
       </p>
       <form id="login-form">
         <div class="auth-field">
@@ -99,7 +101,11 @@
             <option value="Otro trasfondo">Otro trasfondo</option>
           </select>
         </div>
-        <button type="submit" class="btn-primary">Entrar al Chat</button>
+        <div class="auth-field">
+          <label>Sala de destino:</label>
+          <input type="text" value="Sala General" disabled>
+        </div>
+        <button type="submit" class="btn-primary">Entrar a la Sala General</button>
       </form>
     </div>
   </div>
@@ -108,7 +114,7 @@
   <div class="modal-overlay" id="rulesModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Propósito y Normas</h2>
+        <h2>Propósito y Normas - Sala General</h2>
         <button class="close-btn" id="closeRulesBtn">&times;</button>
       </div>
       <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;">Espacio creado para el diálogo bíblico y la edificación mutua:</p>
@@ -136,13 +142,12 @@
     let currentUser = localStorage.getItem('chat_username') || '';
     let currentDoctrine = localStorage.getItem('chat_doctrine') || 'Reformada';
 
-    // Manejo de la pantalla de bienvenida / login
     function checkUserProfile() {
       if (!currentUser) {
         loginModal.classList.add('open');
       } else {
         loginModal.classList.remove('open');
-        profileTag.textContent = `${currentUser} [${currentDoctrine}]`;
+        profileTag.textContent = `${currentUser} [${currentDoctrine}] • Sala General`;
       }
     }
 
@@ -236,7 +241,6 @@
       }
     });
 
-    // Iniciar
     checkUserProfile();
     loadMessages();
   </script>
