@@ -24,19 +24,23 @@
     .btn-action:hover { background: #475569; }
     .btn-action.btn-danger { background: #7f1d1d; border-color: #991b1b; color: #fecaca; }
     .btn-action.btn-danger:hover { background: #991b1b; }
+    .btn-action.btn-admin { background: #854d0e; border-color: #a16207; color: #fef08a; display: none; }
 
     .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
     .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; }
     
     #chat-box { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: var(--chat-font-size); font-family: var(--chat-font-family); }
     
-    .msg { background: #1e293b; padding: 10px 12px; border-radius: 6px; max-width: 85%; border-left: 4px solid #64748b; transition: background 0.2s; }
+    .msg { background: #1e293b; padding: 10px 12px; border-radius: 6px; max-width: 85%; border-left: 4px solid #64748b; }
     .msg.ref { border-left-color: #38bdf8; }
     .msg.mentioned { background: #1e293b; border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
     
     .msg-meta { font-size: 0.8em; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: system-ui, sans-serif; }
     .msg-meta strong { color: #f1f5f9; }
-    .msg-meta .badge { font-size: 0.75em; background: #334155; padding: 2px 5px; border-radius: 4px; }
+    .badge-role { font-size: 0.72em; padding: 1px 5px; border-radius: 4px; font-weight: bold; }
+    .badge-role.admin { background: #a16207; color: #fef08a; }
+    .badge-role.moderator { background: #0369a1; color: #bae6fd; }
+    .badge-doc { font-size: 0.72em; background: #1e293b; border: 1px solid #475569; padding: 1px 5px; border-radius: 4px; }
     .msg-meta .time { font-size: 0.72em; color: #64748b; margin-left: auto; }
     .msg-text { word-break: break-word; line-height: 1.4; color: var(--chat-text-color); }
 
@@ -59,12 +63,11 @@
 
     .input-toolbar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
     .font-select { background: #1e293b; color: #cbd5e1; border: 1px solid #475569; border-radius: 4px; padding: 3px 5px; font-size: 0.78rem; cursor: pointer; outline: none; }
-    
     .color-picker-label { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; border: 1px solid #475569; cursor: pointer; position: relative; overflow: hidden; background: #334155; }
     .color-picker-label input[type="color"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
     .color-indicator { width: 14px; height: 14px; border-radius: 3px; background: #f8fafc; }
 
-    .tool-btn { background: transparent; border: none; color: #94a3b8; padding: 5px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; transition: color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; }
+    .tool-btn { background: transparent; border: none; color: #94a3b8; padding: 5px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .tool-btn:hover { color: #f8fafc; background: #334155; }
     .tool-btn.font-btn { font-weight: 700; font-size: 0.78rem; padding: 5px 4px; }
 
@@ -78,20 +81,26 @@
 
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; z-index: 100; padding: 14px; }
     .modal-overlay.open { display: flex; }
-    .modal-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .modal-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 14px; }
     .modal-header h2 { margin: 0; font-size: 1.15rem; color: #38bdf8; }
     .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
-    
-    .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; gap: 12px; }
-    .qr-image-wrapper { background: #ffffff; padding: 12px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
-    .qr-url-text { font-size: 0.85rem; color: #38bdf8; word-break: break-all; text-decoration: none; border-bottom: 1px dashed #38bdf8; }
 
-    .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-    .auth-field label { font-size: 0.85rem; color: #cbd5e1; }
-    .auth-field input, .auth-field select { padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
-    .btn-primary { width: 100%; padding: 12px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; }
+    .auth-tabs { display: flex; border-bottom: 1px solid #334155; margin-bottom: 14px; }
+    .auth-tab { flex: 1; background: none; border: none; color: #94a3b8; padding: 8px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
+    .auth-tab.active { color: #38bdf8; border-bottom-color: #38bdf8; }
+
+    .auth-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+    .auth-field label { font-size: 0.82rem; color: #cbd5e1; }
+    .auth-field input, .auth-field select { padding: 9px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.92rem; }
+    .auth-field input:focus, .auth-field select:focus { outline: none; border-color: #38bdf8; }
+
+    .btn-primary { width: 100%; padding: 11px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 0.95rem; cursor: pointer; }
     .btn-primary:hover { background: #0369a1; }
+
+    .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; gap: 12px; }
+    .qr-image-wrapper { background: #ffffff; padding: 12px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
+    .qr-url-text { font-size: 0.85rem; color: #38bdf8; word-break: break-all; text-decoration: none; border-bottom: 1px dashed #38bdf8; }
 
     @media (max-width: 768px) {
       header { padding: 8px 12px; }
@@ -112,12 +121,13 @@
       <p class="subtitle">Eje central: Teología Reformada (Soli Deo Gloria)</p>
     </div>
     <div class="header-actions">
+      <button class="btn-action btn-admin" id="openAdminBtn" title="Gestión de Roles">⚙️ <span class="btn-label-desktop">Roles</span></button>
       <button class="btn-action" id="toggleSoundBtn" title="Activar/Desactivar sonido">🔔 <span class="btn-label-desktop">Audio</span></button>
       <button class="btn-action" id="toggleUsersMobileBtn" title="Ver conectados">👥 <span id="mobileCount">0</span></button>
       <button class="btn-action" id="openQrBtn" title="Código QR">📱 <span class="btn-label-desktop">QR</span></button>
       <button class="btn-action" id="openRulesBtn" title="Normas">📜 <span class="btn-label-desktop">Normas</span></button>
-      <button class="btn-action" id="changeUserBtn" title="Cambiar Alias">👤</button>
-      <button class="btn-action btn-danger" id="logoutBtn" title="Salir al Inicio">🚪 <span class="btn-label-desktop">Salir</span></button>
+      <button class="btn-action" id="openProfileBtn" title="Editar Perfil">👤 <span class="btn-label-desktop">Perfil</span></button>
+      <button class="btn-action btn-danger" id="logoutBtn" title="Cerrar Sesión">🚪 <span class="btn-label-desktop">Salir</span></button>
     </div>
   </header>
 
@@ -127,47 +137,47 @@
       
       <!-- Panel de Emojis -->
       <div class="emoji-picker" id="emojiPicker">
-        <button type="button" class="emoji-item" title="Biblia">📖</button>
-        <button type="button" class="emoji-item" title="Oración">🙏</button>
-        <button type="button" class="emoji-item" title="Cruz">✝️</button>
-        <button type="button" class="emoji-item" title="Paloma / Espíritu">🕊️</button>
-        <button type="button" class="emoji-item" title="Iglesia">⛪</button>
-        <button type="button" class="emoji-item" title="Corona">👑</button>
-        <button type="button" class="emoji-item" title="Pan / Comunión">🍞</button>
-        <button type="button" class="emoji-item" title="Cáliz">🍷</button>
-        <button type="button" class="emoji-item" title="Lámpara / Luz">🕯️</button>
-        <button type="button" class="emoji-item" title="Arpa / Alabanza">🎵</button>
-        <button type="button" class="emoji-item" title="Alabanza">🙌</button>
-        <button type="button" class="emoji-item" title="De acuerdo">👍</button>
-        <button type="button" class="emoji-item" title="Pacto / Fraternidad">🤝</button>
-        <button type="button" class="emoji-item" title="Amor fraternal">❤️</button>
-        <button type="button" class="emoji-item" title="Gracia">🤍</button>
-        <button type="button" class="emoji-item" title="Sonrisa">😊</button>
-        <button type="button" class="emoji-item" title="Agradecido">😇</button>
-        <button type="button" class="emoji-item" title="Reflexión">🤔</button>
-        <button type="button" class="emoji-item" title="Atento / Leyendo">🧐</button>
-        <button type="button" class="emoji-item" title="Tristeza / Petición">🥺</button>
-        <button type="button" class="emoji-item" title="Fuerza">💪</button>
-        <button type="button" class="emoji-item" title="Luz">💡</button>
-        <button type="button" class="emoji-item" title="Notas">✍️</button>
-        <button type="button" class="emoji-item" title="Confesiones">📜</button>
-        <button type="button" class="emoji-item" title="Libros">📚</button>
-        <button type="button" class="emoji-item" title="Exégesis">🔍</button>
-        <button type="button" class="emoji-item" title="Púlpito">📢</button>
-        <button type="button" class="emoji-item" title="Fuego">🔥</button>
-        <button type="button" class="emoji-item" title="Agua viva">💧</button>
-        <button type="button" class="emoji-item" title="Cordero">🐑</button>
-        <button type="button" class="emoji-item" title="León">🦁</button>
-        <button type="button" class="emoji-item" title="Paz">✨</button>
-        <button type="button" class="emoji-item" title="Olivo">🌿</button>
-        <button type="button" class="emoji-item" title="Sol">☀️</button>
-        <button type="button" class="emoji-item" title="Estrella">⭐</button>
-        <button type="button" class="emoji-item" title="Escudo de la fe">🛡️</button>
-        <button type="button" class="emoji-item" title="Espada del Espíritu">⚔️</button>
-        <button type="button" class="emoji-item" title="Pacto">🌈</button>
-        <button type="button" class="emoji-item" title="Reloj">⏳</button>
-        <button type="button" class="emoji-item" title="Campana">🔔</button>
-        <button type="button" class="emoji-item" title="Bendición">🎉</button>
+        <button type="button" class="emoji-item">📖</button>
+        <button type="button" class="emoji-item">🙏</button>
+        <button type="button" class="emoji-item">✝️</button>
+        <button type="button" class="emoji-item">🕊️</button>
+        <button type="button" class="emoji-item">⛪</button>
+        <button type="button" class="emoji-item">👑</button>
+        <button type="button" class="emoji-item">🍞</button>
+        <button type="button" class="emoji-item">🍷</button>
+        <button type="button" class="emoji-item">🕯️</button>
+        <button type="button" class="emoji-item">🎵</button>
+        <button type="button" class="emoji-item">🙌</button>
+        <button type="button" class="emoji-item">👍</button>
+        <button type="button" class="emoji-item">🤝</button>
+        <button type="button" class="emoji-item">❤️</button>
+        <button type="button" class="emoji-item">🤍</button>
+        <button type="button" class="emoji-item">😊</button>
+        <button type="button" class="emoji-item">😇</button>
+        <button type="button" class="emoji-item">🤔</button>
+        <button type="button" class="emoji-item">🧐</button>
+        <button type="button" class="emoji-item">🥺</button>
+        <button type="button" class="emoji-item">💪</button>
+        <button type="button" class="emoji-item">💡</button>
+        <button type="button" class="emoji-item">✍️</button>
+        <button type="button" class="emoji-item">📜</button>
+        <button type="button" class="emoji-item">📚</button>
+        <button type="button" class="emoji-item">🔍</button>
+        <button type="button" class="emoji-item">📢</button>
+        <button type="button" class="emoji-item">🔥</button>
+        <button type="button" class="emoji-item">💧</button>
+        <button type="button" class="emoji-item">🐑</button>
+        <button type="button" class="emoji-item">🦁</button>
+        <button type="button" class="emoji-item">✨</button>
+        <button type="button" class="emoji-item">🌿</button>
+        <button type="button" class="emoji-item">☀️</button>
+        <button type="button" class="emoji-item">⭐</button>
+        <button type="button" class="emoji-item">🛡️</button>
+        <button type="button" class="emoji-item">⚔️</button>
+        <button type="button" class="emoji-item">🌈</button>
+        <button type="button" class="emoji-item">⏳</button>
+        <button type="button" class="emoji-item">🔔</button>
+        <button type="button" class="emoji-item">🎉</button>
       </div>
 
       <form id="chat-form">
@@ -209,6 +219,109 @@
     </aside>
   </div>
 
+  <!-- Modal Auth (Registro e Iniciar Sesión) -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tabRegister">Crear Cuenta</button>
+        <button type="button" class="auth-tab" id="tabLogin">Iniciar Sesión</button>
+      </div>
+
+      <!-- Formulario Registro -->
+      <form id="registerForm">
+        <div class="auth-field">
+          <label>Nick / Nombre público:</label>
+          <input type="text" id="regUsername" placeholder="Ej. Calvino_1536" required maxlength="30">
+        </div>
+        <div class="auth-field">
+          <label>Correo electrónico:</label>
+          <input type="email" id="regEmail" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="auth-field">
+          <label>Contraseña:</label>
+          <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+        <div class="auth-field">
+          <label>Confirmar Contraseña:</label>
+          <input type="password" id="regPasswordConfirm" placeholder="Repite la contraseña" required minlength="6">
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">Completar Registro</button>
+      </form>
+
+      <!-- Formulario Login -->
+      <form id="loginForm" style="display: none;">
+        <div class="auth-field">
+          <label>Correo electrónico:</label>
+          <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="auth-field">
+          <label>Contraseña:</label>
+          <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">Entrar a la Sala</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Perfil (Editar Datos en Línea) -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Editar Perfil</h2>
+        <button class="close-btn" id="closeProfileBtn">&times;</button>
+      </div>
+      <form id="profileForm">
+        <div class="auth-field">
+          <label>Nick / Nombre público:</label>
+          <input type="text" id="editUsername" required maxlength="30">
+        </div>
+        <div class="auth-field">
+          <label>Postura doctrinal o trasfondo:</label>
+          <select id="editDoctrine">
+            <option value="Reformada">Reformado(a)</option>
+            <option value="Presbiteriano">Presbiteriano(a)</option>
+            <option value="Bautista Reformado">Bautista Reformado(a)</option>
+            <option value="Bautista General">Bautista General</option>
+            <option value="Metodista / Trad. Wesleyana">Metodista / Trad. Wesleyana</option>
+            <option value="Pentecostal">Pentecostal</option>
+            <option value="Otro trasfondo">Otro trasfondo</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label>Rol actual:</label>
+          <input type="text" id="viewRole" disabled style="background: #1e293b; color: #94a3b8;">
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">Guardar Cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Gestión de Roles (Solo Admin) -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Panel de Administración de Roles</h2>
+        <button class="close-btn" id="closeAdminBtn">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0;">Asigna roles de moderación o administración a otros hermanos:</p>
+      <form id="adminRoleForm">
+        <div class="auth-field">
+          <label>Nick del usuario exacto:</label>
+          <input type="text" id="adminTargetUser" placeholder="Nombre de usuario" required>
+        </div>
+        <div class="auth-field">
+          <label>Rol a asignar:</label>
+          <select id="adminRoleSelect">
+            <option value="moderator">🛡️ Moderador</option>
+            <option value="admin">👑 Administrador</option>
+            <option value="member">Miembro regular</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">Aplicar Rol</button>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal: Código QR -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card" style="max-width: 360px; text-align: center;">
@@ -223,37 +336,6 @@
         </div>
         <a href="https://chat-reformado.vercel.app/" target="_blank" rel="noopener noreferrer" class="qr-url-text">https://chat-reformado.vercel.app/</a>
       </div>
-    </div>
-  </div>
-
-  <!-- Modal Inicial: Entrada de Usuario -->
-  <div class="modal-overlay" id="loginModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Bienvenido a Comunión Doctrinal</h2>
-      </div>
-      <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0; margin-bottom: 14px;">
-        Ingresa tu nombre o alias para ingresar a la <strong>Sala General</strong>:
-      </p>
-      <form id="login-form">
-        <div class="auth-field">
-          <label for="inputUsername">Nombre / Alias:</label>
-          <input type="text" id="inputUsername" placeholder="Ej. Juan Calvino, Hno. David..." required maxlength="30">
-        </div>
-        <div class="auth-field">
-          <label for="inputDoctrine">Postura doctrinal o trasfondo:</label>
-          <select id="inputDoctrine">
-            <option value="Reformada">Reformado(a)</option>
-            <option value="Presbiteriano">Presbiteriano(a)</option>
-            <option value="Bautista Reformado">Bautista Reformado(a)</option>
-            <option value="Bautista General">Bautista General</option>
-            <option value="Metodista / Arminiano">Metodista / Trad. Wesleyana</option>
-            <option value="Pentecostal">Pentecostal</option>
-            <option value="Otro trasfondo">Otro trasfondo</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary">Entrar al Chat</button>
-      </form>
     </div>
   </div>
 
@@ -276,33 +358,29 @@
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
-    // Coloca tu clave anon/public de Supabase:
+    // Coloca tu clave anon/public copiada de Supabase:
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const chatBox = document.getElementById('chat-box');
     const form = document.getElementById('chat-form');
     const contentInput = document.getElementById('content');
-    const loginModal = document.getElementById('loginModal');
-    const loginForm = document.getElementById('login-form');
     const usersList = document.getElementById('usersList');
     const usersCount = document.getElementById('usersCount');
     const mobileCount = document.getElementById('mobileCount');
     const usersSidebar = document.getElementById('usersSidebar');
 
-    let currentUser = localStorage.getItem('chat_username') || '';
-    let currentDoctrine = localStorage.getItem('chat_doctrine') || 'Reformada';
+    let currentSessionUser = null;
+    let currentProfile = null;
     let roomChannel = null;
 
     // --- Reproducción de Audios MP3 ---
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     const sndMessage = new Audio('mensaje.mp3');
     const sndMention = new Audio('mencion.mp3');
-
     sndMessage.volume = 0.7;
     sndMention.volume = 0.85;
 
-    // Desbloqueo anticipado de permisos de audio para móviles y navegadores
     const unlockAudio = () => {
       sndMessage.play().then(() => { sndMessage.pause(); sndMessage.currentTime = 0; }).catch(() => {});
       window.removeEventListener('click', unlockAudio);
@@ -341,11 +419,195 @@
       usersSidebar.classList.toggle('mobile-open');
     };
 
+    // --- Pestañas Auth ---
+    const authModal = document.getElementById('authModal');
+    const tabRegister = document.getElementById('tabRegister');
+    const tabLogin = document.getElementById('tabLogin');
+    const registerForm = document.getElementById('registerForm');
+    const loginForm = document.getElementById('loginForm');
+
+    tabRegister.onclick = () => {
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+      registerForm.style.display = 'block';
+      loginForm.style.display = 'none';
+    };
+
+    tabLogin.onclick = () => {
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+    };
+
+    // Formulario Registro
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('regUsername').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const pass = document.getElementById('regPassword').value;
+      const passConfirm = document.getElementById('regPasswordConfirm').value;
+
+      if (pass !== passConfirm) {
+        alert("Las contraseñas no coinciden.");
+        return;
+      }
+
+      const { data, error } = await client.auth.signUp({
+        email: email,
+        password: pass,
+        options: {
+          data: { username: username }
+        }
+      });
+
+      if (error) {
+        alert("Error al registrarse: " + error.message);
+      } else {
+        alert("¡Registro exitoso! Iniciando sesión...");
+        location.reload();
+      }
+    });
+
+    // Formulario Iniciar Sesión
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+
+      const { data, error } = await client.auth.signInWithPassword({
+        email: email,
+        password: pass
+      });
+
+      if (error) {
+        alert("Error al iniciar sesión: " + error.message);
+      } else {
+        location.reload();
+      }
+    });
+
+    // Botón Salir
+    document.getElementById('logoutBtn').onclick = async () => {
+      if (confirm('¿Deseas cerrar tu sesión?')) {
+        await client.auth.signOut();
+        window.location.href = 'index.html';
+      }
+    };
+
+    // Carga de sesión y perfil
+    async function loadActiveProfile() {
+      const { data: { session } } = await client.auth.getSession();
+      
+      if (!session) {
+        authModal.classList.add('open');
+        return;
+      }
+
+      currentSessionUser = session.user;
+      authModal.classList.remove('open');
+
+      const { data: profile } = await client
+        .from('profiles')
+        .select('*')
+        .eq('id', currentSessionUser.id)
+        .single();
+
+      if (profile) {
+        currentProfile = profile;
+        if (currentProfile.role === 'admin') {
+          document.getElementById('openAdminBtn').style.display = 'inline-flex';
+        }
+      }
+
+      initRealtime();
+      loadMessages();
+    }
+
+    // Modal Perfil
+    const profileModal = document.getElementById('profileModal');
+    document.getElementById('openProfileBtn').onclick = () => {
+      if (!currentProfile) return;
+      document.getElementById('editUsername').value = currentProfile.username;
+      document.getElementById('editDoctrine').value = currentProfile.doctrine_affinity;
+      document.getElementById('viewRole').value = currentProfile.role.toUpperCase();
+      profileModal.classList.add('open');
+    };
+    document.getElementById('closeProfileBtn').onclick = () => profileModal.classList.remove('open');
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newUsername = document.getElementById('editUsername').value.trim();
+      const newDoctrine = document.getElementById('editDoctrine').value;
+
+      const { error } = await client
+        .from('profiles')
+        .update({ username: newUsername, doctrine_affinity: newDoctrine })
+        .eq('id', currentSessionUser.id);
+
+      if (error) {
+        alert("Error al actualizar perfil: " + error.message);
+      } else {
+        currentProfile.username = newUsername;
+        currentProfile.doctrine_affinity = newDoctrine;
+        profileModal.classList.remove('open');
+        alert("Perfil actualizado correctamente.");
+        if (roomChannel) {
+          roomChannel.track({
+            username: currentProfile.username,
+            doctrine: currentProfile.doctrine_affinity,
+            role: currentProfile.role
+          });
+        }
+      }
+    });
+
+    // Modal Admin de Roles
+    const adminModal = document.getElementById('adminModal');
+    document.getElementById('openAdminBtn').onclick = () => adminModal.classList.add('open');
+    document.getElementById('closeAdminBtn').onclick = () => adminModal.classList.remove('open');
+
+    document.getElementById('adminRoleForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const targetUser = document.getElementById('adminTargetUser').value.trim();
+      const newRole = document.getElementById('adminRoleSelect').value;
+
+      const { data: targetProfile, error: searchError } = await client
+        .from('profiles')
+        .select('id')
+        .eq('username', targetUser)
+        .single();
+
+      if (searchError || !targetProfile) {
+        alert("No se encontró ningún usuario con el nick: " + targetUser);
+        return;
+      }
+
+      const { error: updateError } = await client
+        .from('profiles')
+        .update({ role: newRole })
+        .eq('id', targetProfile.id);
+
+      if (updateError) {
+        alert("Error al asignar rol: " + updateError.message);
+      } else {
+        alert(`Rol '${newRole}' asignado correctamente a ${targetUser}.`);
+        adminModal.classList.remove('open');
+      }
+    });
+
+    // Modales QR y Normas
     const qrModal = document.getElementById('qrModal');
     document.getElementById('openQrBtn').onclick = () => qrModal.classList.add('open');
     document.getElementById('closeQrBtn').onclick = () => qrModal.classList.remove('open');
     qrModal.onclick = (e) => { if (e.target === qrModal) qrModal.classList.remove('open'); };
 
+    const rulesModal = document.getElementById('rulesModal');
+    document.getElementById('openRulesBtn').onclick = () => rulesModal.classList.add('open');
+    document.getElementById('closeRulesBtn').onclick = () => rulesModal.classList.remove('open');
+    rulesModal.onclick = (e) => { if (e.target === rulesModal) rulesModal.classList.remove('open'); };
+
+    // Control de Fuente y Color
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
 
@@ -391,6 +653,7 @@
       localStorage.setItem('chat_text_color', color);
     };
 
+    // Emojis
     const emojiPicker = document.getElementById('emojiPicker');
     const btnEmojiToggle = document.getElementById('btnEmojiToggle');
     btnEmojiToggle.onclick = (e) => {
@@ -426,13 +689,19 @@
     function appendMessage(data, isLive = false) {
       const div = document.createElement('div');
       const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
-      const isMention = currentUser && data.content && data.content.toLowerCase().includes(currentUser.toLowerCase()) && data.username !== currentUser;
+      const myNick = currentProfile ? currentProfile.username : '';
+      const isMention = myNick && data.content && data.content.toLowerCase().includes(myNick.toLowerCase()) && data.username !== myNick;
+
+      let roleBadge = '';
+      if (data.role === 'admin') roleBadge = '<span class="badge-role admin">👑 Admin</span>';
+      else if (data.role === 'moderator') roleBadge = '<span class="badge-role moderator">🛡️ Mod</span>';
 
       div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''}`;
       div.innerHTML = `
         <div class="msg-meta">
           <strong>${escapeHtml(data.username)}</strong>
-          <span class="badge">${escapeHtml(data.doctrine_affinity || 'General')}</span>
+          ${roleBadge}
+          <span class="badge-doc">${escapeHtml(data.doctrine_affinity || 'General')}</span>
           <span class="time">${formatTime(data.created_at)}</span>
         </div>
         <div class="msg-text">${escapeHtml(data.content)}</div>
@@ -440,12 +709,9 @@
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      if (isLive && data.username !== currentUser) {
-        if (isMention) {
-          playMentionSound();
-        } else {
-          playMessageSound();
-        }
+      if (isLive && data.username !== myNick) {
+        if (isMention) playMentionSound();
+        else playMessageSound();
       }
     }
 
@@ -466,8 +732,13 @@
         const li = document.createElement('li');
         li.className = 'user-item';
         li.title = `Clic para mencionar a @${u.username}`;
+        
+        let rolePrefix = '';
+        if (u.role === 'admin') rolePrefix = '👑 ';
+        else if (u.role === 'moderator') rolePrefix = '🛡️ ';
+
         li.innerHTML = `
-          <div class="user-item-name"><span class="online-dot"></span>${escapeHtml(u.username)}</div>
+          <div class="user-item-name"><span class="online-dot"></span>${rolePrefix}${escapeHtml(u.username)}</div>
           <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
         `;
         li.onclick = () => {
@@ -483,7 +754,7 @@
       if (roomChannel) roomChannel.unsubscribe();
 
       roomChannel = client.channel('general-room', {
-        config: { presence: { key: currentUser || 'anon' } }
+        config: { presence: { key: currentProfile ? currentProfile.username : 'anon' } }
       });
 
       roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
@@ -495,57 +766,15 @@
       });
 
       roomChannel.subscribe(async (status) => {
-        if (status === 'SUBSCRIBED' && currentUser) {
-          await roomChannel.track({ username: currentUser, doctrine: currentDoctrine });
+        if (status === 'SUBSCRIBED' && currentProfile) {
+          await roomChannel.track({
+            username: currentProfile.username,
+            doctrine: currentProfile.doctrine_affinity,
+            role: currentProfile.role
+          });
         }
       });
     }
-
-    function checkUserProfile() {
-      if (!currentUser) {
-        loginModal.classList.add('open');
-      } else {
-        loginModal.classList.remove('open');
-        initRealtime();
-      }
-    }
-
-    document.getElementById('logoutBtn').onclick = async () => {
-      if (confirm('¿Deseas salir del chat y volver al inicio?')) {
-        if (roomChannel) {
-          await roomChannel.untrack();
-          roomChannel.unsubscribe();
-        }
-        localStorage.removeItem('chat_username');
-        localStorage.removeItem('chat_doctrine');
-        window.location.href = 'index.html';
-      }
-    };
-
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const user = document.getElementById('inputUsername').value.trim();
-      const doctrine = document.getElementById('inputDoctrine').value;
-
-      if (user) {
-        currentUser = user;
-        currentDoctrine = doctrine;
-        localStorage.setItem('chat_username', currentUser);
-        localStorage.setItem('chat_doctrine', currentDoctrine);
-        checkUserProfile();
-      }
-    });
-
-    document.getElementById('changeUserBtn').onclick = () => {
-      document.getElementById('inputUsername').value = currentUser;
-      document.getElementById('inputDoctrine').value = currentDoctrine;
-      loginModal.classList.add('open');
-    };
-
-    const rulesModal = document.getElementById('rulesModal');
-    document.getElementById('openRulesBtn').onclick = () => rulesModal.classList.add('open');
-    document.getElementById('closeRulesBtn').onclick = () => rulesModal.classList.remove('open');
-    rulesModal.onclick = (e) => { if (e.target === rulesModal) rulesModal.classList.remove('open'); };
 
     async function loadMessages() {
       const { data } = await client
@@ -563,12 +792,17 @@
       e.preventDefault();
       const content = contentInput.value.trim();
 
-      if (!content || !currentUser) return;
+      if (!content || !currentProfile) return;
 
       contentInput.value = '';
 
       const { error } = await client.from('messages').insert([
-        { username: currentUser, doctrine_affinity: currentDoctrine, content: content }
+        { 
+          username: currentProfile.username, 
+          doctrine_affinity: currentProfile.doctrine_affinity, 
+          role: currentProfile.role,
+          content: content 
+        }
       ]);
 
       if (error) {
@@ -576,8 +810,7 @@
       }
     });
 
-    checkUserProfile();
-    loadMessages();
+    loadActiveProfile();
   </script>
 </body>
 </html>
