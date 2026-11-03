@@ -7,9 +7,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     
-    header { background: #1e293b; padding: 12px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; }
+    header { background: #1e293b; padding: 12px 20px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
     .header-text h1 { margin: 0; font-size: 1.2rem; color: #38bdf8; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .room-badge { font-size: 0.75rem; background: #0369a1; color: #e0f2fe; padding: 2px 8px; border-radius: 9999px; font-weight: 500; border: 1px solid #38bdf8; }
     .header-text p.subtitle { margin: 4px 0 0; font-size: 0.82rem; color: #94a3b8; }
@@ -18,6 +18,10 @@
     .btn-action { background: #334155; border: 1px solid #475569; color: #f8fafc; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
     .btn-action:hover { background: #475569; }
 
+    /* Disposición principal: Chat + Barra lateral */
+    .main-container { flex: 1; display: flex; overflow: hidden; }
+    .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    
     #chat-box { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     
     .msg { background: #1e293b; padding: 10px 14px; border-radius: 6px; max-width: 85%; border-left: 4px solid #64748b; }
@@ -27,11 +31,20 @@
     .msg-meta strong { color: #f1f5f9; }
     .msg-meta .badge { font-size: 0.75rem; background: #334155; padding: 2px 6px; border-radius: 4px; }
     .msg-meta .time { font-size: 0.72rem; color: #64748b; margin-left: auto; }
-    
     .msg-text { word-break: break-word; line-height: 1.4; }
-    
-    /* Barra inferior de envío */
-    form#chat-form { display: flex; gap: 8px; padding: 12px 16px; background: #1e293b; border-top: 1px solid #334155; align-items: center; }
+
+    /* Barra lateral derecha: Lista de usuarios */
+    aside.users-sidebar { width: 240px; background: #111827; border-left: 1px solid #334155; display: flex; flex-direction: column; flex-shrink: 0; }
+    .sidebar-header { padding: 12px 14px; background: #1e293b; border-bottom: 1px solid #334155; font-size: 0.85rem; font-weight: bold; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; }
+    .users-count { background: #0284c7; color: white; padding: 2px 7px; border-radius: 12px; font-size: 0.75rem; }
+    .users-list { flex: 1; overflow-y: auto; padding: 10px; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .user-item { display: flex; flex-direction: column; background: #1e293b; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; }
+    .user-item-name { font-size: 0.85rem; font-weight: 600; color: #f8fafc; display: flex; align-items: center; gap: 6px; }
+    .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; }
+    .user-item-doc { font-size: 0.72rem; color: #94a3b8; margin-top: 3px; }
+
+    /* Barra de envío */
+    form#chat-form { display: flex; gap: 8px; padding: 12px 16px; background: #1e293b; border-top: 1px solid #334155; align-items: center; flex-shrink: 0; }
     .user-tag { background: #0f172a; border: 1px solid #334155; padding: 8px 12px; border-radius: 4px; font-size: 0.82rem; color: #38bdf8; white-space: nowrap; }
     input#content { flex: 1; padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
     input#content:focus { outline: none; border-color: #38bdf8; }
@@ -46,13 +59,16 @@
     .modal-header h2 { margin: 0; font-size: 1.2rem; color: #38bdf8; }
     .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
     
-    /* Formulario de Entrada */
     .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
     .auth-field label { font-size: 0.85rem; color: #cbd5e1; }
     .auth-field input, .auth-field select { padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
     .auth-field input:disabled { background: #1e293b; color: #94a3b8; cursor: not-allowed; }
     .btn-primary { width: 100%; padding: 12px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
     .btn-primary:hover { background: #0369a1; }
+
+    @media (max-width: 640px) {
+      aside.users-sidebar { display: none; } /* En móviles oculta la barra para no apretar la pantalla */
+    }
   </style>
 </head>
 <body>
@@ -67,13 +83,25 @@
     </div>
   </header>
 
-  <div id="chat-box"></div>
+  <div class="main-container">
+    <div class="chat-container">
+      <div id="chat-box"></div>
+      <form id="chat-form">
+        <div class="user-tag" id="currentProfileTag">Participando como: ...</div>
+        <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
+        <button type="submit">Enviar</button>
+      </form>
+    </div>
 
-  <form id="chat-form">
-    <div class="user-tag" id="currentProfileTag">Participando como: ...</div>
-    <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico en Sala General..." required autocomplete="off">
-    <button type="submit">Enviar</button>
-  </form>
+    <!-- Barra lateral derecha -->
+    <aside class="users-sidebar">
+      <div class="sidebar-header">
+        <span>Conectados</span>
+        <span class="users-count" id="usersCount">0</span>
+      </div>
+      <ul class="users-list" id="usersList"></ul>
+    </aside>
+  </div>
 
   <!-- Modal Inicial: Entrada -->
   <div class="modal-overlay" id="loginModal">
@@ -129,7 +157,7 @@
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
-    // Sustituye con tu clave anon/public de Supabase:
+    // Coloca aquí tu clave anon/public copiada de Supabase:
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -138,9 +166,88 @@
     const loginModal = document.getElementById('loginModal');
     const loginForm = document.getElementById('login-form');
     const profileTag = document.getElementById('currentProfileTag');
+    const usersList = document.getElementById('usersList');
+    const usersCount = document.getElementById('usersCount');
 
     let currentUser = localStorage.getItem('chat_username') || '';
     let currentDoctrine = localStorage.getItem('chat_doctrine') || 'Reformada';
+    let roomChannel = null;
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    function formatTime(isoString) {
+      if (!isoString) return '';
+      const d = new Date(isoString);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function appendMessage(data) {
+      const div = document.createElement('div');
+      const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
+      div.className = `msg ${isRef ? 'ref' : ''}`;
+      div.innerHTML = `
+        <div class="msg-meta">
+          <strong>${escapeHtml(data.username)}</strong>
+          <span class="badge">${escapeHtml(data.doctrine_affinity || 'General')}</span>
+          <span class="time">${formatTime(data.created_at)}</span>
+        </div>
+        <div class="msg-text">${escapeHtml(data.content)}</div>
+      `;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Renderizar la lista lateral de usuarios conectados
+    function renderOnlineUsers(presenceState) {
+      usersList.innerHTML = '';
+      const activeUsers = [];
+
+      for (const key in presenceState) {
+        presenceState[key].forEach(u => {
+          if (u.username) activeUsers.push(u);
+        });
+      }
+
+      usersCount.textContent = activeUsers.length;
+
+      activeUsers.forEach(u => {
+        const li = document.createElement('li');
+        li.className = 'user-item';
+        li.innerHTML = `
+          <div class="user-item-name"><span class="online-dot"></span>${escapeHtml(u.username)}</div>
+          <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
+        `;
+        usersList.appendChild(li);
+      });
+    }
+
+    function initRealtime() {
+      if (roomChannel) roomChannel.unsubscribe();
+
+      roomChannel = client.channel('general-room', {
+        config: { presence: { key: currentUser || 'anon' } }
+      });
+
+      // Escuchar nuevos mensajes
+      roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+        appendMessage(payload.new);
+      });
+
+      // Escuchar lista de conectados (Presence)
+      roomChannel.on('presence', { event: 'sync' }, () => {
+        renderOnlineUsers(roomChannel.presenceState());
+      });
+
+      roomChannel.subscribe(async (status) => {
+        if (status === 'SUBSCRIBED' && currentUser) {
+          await roomChannel.track({ username: currentUser, doctrine: currentDoctrine });
+        }
+      });
+    }
 
     function checkUserProfile() {
       if (!currentUser) {
@@ -148,6 +255,7 @@
       } else {
         loginModal.classList.remove('open');
         profileTag.textContent = `${currentUser} [${currentDoctrine}] • Sala General`;
+        initRealtime();
       }
     }
 
@@ -177,36 +285,8 @@
     document.getElementById('closeRulesBtn').onclick = () => rulesModal.classList.remove('open');
     rulesModal.onclick = (e) => { if (e.target === rulesModal) rulesModal.classList.remove('open'); };
 
-    function formatTime(isoString) {
-      if (!isoString) return '';
-      const d = new Date(isoString);
-      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function appendMessage(data) {
-      const div = document.createElement('div');
-      const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
-      div.className = `msg ${isRef ? 'ref' : ''}`;
-      div.innerHTML = `
-        <div class="msg-meta">
-          <strong>${escapeHtml(data.username)}</strong>
-          <span class="badge">${escapeHtml(data.doctrine_affinity || 'General')}</span>
-          <span class="time">${formatTime(data.created_at)}</span>
-        </div>
-        <div class="msg-text">${escapeHtml(data.content)}</div>
-      `;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-      );
-    }
-
     async function loadMessages() {
-      const { data, error } = await client
+      const { data } = await client
         .from('messages')
         .select('*')
         .order('created_at', { ascending: true })
@@ -216,12 +296,6 @@
         data.forEach(appendMessage);
       }
     }
-
-    client.channel('chat-room')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-        appendMessage(payload.new);
-      })
-      .subscribe();
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
