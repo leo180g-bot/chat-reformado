@@ -2,668 +2,120 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Comunión Doctrinal - Sala General</title>
+  <title>Comunión Doctrinal - Bienvenida</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; }
-    :root {
-      --chat-font-size: 0.95rem;
-      --chat-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --chat-text-color: #f8fafc;
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1e2638;
+      background: radial-gradient(circle at center, #25334d 0%, #111827 100%);
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
     }
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
-    
-    /* Cabecera Adaptable */
-    header { background: #1e293b; padding: 10px 16px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; gap: 8px; }
-    .header-text h1 { margin: 0; font-size: 1.1rem; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
-    .room-badge { font-size: 0.72rem; background: #0369a1; color: #e0f2fe; padding: 2px 7px; border-radius: 9999px; font-weight: 500; border: 1px solid #38bdf8; }
-    .header-text p.subtitle { margin: 2px 0 0; font-size: 0.78rem; color: #94a3b8; display: block; }
-    
-    .header-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
-    .btn-action { background: #334155; border: 1px solid #475569; color: #f8fafc; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
-    .btn-action:hover { background: #475569; }
-    .btn-action.btn-danger { background: #7f1d1d; border-color: #991b1b; color: #fecaca; }
-    .btn-action.btn-danger:hover { background: #991b1b; }
 
-    /* Estructura Principal */
-    .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
-    .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; }
-    
-    #chat-box { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: var(--chat-font-size); font-family: var(--chat-font-family); }
-    
-    /* Mensajes */
-    .msg { background: #1e293b; padding: 10px 12px; border-radius: 6px; max-width: 85%; border-left: 4px solid #64748b; transition: background 0.2s; }
-    .msg.ref { border-left-color: #38bdf8; }
-    .msg.mentioned { background: #1e293b; border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
-    
-    .msg-meta { font-size: 0.8em; color: #94a3b8; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: system-ui, sans-serif; }
-    .msg-meta strong { color: #f1f5f9; }
-    .msg-meta .badge { font-size: 0.75em; background: #334155; padding: 2px 5px; border-radius: 4px; }
-    .msg-meta .time { font-size: 0.72em; color: #64748b; margin-left: auto; }
-    .msg-text { word-break: break-word; line-height: 1.4; color: var(--chat-text-color); }
+    .welcome-container {
+      max-width: 440px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
 
-    /* Barra lateral derecha (Usuarios Conectados) */
-    aside.users-sidebar { width: 230px; background: #111827; border-left: 1px solid #334155; display: flex; flex-direction: column; flex-shrink: 0; }
-    .sidebar-header { padding: 12px 14px; background: #1e293b; border-bottom: 1px solid #334155; font-size: 0.85rem; font-weight: bold; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; }
-    .users-count { background: #0284c7; color: white; padding: 2px 7px; border-radius: 12px; font-size: 0.75rem; }
-    .users-list { flex: 1; overflow-y: auto; padding: 10px; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .user-item { display: flex; flex-direction: column; background: #1e293b; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; cursor: pointer; }
-    .user-item:hover { border-color: #38bdf8; }
-    .user-item-name { font-size: 0.85rem; font-weight: 600; color: #f8fafc; display: flex; align-items: center; gap: 6px; }
-    .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-    .user-item-doc { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
+    /* Contenedor del logo interactivo */
+    .logo-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      border: 1px solid #334155;
+    }
 
-    /* Barra de entrada y controles */
-    form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #1e293b; border-top: 1px solid #334155; flex-shrink: 0; position: relative; }
-    .input-wrapper { flex: 1; display: flex; align-items: center; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 0 6px 0 10px; transition: border-color 0.2s; min-width: 0; }
-    .input-wrapper:focus-within { border-color: #38bdf8; }
-    
-    input#content { flex: 1; background: transparent; border: none; color: #fff; padding: 10px 0; font-size: 0.95rem; min-width: 60px; }
-    input#content:focus { outline: none; }
+    .logo-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
 
-    /* Herramientas de fuente, color y emojis */
-    .input-toolbar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-    .font-select { background: #1e293b; color: #cbd5e1; border: 1px solid #475569; border-radius: 4px; padding: 3px 5px; font-size: 0.78rem; cursor: pointer; outline: none; }
-    
-    .color-picker-label { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; border: 1px solid #475569; cursor: pointer; position: relative; overflow: hidden; background: #334155; }
-    .color-picker-label input[type="color"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-    .color-indicator { width: 14px; height: 14px; border-radius: 3px; background: #f8fafc; }
+    /* Zona clicable superpuesta exactamente en el botón 'ENTRAR AL CHAT' */
+    .btn-hotspot {
+      position: absolute;
+      bottom: 12%;
+      left: 28%;
+      width: 44%;
+      height: 7.5%;
+      display: block;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
 
-    .tool-btn { background: transparent; border: none; color: #94a3b8; padding: 5px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; transition: color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; }
-    .tool-btn:hover { color: #f8fafc; background: #334155; }
-    .tool-btn.font-btn { font-weight: 700; font-size: 0.78rem; padding: 5px 4px; }
+    .btn-hotspot:hover {
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 16px rgba(234, 179, 8, 0.4);
+      transform: scale(1.02);
+    }
 
-    /* Botón Enviar */
-    button#sendBtn { padding: 9px 14px; border-radius: 6px; border: none; background: #0284c7; color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 4px; font-size: 0.88rem; flex-shrink: 0; }
-    button#sendBtn:hover { background: #0369a1; }
+    /* Botón accesible inferior adicional */
+    .btn-enter-fallback {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+      transition: transform 0.15s, box-shadow 0.2s;
+      width: 100%;
+      max-width: 320px;
+    }
 
-    /* Selector de Emojis */
-    .emoji-picker { display: none; position: absolute; bottom: 60px; right: 80px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px; grid-template-columns: repeat(7, 1fr); gap: 6px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 310px; max-height: 220px; overflow-y: auto; }
-    .emoji-picker.open { display: grid; }
-    .emoji-item { background: transparent; border: none; font-size: 1.25rem; cursor: pointer; padding: 4px; border-radius: 4px; }
-    .emoji-item:hover { background: #334155; }
+    .btn-enter-fallback:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+    }
 
-    /* Modales */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; z-index: 100; padding: 14px; }
-    .modal-overlay.open { display: flex; }
-    .modal-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 14px; }
-    .modal-header h2 { margin: 0; font-size: 1.15rem; color: #38bdf8; }
-    .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
-    
-    .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; gap: 12px; }
-    .qr-image-wrapper { background: #ffffff; padding: 12px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
-    .qr-url-text { font-size: 0.85rem; color: #38bdf8; word-break: break-all; text-decoration: none; border-bottom: 1px dashed #38bdf8; }
-
-    .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-    .auth-field label { font-size: 0.85rem; color: #cbd5e1; }
-    .auth-field input, .auth-field select { padding: 10px 12px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; }
-    .btn-primary { width: 100%; padding: 12px; background: #0284c7; border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 1rem; cursor: pointer; }
-    .btn-primary:hover { background: #0369a1; }
-
-    /* Adaptaciones Móviles */
-    @media (max-width: 768px) {
-      header { padding: 8px 12px; }
-      .header-text p.subtitle { display: none; }
-      .btn-label-desktop { display: none; }
-      
-      aside.users-sidebar { position: absolute; right: 0; top: 0; bottom: 0; z-index: 40; transform: translateX(100%); transition: transform 0.25s ease; box-shadow: -4px 0 15px rgba(0,0,0,0.5); width: 220px; }
-      aside.users-sidebar.mobile-open { transform: translateX(0); }
-      
-      .font-select { display: none; }
-      .emoji-picker { right: 8px; bottom: 58px; max-width: 290px; }
-      .msg { max-width: 95%; }
+    .motto {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      font-style: italic;
+      margin: 0;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-text">
-      <h1>Comunión Doctrinal <span class="room-badge">General</span></h1>
-      <p class="subtitle">Eje central: Teología Reformada (Soli Deo Gloria)</p>
-    </div>
-    <div class="header-actions">
-      <!-- Conmutador de Sonido -->
-      <button class="btn-action" id="toggleSoundBtn" title="Activar/Desactivar sonido">🔔 <span class="btn-label-desktop">Audio</span></button>
-      <!-- Botón de Conectados -->
-      <button class="btn-action" id="toggleUsersMobileBtn" title="Ver conectados">👥 <span id="mobileCount">0</span></button>
-      <!-- Botón QR -->
-      <button class="btn-action" id="openQrBtn" title="Código QR">📱 <span class="btn-label-desktop">QR</span></button>
-      <!-- Botón Normas -->
-      <button class="btn-action" id="openRulesBtn" title="Normas">📜 <span class="btn-label-desktop">Normas</span></button>
-      <!-- Botón Perfil -->
-      <button class="btn-action" id="changeUserBtn" title="Cambiar Alias">👤</button>
-      <!-- Botón Salir -->
-      <button class="btn-action btn-danger" id="logoutBtn" title="Salir del chat">🚪 <span class="btn-label-desktop">Salir</span></button>
-    </div>
-  </header>
 
-  <div class="main-container">
-    <div class="chat-container">
-      <div id="chat-box"></div>
-      
-      <!-- Panel de Emojis -->
-      <div class="emoji-picker" id="emojiPicker">
-        <button type="button" class="emoji-item" title="Biblia">📖</button>
-        <button type="button" class="emoji-item" title="Oración">🙏</button>
-        <button type="button" class="emoji-item" title="Cruz">✝️</button>
-        <button type="button" class="emoji-item" title="Paloma / Espíritu">🕊️</button>
-        <button type="button" class="emoji-item" title="Iglesia">⛪</button>
-        <button type="button" class="emoji-item" title="Corona">👑</button>
-        <button type="button" class="emoji-item" title="Pan / Comunión">🍞</button>
-        <button type="button" class="emoji-item" title="Cáliz">🍷</button>
-        <button type="button" class="emoji-item" title="Lámpara / Luz">🕯️</button>
-        <button type="button" class="emoji-item" title="Arpa / Alabanza">🎵</button>
-        <button type="button" class="emoji-item" title="Alabanza">🙌</button>
-        <button type="button" class="emoji-item" title="De acuerdo">👍</button>
-        <button type="button" class="emoji-item" title="Pacto / Fraternidad">🤝</button>
-        <button type="button" class="emoji-item" title="Amor fraternal">❤️</button>
-        <button type="button" class="emoji-item" title="Gracia">🤍</button>
-        <button type="button" class="emoji-item" title="Sonrisa">😊</button>
-        <button type="button" class="emoji-item" title="Agradecido">😇</button>
-        <button type="button" class="emoji-item" title="Reflexión">🤔</button>
-        <button type="button" class="emoji-item" title="Atento / Leyendo">🧐</button>
-        <button type="button" class="emoji-item" title="Tristeza / Petición">🥺</button>
-        <button type="button" class="emoji-item" title="Fuerza">💪</button>
-        <button type="button" class="emoji-item" title="Luz">💡</button>
-        <button type="button" class="emoji-item" title="Notas">✍️</button>
-        <button type="button" class="emoji-item" title="Confesiones">📜</button>
-        <button type="button" class="emoji-item" title="Libros">📚</button>
-        <button type="button" class="emoji-item" title="Exégesis">🔍</button>
-        <button type="button" class="emoji-item" title="Púlpito">📢</button>
-        <button type="button" class="emoji-item" title="Fuego">🔥</button>
-        <button type="button" class="emoji-item" title="Agua viva">💧</button>
-        <button type="button" class="emoji-item" title="Cordero">🐑</button>
-        <button type="button" class="emoji-item" title="León">🦁</button>
-        <button type="button" class="emoji-item" title="Paz">✨</button>
-        <button type="button" class="emoji-item" title="Olivo">🌿</button>
-        <button type="button" class="emoji-item" title="Sol">☀️</button>
-        <button type="button" class="emoji-item" title="Estrella">⭐</button>
-        <button type="button" class="emoji-item" title="Escudo de la fe">🛡️</button>
-        <button type="button" class="emoji-item" title="Espada del Espíritu">⚔️</button>
-        <button type="button" class="emoji-item" title="Pacto">🌈</button>
-        <button type="button" class="emoji-item" title="Reloj">⏳</button>
-        <button type="button" class="emoji-item" title="Campana">🔔</button>
-        <button type="button" class="emoji-item" title="Bendición">🎉</button>
-      </div>
-
-      <!-- Barra de envío -->
-      <form id="chat-form">
-        <div class="input-wrapper">
-          <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
-          
-          <div class="input-toolbar">
-            <select id="fontFamilySelect" class="font-select" title="Tipografía">
-              <option value="system-ui, sans-serif">Sans</option>
-              <option value="Georgia, serif">Serif</option>
-              <option value="'Courier New', monospace">Mono</option>
-            </select>
-
-            <label class="color-picker-label" title="Color de texto">
-              <span class="color-indicator" id="colorIndicator"></span>
-              <input type="color" id="textColorPicker" value="#f8fafc">
-            </label>
-
-            <button type="button" class="tool-btn font-btn" id="btnFontDec" title="A-">A-</button>
-            <button type="button" class="tool-btn font-btn" id="btnFontInc" title="A+">A+</button>
-            <button type="button" class="tool-btn" id="btnEmojiToggle" title="Emojis">😊</button>
-          </div>
-        </div>
-
-        <button type="submit" id="sendBtn">
-          <span class="btn-label-desktop">Enviar</span>
-          <span>➤</span>
-        </button>
-      </form>
+  <div class="welcome-container">
+    <div class="logo-wrapper">
+      <img src="logo.png" alt="Comunión Doctrinal - Teología Reformada" class="logo-img">
+      <!-- Clic directamente sobre el botón gráfico -->
+      <a href="chat.html" class="btn-hotspot" title="Entrar al chat"></a>
     </div>
 
-    <!-- Barra lateral de usuarios -->
-    <aside class="users-sidebar" id="usersSidebar">
-      <div class="sidebar-header">
-        <span>Conectados</span>
-        <span class="users-count" id="usersCount">0</span>
-      </div>
-      <ul class="users-list" id="usersList"></ul>
-    </aside>
+    <!-- Botón directo de acceso -->
+    <a href="chat.html" class="btn-enter-fallback">
+      <span>Entrar a la Sala General</span>
+      <span>➤</span>
+    </a>
+
+    <p class="motto">Soli Deo Gloria</p>
   </div>
 
-  <!-- Modal: Código QR -->
-  <div class="modal-overlay" id="qrModal">
-    <div class="modal-card" style="max-width: 360px; text-align: center;">
-      <div class="modal-header">
-        <h2>Escanear Código QR</h2>
-        <button class="close-btn" id="closeQrBtn">&times;</button>
-      </div>
-      <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 0;">Escanea con tu celular para abrir el chat:</p>
-      <div class="qr-container">
-        <div class="qr-image-wrapper">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fchat-reformado.vercel.app%2F" alt="QR Chat Reformado" width="190" height="190" style="display: block;">
-        </div>
-        <a href="https://chat-reformado.vercel.app/" target="_blank" rel="noopener noreferrer" class="qr-url-text">https://chat-reformado.vercel.app/</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Inicial: Entrada -->
-  <div class="modal-overlay" id="loginModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Bienvenido a Comunión Doctrinal</h2>
-      </div>
-      <p style="font-size: 0.88rem; color: #94a3b8; margin-top: 0; margin-bottom: 14px;">
-        Ingresa tu nombre o alias para ingresar a la <strong>Sala General</strong>:
-      </p>
-      <form id="login-form">
-        <div class="auth-field">
-          <label for="inputUsername">Nombre / Alias:</label>
-          <input type="text" id="inputUsername" placeholder="Ej. Juan Calvino, Hno. David..." required maxlength="30">
-        </div>
-        <div class="auth-field">
-          <label for="inputDoctrine">Postura doctrinal o trasfondo:</label>
-          <select id="inputDoctrine">
-            <option value="Reformada">Reformado(a)</option>
-            <option value="Presbiteriano">Presbiteriano(a)</option>
-            <option value="Bautista Reformado">Bautista Reformado(a)</option>
-            <option value="Bautista General">Bautista General</option>
-            <option value="Metodista / Arminiano">Metodista / Trad. Wesleyana</option>
-            <option value="Pentecostal">Pentecostal</option>
-            <option value="Otro trasfondo">Otro trasfondo</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary">Entrar al Chat</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: Normas Doctrinales -->
-  <div class="modal-overlay" id="rulesModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Propósito y Normas - Sala General</h2>
-        <button class="close-btn" id="closeRulesBtn">&times;</button>
-      </div>
-      <p style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;">Espacio creado para el diálogo bíblico y la edificación mutua:</p>
-      <ul style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.5; padding-left: 18px;">
-        <li><strong>Eje reformado:</strong> Las <em>Cinco Solas</em> y confesiones históricas como guía doctrinal.</li>
-        <li><strong>Diálogo fraternal:</strong> Respeto y mansedumbre bíblica (2 Timoteo 2:24-25).</li>
-        <li><strong>Sana doctrina:</strong> Prohibido el proselitismo de herejías históricas o descalificaciones personales.</li>
-      </ul>
-      <p style="text-align: right; color: #38bdf8; font-style: italic; margin-top: 15px; font-size: 0.85rem;">Soli Deo Gloria</p>
-    </div>
-  </div>
-
-  <script>
-    const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
-    // Coloca tu clave anon/public de Supabase:
-    const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
-
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const chatBox = document.getElementById('chat-box');
-    const form = document.getElementById('chat-form');
-    const contentInput = document.getElementById('content');
-    const loginModal = document.getElementById('loginModal');
-    const loginForm = document.getElementById('login-form');
-    const usersList = document.getElementById('usersList');
-    const usersCount = document.getElementById('usersCount');
-    const mobileCount = document.getElementById('mobileCount');
-    const usersSidebar = document.getElementById('usersSidebar');
-
-    let currentUser = localStorage.getItem('chat_username') || '';
-    let currentDoctrine = localStorage.getItem('chat_doctrine') || 'Reformada';
-    let roomChannel = null;
-    let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
-
-// --- Motor de Audio Mejorado (Mayor volumen y desbloqueo automático) ---
-    let audioCtx = null;
-
-    function getAudioContext() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
-    }
-
-    // Desbloquear audio automáticamente con el primer toque o tecla del usuario
-    const unlockAudio = () => {
-      getAudioContext();
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-    };
-    window.addEventListener('click', unlockAudio);
-    window.addEventListener('keydown', unlockAudio);
-    window.addEventListener('touchstart', unlockAudio);
-
-    // Sonido mensaje estándar (Claro y con mayor ganancia: 0.45)
-    function playMessageSound() {
-      if (!isSoundEnabled) return;
-      try {
-        const ctx = getAudioContext();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.08);
-        
-        // Volumen elevado y decaimiento limpio
-        gain.gain.setValueAtTime(0.45, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.22);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    // Sonido mención (@Usuario) (Campanilla doble enérgica: ganancia 0.6)
-    function playMentionSound() {
-      if (!isSoundEnabled) return;
-      try {
-        const ctx = getAudioContext();
-        const now = ctx.currentTime;
-        const notas = [784, 1046.5]; // Sol5 y Do6
-
-        notas.forEach((freq, idx) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          const start = now + (idx * 0.11);
-          
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(freq, start);
-          
-          gain.gain.setValueAtTime(0.6, start);
-          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
-          
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(start);
-          osc.stop(start + 0.28);
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    // Conmutador de Sonido y Prueba Auditiva
-    const toggleSoundBtn = document.getElementById('toggleSoundBtn');
-    function updateSoundBtn() {
-      toggleSoundBtn.innerHTML = isSoundEnabled ? '🔔 <span class="btn-label-desktop">Audio</span>' : '🔕 <span class="btn-label-desktop">Mudo</span>';
-    }
-    updateSoundBtn();
-    toggleSoundBtn.onclick = () => {
-      isSoundEnabled = !isSoundEnabled;
-      localStorage.setItem('chat_sound', isSoundEnabled);
-      updateSoundBtn();
-      if (isSoundEnabled) {
-        playMessageSound(); // Prueba de sonido inmediata al activarlo
-      }
-    };
-
-    document.getElementById('toggleUsersMobileBtn').onclick = () => {
-      usersSidebar.classList.toggle('mobile-open');
-    };
-
-    // --- Modal QR ---
-    const qrModal = document.getElementById('qrModal');
-    document.getElementById('openQrBtn').onclick = () => qrModal.classList.add('open');
-    document.getElementById('closeQrBtn').onclick = () => qrModal.classList.remove('open');
-    qrModal.onclick = (e) => { if (e.target === qrModal) qrModal.classList.remove('open'); };
-
-    // --- Control de Tamaño de Fuente ---
-    let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
-    document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
-
-    document.getElementById('btnFontInc').onclick = () => {
-      if (currentFontSizeRem < 1.35) {
-        currentFontSizeRem = Math.round((currentFontSizeRem + 0.05) * 100) / 100;
-        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
-        localStorage.setItem('chat_font_size', currentFontSizeRem);
-      }
-    };
-
-    document.getElementById('btnFontDec').onclick = () => {
-      if (currentFontSizeRem > 0.8) {
-        currentFontSizeRem = Math.round((currentFontSizeRem - 0.05) * 100) / 100;
-        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
-        localStorage.setItem('chat_font_size', currentFontSizeRem);
-      }
-    };
-
-    // --- Control de Tipo de Fuente ---
-    const fontSelect = document.getElementById('fontFamilySelect');
-    const savedFont = localStorage.getItem('chat_font_family');
-    if (savedFont) {
-      document.documentElement.style.setProperty('--chat-font-family', savedFont);
-      fontSelect.value = savedFont;
-    }
-    fontSelect.onchange = (e) => {
-      const selected = e.target.value;
-      document.documentElement.style.setProperty('--chat-font-family', selected);
-      localStorage.setItem('chat_font_family', selected);
-    };
-
-    // --- Control de Color de Texto ---
-    const textColorPicker = document.getElementById('textColorPicker');
-    const colorIndicator = document.getElementById('colorIndicator');
-    const savedColor = localStorage.getItem('chat_text_color') || '#f8fafc';
-    document.documentElement.style.setProperty('--chat-text-color', savedColor);
-    textColorPicker.value = savedColor;
-    colorIndicator.style.background = savedColor;
-
-    textColorPicker.oninput = (e) => {
-      const color = e.target.value;
-      document.documentElement.style.setProperty('--chat-text-color', color);
-      colorIndicator.style.background = color;
-      localStorage.setItem('chat_text_color', color);
-    };
-
-    // --- Selector de Emojis ---
-    const emojiPicker = document.getElementById('emojiPicker');
-    const btnEmojiToggle = document.getElementById('btnEmojiToggle');
-    btnEmojiToggle.onclick = (e) => {
-      e.stopPropagation();
-      emojiPicker.classList.toggle('open');
-    };
-    document.querySelectorAll('.emoji-item').forEach(btn => {
-      btn.onclick = () => {
-        contentInput.value += btn.textContent;
-        contentInput.focus();
-        emojiPicker.classList.remove('open');
-      };
-    });
-    document.addEventListener('click', (e) => {
-      if (!emojiPicker.contains(e.target) && e.target !== btnEmojiToggle) emojiPicker.classList.remove('open');
-      if (!usersSidebar.contains(e.target) && e.target !== document.getElementById('toggleUsersMobileBtn')) {
-        usersSidebar.classList.remove('mobile-open');
-      }
-    });
-
-    // --- Funciones del Chat ---
-    function escapeHtml(str) {
-      return (str || '').replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-      );
-    }
-
-    function formatTime(isoString) {
-      if (!isoString) return '';
-      const d = new Date(isoString);
-      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function appendMessage(data, isLive = false) {
-      const div = document.createElement('div');
-      const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
-      const isMention = currentUser && data.content && data.content.toLowerCase().includes(currentUser.toLowerCase()) && data.username !== currentUser;
-
-      div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''}`;
-      div.innerHTML = `
-        <div class="msg-meta">
-          <strong>${escapeHtml(data.username)}</strong>
-          <span class="badge">${escapeHtml(data.doctrine_affinity || 'General')}</span>
-          <span class="time">${formatTime(data.created_at)}</span>
-        </div>
-        <div class="msg-text">${escapeHtml(data.content)}</div>
-      `;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      if (isLive && data.username !== currentUser) {
-        if (isMention) {
-          playMentionSound();
-        } else {
-          playMessageSound();
-        }
-      }
-    }
-
-    function renderOnlineUsers(presenceState) {
-      usersList.innerHTML = '';
-      const activeUsers = [];
-
-      for (const key in presenceState) {
-        presenceState[key].forEach(u => {
-          if (u.username) activeUsers.push(u);
-        });
-      }
-
-      usersCount.textContent = activeUsers.length;
-      mobileCount.textContent = activeUsers.length;
-
-      activeUsers.forEach(u => {
-        const li = document.createElement('li');
-        li.className = 'user-item';
-        li.title = `Clic para mencionar a @${u.username}`;
-        li.innerHTML = `
-          <div class="user-item-name"><span class="online-dot"></span>${escapeHtml(u.username)}</div>
-          <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
-        `;
-        li.onclick = () => {
-          contentInput.value += `@${u.username} `;
-          contentInput.focus();
-          usersSidebar.classList.remove('mobile-open');
-        };
-        usersList.appendChild(li);
-      });
-    }
-
-    function initRealtime() {
-      if (roomChannel) roomChannel.unsubscribe();
-
-      roomChannel = client.channel('general-room', {
-        config: { presence: { key: currentUser || 'anon' } }
-      });
-
-      roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-        appendMessage(payload.new, true);
-      });
-
-      roomChannel.on('presence', { event: 'sync' }, () => {
-        renderOnlineUsers(roomChannel.presenceState());
-      });
-
-      roomChannel.subscribe(async (status) => {
-        if (status === 'SUBSCRIBED' && currentUser) {
-          await roomChannel.track({ username: currentUser, doctrine: currentDoctrine });
-        }
-      });
-    }
-
-    function checkUserProfile() {
-      if (!currentUser) {
-        loginModal.classList.add('open');
-      } else {
-        loginModal.classList.remove('open');
-        initRealtime();
-      }
-    }
-
-    // --- Botón Salir del Chat ---
-    document.getElementById('logoutBtn').onclick = async () => {
-      if (confirm('¿Deseas salir del chat y cerrar tu sesión actual?')) {
-        if (roomChannel) {
-          await roomChannel.untrack();
-          roomChannel.unsubscribe();
-        }
-        localStorage.removeItem('chat_username');
-        localStorage.removeItem('chat_doctrine');
-        currentUser = '';
-        currentDoctrine = 'Reformada';
-        document.getElementById('inputUsername').value = '';
-        usersList.innerHTML = '';
-        usersCount.textContent = '0';
-        mobileCount.textContent = '0';
-        loginModal.classList.add('open');
-      }
-    };
-
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const user = document.getElementById('inputUsername').value.trim();
-      const doctrine = document.getElementById('inputDoctrine').value;
-
-      if (user) {
-        currentUser = user;
-        currentDoctrine = doctrine;
-        localStorage.setItem('chat_username', currentUser);
-        localStorage.setItem('chat_doctrine', currentDoctrine);
-        checkUserProfile();
-      }
-    });
-
-    document.getElementById('changeUserBtn').onclick = () => {
-      document.getElementById('inputUsername').value = currentUser;
-      document.getElementById('inputDoctrine').value = currentDoctrine;
-      loginModal.classList.add('open');
-    };
-
-    // Modal de Normas
-    const rulesModal = document.getElementById('rulesModal');
-    document.getElementById('openRulesBtn').onclick = () => rulesModal.classList.add('open');
-    document.getElementById('closeRulesBtn').onclick = () => rulesModal.classList.remove('open');
-    rulesModal.onclick = (e) => { if (e.target === rulesModal) rulesModal.classList.remove('open'); };
-
-    async function loadMessages() {
-      const { data } = await client
-        .from('messages')
-        .select('*')
-        .order('created_at', { ascending: true })
-        .limit(60);
-
-      if (data) {
-        data.forEach(msg => appendMessage(msg, false));
-      }
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const content = contentInput.value.trim();
-
-      if (!content || !currentUser) return;
-
-      getAudioContext();
-
-      contentInput.value = '';
-
-      const { error } = await client.from('messages').insert([
-        { username: currentUser, doctrine_affinity: currentDoctrine, content: content }
-      ]);
-
-      if (error) {
-        alert("Error al enviar mensaje: " + error.message);
-      }
-    });
-
-    checkUserProfile();
-    loadMessages();
-  </script>
 </body>
 </html>
