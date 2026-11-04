@@ -306,6 +306,34 @@
     .online-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .user-item-doc { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
 
+    /* Menú contextual emergente (Clic en Nick) */
+    .user-action-popup {
+      display: none;
+      position: fixed;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      z-index: 120;
+      overflow: hidden;
+      min-width: 185px;
+    }
+    .user-action-popup.open { display: block; }
+    .popup-btn {
+      width: 100%;
+      padding: 9px 12px;
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 0.85rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .popup-btn:hover { background: var(--border-color); }
+
     /* Entrada de texto */
     form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-panel); border-top: 1px solid var(--border-color); flex-shrink: 0; position: relative; }
     .input-wrapper { flex: 1; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 6px 0 10px; min-width: 0; }
@@ -471,7 +499,7 @@
 
       <div id="chat-box"></div>
       
-      <!-- Panel de configuración de fuentes agrupado -->
+      <!-- Panel de fuentes agrupado -->
       <div class="font-settings-popover" id="fontPopover">
         <div class="font-row">
           <select id="fontFamilySelect" class="font-select-popover">
@@ -542,7 +570,21 @@
     </aside>
   </div>
 
-  <!-- Modal Selector Bíblico Automático con Respaldo -->
+  <!-- Popup contextual al hacer clic en un Nick -->
+  <div class="user-action-popup" id="userPopup">
+    <div style="padding: 6px 12px; font-size: 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: bold;" id="popupHeaderNick">
+      Usuario
+    </div>
+    <button type="button" class="popup-btn" id="popupMentionBtn">💬 Mencionar</button>
+    <button type="button" class="popup-btn" id="popupPrivateBtn">🔒 Mensaje Privado</button>
+    
+    <div id="adminActionsDivider" class="dropdown-divider" style="display: none;"></div>
+    <button type="button" class="popup-btn" id="popupPurgeBtn" style="display: none; color: #fca5a5;">🗑️ Borrar mensajes</button>
+    <button type="button" class="popup-btn" id="popupSilenceBtn" style="display: none; color: #fde047;">🔇 Silenciar usuario</button>
+    <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rol</button>
+  </div>
+
+  <!-- Modal Selector Bíblico Automático con GetBible -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -595,9 +637,9 @@
           <option value="Mateo">Mateo</option>
           <option value="Marcos">Marcos</option>
           <option value="Lucas">Lucas</option>
-          <option value="Juan">Juan</option>
+          <option value="Juan" selected>Juan</option>
           <option value="Hechos">Hechos</option>
-          <option value="Romanos" selected>Romanos</option>
+          <option value="Romanos">Romanos</option>
           <option value="1 Corintios">1 Corintios</option>
           <option value="2 Corintios">2 Corintios</option>
           <option value="Galatas">Gálatas</option>
@@ -625,15 +667,15 @@
       <div style="display: flex; gap: 8px;">
         <div class="auth-field" style="flex: 1;">
           <label for="bibleChapter">Capítulo:</label>
-          <input type="number" id="bibleChapter" min="1" value="8">
+          <input type="number" id="bibleChapter" min="1" value="1">
         </div>
         <div class="auth-field" style="flex: 1;">
           <label for="bibleVerseStart">Desde v.:</label>
-          <input type="number" id="bibleVerseStart" min="1" value="28">
+          <input type="number" id="bibleVerseStart" min="1" value="12">
         </div>
         <div class="auth-field" style="flex: 1;">
           <label for="bibleVerseEnd">Hasta v.:</label>
-          <input type="number" id="bibleVerseEnd" min="1" value="30">
+          <input type="number" id="bibleVerseEnd" min="1" value="13">
         </div>
       </div>
 
@@ -810,10 +852,22 @@
     const currentViewLabel = document.getElementById('currentViewLabel');
     const currentViewDesc = document.getElementById('currentViewDesc');
 
+    // Elementos del Popup Contextual
+    const userPopup = document.getElementById('userPopup');
+    const popupHeaderNick = document.getElementById('popupHeaderNick');
+    const popupMentionBtn = document.getElementById('popupMentionBtn');
+    const popupPrivateBtn = document.getElementById('popupPrivateBtn');
+    const adminActionsDivider = document.getElementById('adminActionsDivider');
+    const popupPurgeBtn = document.getElementById('popupPurgeBtn');
+    const popupSilenceBtn = document.getElementById('popupSilenceBtn');
+    const popupChangeRoleBtn = document.getElementById('popupChangeRoleBtn');
+
     let currentSessionUser = null;
     let currentProfile = null;
     let isGuest = false;
     let roomChannel = null;
+    let selectedPopupUser = null;
+    let usuariosSilenciados = new Set();
 
     let currentChannel = 'general';
     let allMessages = [];
@@ -899,6 +953,9 @@
         fontPopover.classList.remove('open');
         btnFontMenu.classList.remove('active');
       }
+      if (!userPopup.contains(e.target)) {
+        userPopup.classList.remove('open');
+      }
     });
 
     document.getElementById('toggleChannelsMobileBtn').onclick = () => {
@@ -977,7 +1034,91 @@
       }
     };
 
-    // --- Modal Bíblico Automático con Respaldo y CORS Deno ---
+    // --- Menú Contextual (Clic en Nick) ---
+    function openUserActions(nick, evt) {
+      if (!nick) return;
+      if (currentProfile && nick.toLowerCase() === currentProfile.username.toLowerCase()) return;
+
+      selectedPopupUser = nick;
+      popupHeaderNick.textContent = `@${nick}`;
+
+      const myRole = currentProfile ? currentProfile.role : 'guest';
+      const esStaff = myRole === 'admin' || myRole === 'moderator';
+
+      if (esStaff) {
+        adminActionsDivider.style.display = 'block';
+        popupPurgeBtn.style.display = 'flex';
+        popupSilenceBtn.style.display = 'flex';
+        popupSilenceBtn.textContent = usuariosSilenciados.has(nick.toLowerCase()) ? '🔊 Quitar silencio' : '🔇 Silenciar usuario';
+        popupChangeRoleBtn.style.display = myRole === 'admin' ? 'flex' : 'none';
+      } else {
+        adminActionsDivider.style.display = 'none';
+        popupPurgeBtn.style.display = 'none';
+        popupSilenceBtn.style.display = 'none';
+        popupChangeRoleBtn.style.display = 'none';
+      }
+
+      const clientX = evt.clientX || (evt.touches && evt.touches[0] ? evt.touches[0].clientX : 60);
+      const clientY = evt.clientY || (evt.touches && evt.touches[0] ? evt.touches[0].clientY : 60);
+
+      userPopup.style.left = `${Math.min(clientX, window.innerWidth - 195)}px`;
+      userPopup.style.top = `${Math.min(clientY, window.innerHeight - 210)}px`;
+      userPopup.classList.add('open');
+    }
+
+    popupMentionBtn.onclick = () => {
+      if (selectedPopupUser) {
+        contentInput.value += `@${selectedPopupUser} `;
+        contentInput.focus();
+      }
+      userPopup.classList.remove('open');
+    };
+
+    popupPrivateBtn.onclick = () => {
+      if (selectedPopupUser) {
+        startDirectMessageWith(selectedPopupUser);
+      }
+      userPopup.classList.remove('open');
+    };
+
+    popupPurgeBtn.onclick = async () => {
+      userPopup.classList.remove('open');
+      if (!selectedPopupUser) return;
+
+      if (!confirm(`¿Eliminar los mensajes recientes de @${selectedPopupUser}?`)) return;
+
+      const { error } = await client.from('messages').delete().eq('username', selectedPopupUser);
+      if (error) {
+        alert("Error al eliminar mensajes: " + error.message);
+      } else {
+        alert(`Mensajes de @${selectedPopupUser} eliminados.`);
+        allMessages = allMessages.filter(m => m.username !== selectedPopupUser);
+        renderFilteredMessages();
+      }
+    };
+
+    popupSilenceBtn.onclick = () => {
+      userPopup.classList.remove('open');
+      if (!selectedPopupUser) return;
+
+      const userLower = selectedPopupUser.toLowerCase();
+      if (usuariosSilenciados.has(userLower)) {
+        usuariosSilenciados.delete(userLower);
+        alert(`Se ha restablecido la voz a @${selectedPopupUser}.`);
+      } else {
+        usuariosSilenciados.add(userLower);
+        alert(`@${selectedPopupUser} ha sido silenciado localmente.`);
+      }
+    };
+
+    popupChangeRoleBtn.onclick = () => {
+      userPopup.classList.remove('open');
+      if (!selectedPopupUser) return;
+      document.getElementById('adminTargetUser').value = selectedPopupUser;
+      document.getElementById('adminModal').classList.add('open');
+    };
+
+    // --- Modal Bíblico Automático con GetBible ---
     const bibleModal = document.getElementById('bibleModal');
     const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
     const closeBibleBtn = document.getElementById('closeBibleBtn');
@@ -991,25 +1132,21 @@
       window.open("https://www.tbsonlinebible.com/", "_blank");
     };
 
-    const bookSlugs = {
-      "Genesis": "genesis", "Exodo": "exodo", "Levitico": "levitico", "Numeros": "numeros",
-      "Deuteronomio": "deuteronomio", "Josue": "josue", "Jueces": "jueces", "Rut": "rut",
-      "1 Samuel": "1-samuel", "2 Samuel": "2-samuel", "1 Reyes": "1-reyes", "2 Reyes": "2-reyes",
-      "1 Cronicas": "1-cronicas", "2 Cronicas": "2-cronicas", "Esdras": "esdras", "Nehemias": "nehemias",
-      "Ester": "ester", "Job": "job", "Salmos": "salmos", "Proverbios": "proverbios",
-      "Eclesiastes": "eclesiastes", "Cantares": "cantares", "Isaias": "isaias", "Jeremias": "jeremias",
-      "Lamentaciones": "lamentaciones", "Ezequiel": "ezequiel", "Daniel": "daniel", "Oseas": "oseas",
-      "Joel": "joel", "Amos": "amos", "Abdias": "abdias", "Jonas": "jonas", "Miqueas": "miqueas",
-      "Nahum": "nahum", "Habacuc": "habacuc", "Sofonias": "sofonias", "Hageo": "hageo",
-      "Zacarias": "zacarias", "Malaquias": "malaquias", "Mateo": "mateo", "Marcos": "marcos",
-      "Lucas": "lucas", "Juan": "juan", "Hechos": "hechos", "Romanos": "romanos",
-      "1 Corintios": "1-corintios", "2 Corintios": "2-corintios", "Galatas": "galatas",
-      "Efesios": "efesios", "Filipenses": "filipenses", "Colosenses": "colosenses",
-      "1 Tesalonicenses": "1-tesalonicenses", "2 Tesalonicenses": "2-tesalonicenses",
-      "1 Timoteo": "1-timoteo", "2 Timoteo": "2-timoteo", "Tito": "tito", "Filemon": "filemon",
-      "Hebreos": "hebreos", "Santiago": "santiago", "1 Pedro": "1-pedro", "2 Pedro": "2-pedro",
-      "1 Juan": "1-juan", "2 Juan": "2-juan", "3 Juan": "3-juan", "Judas": "judas",
-      "Apocalipsis": "apocalipsis"
+    const bibleBookNumbers = {
+      "Genesis": 1, "Exodo": 2, "Levitico": 3, "Numeros": 4, "Deuteronomio": 5,
+      "Josue": 6, "Jueces": 7, "Rut": 8, "1 Samuel": 9, "2 Samuel": 10,
+      "1 Reyes": 11, "2 Reyes": 12, "1 Cronicas": 13, "2 Cronicas": 14, "Esdras": 15,
+      "Nehemias": 16, "Ester": 17, "Job": 18, "Salmos": 19, "Proverbios": 20,
+      "Eclesiastes": 21, "Cantares": 22, "Isaias": 23, "Jeremias": 24, "Lamentaciones": 25,
+      "Ezequiel": 26, "Daniel": 27, "Oseas": 28, "Joel": 29, "Amos": 30,
+      "Abdias": 31, "Jonas": 32, "Miqueas": 33, "Nahum": 34, "Habacuc": 35,
+      "Sofonias": 36, "Hageo": 37, "Zacarias": 38, "Malaquias": 39, "Mateo": 40,
+      "Marcos": 41, "Lucas": 42, "Juan": 43, "Hechos": 44, "Romanos": 45,
+      "1 Corintios": 46, "2 Corintios": 47, "Galatas": 48, "Efesios": 49, "Filipenses": 50,
+      "Colosenses": 51, "1 Tesalonicenses": 52, "2 Tesalonicenses": 53, "1 Timoteo": 54,
+      "2 Timoteo": 55, "Tito": 56, "Filemon": 57, "Hebreos": 58, "Santiago": 59,
+      "1 Pedro": 60, "2 Pedro": 61, "1 Juan": 62, "2 Juan": 63, "3 Juan": 64,
+      "Judas": 65, "Apocalipsis": 66
     };
 
     btnFetchAndInsertVerse.onclick = async () => {
@@ -1033,13 +1170,13 @@
       }
 
       const rangeLabel = startVerse === endVerse ? `${chapter}:${startVerse}` : `${chapter}:${startVerse}-${endVerse}`;
-      const slug = bookSlugs[bookName] || bookName.toLowerCase();
+      const bookNumber = bibleBookNumbers[bookName] || 43;
 
       btnFetchAndInsertVerse.disabled = true;
       btnFetchAndInsertVerse.textContent = "Consultando...";
 
       try {
-        const url = `https://bible-api.deno.dev/api/read/rv1960/${slug}/${chapter}`;
+        const url = `https://api.getbible.net/v2/rvr/${bookNumber}/${chapter}.json`;
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -1047,15 +1184,15 @@
         }
 
         const data = await response.json();
-        const versesArray = data.vers || [];
+        const versesList = data.verses || [];
 
-        const selectedVerses = versesArray
-          .filter(v => v.number >= startVerse && v.number <= endVerse)
-          .map(v => `${v.number} ${v.verse.trim()}`)
+        const selectedVerses = versesList
+          .filter(v => v.verse >= startVerse && v.verse <= endVerse)
+          .map(v => `${v.verse} ${v.text.trim()}`)
           .join(" ");
 
         if (!selectedVerses) {
-          throw new Error("Versículos no encontrados en el capítulo.");
+          throw new Error("No se encontraron versículos en ese rango.");
         }
 
         const citation = `«${selectedVerses}» (${bookName} ${rangeLabel} - RVR1960)`;
@@ -1064,11 +1201,7 @@
         bibleModal.classList.remove('open');
         contentInput.focus();
       } catch (err) {
-        // En caso de corte o bloqueo externo, insertar la referencia directa para no frenar la sala
-        const fallbackCitation = `📖 [${bookName} ${rangeLabel}] — (Ver en: https://www.tbsonlinebible.com/)`;
-        contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + fallbackCitation;
-        bibleModal.classList.remove('open');
-        contentInput.focus();
+        alert("Error al obtener versículo: " + err.message + ". Verifica que el capítulo y los versículos existan.");
       } finally {
         btnFetchAndInsertVerse.disabled = false;
         btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
@@ -1215,11 +1348,12 @@
         <div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>
       `;
 
+      // Clic en el nombre: Abre el menú emergente
       const clickableNick = div.querySelector('.user-clickable');
       clickableNick.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        startDirectMessageWith(data.username);
+        openUserActions(data.username, e);
       });
 
       chatBox.appendChild(div);
@@ -1285,10 +1419,11 @@
           <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
         `;
         
+        // Clic en usuario conectado: Abre el menú emergente
         li.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          startDirectMessageWith(u.username);
+          openUserActions(u.username, e);
           if (window.innerWidth <= 768) {
             usersSidebar.classList.remove('mobile-open');
           }
@@ -1302,6 +1437,11 @@
       e.preventDefault();
       const content = contentInput.value.trim();
       if (!content || !currentProfile) return;
+
+      if (usuariosSilenciados.has(currentProfile.username.toLowerCase())) {
+        alert("🔇 Te encuentras silenciado en esta sala.");
+        return;
+      }
 
       contentInput.value = '';
 
