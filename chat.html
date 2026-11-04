@@ -14,7 +14,6 @@
     }
     body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
     
-    /* Header estilizado y minimalista */
     header { background: #1e293b; padding: 10px 16px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; position: relative; }
     .header-text h1 { margin: 0; font-size: 1.1rem; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
     .room-badge { font-size: 0.72rem; background: #0369a1; color: #e0f2fe; padding: 2px 7px; border-radius: 9999px; font-weight: 500; border: 1px solid #38bdf8; }
@@ -24,7 +23,6 @@
     .btn-menu-trigger { background: #334155; border: 1px solid #475569; color: #f8fafc; padding: 7px 12px; border-radius: 6px; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-menu-trigger:hover { background: #475569; }
 
-    /* Menú desplegable global */
     .dropdown-menu { display: none; position: absolute; right: 16px; top: 54px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); min-width: 200px; z-index: 100; overflow: hidden; flex-direction: column; }
     .dropdown-menu.open { display: flex; }
     .dropdown-item { padding: 10px 14px; background: none; border: none; color: #f8fafc; font-size: 0.85rem; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px; width: 100%; transition: background 0.15s; }
@@ -33,7 +31,6 @@
     .dropdown-item.danger:hover { background: #7f1d1d; }
     .dropdown-divider { height: 1px; background: #334155; margin: 4px 0; }
 
-    /* Layout principal */
     .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
     .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; }
     
@@ -57,7 +54,6 @@
     .msg-meta .time { font-size: 0.72em; color: #64748b; margin-left: auto; }
     .msg-text { word-break: break-word; line-height: 1.4; color: var(--chat-text-color); }
 
-    /* Barra lateral de usuarios */
     aside.users-sidebar { width: 230px; background: #111827; border-left: 1px solid #334155; display: flex; flex-direction: column; flex-shrink: 0; }
     .sidebar-header { padding: 12px 14px; background: #1e293b; border-bottom: 1px solid #334155; font-size: 0.85rem; font-weight: bold; color: #cbd5e1; display: flex; justify-content: space-between; align-items: center; }
     .users-count { background: #0284c7; color: white; padding: 2px 7px; border-radius: 12px; font-size: 0.75rem; }
@@ -68,7 +64,6 @@
     .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .user-item-doc { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
 
-    /* Formulario inferior */
     form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #1e293b; border-top: 1px solid #334155; flex-shrink: 0; position: relative; }
     .private-badge-target { display: none; background: #7e22ce; color: #fff; font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; white-space: nowrap; align-items: center; gap: 4px; cursor: pointer; }
     .input-wrapper { flex: 1; display: flex; align-items: center; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 0 6px 0 10px; transition: border-color 0.2s; min-width: 0; }
@@ -89,7 +84,6 @@
     button#sendBtn { padding: 9px 14px; border-radius: 6px; border: none; background: #0284c7; color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 4px; font-size: 0.88rem; flex-shrink: 0; }
     button#sendBtn:hover { background: #0369a1; }
 
-    /* Modales y menú contextual */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; z-index: 110; padding: 14px; }
     .modal-overlay.open { display: flex; }
     .modal-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -97,7 +91,7 @@
     .modal-header h2 { margin: 0; font-size: 1.15rem; color: #38bdf8; }
     .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
 
-    .user-action-popup { display: none; position: fixed; background: #1e293b; border: 1px solid #475569; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.7); z-index: 120; overflow: hidden; min-width: 170px; }
+    .user-action-popup { display: none; position: fixed; background: #1e293b; border: 1px solid #475569; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.7); z-index: 120; overflow: hidden; min-width: 175px; }
     .user-action-popup.open { display: block; }
     .popup-btn { width: 100%; padding: 9px 12px; background: none; border: none; color: #f8fafc; font-size: 0.85rem; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .popup-btn:hover { background: #334155; }
@@ -137,7 +131,6 @@
         <span>☰ Opciones</span>
       </button>
 
-      <!-- Menú unificado -->
       <div class="dropdown-menu" id="headerDropdown">
         <button class="dropdown-item" id="optSound">🔔 Sonido: Activado</button>
         <button class="dropdown-item" id="optUsers">👥 Conectados (<span id="menuUsersCount">0</span>)</button>
@@ -156,7 +149,6 @@
     <div class="chat-container">
       <div id="chat-box"></div>
       
-      <!-- Panel Emojis -->
       <div class="emoji-picker" id="emojiPicker">
         <button type="button" class="emoji-item">📖</button>
         <button type="button" class="emoji-item">🙏</button>
@@ -189,13 +181,12 @@
       </div>
 
       <form id="chat-form">
-        <!-- Indicador de mensaje privado activo -->
         <div class="private-badge-target" id="privateTargetBadge" title="Clic para cancelar privado">
           <span>🔒 Para @<strong id="privateTargetName"></strong></span> ✕
         </div>
 
         <div class="input-wrapper">
-          <input type="text" id="content" placeholder="Escribe tu mensaje..." required autocomplete="off">
+          <input type="text" id="content" placeholder="Escribe tu mensaje bíblico o teológico..." required autocomplete="off">
           
           <div class="input-toolbar">
             <select id="fontFamilySelect" class="font-select">
@@ -221,7 +212,6 @@
       </form>
     </div>
 
-    <!-- Barra lateral de usuarios -->
     <aside class="users-sidebar" id="usersSidebar">
       <div class="sidebar-header">
         <span>Conectados</span>
@@ -231,13 +221,19 @@
     </aside>
   </div>
 
-  <!-- Popup contextual al hacer clic en un Nick -->
   <div class="user-action-popup" id="userPopup">
+    <div style="padding: 6px 12px; font-size: 0.75rem; color: #94a3b8; border-bottom: 1px solid #334155; font-weight: bold;" id="popupHeaderNick">
+      Usuario
+    </div>
     <button type="button" class="popup-btn" id="popupMentionBtn">💬 Mencionar</button>
     <button type="button" class="popup-btn" id="popupPrivateBtn">🔒 Mensaje Privado</button>
+    
+    <div id="adminActionsDivider" class="dropdown-divider" style="display: none;"></div>
+    <button type="button" class="popup-btn" id="popupPurgeBtn" style="display: none; color: #fca5a5;">🗑️ Borrar sus mensajes</button>
+    <button type="button" class="popup-btn" id="popupSilenceBtn" style="display: none; color: #fde047;">🔇 Silenciar usuario</button>
+    <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar / Cambiar Rol</button>
   </div>
 
-  <!-- Modal Auth -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
       <div class="auth-tabs">
@@ -300,7 +296,6 @@
     </div>
   </div>
 
-  <!-- Modal Perfil -->
   <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -333,7 +328,6 @@
     </div>
   </div>
 
-  <!-- Modal Roles (Admin) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -358,7 +352,6 @@
     </div>
   </div>
 
-  <!-- Modal QR -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card" style="text-align: center;">
       <div class="modal-header">
@@ -370,7 +363,6 @@
     </div>
   </div>
 
-  <!-- Modal Normas -->
   <div class="modal-overlay" id="rulesModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -402,14 +394,20 @@
     const privateTargetBadge = document.getElementById('privateTargetBadge');
     const privateTargetName = document.getElementById('privateTargetName');
 
+    const adminActionsDivider = document.getElementById('adminActionsDivider');
+    const popupPurgeBtn = document.getElementById('popupPurgeBtn');
+    const popupSilenceBtn = document.getElementById('popupSilenceBtn');
+    const popupChangeRoleBtn = document.getElementById('popupChangeRoleBtn');
+    const popupHeaderNick = document.getElementById('popupHeaderNick');
+
     let currentSessionUser = null;
     let currentProfile = null;
     let isGuest = false;
     let roomChannel = null;
     let targetPrivateUser = null;
     let selectedPopupUser = null;
+    let usuariosSilenciados = new Set();
 
-    // --- Audios MP3 ---
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     const sndMessage = new Audio('mensaje.mp3');
     const sndMention = new Audio('mencion.mp3');
@@ -419,9 +417,11 @@
     const unlockAudio = () => {
       sndMessage.play().then(() => { sndMessage.pause(); sndMessage.currentTime = 0; }).catch(() => {});
       window.removeEventListener('click', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
       window.removeEventListener('touchstart', unlockAudio);
     };
     window.addEventListener('click', unlockAudio);
+    window.addEventListener('keydown', unlockAudio);
     window.addEventListener('touchstart', unlockAudio);
 
     function playMessageSound() {
@@ -436,7 +436,6 @@
       sndMention.play().catch(() => {});
     }
 
-    // --- Control del Menú Unificado ---
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const headerDropdown = document.getElementById('headerDropdown');
 
@@ -495,12 +494,29 @@
       }
     };
 
-    // --- Menú Contextual (Clic en Nick) ---
     function openUserActions(nick, evt) {
       if (currentProfile && nick === currentProfile.username) return;
       selectedPopupUser = nick;
-      userPopup.style.left = `${Math.min(evt.clientX, window.innerWidth - 180)}px`;
-      userPopup.style.top = `${Math.min(evt.clientY, window.innerHeight - 90)}px`;
+      popupHeaderNick.textContent = `@${nick}`;
+
+      const myRole = currentProfile ? currentProfile.role : 'guest';
+      const esStaff = myRole === 'admin' || myRole === 'moderator';
+
+      if (esStaff) {
+        adminActionsDivider.style.display = 'block';
+        popupPurgeBtn.style.display = 'flex';
+        popupSilenceBtn.style.display = 'flex';
+        popupSilenceBtn.textContent = usuariosSilenciados.has(nick.toLowerCase()) ? '🔊 Quitar silencio' : '🔇 Silenciar usuario';
+        popupChangeRoleBtn.style.display = myRole === 'admin' ? 'flex' : 'none';
+      } else {
+        adminActionsDivider.style.display = 'none';
+        popupPurgeBtn.style.display = 'none';
+        popupSilenceBtn.style.display = 'none';
+        popupChangeRoleBtn.style.display = 'none';
+      }
+
+      userPopup.style.left = `${Math.min(evt.clientX, window.innerWidth - 185)}px`;
+      userPopup.style.top = `${Math.min(evt.clientY, window.innerHeight - 200)}px`;
       userPopup.classList.add('open');
     }
 
@@ -523,18 +539,61 @@
       userPopup.classList.remove('open');
     };
 
+    popupPurgeBtn.onclick = async () => {
+      userPopup.classList.remove('open');
+      if (!selectedPopupUser) return;
+
+      const confirmar = confirm(`¿Estás seguro de que deseas eliminar los mensajes recientes de @${selectedPopupUser}?`);
+      if (!confirmar) return;
+
+      const { error } = await client
+        .from('messages')
+        .delete()
+        .eq('username', selectedPopupUser);
+
+      if (error) {
+        alert("Error al eliminar mensajes: " + error.message);
+      } else {
+        alert(`Se han eliminado los mensajes de @${selectedPopupUser}.`);
+        chatBox.querySelectorAll('.msg').forEach(el => {
+          if (el.querySelector('.user-clickable')?.textContent === selectedPopupUser) {
+            el.remove();
+          }
+        });
+      }
+    };
+
+    popupSilenceBtn.onclick = () => {
+      userPopup.classList.remove('open');
+      if (!selectedPopupUser) return;
+
+      const userLower = selectedPopupUser.toLowerCase();
+      if (usuariosSilenciados.has(userLower)) {
+        usuariosSilenciados.delete(userLower);
+        alert(`Se ha restablecido la voz a @${selectedPopupUser}.`);
+      } else {
+        usuariosSilenciados.add(userLower);
+        alert(`@${selectedPopupUser} ha sido silenciado localmente.`);
+      }
+    };
+
+    popupChangeRoleBtn.onclick = () => {
+      userPopup.classList.remove('open');
+      if (!selectedPopupUser) return;
+      document.getElementById('adminTargetUser').value = selectedPopupUser;
+      document.getElementById('adminModal').classList.add('open');
+    };
+
     privateTargetBadge.onclick = () => {
       targetPrivateUser = null;
       privateTargetBadge.style.display = 'none';
       contentInput.placeholder = "Escribe tu mensaje bíblico o teológico...";
     };
 
-    // --- Renderizado de Mensajes con Privados ---
     function appendMessage(data, isLive = false) {
       const myNick = currentProfile ? currentProfile.username : '';
       const isPrivate = data.recipient && data.recipient.trim() !== '';
 
-      // Si es privado y no soy ni el remitente ni el destinatario, no lo muestro
       if (isPrivate && data.username !== myNick && data.recipient !== myNick) {
         return;
       }
@@ -607,11 +666,15 @@
       });
     }
 
-    // --- Envío de Mensajes (Públicos o Privados) ---
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = contentInput.value.trim();
       if (!content || !currentProfile) return;
+
+      if (usuariosSilenciados.has(currentProfile.username.toLowerCase())) {
+        alert("🔇 Te encuentras silenciado por la moderación.");
+        return;
+      }
 
       contentInput.value = '';
 
@@ -627,7 +690,6 @@
       if (error) alert("Error al enviar mensaje: " + error.message);
     });
 
-    // --- Autenticación y Realtime ---
     async function loadActiveProfile() {
       const savedGuest = localStorage.getItem('guest_user');
       if (savedGuest) {
@@ -667,7 +729,6 @@
       loadMessages();
     }
 
-    // Login
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const nick = document.getElementById('loginNick').value.trim();
@@ -675,7 +736,7 @@
 
       const { data: userEmail, error: rpcError } = await client.rpc('get_user_email_by_nick', { target_nick: nick });
       if (rpcError || !userEmail) {
-        alert("Nick no encontrado.");
+        alert("Nick no encontrado. Verifica la escritura o crea una cuenta.");
         return;
       }
 
@@ -687,7 +748,6 @@
       }
     });
 
-    // Registro
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim();
@@ -711,7 +771,6 @@
       }
     });
 
-    // Invitado
     document.getElementById('guestForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const nick = document.getElementById('guestNick').value.trim();
@@ -720,7 +779,6 @@
       location.reload();
     });
 
-    // Pestañas Auth
     const tabLogin = document.getElementById('tabLogin');
     const tabRegister = document.getElementById('tabRegister');
     const tabGuest = document.getElementById('tabGuest');
@@ -737,6 +795,123 @@
     tabLogin.onclick = () => switchAuthTab(tabLogin, loginForm);
     tabRegister.onclick = () => switchAuthTab(tabRegister, registerForm);
     tabGuest.onclick = () => switchAuthTab(tabGuest, guestForm);
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (isGuest) return;
+
+      const newUsername = document.getElementById('editUsername').value.trim();
+      const newDoctrine = document.getElementById('editDoctrine').value;
+
+      const { error } = await client
+        .from('profiles')
+        .update({ username: newUsername, doctrine_affinity: newDoctrine })
+        .eq('id', currentSessionUser.id);
+
+      if (error) {
+        alert("Error al actualizar perfil: " + error.message);
+      } else {
+        currentProfile.username = newUsername;
+        currentProfile.doctrine_affinity = newDoctrine;
+        document.getElementById('profileModal').classList.remove('open');
+        alert("Perfil actualizado correctamente.");
+        if (roomChannel) {
+          roomChannel.track({
+            username: currentProfile.username,
+            doctrine: currentProfile.doctrine_affinity,
+            role: currentProfile.role
+          });
+        }
+      }
+    });
+
+    document.getElementById('adminRoleForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const targetUser = document.getElementById('adminTargetUser').value.trim();
+      const newRole = document.getElementById('adminRoleSelect').value;
+
+      const { data: targetProfile, error: searchError } = await client
+        .from('profiles')
+        .select('id')
+        .eq('username', targetUser)
+        .single();
+
+      if (searchError || !targetProfile) {
+        alert("No se encontró ningún usuario con el nick: " + targetUser);
+        return;
+      }
+
+      const { error: updateError } = await client
+        .from('profiles')
+        .update({ role: newRole })
+        .eq('id', targetProfile.id);
+
+      if (updateError) {
+        alert("Error al asignar rol: " + updateError.message);
+      } else {
+        alert(`Rol '${newRole}' asignado correctamente a ${targetUser}.`);
+        document.getElementById('adminModal').classList.remove('open');
+      }
+    });
+
+    let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
+    document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
+
+    document.getElementById('btnFontInc').onclick = () => {
+      if (currentFontSizeRem < 1.35) {
+        currentFontSizeRem = Math.round((currentFontSizeRem + 0.05) * 100) / 100;
+        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
+        localStorage.setItem('chat_font_size', currentFontSizeRem);
+      }
+    };
+
+    document.getElementById('btnFontDec').onclick = () => {
+      if (currentFontSizeRem > 0.8) {
+        currentFontSizeRem = Math.round((currentFontSizeRem - 0.05) * 100) / 100;
+        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
+        localStorage.setItem('chat_font_size', currentFontSizeRem);
+      }
+    };
+
+    const fontSelect = document.getElementById('fontFamilySelect');
+    const savedFont = localStorage.getItem('chat_font_family');
+    if (savedFont) {
+      document.documentElement.style.setProperty('--chat-font-family', savedFont);
+      fontSelect.value = savedFont;
+    }
+    fontSelect.onchange = (e) => {
+      const selected = e.target.value;
+      document.documentElement.style.setProperty('--chat-font-family', selected);
+      localStorage.setItem('chat_font_family', selected);
+    };
+
+    const textColorPicker = document.getElementById('textColorPicker');
+    const colorIndicator = document.getElementById('colorIndicator');
+    const savedColor = localStorage.getItem('chat_text_color') || '#f8fafc';
+    document.documentElement.style.setProperty('--chat-text-color', savedColor);
+    textColorPicker.value = savedColor;
+    colorIndicator.style.background = savedColor;
+
+    textColorPicker.oninput = (e) => {
+      const color = e.target.value;
+      document.documentElement.style.setProperty('--chat-text-color', color);
+      colorIndicator.style.background = color;
+      localStorage.setItem('chat_text_color', color);
+    };
+
+    const emojiPicker = document.getElementById('emojiPicker');
+    const btnEmojiToggle = document.getElementById('btnEmojiToggle');
+    btnEmojiToggle.onclick = (e) => {
+      e.stopPropagation();
+      emojiPicker.classList.toggle('open');
+    };
+    document.querySelectorAll('.emoji-item').forEach(btn => {
+      btn.onclick = () => {
+        contentInput.value += btn.textContent;
+        contentInput.focus();
+        emojiPicker.classList.remove('open');
+      };
+    });
 
     function initRealtime() {
       if (roomChannel) roomChannel.unsubscribe();
