@@ -34,7 +34,7 @@
     .dropdown-item.danger:hover { background: #7f1d1d; }
     .dropdown-divider { height: 1px; background: #334155; margin: 4px 0; }
 
-    /* Layout con 3 columnas: [Canales/Privados | Chat | Conectados] */
+    /* Layout principal */
     .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
 
     /* Barra izquierda: Salas y Mensajes Privados */
@@ -45,6 +45,31 @@
     .channel-item:hover { background: #1e293b; color: #f8fafc; }
     .channel-item.active { background: #0284c7; color: #ffffff; font-weight: 600; }
     .unread-badge { background: #ef4444; color: white; font-size: 0.7rem; font-weight: bold; padding: 1px 6px; border-radius: 10px; }
+
+    /* Botón cerrar pestaña directa (✕) */
+    .channel-item-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      line-height: 1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 6px;
+      transition: all 0.15s ease;
+    }
+    .channel-item-close:hover {
+      background: #334155;
+      color: #f87171;
+    }
+    .channel-item.active .channel-item-close {
+      color: #e0f2fe;
+    }
+    .channel-item.active .channel-item-close:hover {
+      background: #0369a1;
+      color: #fca5a5;
+    }
 
     /* Contenedor central del Chat */
     .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; background: #0b1120; }
@@ -81,7 +106,7 @@
     .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .user-item-doc { font-size: 0.72rem; color: #94a3b8; margin-top: 2px; }
 
-    /* Barra de entrada inferior */
+    /* Entrada de texto */
     form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #1e293b; border-top: 1px solid #334155; flex-shrink: 0; }
     .input-wrapper { flex: 1; display: flex; align-items: center; background: #0f172a; border: 1px solid #475569; border-radius: 6px; padding: 0 6px 0 10px; min-width: 0; }
     .input-wrapper:focus-within { border-color: #38bdf8; }
@@ -168,9 +193,7 @@
       </ul>
 
       <div class="channels-header" style="margin-top: 10px;">Mensajes Directos</div>
-      <ul class="channel-list" id="directMessagesList">
-        <!-- Pestañas de chats privados se agregan dinámicamente aquí -->
-      </ul>
+      <ul class="channel-list" id="directMessagesList"></ul>
     </aside>
 
     <!-- Chat Central -->
@@ -417,10 +440,9 @@
     let isGuest = false;
     let roomChannel = null;
 
-    // Estado del canal: 'general' o '@Nick'
     let currentChannel = 'general';
-    let allMessages = []; // Caché en memoria para filtrar en tiempo real
-    let directConversations = new Set(); // Nicks con conversaciones abiertas
+    let allMessages = [];
+    let directConversations = new Set();
 
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     const sndMessage = new Audio('mensaje.mp3');
@@ -450,7 +472,6 @@
       sndMention.play().catch(() => {});
     }
 
-    // Toggle menú y paneles móviles
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const headerDropdown = document.getElementById('headerDropdown');
     menuToggleBtn.onclick = (e) => {
@@ -510,11 +531,9 @@
       }
     };
 
-    // --- Sistema de Pestañas: Salas y Conversaciones Privadas ---
     function selectChannel(channelName) {
       currentChannel = channelName;
 
-      // Quitar clase activa de todas las pestañas
       document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
 
       if (channelName === 'general') {
@@ -543,32 +562,58 @@
     function ensureDirectTab(nick, hasUnread = false) {
       if (!nick) return;
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-      if (nick.toLowerCase() === myNick) return;
+      const targetLower = nick.toLowerCase();
+      if (targetLower === myNick) return;
 
-      if (!directConversations.has(nick.toLowerCase())) {
-        directConversations.add(nick.toLowerCase());
+      if (!directConversations.has(targetLower)) {
+        directConversations.add(targetLower);
 
         const li = document.createElement('li');
         li.className = 'channel-item';
-        li.id = `tab-dm-${nick.toLowerCase()}`;
-        li.innerHTML = `<span>🔒 @${escapeHtml(nick)}</span>`;
-        li.onclick = () => selectChannel(nick.toLowerCase());
+        li.id = `tab-dm-${targetLower}`;
+        
+        li.innerHTML = `
+          <span style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            🔒 @${escapeHtml(nick)}
+          </span>
+          <span style="display: flex; align-items: center; gap: 4px;">
+            <button type="button" class="channel-item-close" title="Cerrar chat">✕</button>
+          </span>
+        `;
+
+        li.addEventListener('click', () => selectChannel(targetLower));
+
+        const closeBtn = li.querySelector('.channel-item-close');
+        closeBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          closeDirectTab(targetLower);
+        });
 
         directMessagesList.appendChild(li);
       }
 
-      if (hasUnread && currentChannel !== nick.toLowerCase()) {
-        const item = document.getElementById(`tab-dm-${nick.toLowerCase()}`);
+      if (hasUnread && currentChannel !== targetLower) {
+        const item = document.getElementById(`tab-dm-${targetLower}`);
         if (item && !item.querySelector('.unread-badge')) {
+          const badgeContainer = item.querySelector('span:last-child');
           const badge = document.createElement('span');
           badge.className = 'unread-badge';
           badge.textContent = 'Nuevo';
-          item.appendChild(badge);
+          badgeContainer.insertBefore(badge, badgeContainer.firstChild);
         }
       }
     }
 
-    // Iniciar privado al pulsar sobre el nombre de un usuario
+    function closeDirectTab(nickLower) {
+      directConversations.delete(nickLower);
+      const tab = document.getElementById(`tab-dm-${nickLower}`);
+      if (tab) tab.remove();
+      if (currentChannel === nickLower) {
+        selectChannel('general');
+      }
+    }
+
     function startDirectMessageWith(nick) {
       if (!nick) return;
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
@@ -579,7 +624,6 @@
       contentInput.focus();
     }
 
-    // --- Renderizado y Filtrado de Mensajes ---
     function renderFilteredMessages() {
       chatBox.innerHTML = '';
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
@@ -590,10 +634,8 @@
         const isPrivate = !!recipient;
 
         if (currentChannel === 'general') {
-          // Mostrar solo mensajes públicos
           if (!isPrivate) appendMessageDOM(msg);
         } else {
-          // Mostrar solo la conversación privada bilateral
           const isBetween = (sender === myNick && recipient === currentChannel) ||
                             (sender === currentChannel && recipient === myNick);
           if (isBetween) appendMessageDOM(msg);
@@ -626,7 +668,6 @@
         <div class="msg-text">${escapeHtml(data.content)}</div>
       `;
 
-      // Clic en el nombre: abre privado directamente en la barra izquierda
       const clickableNick = div.querySelector('.user-clickable');
       clickableNick.addEventListener('click', (e) => {
         e.preventDefault();
@@ -647,7 +688,6 @@
       const isPrivate = !!recipient;
 
       if (isPrivate) {
-        // Si no soy el remitente ni el destinatario, ignorar por completo
         if (sender !== myNick && recipient !== myNick) return;
 
         const otherUser = sender === myNick ? recipient : sender;
@@ -661,7 +701,6 @@
 
         if (isLive && sender !== myNick) playMentionSound();
       } else {
-        // Mensaje público
         if (currentChannel === 'general') {
           appendMessageDOM(newMsg);
         }
@@ -673,7 +712,6 @@
       }
     }
 
-    // --- Lista de Conectados ---
     function renderOnlineUsers(presenceState) {
       usersList.innerHTML = '';
       const activeUsers = [];
@@ -697,7 +735,6 @@
           <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
         `;
         
-        // Al tocar un usuario en la lista lateral derecha: abrir privado
         li.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -709,7 +746,6 @@
       });
     }
 
-    // --- Envío de Mensajes ---
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = contentInput.value.trim();
@@ -725,7 +761,6 @@
 
       if (currentProfile.role) payload.role = currentProfile.role;
 
-      // Si estoy en la pestaña de un privado, se agrega el recipient automáticamente
       if (currentChannel !== 'general') {
         payload.recipient = currentChannel;
       }
@@ -734,7 +769,6 @@
       if (error) alert("Error al enviar mensaje: " + error.message);
     });
 
-    // --- Carga Inicial de Mensajes ---
     async function loadMessages() {
       const { data } = await client
         .from('messages')
@@ -747,7 +781,6 @@
         data.forEach(msg => {
           allMessages.push(msg);
 
-          // Si hay mensajes privados previos míos, reconstruir las pestañas
           const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
           const sender = (msg.username || '').toLowerCase();
           const recipient = (msg.recipient || '').toLowerCase();
@@ -761,7 +794,6 @@
       }
     }
 
-    // --- Autenticación ---
     async function loadActiveProfile() {
       const savedGuest = localStorage.getItem('guest_user');
       if (savedGuest) {
@@ -924,7 +956,6 @@
       }
     });
 
-    // Tipografía y formato
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
     document.getElementById('btnFontInc').onclick = () => {
@@ -979,7 +1010,6 @@
       };
     });
 
-    // Realtime de Supabase
     function initRealtime() {
       if (roomChannel) roomChannel.unsubscribe();
       roomChannel = client.channel('general-room', {
