@@ -91,7 +91,8 @@
     .modal-header h2 { margin: 0; font-size: 1.15rem; color: #38bdf8; }
     .close-btn { background: transparent; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; line-height: 1; }
 
-    .user-action-popup { display: none; position: fixed; background: #1e293b; border: 1px solid #475569; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.7); z-index: 120; overflow: hidden; min-width: 175px; }
+    /* Ventana emergente al hacer clic en un nick */
+    .user-action-popup { display: none; position: fixed; background: #1e293b; border: 1px solid #475569; border-radius: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.7); z-index: 120; overflow: hidden; min-width: 185px; }
     .user-action-popup.open { display: block; }
     .popup-btn { width: 100%; padding: 9px 12px; background: none; border: none; color: #f8fafc; font-size: 0.85rem; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .popup-btn:hover { background: #334155; }
@@ -221,6 +222,7 @@
     </aside>
   </div>
 
+  <!-- Popup contextual al pulsar el Nick -->
   <div class="user-action-popup" id="userPopup">
     <div style="padding: 6px 12px; font-size: 0.75rem; color: #94a3b8; border-bottom: 1px solid #334155; font-weight: bold;" id="popupHeaderNick">
       Usuario
@@ -234,6 +236,7 @@
     <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar / Cambiar Rol</button>
   </div>
 
+  <!-- Modal Auth -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
       <div class="auth-tabs">
@@ -296,6 +299,7 @@
     </div>
   </div>
 
+  <!-- Modal Perfil -->
   <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -328,6 +332,7 @@
     </div>
   </div>
 
+  <!-- Modal Roles (Admin) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -352,6 +357,7 @@
     </div>
   </div>
 
+  <!-- Modal QR -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card" style="text-align: center;">
       <div class="modal-header">
@@ -363,6 +369,7 @@
     </div>
   </div>
 
+  <!-- Modal Normas -->
   <div class="modal-overlay" id="rulesModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -444,9 +451,13 @@
       headerDropdown.classList.toggle('open');
     };
 
-    document.addEventListener('click', () => {
-      headerDropdown.classList.remove('open');
-      userPopup.classList.remove('open');
+    document.addEventListener('click', (e) => {
+      if (!headerDropdown.contains(e.target) && e.target !== menuToggleBtn) {
+        headerDropdown.classList.remove('open');
+      }
+      if (!userPopup.contains(e.target)) {
+        userPopup.classList.remove('open');
+      }
     });
 
     const optSound = document.getElementById('optSound');
@@ -494,9 +505,10 @@
       }
     };
 
-    ffunction openUserActions(nick, evt) {
+    // Abre la ventana emergente sobre cualquier Nick
+    function openUserActions(nick, evt) {
       if (!nick) return;
-      if (currentProfile && nick === currentProfile.username) return; // No auto-moderarse
+      if (currentProfile && nick.toLowerCase() === currentProfile.username.toLowerCase()) return;
 
       selectedPopupUser = nick;
       popupHeaderNick.textContent = `@${nick}`;
@@ -517,14 +529,14 @@
         popupChangeRoleBtn.style.display = 'none';
       }
 
-      // Posicionamiento de la ventana emergente en pantalla
-      const posX = Math.min(evt.clientX || 50, window.innerWidth - 190);
-      const posY = Math.min(evt.clientY || 50, window.innerHeight - 200);
+      const clientX = evt.clientX || (evt.touches && evt.touches[0] ? evt.touches[0].clientX : 60);
+      const clientY = evt.clientY || (evt.touches && evt.touches[0] ? evt.touches[0].clientY : 60);
 
-      userPopup.style.left = `${posX}px`;
-      userPopup.style.top = `${posY}px`;
+      userPopup.style.left = `${Math.min(clientX, window.innerWidth - 195)}px`;
+      userPopup.style.top = `${Math.min(clientY, window.innerHeight - 210)}px`;
       userPopup.classList.add('open');
     }
+
     document.getElementById('popupMentionBtn').onclick = () => {
       if (selectedPopupUser) {
         contentInput.value += `@${selectedPopupUser} `;
@@ -596,17 +608,7 @@
     };
 
     function appendMessage(data, isLive = false) {
-    // Asegurar que el elemento con clase 'user-clickable' abra el popup
-      const nickElem = div.querySelector('.user-clickable');
-      if (nickElem) {
-        nickElem.style.cursor = 'pointer';
-        nickElem.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          openUserActions(data.username, e);
-        });
-      }
-      
+      const myNick = currentProfile ? currentProfile.username : '';
       const isPrivate = data.recipient && data.recipient.trim() !== '';
 
       if (isPrivate && data.username !== myNick && data.recipient !== myNick) {
@@ -627,7 +629,7 @@
       div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''}`;
       div.innerHTML = `
         <div class="msg-meta">
-          <span class="user-clickable" data-nick="${escapeHtml(data.username)}">${escapeHtml(data.username)}</span>
+          <span class="user-clickable">${escapeHtml(data.username)}</span>
           ${roleBadge}
           ${privateBadge}
           <span class="badge-doc">${escapeHtml(data.doctrine_affinity || 'General')}</span>
@@ -636,10 +638,12 @@
         <div class="msg-text">${escapeHtml(data.content)}</div>
       `;
 
-      div.querySelector('.user-clickable').onclick = (e) => {
+      const clickableNick = div.querySelector('.user-clickable');
+      clickableNick.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         openUserActions(data.username, e);
-      };
+      });
 
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -672,15 +676,17 @@
           <div class="user-item-name"><span class="online-dot"></span>${rolePrefix}${escapeHtml(u.username)}</div>
           <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
         `;
-        li.onclick = (e) => {
+        li.addEventListener('click', (e) => {
+          e.preventDefault();
           e.stopPropagation();
           openUserActions(u.username, e);
           usersSidebar.classList.remove('mobile-open');
-        };
+        });
         usersList.appendChild(li);
       });
     }
 
+    // Formulario de Envío
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = contentInput.value.trim();
@@ -696,15 +702,18 @@
       const payload = {
         username: currentProfile.username,
         doctrine_affinity: currentProfile.doctrine_affinity,
-        role: currentProfile.role,
-        content: content,
-        recipient: targetPrivateUser || null
+        content: content
       };
+
+      // Si las columnas existen se envían; si no, la base de datos toma defaults
+      if (currentProfile.role) payload.role = currentProfile.role;
+      if (targetPrivateUser) payload.recipient = targetPrivateUser;
 
       const { error } = await client.from('messages').insert([payload]);
       if (error) alert("Error al enviar mensaje: " + error.message);
     });
 
+    // Carga de sesión
     async function loadActiveProfile() {
       const savedGuest = localStorage.getItem('guest_user');
       if (savedGuest) {
