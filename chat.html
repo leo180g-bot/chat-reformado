@@ -542,7 +542,7 @@
     </aside>
   </div>
 
-  <!-- Modal Selector Bíblico Automático (Opción A) -->
+  <!-- Modal Selector Bíblico Automático con Respaldo -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -553,7 +553,6 @@
       <div class="auth-field">
         <label for="bibleBookSelect">Libro:</label>
         <select id="bibleBookSelect">
-          <!-- Antiguo Testamento -->
           <option value="Genesis">Génesis</option>
           <option value="Exodo">Éxodo</option>
           <option value="Levitico">Levítico</option>
@@ -593,7 +592,6 @@
           <option value="Hageo">Hageo</option>
           <option value="Zacarias">Zacarías</option>
           <option value="Malaquias">Malaquías</option>
-          <!-- Nuevo Testamento -->
           <option value="Mateo">Mateo</option>
           <option value="Marcos">Marcos</option>
           <option value="Lucas">Lucas</option>
@@ -640,7 +638,7 @@
       </div>
 
       <div style="margin: 6px 0 12px; font-size: 0.78rem; color: var(--text-muted);">
-        * Máximo 10 versículos por cita. Se consultará automáticamente la Reina-Valera.
+        * Máximo 10 versículos por cita. Se consultará automáticamente la Reina-Valera 1960.
       </div>
 
       <div style="display: flex; gap: 8px;">
@@ -821,6 +819,7 @@
     let allMessages = [];
     let directConversations = new Set();
 
+    // Preferencias
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     let isPrivateSoundEnabled = localStorage.getItem('chat_private_sound') !== 'false';
     let isDmsBlocked = localStorage.getItem('chat_block_dms') === 'true';
@@ -978,7 +977,20 @@
       }
     };
 
-  // Mapeo normalizado para la API Reina-Valera (RVR1960)
+    // --- Modal Bíblico Automático con Respaldo y CORS Deno ---
+    const bibleModal = document.getElementById('bibleModal');
+    const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
+    const closeBibleBtn = document.getElementById('closeBibleBtn');
+    const btnFetchAndInsertVerse = document.getElementById('btnFetchAndInsertVerse');
+    const btnOpenTBSDirect = document.getElementById('btnOpenTBSDirect');
+
+    btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
+    closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
+
+    btnOpenTBSDirect.onclick = () => {
+      window.open("https://www.tbsonlinebible.com/", "_blank");
+    };
+
     const bookSlugs = {
       "Genesis": "genesis", "Exodo": "exodo", "Levitico": "levitico", "Numeros": "numeros",
       "Deuteronomio": "deuteronomio", "Josue": "josue", "Jueces": "jueces", "Rut": "rut",
@@ -1012,7 +1024,7 @@
       }
 
       if (startVerse > endVerse) {
-        return alert("El versículo inicial no puede ser mayor que el final.");
+        return alert("El versículo de inicio no puede ser mayor que el final.");
       }
 
       const count = (endVerse - startVerse) + 1;
@@ -1027,7 +1039,6 @@
       btnFetchAndInsertVerse.textContent = "Consultando...";
 
       try {
-        // Petición a endpoint con soporte completo de CORS y RVR1960
         const url = `https://bible-api.deno.dev/api/read/rv1960/${slug}/${chapter}`;
         const response = await fetch(url);
 
@@ -1038,7 +1049,6 @@
         const data = await response.json();
         const versesArray = data.vers || [];
 
-        // Extraer los versículos dentro del rango seleccionado
         const selectedVerses = versesArray
           .filter(v => v.number >= startVerse && v.number <= endVerse)
           .map(v => `${v.number} ${v.verse.trim()}`)
@@ -1053,9 +1063,8 @@
         contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + citation;
         bibleModal.classList.remove('open');
         contentInput.focus();
-
       } catch (err) {
-        // En caso de corte o bloqueo externo, insertar la referencia para no frenar la conversación
+        // En caso de corte o bloqueo externo, insertar la referencia directa para no frenar la sala
         const fallbackCitation = `📖 [${bookName} ${rangeLabel}] — (Ver en: https://www.tbsonlinebible.com/)`;
         contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + fallbackCitation;
         bibleModal.classList.remove('open');
@@ -1065,6 +1074,7 @@
         btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
       }
     };
+
     // Pestañas
     function selectChannel(channelName) {
       currentChannel = channelName;
