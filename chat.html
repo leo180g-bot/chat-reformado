@@ -26,8 +26,6 @@
       --msg-private-bg: #172554;
       --msg-border: #64748b;
       --chat-font-size: 0.95rem;
-      --chat-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --chat-text-color: #f8fafc;
     }
 
     [data-theme="carbon"] {
@@ -46,7 +44,6 @@
       --msg-bg: #18181b;
       --msg-private-bg: #271e38;
       --msg-border: #52525b;
-      --chat-text-color: #fafafa;
     }
 
     [data-theme="pergamino"] {
@@ -65,7 +62,6 @@
       --msg-bg: #332c25;
       --msg-private-bg: #3d2c1d;
       --msg-border: #786b59;
-      --chat-text-color: #f5f0e6;
     }
 
     [data-theme="bosque"] {
@@ -84,7 +80,6 @@
       --msg-bg: #14352b;
       --msg-private-bg: #1b3838;
       --msg-border: #3b7664;
-      --chat-text-color: #ecfdf5;
     }
 
     body {
@@ -272,7 +267,7 @@
     .chat-header-bar { padding: 8px 14px; background: var(--bg-panel); border-bottom: 1px solid var(--border-subtle); font-size: 0.82rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
     .chat-header-bar strong { color: var(--accent); }
 
-    #chat-box { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: var(--chat-font-size); font-family: var(--chat-font-family); }
+    #chat-box { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: var(--chat-font-size); }
     
     .msg { background: var(--msg-bg); padding: 9px 12px; border-radius: 6px; max-width: 85%; border-left: 4px solid var(--msg-border); }
     .msg.ref { border-left-color: var(--accent); }
@@ -289,7 +284,7 @@
     .badge-role.guest { background: #475569; color: #cbd5e1; font-style: italic; }
     .badge-doc { font-size: 0.72em; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 4px; }
     .msg-meta .time { font-size: 0.72em; color: var(--text-muted); margin-left: auto; }
-    .msg-text { word-break: break-word; line-height: 1.4; color: var(--chat-text-color); }
+    .msg-text { word-break: break-word; line-height: 1.4; }
 
     aside.users-sidebar {
       width: 210px;
@@ -527,7 +522,7 @@
           <input type="text" id="content" placeholder="Escribe tu mensaje en # Sala General..." required autocomplete="off">
           
           <div class="input-toolbar">
-            <label class="color-picker-label" title="Color de texto">
+            <label class="color-picker-label" title="Color de tu mensaje">
               <span class="color-indicator" id="colorIndicator"></span>
               <input type="color" id="textColorPicker" value="#f8fafc">
             </label>
@@ -1010,6 +1005,10 @@
       else if (data.role === 'moderator') roleBadge = '<span class="badge-role moderator">🛡️ Mod</span>';
       else if (data.role === 'guest') roleBadge = '<span class="badge-role guest">Invitado</span>';
 
+      // Estilo individual definido por quien escribió el mensaje
+      const messageFont = data.font_family || 'system-ui, sans-serif';
+      const messageColor = data.text_color || '#f8fafc';
+
       div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''}`;
       div.innerHTML = `
         <div class="msg-meta">
@@ -1018,7 +1017,7 @@
           <span class="badge-doc">${escapeHtml(data.doctrine_affinity || 'General')}</span>
           <span class="time">${formatTime(data.created_at)}</span>
         </div>
-        <div class="msg-text">${escapeHtml(data.content)}</div>
+        <div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>
       `;
 
       const clickableNick = div.querySelector('.user-clickable');
@@ -1043,7 +1042,6 @@
       if (isPrivate) {
         if (sender !== myNick && recipient !== myNick) return;
 
-        // Si el usuario receptor tiene bloqueados los mensajes directos
         if (recipient === myNick && isDmsBlocked) return;
 
         const otherUser = sender === myNick ? recipient : sender;
@@ -1106,6 +1104,7 @@
       });
     }
 
+    // Envío del mensaje con el formato del usuario
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = contentInput.value.trim();
@@ -1113,10 +1112,16 @@
 
       contentInput.value = '';
 
+      // Capturar la fuente y color actuales del remitente
+      const chosenFont = document.getElementById('fontFamilySelect').value;
+      const chosenColor = document.getElementById('textColorPicker').value;
+
       const payload = {
         username: currentProfile.username,
         doctrine_affinity: currentProfile.doctrine_affinity,
-        content: content
+        content: content,
+        font_family: chosenFont,
+        text_color: chosenColor
       };
 
       if (currentProfile.role) payload.role = currentProfile.role;
@@ -1316,7 +1321,7 @@
       }
     });
 
-    // Control de Tipografía y Tamaño Agrupados
+    // Tamaño de fuente en la vista del usuario
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
     
@@ -1336,27 +1341,30 @@
       }
     };
 
+    // Preferencia local de fuente para redactar
     const fontSelect = document.getElementById('fontFamilySelect');
-    const savedFont = localStorage.getItem('chat_font_family');
-    if (savedFont) {
-      document.documentElement.style.setProperty('--chat-font-family', savedFont);
-      fontSelect.value = savedFont;
-    }
+    const savedUserFont = localStorage.getItem('user_editor_font') || 'system-ui, sans-serif';
+    fontSelect.value = savedUserFont;
+    contentInput.style.fontFamily = savedUserFont;
+
     fontSelect.onchange = (e) => {
-      document.documentElement.style.setProperty('--chat-font-family', e.target.value);
-      localStorage.setItem('chat_font_family', e.target.value);
+      contentInput.style.fontFamily = e.target.value;
+      localStorage.setItem('user_editor_font', e.target.value);
     };
 
+    // Selector de color del remitente
     const textColorPicker = document.getElementById('textColorPicker');
     const colorIndicator = document.getElementById('colorIndicator');
-    const savedColor = localStorage.getItem('chat_text_color') || '#f8fafc';
-    document.documentElement.style.setProperty('--chat-text-color', savedColor);
+    const savedColor = localStorage.getItem('user_editor_color') || '#f8fafc';
     textColorPicker.value = savedColor;
     colorIndicator.style.background = savedColor;
+    contentInput.style.color = savedColor;
+
     textColorPicker.oninput = (e) => {
-      document.documentElement.style.setProperty('--chat-text-color', e.target.value);
-      colorIndicator.style.background = e.target.value;
-      localStorage.setItem('chat_text_color', e.target.value);
+      const color = e.target.value;
+      colorIndicator.style.background = color;
+      contentInput.style.color = color;
+      localStorage.setItem('user_editor_color', color);
     };
 
     const emojiPicker = document.getElementById('emojiPicker');
