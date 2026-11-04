@@ -585,7 +585,7 @@
     <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rol</button>
   </div>
 
-  <!-- Modal Selector Bíblico Automático con Bolls Life (RVR1960) -->
+  <!-- Modal Selector Bíblico con consulta a RVR1960.json local -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -596,45 +596,45 @@
       <div class="auth-field">
         <label for="bibleBookSelect">Libro:</label>
         <select id="bibleBookSelect">
-          <option value="Genesis">Génesis</option>
-          <option value="Exodo">Éxodo</option>
-          <option value="Levitico">Levítico</option>
-          <option value="Numeros">Números</option>
+          <option value="Génesis">Génesis</option>
+          <option value="Éxodo">Éxodo</option>
+          <option value="Levítico">Levítico</option>
+          <option value="Números">Números</option>
           <option value="Deuteronomio">Deuteronomio</option>
-          <option value="Josue">Josué</option>
+          <option value="Josué">Josué</option>
           <option value="Jueces">Jueces</option>
           <option value="Rut">Rut</option>
           <option value="1 Samuel">1 Samuel</option>
           <option value="2 Samuel">2 Samuel</option>
           <option value="1 Reyes">1 Reyes</option>
           <option value="2 Reyes">2 Reyes</option>
-          <option value="1 Cronicas">1 Crónicas</option>
-          <option value="2 Cronicas">2 Crónicas</option>
+          <option value="1 Crónicas">1 Crónicas</option>
+          <option value="2 Crónicas">2 Crónicas</option>
           <option value="Esdras">Esdras</option>
-          <option value="Nehemias">Nehemías</option>
+          <option value="Nehemías">Nehemías</option>
           <option value="Ester">Ester</option>
           <option value="Job">Job</option>
           <option value="Salmos">Salmos</option>
           <option value="Proverbios">Proverbios</option>
-          <option value="Eclesiastes">Eclesiastés</option>
+          <option value="Eclesiastés">Eclesiastés</option>
           <option value="Cantares">Cantares</option>
-          <option value="Isaias">Isaías</option>
-          <option value="Jeremias">Jeremías</option>
+          <option value="Isaías">Isaías</option>
+          <option value="Jeremías">Jeremías</option>
           <option value="Lamentaciones">Lamentaciones</option>
           <option value="Ezequiel">Ezequiel</option>
           <option value="Daniel">Daniel</option>
           <option value="Oseas">Oseas</option>
           <option value="Joel">Joel</option>
-          <option value="Amos">Amós</option>
-          <option value="Abdias">Abdías</option>
-          <option value="Jonas">Jonás</option>
+          <option value="Amós">Amós</option>
+          <option value="Abdías">Abdías</option>
+          <option value="Jonás">Jonás</option>
           <option value="Miqueas">Miqueas</option>
-          <option value="Nahum">Nahúm</option>
+          <option value="Nahúm">Nahúm</option>
           <option value="Habacuc">Habacuc</option>
-          <option value="Sofonias">Sofonías</option>
+          <option value="Sofonías">Sofonías</option>
           <option value="Hageo">Hageo</option>
-          <option value="Zacarias">Zacarías</option>
-          <option value="Malaquias">Malaquías</option>
+          <option value="Zacarías">Zacarías</option>
+          <option value="Malaquías">Malaquías</option>
           <option value="Mateo">Mateo</option>
           <option value="Marcos">Marcos</option>
           <option value="Lucas">Lucas</option>
@@ -643,7 +643,7 @@
           <option value="Romanos">Romanos</option>
           <option value="1 Corintios">1 Corintios</option>
           <option value="2 Corintios">2 Corintios</option>
-          <option value="Galatas">Gálatas</option>
+          <option value="Gálatas">Gálatas</option>
           <option value="Efesios">Efesios</option>
           <option value="Filipenses">Filipenses</option>
           <option value="Colosenses">Colosenses</option>
@@ -652,7 +652,7 @@
           <option value="1 Timoteo">1 Timoteo</option>
           <option value="2 Timoteo">2 Timoteo</option>
           <option value="Tito">Tito</option>
-          <option value="Filemon">Filemón</option>
+          <option value="Filemón">Filemón</option>
           <option value="Hebreos">Hebreos</option>
           <option value="Santiago">Santiago</option>
           <option value="1 Pedro">1 Pedro</option>
@@ -681,12 +681,11 @@
       </div>
 
       <div style="margin: 6px 0 12px; font-size: 0.78rem; color: var(--text-muted);">
-        * Máximo 10 versículos por cita. Se consultará automáticamente la Reina-Valera 1960.
+        * Máximo 10 versículos por cita. Consulta directa desde tu archivo RVR1960.json.
       </div>
 
       <div style="display: flex; gap: 8px;">
         <button type="button" class="btn-primary" id="btnFetchAndInsertVerse">Obtener y Pegar</button>
-        <button type="button" class="btn-primary" id="btnOpenTBSDirect" style="background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); width: auto; white-space: nowrap;">TBS Web</button>
       </div>
     </div>
   </div>
@@ -874,6 +873,9 @@
     let allMessages = [];
     let directConversations = new Set();
 
+    // Variable global para almacenar la Biblia en caché
+    let localBibleCache = null;
+
     // Preferencias
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     let isPrivateSoundEnabled = localStorage.getItem('chat_private_sound') !== 'false';
@@ -1019,7 +1021,6 @@
       const confirmacion = confirm("⚠️ ¿Estás seguro de que deseas vaciar TODOS los mensajes de la Sala General? Esta acción no se puede deshacer.");
       if (!confirmacion) return;
 
-      // Se eliminan solo los mensajes que no sean privados (recipient is null)
       const { error } = await client
         .from('messages')
         .delete()
@@ -1143,36 +1144,87 @@
       document.getElementById('adminModal').classList.add('open');
     };
 
-    // --- Modal Bíblico Automático con Bolls Life (RVR1960) ---
+    // --- Modal Bíblico: Lógica con RVR1960.json local ---
     const bibleModal = document.getElementById('bibleModal');
     const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
     const closeBibleBtn = document.getElementById('closeBibleBtn');
     const btnFetchAndInsertVerse = document.getElementById('btnFetchAndInsertVerse');
-    const btnOpenTBSDirect = document.getElementById('btnOpenTBSDirect');
 
     btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
     closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
 
-    btnOpenTBSDirect.onclick = () => {
-      window.open("https://www.tbsonlinebible.com/", "_blank");
-    };
+    // Función auxiliar para normalizar nombres eliminando tildes y mayúsculas
+    function normalizeStr(str) {
+      return (str || '')
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
 
-    const bibleBookIds = {
-      "Genesis": 1, "Exodo": 2, "Levitico": 3, "Numeros": 4, "Deuteronomio": 5,
-      "Josue": 6, "Jueces": 7, "Rut": 8, "1 Samuel": 9, "2 Samuel": 10,
-      "1 Reyes": 11, "2 Reyes": 12, "1 Cronicas": 13, "2 Cronicas": 14, "Esdras": 15,
-      "Nehemias": 16, "Ester": 17, "Job": 18, "Salmos": 19, "Proverbios": 20,
-      "Eclesiastes": 21, "Cantares": 22, "Isaias": 23, "Jeremias": 24, "Lamentaciones": 25,
-      "Ezequiel": 26, "Daniel": 27, "Oseas": 28, "Joel": 29, "Amos": 30,
-      "Abdias": 31, "Jonas": 32, "Miqueas": 33, "Nahum": 34, "Habacuc": 35,
-      "Sofonias": 36, "Hageo": 37, "Zacarias": 38, "Malaquias": 39, "Mateo": 40,
-      "Marcos": 41, "Lucas": 42, "Juan": 43, "Hechos": 44, "Romanos": 45,
-      "1 Corintios": 46, "2 Corintios": 47, "Galatas": 48, "Efesios": 49, "Filipenses": 50,
-      "Colosenses": 51, "1 Tesalonicenses": 52, "2 Tesalonicenses": 53, "1 Timoteo": 54,
-      "2 Timoteo": 55, "Tito": 56, "Filemon": 57, "Hebreos": 58, "Santiago": 59,
-      "1 Pedro": 60, "2 Pedro": 61, "1 Juan": 62, "2 Juan": 63, "3 Juan": 64,
-      "Judas": 65, "Apocalipsis": 66
-    };
+    // Carga perezosa de la Biblia en memoria
+    async function loadLocalBible() {
+      if (!localBibleCache) {
+        const res = await fetch('./RVR1960.json');
+        if (!res.ok) {
+          throw new Error("No se encontró el archivo RVR1960.json en la raíz del proyecto.");
+        }
+        localBibleCache = await res.json();
+      }
+      return localBibleCache;
+    }
+
+    // Extractor universal de versículos según la estructura del JSON
+    function extractVersesFromJSON(bibleData, bookName, chapterNum, startV, endV) {
+      const targetBook = normalizeStr(bookName);
+      let versesFound = [];
+
+      // Caso 1: Array de objetos planos [{ book: "Juan", chapter: 1, verse: 1, text: "..." }, ...]
+      if (Array.isArray(bibleData)) {
+        versesFound = bibleData.filter(item => {
+          const itemBook = normalizeStr(item.book || item.book_name || item.libro || '');
+          const itemChap = parseInt(item.chapter || item.capitulo, 10);
+          const itemVerse = parseInt(item.verse || item.versiculo, 10);
+          return itemBook === targetBook && itemChap === chapterNum && itemVerse >= startV && itemVerse <= endV;
+        }).map(item => `${item.verse || item.versiculo} ${(item.text || item.texto || '').trim()}`);
+      } 
+      // Caso 2: Objeto estructurado { "Juan": { "1": { "1": "...", "2": "..." } } }
+      else if (typeof bibleData === 'object' && bibleData !== null) {
+        // Encontrar la clave del libro en el objeto ignorando tildes/mayúsculas
+        let matchedKey = Object.keys(bibleData).find(k => normalizeStr(k) === targetBook);
+        
+        // Si no está directamente, revisar si tiene un nodo contenedor tipo "books"
+        let bookObj = matchedKey ? bibleData[matchedKey] : null;
+        if (!bookObj && bibleData.books) {
+          matchedKey = Object.keys(bibleData.books).find(k => normalizeStr(k) === targetBook);
+          bookObj = matchedKey ? bibleData.books[matchedKey] : null;
+        }
+
+        if (bookObj) {
+          // Si los capítulos son un objeto indexado por número
+          const chapterObj = bookObj[chapterNum] || bookObj[String(chapterNum)] || (Array.isArray(bookObj) ? bookObj[chapterNum - 1] : null);
+          
+          if (chapterObj) {
+            for (let v = startV; v <= endV; v++) {
+              let text = '';
+              if (Array.isArray(chapterObj)) {
+                // Array de versículos base 0 o base 1
+                text = chapterObj[v] || chapterObj[v - 1] || '';
+              } else if (typeof chapterObj === 'object') {
+                text = chapterObj[v] || chapterObj[String(v)] || '';
+              }
+              if (text) {
+                // Si el versículo viene como objeto { text: "..." }
+                if (typeof text === 'object') text = text.text || text.verse || '';
+                versesFound.push(`${v} ${String(text).replace(/<[^>]*>?/gm, '').trim()}`);
+              }
+            }
+          }
+        }
+      }
+
+      return versesFound.join(" ");
+    }
 
     btnFetchAndInsertVerse.onclick = async () => {
       const bookSelect = document.getElementById('bibleBookSelect');
@@ -1195,55 +1247,32 @@
       }
 
       const rangeLabel = startVerse === endVerse ? `${chapter}:${startVerse}` : `${chapter}:${startVerse}-${endVerse}`;
-      const queryPassage = `${bookName} ${rangeLabel}`;
 
       btnFetchAndInsertVerse.disabled = true;
-      btnFetchAndInsertVerse.textContent = "Consultando...";
+      btnFetchAndInsertVerse.textContent = "Buscando...";
 
       try {
-        // Consulta directa del rango exacto con translation=rvr (Reina-Valera)
-        const url = `https://bible-api.com/${encodeURIComponent(queryPassage)}?translation=rvr`;
-        const response = await fetch(url);
+        const bibleData = await loadLocalBible();
+        const extractedText = extractVersesFromJSON(bibleData, bookName, chapter, startVerse, endVerse);
 
-        if (!response.ok) {
-          throw new Error("No se encontró el pasaje solicitado.");
+        if (!extractedText || extractedText.trim() === '') {
+          throw new Error("No se encontraron los versículos especificados en el archivo RVR1960.json.");
         }
 
-        const data = await response.json();
-
-        let formattedText = "";
-
-        // Si devuelve array de versículos estructurados
-        if (data.verses && data.verses.length > 0) {
-          formattedText = data.verses
-            .map(v => `${v.verse} ${v.text.replace(/\s+/g, ' ').trim()}`)
-            .join(" ");
-        } else if (data.text) {
-          // Si devuelve el texto consolidado
-          formattedText = data.text.replace(/\s+/g, ' ').trim();
-        }
-
-        if (!formattedText) {
-          throw new Error("El texto del pasaje llegó vacío.");
-        }
-
-        const citation = `«${formattedText}» (${bookName} ${rangeLabel} - RVR)`;
+        const citation = `«${extractedText}» (${bookName} ${rangeLabel} - RVR1960)`;
 
         contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + citation;
         bibleModal.classList.remove('open');
         contentInput.focus();
 
       } catch (err) {
-        alert("Aviso: " + err.message + " Se insertará la referencia con enlace directo.");
-        const fallbackCitation = `📖 [${bookName} ${rangeLabel}] — (Leer en: https://www.tbsonlinebible.com/)`;
-        contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + fallbackCitation;
-        bibleModal.classList.remove('open');
-        contentInput.focus();
+        alert("Error al cargar pasaje: " + err.message);
       } finally {
         btnFetchAndInsertVerse.disabled = false;
         btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
       }
     };
+
     // Pestañas
     function selectChannel(channelName) {
       currentChannel = channelName;
@@ -1769,7 +1798,6 @@
           allMessages = allMessages.filter(m => m.id !== deletedId);
           renderFilteredMessages();
         } else {
-          // Si fue un borrado masivo sin IDs específicos
           loadMessages();
         }
       });
