@@ -494,8 +494,10 @@
       }
     };
 
-    function openUserActions(nick, evt) {
-      if (currentProfile && nick === currentProfile.username) return;
+    ffunction openUserActions(nick, evt) {
+      if (!nick) return;
+      if (currentProfile && nick === currentProfile.username) return; // No auto-moderarse
+
       selectedPopupUser = nick;
       popupHeaderNick.textContent = `@${nick}`;
 
@@ -515,11 +517,14 @@
         popupChangeRoleBtn.style.display = 'none';
       }
 
-      userPopup.style.left = `${Math.min(evt.clientX, window.innerWidth - 185)}px`;
-      userPopup.style.top = `${Math.min(evt.clientY, window.innerHeight - 200)}px`;
+      // Posicionamiento de la ventana emergente en pantalla
+      const posX = Math.min(evt.clientX || 50, window.innerWidth - 190);
+      const posY = Math.min(evt.clientY || 50, window.innerHeight - 200);
+
+      userPopup.style.left = `${posX}px`;
+      userPopup.style.top = `${posY}px`;
       userPopup.classList.add('open');
     }
-
     document.getElementById('popupMentionBtn').onclick = () => {
       if (selectedPopupUser) {
         contentInput.value += `@${selectedPopupUser} `;
@@ -591,7 +596,17 @@
     };
 
     function appendMessage(data, isLive = false) {
-      const myNick = currentProfile ? currentProfile.username : '';
+    // Asegurar que el elemento con clase 'user-clickable' abra el popup
+      const nickElem = div.querySelector('.user-clickable');
+      if (nickElem) {
+        nickElem.style.cursor = 'pointer';
+        nickElem.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openUserActions(data.username, e);
+        });
+      }
+      
       const isPrivate = data.recipient && data.recipient.trim() !== '';
 
       if (isPrivate && data.username !== myNick && data.recipient !== myNick) {
