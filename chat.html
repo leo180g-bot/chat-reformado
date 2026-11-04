@@ -1144,9 +1144,7 @@
       document.getElementById('adminModal').classList.add('open');
     };
 
-    // =========================================================================
-    // MODAL BÍBLICO: Lectura directa de RVR1960.json en el mismo directorio
-    // =========================================================================
+   // --- Modal Bíblico: Lógica ajustada a RVR1960.json ---
     const bibleModal = document.getElementById('bibleModal');
     const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
     const closeBibleBtn = document.getElementById('closeBibleBtn');
@@ -1155,7 +1153,7 @@
     btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
     closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
 
-    // Normalizador de texto (remueve acentos, mayúsculas y prefijos como 'San')
+    // Normaliza eliminando acentos, espacios y mayúsculas
     function normalizeStr(str) {
       return (str || '')
         .normalize("NFD")
@@ -1163,27 +1161,20 @@
         .toLowerCase()
         .replace(/^san\s+/, '')
         .replace(/^santo\s+/, '')
-        .replace(/salmos?/, 'salmo')
         .trim();
     }
 
-    // Carga perezosa con caché en memoria y aviso de carga
+    // Carga en memoria en caché una única vez
     async function loadLocalBible() {
       if (localBibleCache) return localBibleCache;
-
-      if (window.location.protocol === 'file:') {
-        throw new Error(
-          "Estás abriendo el HTML como archivo local (file:///). Los navegadores bloquean la lectura de archivos JSON locales por seguridad CORS. Usa Live Server en VS Code o súbelo a tu hosting (Vercel, GitHub Pages, etc.)."
-        );
-      }
 
       btnFetchAndInsertVerse.disabled = true;
       btnFetchAndInsertVerse.textContent = "Cargando texto bíblico...";
 
       try {
-        const res = await fetch('./RVR1960.json', { cache: 'force-cache' });
+        const res = await fetch('./RVR1960.json');
         if (!res.ok) {
-          throw new Error(`No se encontró 'RVR1960.json' (Error ${res.status}). Asegúrate de que el nombre coincida exactamente en mayúsculas.`);
+          throw new Error(`No se pudo leer RVR1960.json (Código HTTP ${res.status}). Verifica que el archivo esté en la raíz del proyecto.`);
         }
         localBibleCache = await res.json();
         return localBibleCache;
@@ -1192,66 +1183,52 @@
       }
     }
 
-    // Extractor universal multiformato para RVR1960.json
+    // Extractor preciso según el esquema exacto de tu archivo
     function extractVersesFromJSON(bibleData, bookName, chapterNum, startV, endV) {
       const targetBook = normalizeStr(bookName);
-      let versesFound = [];
 
-      // ESTRUCTURA 1: Array de objetos planos [{ book: "Juan", chapter: 1, verse: 1, text: "..." }, ...]
-      if (Array.isArray(bibleData) && bibleData.length > 0 && (bibleData[0].book || bibleData[0].libro || bibleData[0].name)) {
-        if (bibleData[0].verse !== undefined || bibleData[0].versiculo !== undefined) {
-          versesFound = bibleData.filter(item => {
-            const itemBook = normalizeStr(item.book || item.book_name || item.libro || '');
-            const itemChap = parseInt(item.chapter || item.capitulo, 10);
-            const itemVerse = parseInt(item.verse || item.versiculo, 10);
-            return itemBook === targetBook && itemChap === chapterNum && itemVerse >= startV && itemVerse <= endV;
-          }).map(item => `${item.verse || item.versiculo} ${(item.text || item.texto || '').trim()}`);
-
-          if (versesFound.length > 0) return versesFound.join(" ");
-        }
-
-        // Array de libros: [{ name: "Génesis", chapters: [ ... ] }]
-        const matchedBook = bibleData.find(b => normalizeStr(b.name || b.book || b.libro || '') === targetBook);
-        if (matchedBook && matchedBook.chapters) {
-          const chap = matchedBook.chapters[chapterNum - 1] || matchedBook.chapters[chapterNum] || matchedBook.chapters[String(chapterNum)];
-          if (chap) return extractFromChapter(chap, startV, endV);
-        }
+      if (!bibleData || !Array.isArray(bibleData.books)) {
+        throw new Error("El archivo JSON no tiene la estructura de 'books' esperada.");
       }
 
-      // ESTRUCTURA 2: Objeto clave-valor { "Génesis": { ... }, "Juan": [ ... ] }
-      const root = bibleData.books || bibleData.libros || bibleData;
-      const matchedKey = Object.keys(root).find(k => normalizeStr(k) === targetBook);
+      // 1. Buscar el libro por coincidencia en 'human' (o 'usfm')
+      const bookObj = bibleData.books.find(b => {
+        return normalizeStr(b.human) === targetBook || normalizeStr(b.usfm) === targetBook;
+      });
 
-      if (matchedKey) {
-        const bookObj = root[matchedKey];
-        const chap = Array.isArray(bookObj)
-          ? (bookObj[chapterNum - 1] || bookObj[chapterNum])
-          : (bookObj[chapterNum] || bookObj[String(chapterNum)] || (bookObj.chapters && (bookObj.chapters[chapterNum - 1] || bookObj.chapters[chapterNum])));
-
-        if (chap) return extractFromChapter(chap, startV, endV);
+      if (!bookObj || !Array.isArray(bookObj.chapters)) {
+        throw new Error(`No se encontró el libro "${bookName}" en el archivo.`);
       }
 
-      return versesFound.join(" ");
-    }
+      // 2. Localizar el capítulo solicitado
+      // Primero intenta por coincidencia en la cadena 'human' (ej: "Juan 1" o "Génesis 1"), o por índice base 0
+      const chapterObj = bookObj.chapters.find(c => {
+        if (!c.human) return false;
+        const parts = c.human.trim().split(/\s+/);
+        const lastPart = parseInt(parts[parts.length - 1], 10);
+        return lastPart === chapterNum;
+      }) || bookObj.chapters[chapterNum - 1];
 
-    function extractFromChapter(chapData, startV, endV) {
+      if (!chapterObj || !Array.isArray(chapterObj.items)) {
+        throw new Error(`No se encontró el capítulo ${chapterNum} de ${bookName}.`);
+      }
+
+      // 3. Filtrar los versículos dentro del arreglo 'items'
       let results = [];
-      for (let v = startV; v <= endV; v++) {
-        let text = '';
-        if (Array.isArray(chapData)) {
-          text = chapData[v] || chapData[v - 1] || '';
-        } else if (typeof chapData === 'object' && chapData !== null) {
-          text = chapData[v] || chapData[String(v)] || '';
-        }
-
-        if (text) {
-          if (typeof text === 'object') {
-            text = text.text || text.texto || text.verse || '';
+      chapterObj.items.forEach(item => {
+        if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
+          // Comprobar si alguno de los números de versículo coincide con el rango
+          const hasMatchingVerse = item.verse_numbers.some(n => n >= startV && n <= endV);
+          if (hasMatchingVerse) {
+            const vNum = item.verse_numbers[0];
+            const textContent = Array.isArray(item.lines) ? item.lines.join(" ").trim() : "";
+            if (textContent) {
+              results.push(`${vNum} ${textContent}`);
+            }
           }
-          const cleanText = String(text).replace(/<[^>]*>?/gm, '').trim();
-          if (cleanText) results.push(`${v} ${cleanText}`);
         }
-      }
+      });
+
       return results.join(" ");
     }
 
@@ -1285,7 +1262,7 @@
         const extractedText = extractVersesFromJSON(bibleData, bookName, chapter, startVerse, endVerse);
 
         if (!extractedText || extractedText.trim() === '') {
-          throw new Error(`No se encontró el texto para ${bookName} ${rangeLabel}.`);
+          throw new Error(`No se encontraron los versículos en ${bookName} ${rangeLabel}.`);
         }
 
         const citation = `«${extractedText}» (${bookName} ${rangeLabel} - RVR1960)`;
@@ -1295,13 +1272,12 @@
         contentInput.focus();
 
       } catch (err) {
-        alert("Error al cargar pasaje: " + err.message);
+        alert("Aviso: " + err.message);
       } finally {
         btnFetchAndInsertVerse.disabled = false;
         btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
       }
     };
-
     // Pestañas
     function selectChannel(channelName) {
       currentChannel = channelName;
