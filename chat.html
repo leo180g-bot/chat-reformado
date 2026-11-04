@@ -284,7 +284,7 @@
     .badge-role.guest { background: #475569; color: #cbd5e1; font-style: italic; }
     .badge-doc { font-size: 0.72em; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 4px; }
     .msg-meta .time { font-size: 0.72em; color: var(--text-muted); margin-left: auto; }
-    .msg-text { word-break: break-word; line-height: 1.4; }
+    .msg-text { word-break: break-word; line-height: 1.4; white-space: pre-wrap; }
 
     aside.users-sidebar {
       width: 210px;
@@ -322,7 +322,7 @@
     .tool-btn:hover { color: var(--text-main); background: var(--border-color); }
     .tool-btn.active { color: var(--accent); background: var(--bg-panel); }
 
-    /* Popover para agrupar controles de fuente */
+    /* Popover para fuentes */
     .font-settings-popover {
       display: none;
       position: absolute;
@@ -350,7 +350,7 @@
     /* Modales */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); align-items: center; justify-content: center; z-index: 110; padding: 14px; }
     .modal-overlay.open { display: flex; }
-    .modal-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 18px; }
+    .modal-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 18px; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 12px; }
     .modal-header h2 { margin: 0; font-size: 1.1rem; color: var(--accent); }
     .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
@@ -380,9 +380,7 @@
         width: 220px;
         box-shadow: 4px 0 15px rgba(0,0,0,0.5);
       }
-      aside.channels-sidebar.mobile-open {
-        transform: translateX(0);
-      }
+      aside.channels-sidebar.mobile-open { transform: translateX(0); }
       
       aside.users-sidebar {
         position: absolute;
@@ -394,9 +392,7 @@
         width: 210px;
         box-shadow: -4px 0 15px rgba(0,0,0,0.5);
       }
-      aside.users-sidebar.mobile-open {
-        transform: translateX(0);
-      }
+      aside.users-sidebar.mobile-open { transform: translateX(0); }
       aside.users-sidebar.hidden-desktop { display: flex; }
       
       .emoji-picker { right: 8px; bottom: 55px; }
@@ -464,9 +460,7 @@
       <div class="channels-header-row" style="margin-top: 4px;">
         <span class="channels-header">Mensajes Directos</span>
       </div>
-      <ul class="channel-list dms-list" id="directMessagesList">
-        <!-- Pestañas dinámicas de chats privados -->
-      </ul>
+      <ul class="channel-list dms-list" id="directMessagesList"></ul>
     </aside>
 
     <div class="chat-container">
@@ -527,8 +521,8 @@
               <input type="color" id="textColorPicker" value="#f8fafc">
             </label>
 
-            <!-- Botón agrupado de Fuentes (Aa) -->
             <button type="button" class="tool-btn" id="btnFontMenu" title="Ajustes de fuente y tamaño">Aa</button>
+            <button type="button" class="tool-btn" id="btnOpenBibleModal" title="Citar texto bíblico (1 a 10 versículos)">📖</button>
             <button type="button" class="tool-btn" id="btnEmojiToggle">😊</button>
           </div>
         </div>
@@ -546,6 +540,114 @@
       </div>
       <ul class="users-list" id="usersList"></ul>
     </aside>
+  </div>
+
+  <!-- Modal Selector Bíblico Automático (Opción A) -->
+  <div class="modal-overlay" id="bibleModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Citar Pasaje Bíblico</h2>
+        <button class="close-btn" id="closeBibleBtn">&times;</button>
+      </div>
+
+      <div class="auth-field">
+        <label for="bibleBookSelect">Libro:</label>
+        <select id="bibleBookSelect">
+          <!-- Antiguo Testamento -->
+          <option value="Genesis">Génesis</option>
+          <option value="Exodo">Éxodo</option>
+          <option value="Levitico">Levítico</option>
+          <option value="Numeros">Números</option>
+          <option value="Deuteronomio">Deuteronomio</option>
+          <option value="Josue">Josué</option>
+          <option value="Jueces">Jueces</option>
+          <option value="Rut">Rut</option>
+          <option value="1 Samuel">1 Samuel</option>
+          <option value="2 Samuel">2 Samuel</option>
+          <option value="1 Reyes">1 Reyes</option>
+          <option value="2 Reyes">2 Reyes</option>
+          <option value="1 Cronicas">1 Crónicas</option>
+          <option value="2 Cronicas">2 Crónicas</option>
+          <option value="Esdras">Esdras</option>
+          <option value="Nehemias">Nehemías</option>
+          <option value="Ester">Ester</option>
+          <option value="Job">Job</option>
+          <option value="Salmos">Salmos</option>
+          <option value="Proverbios">Proverbios</option>
+          <option value="Eclesiastes">Eclesiastés</option>
+          <option value="Cantares">Cantares</option>
+          <option value="Isaias">Isaías</option>
+          <option value="Jeremias">Jeremías</option>
+          <option value="Lamentaciones">Lamentaciones</option>
+          <option value="Ezequiel">Ezequiel</option>
+          <option value="Daniel">Daniel</option>
+          <option value="Oseas">Oseas</option>
+          <option value="Joel">Joel</option>
+          <option value="Amos">Amós</option>
+          <option value="Abdias">Abdías</option>
+          <option value="Jonas">Jonás</option>
+          <option value="Miqueas">Miqueas</option>
+          <option value="Nahum">Nahúm</option>
+          <option value="Habacuc">Habacuc</option>
+          <option value="Sofonias">Sofonías</option>
+          <option value="Hageo">Hageo</option>
+          <option value="Zacarias">Zacarías</option>
+          <option value="Malaquias">Malaquías</option>
+          <!-- Nuevo Testamento -->
+          <option value="Mateo">Mateo</option>
+          <option value="Marcos">Marcos</option>
+          <option value="Lucas">Lucas</option>
+          <option value="Juan">Juan</option>
+          <option value="Hechos">Hechos</option>
+          <option value="Romanos" selected>Romanos</option>
+          <option value="1 Corintios">1 Corintios</option>
+          <option value="2 Corintios">2 Corintios</option>
+          <option value="Galatas">Gálatas</option>
+          <option value="Efesios">Efesios</option>
+          <option value="Filipenses">Filipenses</option>
+          <option value="Colosenses">Colosenses</option>
+          <option value="1 Tesalonicenses">1 Tesalonicenses</option>
+          <option value="2 Tesalonicenses">2 Tesalonicenses</option>
+          <option value="1 Timoteo">1 Timoteo</option>
+          <option value="2 Timoteo">2 Timoteo</option>
+          <option value="Tito">Tito</option>
+          <option value="Filemon">Filemón</option>
+          <option value="Hebreos">Hebreos</option>
+          <option value="Santiago">Santiago</option>
+          <option value="1 Pedro">1 Pedro</option>
+          <option value="2 Pedro">2 Pedro</option>
+          <option value="1 Juan">1 Juan</option>
+          <option value="2 Juan">2 Juan</option>
+          <option value="3 Juan">3 Juan</option>
+          <option value="Judas">Judas</option>
+          <option value="Apocalipsis">Apocalipsis</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <div class="auth-field" style="flex: 1;">
+          <label for="bibleChapter">Capítulo:</label>
+          <input type="number" id="bibleChapter" min="1" value="8">
+        </div>
+        <div class="auth-field" style="flex: 1;">
+          <label for="bibleVerseStart">Desde v.:</label>
+          <input type="number" id="bibleVerseStart" min="1" value="28">
+        </div>
+        <div class="auth-field" style="flex: 1;">
+          <label for="bibleVerseEnd">Hasta v.:</label>
+          <input type="number" id="bibleVerseEnd" min="1" value="30">
+        </div>
+      </div>
+
+      <div style="margin: 6px 0 12px; font-size: 0.78rem; color: var(--text-muted);">
+        * Máximo 10 versículos por cita. Se consultará automáticamente la Reina-Valera.
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn-primary" id="btnFetchAndInsertVerse">Obtener y Pegar</button>
+        <button type="button" class="btn-primary" id="btnOpenTBSDirect" style="background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); width: auto; white-space: nowrap;">TBS Web</button>
+      </div>
+    </div>
   </div>
 
   <div class="modal-overlay" id="authModal">
@@ -719,7 +821,6 @@
     let allMessages = [];
     let directConversations = new Set();
 
-    // Preferencias de Sonido y Bloqueo
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     let isPrivateSoundEnabled = localStorage.getItem('chat_private_sound') !== 'false';
     let isDmsBlocked = localStorage.getItem('chat_block_dms') === 'true';
@@ -782,7 +883,7 @@
       headerDropdown.classList.toggle('open');
     };
     
-    // Controles desplegables de Fuente
+    // Controles de Fuente
     const btnFontMenu = document.getElementById('btnFontMenu');
     const fontPopover = document.getElementById('fontPopover');
     btnFontMenu.onclick = (e) => {
@@ -819,7 +920,7 @@
       }
     };
 
-    // Toggles en Menú
+    // Toggles Menú
     const optSound = document.getElementById('optSound');
     const optPrivateSound = document.getElementById('optPrivateSound');
     const optBlockDms = document.getElementById('optBlockDms');
@@ -849,9 +950,7 @@
       isDmsBlocked = !isDmsBlocked;
       localStorage.setItem('chat_block_dms', isDmsBlocked);
       refreshMenuToggles();
-      alert(isDmsBlocked 
-        ? "Has bloqueado la recepción de mensajes privados nuevos." 
-        : "Recepción de mensajes privados habilitada.");
+      alert(isDmsBlocked ? "Recepción de mensajes privados bloqueada." : "Recepción de mensajes privados habilitada.");
     };
 
     document.getElementById('optQr').onclick = () => document.getElementById('qrModal').classList.add('open');
@@ -879,7 +978,76 @@
       }
     };
 
-    // Gestión de Pestañas
+    // --- Modal Bíblico Automático (Opción A) ---
+    const bibleModal = document.getElementById('bibleModal');
+    const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
+    const closeBibleBtn = document.getElementById('closeBibleBtn');
+    const btnFetchAndInsertVerse = document.getElementById('btnFetchAndInsertVerse');
+    const btnOpenTBSDirect = document.getElementById('btnOpenTBSDirect');
+
+    btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
+    closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
+
+    btnOpenTBSDirect.onclick = () => {
+      window.open("https://www.tbsonlinebible.com/", "_blank");
+    };
+
+    btnFetchAndInsertVerse.onclick = async () => {
+      const bookSelect = document.getElementById('bibleBookSelect');
+      const bookName = bookSelect.value;
+      const chapter = parseInt(document.getElementById('bibleChapter').value, 10);
+      const startVerse = parseInt(document.getElementById('bibleVerseStart').value, 10);
+      const endVerse = parseInt(document.getElementById('bibleVerseEnd').value, 10);
+
+      if (isNaN(chapter) || isNaN(startVerse) || isNaN(endVerse) || chapter < 1 || startVerse < 1 || endVerse < 1) {
+        return alert("Por favor ingresa números válidos.");
+      }
+
+      if (startVerse > endVerse) {
+        return alert("El versículo de inicio no puede ser mayor que el final.");
+      }
+
+      const count = (endVerse - startVerse) + 1;
+      if (count > 10) {
+        return alert("Solo puedes citar un máximo de 10 versículos a la vez.");
+      }
+
+      const rangeQuery = startVerse === endVerse ? `${chapter}:${startVerse}` : `${chapter}:${startVerse}-${endVerse}`;
+      const searchRef = `${bookName} ${rangeQuery}`;
+
+      btnFetchAndInsertVerse.disabled = true;
+      btnFetchAndInsertVerse.textContent = "Consultando...";
+
+      try {
+        // Consulta a API Bíblica pública en español (RVR)
+        const apiUrl = `https://bible-api.com/${encodeURIComponent(searchRef)}?translation=rvr`;
+        const res = await fetch(apiUrl);
+
+        if (!res.ok) {
+          throw new Error("No se pudo obtener el pasaje. Verifica el capítulo o versículo.");
+        }
+
+        const data = await res.json();
+        if (!data.text) {
+          throw new Error("Pasaje no encontrado.");
+        }
+
+        // Limpiar saltos de línea excesivos
+        const cleanText = data.text.trim().replace(/\s+/g, ' ');
+        const finalCitation = `«${cleanText}» (${bookName} ${rangeQuery} - RVR)`;
+
+        contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + finalCitation;
+        bibleModal.classList.remove('open');
+        contentInput.focus();
+      } catch (err) {
+        alert("Error al obtener el versículo: " + err.message);
+      } finally {
+        btnFetchAndInsertVerse.disabled = false;
+        btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
+      }
+    };
+
+    // Pestañas
     function selectChannel(channelName) {
       currentChannel = channelName;
       document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
@@ -1005,7 +1173,6 @@
       else if (data.role === 'moderator') roleBadge = '<span class="badge-role moderator">🛡️ Mod</span>';
       else if (data.role === 'guest') roleBadge = '<span class="badge-role guest">Invitado</span>';
 
-      // Estilo individual definido por quien escribió el mensaje
       const messageFont = data.font_family || 'system-ui, sans-serif';
       const messageColor = data.text_color || '#f8fafc';
 
@@ -1041,7 +1208,6 @@
 
       if (isPrivate) {
         if (sender !== myNick && recipient !== myNick) return;
-
         if (recipient === myNick && isDmsBlocked) return;
 
         const otherUser = sender === myNick ? recipient : sender;
@@ -1104,7 +1270,6 @@
       });
     }
 
-    // Envío del mensaje con el formato del usuario
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = contentInput.value.trim();
@@ -1112,7 +1277,6 @@
 
       contentInput.value = '';
 
-      // Capturar la fuente y color actuales del remitente
       const chosenFont = document.getElementById('fontFamilySelect').value;
       const chosenColor = document.getElementById('textColorPicker').value;
 
@@ -1321,7 +1485,7 @@
       }
     });
 
-    // Tamaño de fuente en la vista del usuario
+    // Control de Tamaño de fuente
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
     
@@ -1341,7 +1505,7 @@
       }
     };
 
-    // Preferencia local de fuente para redactar
+    // Preferencias de formato
     const fontSelect = document.getElementById('fontFamilySelect');
     const savedUserFont = localStorage.getItem('user_editor_font') || 'system-ui, sans-serif';
     fontSelect.value = savedUserFont;
@@ -1352,7 +1516,6 @@
       localStorage.setItem('user_editor_font', e.target.value);
     };
 
-    // Selector de color del remitente
     const textColorPicker = document.getElementById('textColorPicker');
     const colorIndicator = document.getElementById('colorIndicator');
     const savedColor = localStorage.getItem('user_editor_color') || '#f8fafc';
