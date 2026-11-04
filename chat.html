@@ -99,7 +99,6 @@
       transition: background 0.2s, color 0.2s;
     }
     
-    /* Header principal */
     header {
       background: var(--bg-panel);
       padding: 8px 14px;
@@ -127,7 +126,6 @@
     
     .header-right { display: flex; align-items: center; gap: 6px; }
     
-    /* Botones de solo icono en la cabecera */
     .btn-icon-header {
       background: var(--bg-body);
       border: 1px solid var(--border-color);
@@ -151,7 +149,6 @@
       border-radius: 10px;
     }
 
-    /* Menú desplegable */
     .dropdown-menu {
       display: none;
       position: absolute;
@@ -211,10 +208,8 @@
       width: 100%;
     }
 
-    /* Layout principal */
     .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
 
-    /* Barra izquierda: Salas y Mensajes Privados */
     aside.channels-sidebar {
       width: 220px;
       background: var(--bg-body);
@@ -273,7 +268,6 @@
     .channel-item.active .channel-item-close { color: #e0f2fe; }
     .channel-item.active .channel-item-close:hover { background: var(--accent-btn-hover); color: #fca5a5; }
 
-    /* Contenedor central del Chat */
     .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; background: var(--bg-chat); }
     .chat-header-bar { padding: 8px 14px; background: var(--bg-panel); border-bottom: 1px solid var(--border-subtle); font-size: 0.82rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
     .chat-header-bar strong { color: var(--accent); }
@@ -297,7 +291,6 @@
     .msg-meta .time { font-size: 0.72em; color: var(--text-muted); margin-left: auto; }
     .msg-text { word-break: break-word; line-height: 1.4; color: var(--chat-text-color); }
 
-    /* Barra derecha: Conectados */
     aside.users-sidebar {
       width: 210px;
       background: var(--bg-subpanel);
@@ -318,7 +311,6 @@
     .online-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .user-item-doc { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
 
-    /* Entrada de texto inferior */
     form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-panel); border-top: 1px solid var(--border-color); flex-shrink: 0; }
     .input-wrapper { flex: 1; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 6px 0 10px; min-width: 0; }
     .input-wrapper:focus-within { border-color: var(--accent); }
@@ -336,7 +328,6 @@
     button#sendBtn { padding: 8px 13px; border-radius: 6px; border: none; background: var(--accent-btn); color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; font-size: 0.85rem; flex-shrink: 0; }
     button#sendBtn:hover { background: var(--accent-btn-hover); }
 
-    /* Modales */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); align-items: center; justify-content: center; z-index: 110; padding: 14px; }
     .modal-overlay.open { display: flex; }
     .modal-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 18px; }
@@ -359,7 +350,6 @@
       .btn-toggle-nav { display: inline-flex; }
       .btn-close-sidebar { display: inline-block; }
       
-      /* En móvil: Oculto de forma predeterminada */
       aside.channels-sidebar {
         position: absolute;
         left: 0;
@@ -374,7 +364,6 @@
         transform: translateX(0);
       }
       
-      /* En móvil: Barra de usuarios oculta de forma predeterminada */
       aside.users-sidebar {
         position: absolute;
         right: 0;
@@ -398,7 +387,6 @@
 <body>
   <header>
     <div class="header-left">
-      <!-- Botón para abrir la barra de chats en móviles -->
       <button class="btn-toggle-nav" id="toggleChannelsMobileBtn" title="Ver salas y privados">💬</button>
       <div class="header-text">
         <h1>Comunión Doctrinal <span class="room-badge">General</span></h1>
@@ -406,17 +394,14 @@
     </div>
     
     <div class="header-right">
-      <!-- Botón independiente: Solo Icono de Conectados -->
       <button class="btn-icon-header" id="btnToggleUsers" title="Ver usuarios conectados">
         👥 <span class="badge-counter" id="btnUsersCount">0</span>
       </button>
 
-      <!-- Botón independiente: Solo Icono de Opciones -->
       <button class="btn-icon-header" id="menuToggleBtn" title="Menú de opciones">
         ☰
       </button>
 
-      <!-- Menú desplegable con Temas de apariencia -->
       <div class="dropdown-menu" id="headerDropdown">
         <div class="theme-selector-container">
           <label for="themeSelect">🎨 Tema visual</label>
@@ -442,7 +427,6 @@
   </header>
 
   <div class="main-container">
-    <!-- Barra Lateral Izquierda: Salas y Privados (Oculta en móvil por defecto) -->
     <aside class="channels-sidebar" id="channelsSidebar">
       <div class="channels-header-row">
         <span class="channels-header">Salas</span>
@@ -463,7 +447,6 @@
       </ul>
     </aside>
 
-    <!-- Chat Central -->
     <div class="chat-container">
       <div class="chat-header-bar">
         <span>Viendo: <strong id="currentViewLabel"># Sala General</strong></span>
@@ -525,7 +508,6 @@
       </form>
     </div>
 
-    <!-- Barra Lateral Derecha: Conectados -->
     <aside class="users-sidebar" id="usersSidebar">
       <div class="sidebar-header">
         <span>Conectados</span>
@@ -535,7 +517,6 @@
     </aside>
   </div>
 
-  <!-- Modal Auth -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
       <div class="auth-tabs">
@@ -598,7 +579,6 @@
     </div>
   </div>
 
-  <!-- Modal Perfil -->
   <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -631,7 +611,6 @@
     </div>
   </div>
 
-  <!-- Modal Roles (Admin) -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -656,7 +635,6 @@
     </div>
   </div>
 
-  <!-- Modal QR -->
   <div class="modal-overlay" id="qrModal">
     <div class="modal-card" style="text-align: center;">
       <div class="modal-header">
@@ -668,7 +646,6 @@
     </div>
   </div>
 
-  <!-- Modal Normas -->
   <div class="modal-overlay" id="rulesModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -727,11 +704,15 @@
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     const sndMessage = new Audio('mensaje.mp3');
     const sndMention = new Audio('mencion.mp3');
+    const sndPrivate = new Audio('privado.mp3'); // Sonido exclusivo para privados
     sndMessage.volume = 0.7;
     sndMention.volume = 0.85;
+    sndPrivate.volume = 0.85;
 
     const unlockAudio = () => {
-      sndMessage.play().then(() => { sndMessage.pause(); sndMessage.currentTime = 0; }).catch(() => {});
+      [sndMessage, sndMention, sndPrivate].forEach(a => {
+        a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
+      });
       window.removeEventListener('click', unlockAudio);
       window.removeEventListener('keydown', unlockAudio);
       window.removeEventListener('touchstart', unlockAudio);
@@ -752,6 +733,12 @@
       sndMention.play().catch(() => {});
     }
 
+    function playPrivateSound() {
+      if (!isSoundEnabled) return;
+      sndPrivate.currentTime = 0;
+      sndPrivate.play().catch(() => {});
+    }
+
     // --- Menú superior y conmutadores de barra lateral ---
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const headerDropdown = document.getElementById('headerDropdown');
@@ -765,18 +752,15 @@
       }
     });
 
-    // Abrir barra izquierda en móviles
     document.getElementById('toggleChannelsMobileBtn').onclick = () => {
       channelsSidebar.classList.toggle('mobile-open');
       usersSidebar.classList.remove('mobile-open');
     };
 
-    // Botón de cierre dentro de la barra de salas/chats
     document.getElementById('btnCloseChannels').onclick = () => {
       channelsSidebar.classList.remove('mobile-open');
     };
 
-    // Botón Conectados (Conmutador escritorio/móvil)
     document.getElementById('btnToggleUsers').onclick = () => {
       if (window.innerWidth <= 768) {
         usersSidebar.classList.toggle('mobile-open');
@@ -991,7 +975,10 @@
           appendMessageDOM(newMsg);
         }
 
-        if (isLive && sender !== myNick) playMentionSound();
+        // Si es un mensaje privado en vivo y no lo envié yo, suena privado.mp3
+        if (isLive && sender !== myNick) {
+          playPrivateSound();
+        }
       } else {
         if (currentChannel === 'general') {
           appendMessageDOM(newMsg);
@@ -1250,7 +1237,6 @@
       }
     });
 
-    // Formato tipográfico
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
     document.getElementById('btnFontInc').onclick = () => {
