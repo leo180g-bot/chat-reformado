@@ -118,6 +118,47 @@
       font-style: italic;
       margin: 0;
     }
+
+.chapel-banner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-panel, #1e293b);
+  border: 1px solid var(--border-color, #334155);
+  border-radius: 8px;
+  padding: 16px 14px;
+  margin: 16px 0 20px 0;
+  text-align: center;
+}
+
+.chapel-link {
+  display: inline-block;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  line-height: 0;
+}
+
+.chapel-link:hover {
+  transform: scale(1.03);
+  opacity: 0.95;
+}
+
+.chapel-logo {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.chapel-caption {
+  margin: 10px 0 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.35;
+  max-width: 380px;
+}
+    
   </style>
 </head>
 <body>
@@ -144,16 +185,14 @@
     <p class="motto">Soli Deo Gloria</p>
   </div>
 
-<div class="resource-card">
-  <div class="resource-info">
-    <span class="resource-tag">📖 Biblioteca Doctrinal Recomendada</span>
-    <h3>Literatura y Libros en PDF</h3>
-    <p>Accede a miles de títulos de teología reformada, clásicos puritanos y tratados sin costo a través de Chapel Library.</p>
-  </div>
-  <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="btn-resource">
-    Explorar Recursos ↗
+<div class="chapel-banner-container">
+  <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="chapel-link" title="Visitar Chapel Library - Literatura y libros en PDF">
+    <img src="logo_chapel.png" alt="Chapel Library" class="chapel-logo">
   </a>
+  <p class="chapel-caption">Haz clic en el logo para explorar miles de libros, tratados y literatura reformada en PDF sin costo.</p>
 </div>
+
+  
   
 </body>
 </html>
