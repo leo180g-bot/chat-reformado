@@ -585,7 +585,7 @@
     <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rol</button>
   </div>
 
-  <!-- Modal Selector Bíblico con consulta a RVR1960.json local -->
+  <!-- Modal Selector Bíblico adaptado exactamente a RVR1960.json -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -873,7 +873,7 @@
     let allMessages = [];
     let directConversations = new Set();
 
-    // Variable global para almacenar la Biblia en memoria (caché)
+    // Variable global para almacenar la Biblia en caché
     let localBibleCache = null;
 
     // Preferencias
@@ -1144,7 +1144,7 @@
       document.getElementById('adminModal').classList.add('open');
     };
 
-   // --- Modal Bíblico: Lógica ajustada a RVR1960.json ---
+    // --- Modal Bíblico: Lógica ajustada exactamente al esquema de tu RVR1960.json ---
     const bibleModal = document.getElementById('bibleModal');
     const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
     const closeBibleBtn = document.getElementById('closeBibleBtn');
@@ -1153,7 +1153,7 @@
     btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
     closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
 
-    // Normaliza eliminando acentos, espacios y mayúsculas
+    // Función auxiliar para normalizar nombres eliminando tildes y mayúsculas
     function normalizeStr(str) {
       return (str || '')
         .normalize("NFD")
@@ -1164,7 +1164,7 @@
         .trim();
     }
 
-    // Carga en memoria en caché una única vez
+    // Carga perezosa de la Biblia en memoria (solo una descarga por sesión)
     async function loadLocalBible() {
       if (localBibleCache) return localBibleCache;
 
@@ -1174,7 +1174,7 @@
       try {
         const res = await fetch('./RVR1960.json');
         if (!res.ok) {
-          throw new Error(`No se pudo leer RVR1960.json (Código HTTP ${res.status}). Verifica que el archivo esté en la raíz del proyecto.`);
+          throw new Error(`No se encontró el archivo RVR1960.json (Código HTTP ${res.status}). Asegúrate de haberlo subido en la raíz de tu repositorio.`);
         }
         localBibleCache = await res.json();
         return localBibleCache;
@@ -1183,25 +1183,24 @@
       }
     }
 
-    // Extractor preciso según el esquema exacto de tu archivo
+    // Extractor preciso de acuerdo al esquema: bibleData.books -> chapters -> items (verse)
     function extractVersesFromJSON(bibleData, bookName, chapterNum, startV, endV) {
       const targetBook = normalizeStr(bookName);
 
       if (!bibleData || !Array.isArray(bibleData.books)) {
-        throw new Error("El archivo JSON no tiene la estructura de 'books' esperada.");
+        throw new Error("El archivo JSON no contiene el arreglo 'books'.");
       }
 
-      // 1. Buscar el libro por coincidencia en 'human' (o 'usfm')
+      // 1. Localizar el libro exacto por coincidencia en 'human' o 'usfm'
       const bookObj = bibleData.books.find(b => {
         return normalizeStr(b.human) === targetBook || normalizeStr(b.usfm) === targetBook;
       });
 
       if (!bookObj || !Array.isArray(bookObj.chapters)) {
-        throw new Error(`No se encontró el libro "${bookName}" en el archivo.`);
+        throw new Error(`No se encontró el libro "${bookName}" en el archivo JSON.`);
       }
 
-      // 2. Localizar el capítulo solicitado
-      // Primero intenta por coincidencia en la cadena 'human' (ej: "Juan 1" o "Génesis 1"), o por índice base 0
+      // 2. Localizar el capítulo solicitado dentro del arreglo 'chapters'
       const chapterObj = bookObj.chapters.find(c => {
         if (!c.human) return false;
         const parts = c.human.trim().split(/\s+/);
@@ -1210,14 +1209,13 @@
       }) || bookObj.chapters[chapterNum - 1];
 
       if (!chapterObj || !Array.isArray(chapterObj.items)) {
-        throw new Error(`No se encontró el capítulo ${chapterNum} de ${bookName}.`);
+        throw new Error(`No se encontró el capítulo ${chapterNum} en ${bookName}.`);
       }
 
-      // 3. Filtrar los versículos dentro del arreglo 'items'
+      // 3. Filtrar versículos dentro de 'items', omitiendo headings y uniendo líneas
       let results = [];
       chapterObj.items.forEach(item => {
         if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
-          // Comprobar si alguno de los números de versículo coincide con el rango
           const hasMatchingVerse = item.verse_numbers.some(n => n >= startV && n <= endV);
           if (hasMatchingVerse) {
             const vNum = item.verse_numbers[0];
@@ -1244,7 +1242,7 @@
       }
 
       if (startVerse > endVerse) {
-        return alert("El versículo de inicio no puede ser mayor que el final.");
+        return alert("El versículo inicial no puede ser mayor que el final.");
       }
 
       const count = (endVerse - startVerse) + 1;
@@ -1262,7 +1260,7 @@
         const extractedText = extractVersesFromJSON(bibleData, bookName, chapter, startVerse, endVerse);
 
         if (!extractedText || extractedText.trim() === '') {
-          throw new Error(`No se encontraron los versículos en ${bookName} ${rangeLabel}.`);
+          throw new Error(`No se encontraron los versículos solicitados para ${bookName} ${rangeLabel}.`);
         }
 
         const citation = `«${extractedText}» (${bookName} ${rangeLabel} - RVR1960)`;
@@ -1272,12 +1270,13 @@
         contentInput.focus();
 
       } catch (err) {
-        alert("Aviso: " + err.message);
+        alert("Error al cargar pasaje: " + err.message);
       } finally {
         btnFetchAndInsertVerse.disabled = false;
         btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
       }
     };
+
     // Pestañas
     function selectChannel(channelName) {
       currentChannel = channelName;
@@ -1490,6 +1489,7 @@
           <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
         `;
         
+        // Clic en usuario conectado: Abre el menú contextual
         li.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -1790,10 +1790,12 @@
         config: { presence: { key: currentProfile ? currentProfile.username : 'anon' } }
       });
 
+      // Escuchar nuevos mensajes
       roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
         processIncomingMessage(payload.new, true);
       });
 
+      // Escuchar eliminación de mensajes (purgas o vaciado de sala)
       roomChannel.on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
         const deletedId = payload.old ? payload.old.id : null;
         if (deletedId) {
