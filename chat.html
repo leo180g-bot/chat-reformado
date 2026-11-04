@@ -158,7 +158,7 @@
       border: 1px solid var(--border-color);
       border-radius: 8px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      min-width: 200px;
+      min-width: 220px;
       z-index: 100;
       overflow: hidden;
       flex-direction: column;
@@ -311,23 +311,48 @@
     .online-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .user-item-doc { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
 
-    form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-panel); border-top: 1px solid var(--border-color); flex-shrink: 0; }
+    /* Entrada de texto */
+    form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-panel); border-top: 1px solid var(--border-color); flex-shrink: 0; position: relative; }
     .input-wrapper { flex: 1; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 6px 0 10px; min-width: 0; }
     .input-wrapper:focus-within { border-color: var(--accent); }
     input#content { flex: 1; background: transparent; border: none; color: var(--text-main); padding: 9px 0; font-size: 0.92rem; min-width: 60px; }
     input#content:focus { outline: none; }
 
-    .input-toolbar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-    .font-select { background: var(--bg-panel); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; padding: 3px 5px; font-size: 0.75rem; cursor: pointer; outline: none; }
+    .input-toolbar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; position: relative; }
     .color-picker-label { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--border-color); cursor: pointer; position: relative; overflow: hidden; background: var(--bg-panel); }
     .color-picker-label input[type="color"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
     .color-indicator { width: 12px; height: 12px; border-radius: 2px; background: #f8fafc; }
-    .tool-btn { background: transparent; border: none; color: var(--text-muted); padding: 4px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    
+    .tool-btn { background: transparent; border: none; color: var(--text-muted); padding: 4px 6px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .tool-btn:hover { color: var(--text-main); background: var(--border-color); }
-    .tool-btn.font-btn { font-weight: 700; font-size: 0.75rem; }
+    .tool-btn.active { color: var(--accent); background: var(--bg-panel); }
+
+    /* Popover para agrupar controles de fuente */
+    .font-settings-popover {
+      display: none;
+      position: absolute;
+      bottom: 42px;
+      right: 32px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      z-index: 60;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 140px;
+    }
+    .font-settings-popover.open { display: flex; }
+    .font-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .font-select-popover { background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 6px; font-size: 0.78rem; width: 100%; outline: none; }
+    .font-size-btn { flex: 1; padding: 4px; background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
+    .font-size-btn:hover { background: var(--border-color); }
+
     button#sendBtn { padding: 8px 13px; border-radius: 6px; border: none; background: var(--accent-btn); color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; font-size: 0.85rem; flex-shrink: 0; }
     button#sendBtn:hover { background: var(--accent-btn-hover); }
 
+    /* Modales */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); align-items: center; justify-content: center; z-index: 110; padding: 14px; }
     .modal-overlay.open { display: flex; }
     .modal-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 18px; }
@@ -342,7 +367,7 @@
     .auth-field input, .auth-field select { padding: 8px 10px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); font-size: 0.88rem; }
     .btn-primary { width: 100%; padding: 10px; background: var(--accent-btn); border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
 
-    .emoji-picker { display: none; position: absolute; bottom: 58px; right: 80px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; grid-template-columns: repeat(7, 1fr); gap: 5px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 290px; max-height: 200px; overflow-y: auto; }
+    .emoji-picker { display: none; position: absolute; bottom: 58px; right: 20px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; grid-template-columns: repeat(7, 1fr); gap: 5px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 290px; max-height: 200px; overflow-y: auto; }
     .emoji-picker.open { display: grid; }
     .emoji-item { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; padding: 4px; border-radius: 4px; }
 
@@ -379,8 +404,8 @@
       }
       aside.users-sidebar.hidden-desktop { display: flex; }
       
-      .font-select { display: none; }
       .emoji-picker { right: 8px; bottom: 55px; }
+      .font-settings-popover { right: 8px; }
     }
   </style>
 </head>
@@ -414,7 +439,9 @@
         </div>
         <div class="dropdown-divider"></div>
 
-        <button class="dropdown-item" id="optSound">🔔 Sonido: Activado</button>
+        <button class="dropdown-item" id="optSound">🔔 Sonido General: Activado</button>
+        <button class="dropdown-item" id="optPrivateSound">🔕 Sonido Privados: Activado</button>
+        <button class="dropdown-item" id="optBlockDms">🔒 Privados: Permitidos</button>
         <button class="dropdown-item" id="optProfile">👤 Mi Perfil</button>
         <button class="dropdown-item" id="optRoles" style="display: none; color: #fef08a;">⚙️ Gestión de Roles</button>
         <div class="dropdown-divider"></div>
@@ -455,6 +482,21 @@
 
       <div id="chat-box"></div>
       
+      <!-- Panel de configuración de fuentes agrupado -->
+      <div class="font-settings-popover" id="fontPopover">
+        <div class="font-row">
+          <select id="fontFamilySelect" class="font-select-popover">
+            <option value="system-ui, sans-serif">Sans</option>
+            <option value="Georgia, serif">Serif</option>
+            <option value="'Courier New', monospace">Mono</option>
+          </select>
+        </div>
+        <div class="font-row">
+          <button type="button" class="font-size-btn" id="btnFontDec">A -</button>
+          <button type="button" class="font-size-btn" id="btnFontInc">A +</button>
+        </div>
+      </div>
+
       <div class="emoji-picker" id="emojiPicker">
         <button type="button" class="emoji-item">📖</button>
         <button type="button" class="emoji-item">🙏</button>
@@ -485,19 +527,13 @@
           <input type="text" id="content" placeholder="Escribe tu mensaje en # Sala General..." required autocomplete="off">
           
           <div class="input-toolbar">
-            <select id="fontFamilySelect" class="font-select">
-              <option value="system-ui, sans-serif">Sans</option>
-              <option value="Georgia, serif">Serif</option>
-              <option value="'Courier New', monospace">Mono</option>
-            </select>
-
             <label class="color-picker-label" title="Color de texto">
               <span class="color-indicator" id="colorIndicator"></span>
               <input type="color" id="textColorPicker" value="#f8fafc">
             </label>
 
-            <button type="button" class="tool-btn font-btn" id="btnFontDec">A-</button>
-            <button type="button" class="tool-btn font-btn" id="btnFontInc">A+</button>
+            <!-- Botón agrupado de Fuentes (Aa) -->
+            <button type="button" class="tool-btn" id="btnFontMenu" title="Ajustes de fuente y tamaño">Aa</button>
             <button type="button" class="tool-btn" id="btnEmojiToggle">😊</button>
           </div>
         </div>
@@ -688,7 +724,12 @@
     let allMessages = [];
     let directConversations = new Set();
 
-    // --- Gestión de Temas Visuales ---
+    // Preferencias de Sonido y Bloqueo
+    let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
+    let isPrivateSoundEnabled = localStorage.getItem('chat_private_sound') !== 'false';
+    let isDmsBlocked = localStorage.getItem('chat_block_dms') === 'true';
+
+    // Temas Visuales
     const themeSelect = document.getElementById('themeSelect');
     const savedTheme = localStorage.getItem('chat_theme') || 'noche';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -700,11 +741,10 @@
       localStorage.setItem('chat_theme', selected);
     });
 
-    // --- Audios MP3 ---
-    let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
+    // Audios MP3
     const sndMessage = new Audio('mensaje.mp3');
     const sndMention = new Audio('mencion.mp3');
-    const sndPrivate = new Audio('privado.mp3'); // Sonido exclusivo para privados
+    const sndPrivate = new Audio('privado.mp3');
     sndMessage.volume = 0.7;
     sndMention.volume = 0.85;
     sndPrivate.volume = 0.85;
@@ -734,21 +774,35 @@
     }
 
     function playPrivateSound() {
-      if (!isSoundEnabled) return;
+      if (!isSoundEnabled || !isPrivateSoundEnabled) return;
       sndPrivate.currentTime = 0;
       sndPrivate.play().catch(() => {});
     }
 
-    // --- Menú superior y conmutadores de barra lateral ---
+    // Menú superior
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const headerDropdown = document.getElementById('headerDropdown');
     menuToggleBtn.onclick = (e) => {
       e.stopPropagation();
       headerDropdown.classList.toggle('open');
     };
+    
+    // Controles desplegables de Fuente
+    const btnFontMenu = document.getElementById('btnFontMenu');
+    const fontPopover = document.getElementById('fontPopover');
+    btnFontMenu.onclick = (e) => {
+      e.stopPropagation();
+      fontPopover.classList.toggle('open');
+      btnFontMenu.classList.toggle('active');
+    };
+
     document.addEventListener('click', (e) => {
       if (!headerDropdown.contains(e.target) && e.target !== menuToggleBtn) {
         headerDropdown.classList.remove('open');
+      }
+      if (!fontPopover.contains(e.target) && e.target !== btnFontMenu) {
+        fontPopover.classList.remove('open');
+        btnFontMenu.classList.remove('active');
       }
     });
 
@@ -770,16 +824,39 @@
       }
     };
 
+    // Toggles en Menú
     const optSound = document.getElementById('optSound');
-    function refreshSoundLabel() {
-      optSound.textContent = isSoundEnabled ? '🔔 Sonido: Activado' : '🔕 Sonido: Mudo';
+    const optPrivateSound = document.getElementById('optPrivateSound');
+    const optBlockDms = document.getElementById('optBlockDms');
+
+    function refreshMenuToggles() {
+      optSound.textContent = isSoundEnabled ? '🔔 Sonido General: Activado' : '🔕 Sonido General: Mudo';
+      optPrivateSound.textContent = isPrivateSoundEnabled ? '🔔 Sonido Privados: Activado' : '🔕 Sonido Privados: Silenciado';
+      optBlockDms.textContent = isDmsBlocked ? '🚫 Privados: Bloqueados' : '🔒 Privados: Permitidos';
     }
-    refreshSoundLabel();
+    refreshMenuToggles();
+
     optSound.onclick = () => {
       isSoundEnabled = !isSoundEnabled;
       localStorage.setItem('chat_sound', isSoundEnabled);
-      refreshSoundLabel();
+      refreshMenuToggles();
       if (isSoundEnabled) playMessageSound();
+    };
+
+    optPrivateSound.onclick = () => {
+      isPrivateSoundEnabled = !isPrivateSoundEnabled;
+      localStorage.setItem('chat_private_sound', isPrivateSoundEnabled);
+      refreshMenuToggles();
+      if (isPrivateSoundEnabled) playPrivateSound();
+    };
+
+    optBlockDms.onclick = () => {
+      isDmsBlocked = !isDmsBlocked;
+      localStorage.setItem('chat_block_dms', isDmsBlocked);
+      refreshMenuToggles();
+      alert(isDmsBlocked 
+        ? "Has bloqueado la recepción de mensajes privados nuevos." 
+        : "Recepción de mensajes privados habilitada.");
     };
 
     document.getElementById('optQr').onclick = () => document.getElementById('qrModal').classList.add('open');
@@ -807,7 +884,7 @@
       }
     };
 
-    // --- Gestión de Pestañas ---
+    // Gestión de Pestañas
     function selectChannel(channelName) {
       currentChannel = channelName;
       document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
@@ -966,6 +1043,9 @@
       if (isPrivate) {
         if (sender !== myNick && recipient !== myNick) return;
 
+        // Si el usuario receptor tiene bloqueados los mensajes directos
+        if (recipient === myNick && isDmsBlocked) return;
+
         const otherUser = sender === myNick ? recipient : sender;
         const isCurrentlyViewing = currentChannel === otherUser;
 
@@ -975,7 +1055,6 @@
           appendMessageDOM(newMsg);
         }
 
-        // Si es un mensaje privado en vivo y no lo envié yo, suena privado.mp3
         if (isLive && sender !== myNick) {
           playPrivateSound();
         }
@@ -1237,8 +1316,10 @@
       }
     });
 
+    // Control de Tipografía y Tamaño Agrupados
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
+    
     document.getElementById('btnFontInc').onclick = () => {
       if (currentFontSizeRem < 1.35) {
         currentFontSizeRem = Math.round((currentFontSizeRem + 0.05) * 100) / 100;
@@ -1246,6 +1327,7 @@
         localStorage.setItem('chat_font_size', currentFontSizeRem);
       }
     };
+    
     document.getElementById('btnFontDec').onclick = () => {
       if (currentFontSizeRem > 0.8) {
         currentFontSizeRem = Math.round((currentFontSizeRem - 0.05) * 100) / 100;
