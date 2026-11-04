@@ -978,18 +978,26 @@
       }
     };
 
-    // --- Modal Bíblico Automático (Opción A) ---
-    const bibleModal = document.getElementById('bibleModal');
-    const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
-    const closeBibleBtn = document.getElementById('closeBibleBtn');
-    const btnFetchAndInsertVerse = document.getElementById('btnFetchAndInsertVerse');
-    const btnOpenTBSDirect = document.getElementById('btnOpenTBSDirect');
-
-    btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
-    closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
-
-    btnOpenTBSDirect.onclick = () => {
-      window.open("https://www.tbsonlinebible.com/", "_blank");
+  // Mapeo normalizado para la API Reina-Valera (RVR1960)
+    const bookSlugs = {
+      "Genesis": "genesis", "Exodo": "exodo", "Levitico": "levitico", "Numeros": "numeros",
+      "Deuteronomio": "deuteronomio", "Josue": "josue", "Jueces": "jueces", "Rut": "rut",
+      "1 Samuel": "1-samuel", "2 Samuel": "2-samuel", "1 Reyes": "1-reyes", "2 Reyes": "2-reyes",
+      "1 Cronicas": "1-cronicas", "2 Cronicas": "2-cronicas", "Esdras": "esdras", "Nehemias": "nehemias",
+      "Ester": "ester", "Job": "job", "Salmos": "salmos", "Proverbios": "proverbios",
+      "Eclesiastes": "eclesiastes", "Cantares": "cantares", "Isaias": "isaias", "Jeremias": "jeremias",
+      "Lamentaciones": "lamentaciones", "Ezequiel": "ezequiel", "Daniel": "daniel", "Oseas": "oseas",
+      "Joel": "joel", "Amos": "amos", "Abdias": "abdias", "Jonas": "jonas", "Miqueas": "miqueas",
+      "Nahum": "nahum", "Habacuc": "habacuc", "Sofonias": "sofonias", "Hageo": "hageo",
+      "Zacarias": "zacarias", "Malaquias": "malaquias", "Mateo": "mateo", "Marcos": "marcos",
+      "Lucas": "lucas", "Juan": "juan", "Hechos": "hechos", "Romanos": "romanos",
+      "1 Corintios": "1-corintios", "2 Corintios": "2-corintios", "Galatas": "galatas",
+      "Efesios": "efesios", "Filipenses": "filipenses", "Colosenses": "colosenses",
+      "1 Tesalonicenses": "1-tesalonicenses", "2 Tesalonicenses": "2-tesalonicenses",
+      "1 Timoteo": "1-timoteo", "2 Timoteo": "2-timoteo", "Tito": "tito", "Filemon": "filemon",
+      "Hebreos": "hebreos", "Santiago": "santiago", "1 Pedro": "1-pedro", "2 Pedro": "2-pedro",
+      "1 Juan": "1-juan", "2 Juan": "2-juan", "3 Juan": "3-juan", "Judas": "judas",
+      "Apocalipsis": "apocalipsis"
     };
 
     btnFetchAndInsertVerse.onclick = async () => {
@@ -1004,49 +1012,59 @@
       }
 
       if (startVerse > endVerse) {
-        return alert("El versículo de inicio no puede ser mayor que el final.");
+        return alert("El versículo inicial no puede ser mayor que el final.");
       }
 
       const count = (endVerse - startVerse) + 1;
       if (count > 10) {
-        return alert("Solo puedes citar un máximo de 10 versículos a la vez.");
+        return alert("Solo puedes citar hasta un máximo de 10 versículos a la vez.");
       }
 
-      const rangeQuery = startVerse === endVerse ? `${chapter}:${startVerse}` : `${chapter}:${startVerse}-${endVerse}`;
-      const searchRef = `${bookName} ${rangeQuery}`;
+      const rangeLabel = startVerse === endVerse ? `${chapter}:${startVerse}` : `${chapter}:${startVerse}-${endVerse}`;
+      const slug = bookSlugs[bookName] || bookName.toLowerCase();
 
       btnFetchAndInsertVerse.disabled = true;
       btnFetchAndInsertVerse.textContent = "Consultando...";
 
       try {
-        // Consulta a API Bíblica pública en español (RVR)
-        const apiUrl = `https://bible-api.com/${encodeURIComponent(searchRef)}?translation=rvr`;
-        const res = await fetch(apiUrl);
+        // Petición a endpoint con soporte completo de CORS y RVR1960
+        const url = `https://bible-api.deno.dev/api/read/rv1960/${slug}/${chapter}`;
+        const response = await fetch(url);
 
-        if (!res.ok) {
-          throw new Error("No se pudo obtener el pasaje. Verifica el capítulo o versículo.");
+        if (!response.ok) {
+          throw new Error("No se pudo obtener el capítulo.");
         }
 
-        const data = await res.json();
-        if (!data.text) {
-          throw new Error("Pasaje no encontrado.");
+        const data = await response.json();
+        const versesArray = data.vers || [];
+
+        // Extraer los versículos dentro del rango seleccionado
+        const selectedVerses = versesArray
+          .filter(v => v.number >= startVerse && v.number <= endVerse)
+          .map(v => `${v.number} ${v.verse.trim()}`)
+          .join(" ");
+
+        if (!selectedVerses) {
+          throw new Error("Versículos no encontrados en el capítulo.");
         }
 
-        // Limpiar saltos de línea excesivos
-        const cleanText = data.text.trim().replace(/\s+/g, ' ');
-        const finalCitation = `«${cleanText}» (${bookName} ${rangeQuery} - RVR)`;
+        const citation = `«${selectedVerses}» (${bookName} ${rangeLabel} - RVR1960)`;
 
-        contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + finalCitation;
+        contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + citation;
         bibleModal.classList.remove('open');
         contentInput.focus();
+
       } catch (err) {
-        alert("Error al obtener el versículo: " + err.message);
+        // En caso de corte o bloqueo externo, insertar la referencia para no frenar la conversación
+        const fallbackCitation = `📖 [${bookName} ${rangeLabel}] — (Ver en: https://www.tbsonlinebible.com/)`;
+        contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + fallbackCitation;
+        bibleModal.classList.remove('open');
+        contentInput.focus();
       } finally {
         btnFetchAndInsertVerse.disabled = false;
         btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
       }
     };
-
     // Pestañas
     function selectChannel(channelName) {
       currentChannel = channelName;
