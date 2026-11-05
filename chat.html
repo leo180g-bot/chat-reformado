@@ -273,6 +273,31 @@
     .msg.ref { border-left-color: var(--accent); }
     .msg.mentioned { background: var(--msg-bg); border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
     .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
+
+    /* Mensajes informativos de entrada, salida y sistema */
+    .msg-system {
+      align-self: center;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.76rem;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin: 4px auto;
+      text-align: center;
+      max-width: 90%;
+      font-style: italic;
+    }
+
+    /* Mensaje visual destacado para el Bot */
+    .msg.bot {
+      border-left-color: #10b981;
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .badge-role.bot {
+      background: #047857;
+      color: #a7f3d0;
+    }
     
     .msg-meta { font-size: 0.78em; color: var(--text-muted); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: system-ui, sans-serif; }
     .user-clickable { color: var(--accent); cursor: pointer; font-weight: bold; }
@@ -585,7 +610,7 @@
     <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rol</button>
   </div>
 
-  <!-- Modal Selector Bíblico con los 66 libros del archivo RVR1960.json -->
+  <!-- Modal Selector Bíblico -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1302,7 +1327,45 @@
       }
     };
 
-    // Pestañas
+    // Funciones del Sistema y Bot
+    function appendSystemNotice(text) {
+      if (currentChannel !== 'general') return;
+      const div = document.createElement('div');
+      div.className = 'msg-system';
+      div.textContent = text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendPublicBotWelcome(newUserNick) {
+      if (!newUserNick) return;
+
+      const versiculos = [
+        "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna...» (Juan 5:39)",
+        "«La gracia del Señor Jesucristo, el amor de Dios, y la comunión del Espíritu Santo sean con todos vosotros.» (2 Corintios 13:14)",
+        "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir...» (2 Timoteo 3:16)",
+        "«Pero la palabra del Señor permanece para siempre.» (1 Pedro 1:25)"
+      ];
+
+      const versiculoAzar = versiculos[Math.floor(Math.random() * versiculos.length)];
+
+      const botPayload = {
+        username: "BereanoBot",
+        role: "bot",
+        doctrine_affinity: "Soli Deo Gloria",
+        content: `¡Gracia y paz, @${newUserNick}! Te damos la bienvenida a Comunión Doctrinal.\n${versiculoAzar}`,
+        font_family: "system-ui, sans-serif",
+        text_color: "#ecfdf5",
+        recipient: null
+      };
+
+      const { error } = await client.from('messages').insert([botPayload]);
+      if (error) {
+        console.error("Error al publicar saludo del bot:", error.message);
+      }
+    }
+
+    // Pestañas de Navegación
     function selectChannel(channelName) {
       currentChannel = channelName;
       document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
@@ -1334,7 +1397,7 @@
       if (!nick) return;
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
       const targetLower = nick.toLowerCase();
-      if (targetLower === myNick) return;
+      if (targetLower === myNick || targetLower === 'bereanobot') return;
 
       if (!directConversations.has(targetLower)) {
         directConversations.add(targetLower);
@@ -1386,7 +1449,7 @@
     }
 
     function startDirectMessageWith(nick) {
-      if (!nick) return;
+      if (!nick || nick.toLowerCase() === 'bereanobot') return;
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
       if (nick.toLowerCase() === myNick) return;
 
@@ -1422,16 +1485,18 @@
       const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
       const isMention = myNick && data.content && data.content.toLowerCase().includes(myNick.toLowerCase()) && data.username !== myNick;
       const isPrivate = !!data.recipient;
+      const isBot = data.role === 'bot' || data.username === 'BereanoBot';
 
       let roleBadge = '';
       if (data.role === 'admin') roleBadge = '<span class="badge-role admin">👑 Admin</span>';
       else if (data.role === 'moderator') roleBadge = '<span class="badge-role moderator">🛡️ Mod</span>';
       else if (data.role === 'guest') roleBadge = '<span class="badge-role guest">Invitado</span>';
+      else if (isBot) roleBadge = '<span class="badge-role bot">🤖 BOT</span>';
 
       const messageFont = data.font_family || 'system-ui, sans-serif';
       const messageColor = data.text_color || '#f8fafc';
 
-      div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''}`;
+      div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''} ${isBot ? 'bot' : ''}`;
       div.dataset.msgId = data.id || '';
       div.innerHTML = `
         <div class="msg-meta">
@@ -1443,12 +1508,11 @@
         <div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>
       `;
 
-      // Clic en el nombre: Abre el menú contextual
       const clickableNick = div.querySelector('.user-clickable');
       clickableNick.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        openUserActions(data.username, e);
+        if (!isBot) openUserActions(data.username, e);
       });
 
       chatBox.appendChild(div);
@@ -1514,7 +1578,6 @@
           <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
         `;
         
-        // Clic en usuario conectado: Abre el menú contextual
         li.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -1808,7 +1871,7 @@
       };
     });
 
-    // Realtime con listener para inserciones y eliminaciones masivas
+    // Realtime con listener de inserciones, eliminaciones y presencia
     function initRealtime() {
       if (roomChannel) roomChannel.unsubscribe();
       roomChannel = client.channel('general-room', {
@@ -1831,8 +1894,35 @@
         }
       });
 
+      // Sincronizar usuarios conectados
       roomChannel.on('presence', { event: 'sync' }, () => {
         renderOnlineUsers(roomChannel.presenceState());
+      });
+
+      // Evento: Alguien entra a la sala
+      roomChannel.on('presence', { event: 'join' }, ({ key, newPresences }) => {
+        newPresences.forEach(presence => {
+          if (presence.username) {
+            appendSystemNotice(`🟢 @${presence.username} se ha unido a la sala.`);
+
+            // Candado anti-duplicados: Solo el cliente que ingresa dispara la inserción
+            const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
+            if (myNick && presence.username.toLowerCase() === myNick) {
+              setTimeout(() => {
+                sendPublicBotWelcome(presence.username);
+              }, 800);
+            }
+          }
+        });
+      });
+
+      // Evento: Alguien sale de la sala
+      roomChannel.on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+        leftPresences.forEach(presence => {
+          if (presence.username) {
+            appendSystemNotice(`🔴 @${presence.username} ha salido de la sala.`);
+          }
+        });
       });
 
       roomChannel.subscribe(async (status) => {
