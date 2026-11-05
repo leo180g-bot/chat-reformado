@@ -8,7 +8,6 @@
   <style>
     * { box-sizing: border-box; }
 
-    /* Paletas de Temas de Apariencia */
     :root, [data-theme="noche"] {
       --bg-body: #0f172a;
       --bg-panel: #1e293b;
@@ -281,7 +280,6 @@
     .msg.mentioned { background: var(--msg-bg); border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
     .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
 
-    /* Botón de eliminación en mensajes privados */
     .btn-msg-delete {
       background: transparent;
       border: none;
@@ -309,7 +307,6 @@
     .badge-role.guest { background: #475569; color: #cbd5e1; font-style: italic; }
     .badge-role.bot { background: #047857; color: #a7f3d0; }
 
-    /* Mensajes del Sistema y Bot */
     .msg-system {
       align-self: center;
       background: rgba(30, 41, 59, 0.6);
@@ -356,7 +353,7 @@
     .online-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .user-item-doc { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
 
-    /* Menú contextual (Clic en Nick) */
+    /* Menú contextual */
     .user-action-popup {
       display: none;
       position: fixed;
@@ -384,7 +381,7 @@
     }
     .popup-btn:hover { background: var(--border-color); }
 
-    /* Entrada de texto */
+    /* Barra de entrada */
     form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-panel); border-top: 1px solid var(--border-color); flex-shrink: 0; position: relative; }
     .input-wrapper { flex: 1; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 6px 0 10px; min-width: 0; }
     .input-wrapper:focus-within { border-color: var(--accent); }
@@ -440,7 +437,6 @@
     .auth-field input, .auth-field select { padding: 8px 10px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); font-size: 0.88rem; }
     .btn-primary { width: 100%; padding: 10px; background: var(--accent-btn); border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
 
-    /* Fila compacta para selección de capítulo y versículos */
     .bible-numbers-row {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -449,32 +445,11 @@
       margin-bottom: 8px;
     }
 
-    .bible-numbers-row .auth-field {
-      margin-bottom: 0;
-      min-width: 0;
-    }
-
-    .bible-numbers-row label {
-      font-size: 0.72rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .bible-numbers-row input[type="number"] {
-      width: 100%;
-      padding: 6px 4px;
-      font-size: 0.85rem;
-      text-align: center;
-      appearance: textfield;
-      -moz-appearance: textfield;
-    }
-
+    .bible-numbers-row .auth-field { margin-bottom: 0; min-width: 0; }
+    .bible-numbers-row label { font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bible-numbers-row input[type="number"] { width: 100%; padding: 6px 4px; font-size: 0.85rem; text-align: center; appearance: textfield; -moz-appearance: textfield; }
     .bible-numbers-row input[type="number"]::-webkit-outer-spin-button,
-    .bible-numbers-row input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    .bible-numbers-row input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
     .emoji-picker { display: none; position: absolute; bottom: 58px; right: 20px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; grid-template-columns: repeat(7, 1fr); gap: 5px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 290px; max-height: 200px; overflow-y: auto; }
     .emoji-picker.open { display: grid; }
@@ -586,7 +561,6 @@
 
       <div id="chat-box"></div>
       
-      <!-- Panel de fuentes agrupado -->
       <div class="font-settings-popover" id="fontPopover">
         <div class="font-row">
           <select id="fontFamilySelect" class="font-select-popover">
@@ -657,7 +631,6 @@
     </aside>
   </div>
 
-  <!-- Popup contextual al hacer clic en un Nick -->
   <div class="user-action-popup" id="userPopup">
     <div style="padding: 6px 12px; font-size: 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: bold;" id="popupHeaderNick">
       Usuario
@@ -671,7 +644,6 @@
     <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rango</button>
   </div>
 
-  <!-- Modal Selector Bíblico con Selector de Versión y Campos Compactos -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -679,7 +651,6 @@
         <button class="close-btn" id="closeBibleBtn">&times;</button>
       </div>
 
-      <!-- Selector de Versión de la Biblia -->
       <div class="auth-field">
         <label for="bibleVersionSelect">Versión:</label>
         <select id="bibleVersionSelect">
@@ -760,7 +731,6 @@
         </select>
       </div>
 
-      <!-- Fila compacta de 3 columnas para Capítulo y Versículos -->
       <div class="bible-numbers-row">
         <div class="auth-field">
           <label for="bibleChapter">Capítulo:</label>
@@ -784,7 +754,6 @@
     </div>
   </div>
 
-  <!-- Modal Auth (Si no hay sesión) -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
       <div class="auth-tabs">
@@ -847,7 +816,6 @@
     </div>
   </div>
 
-  <!-- Modal Editar Perfil -->
   <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -926,7 +894,6 @@
     </div>
   </div>
 
-  <!-- Panel de Roles con los 5 Rangos -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -997,7 +964,6 @@
     const currentViewLabel = document.getElementById('currentViewLabel');
     const currentViewDesc = document.getElementById('currentViewDesc');
 
-    // Elementos del Popup Contextual
     const userPopup = document.getElementById('userPopup');
     const popupHeaderNick = document.getElementById('popupHeaderNick');
     const popupMentionBtn = document.getElementById('popupMentionBtn');
@@ -1015,23 +981,19 @@
     let usuariosSilenciados = new Set();
 
     let currentChannel = 'general';
-    let allMessages = [];
+    let publicMessages = [];
     let directConversations = new Set();
 
-    // Caché en memoria para las versiones de la Biblia
     const biblesCache = {};
-
     const BIBLE_FILES = {
       "RVR1960": "./RVR1960.json",
       "RVSBT18": "./RVSBT18.json"
     };
 
-    // Preferencias
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
     let isPrivateSoundEnabled = localStorage.getItem('chat_private_sound') !== 'false';
     let isDmsBlocked = localStorage.getItem('chat_block_dms') === 'true';
 
-    // Temas Visuales
     const themeSelect = document.getElementById('themeSelect');
     const savedTheme = localStorage.getItem('chat_theme') || 'noche';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -1043,7 +1005,6 @@
       localStorage.setItem('chat_theme', selected);
     });
 
-    // Audios MP3
     const sndMessage = new Audio('mensaje.mp3');
     const sndMention = new Audio('mencion.mp3');
     const sndPrivate = new Audio('privado.mp3');
@@ -1081,6 +1042,34 @@
       sndPrivate.play().catch(() => {});
     }
 
+    // --- ALMACENAMIENTO LOCAL DE MENSAJES PRIVADOS (CLIENT-SIDE) ---
+    function getLocalDmsStorageKey() {
+      const myNick = currentProfile ? currentProfile.username.toLowerCase() : 'anon';
+      return `local_dms_${myNick}`;
+    }
+
+    function loadLocalDms() {
+      try {
+        const raw = localStorage.getItem(getLocalDmsStorageKey());
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveLocalDms(dmsObj) {
+      try {
+        localStorage.setItem(getLocalDmsStorageKey(), JSON.stringify(dmsObj));
+      } catch (e) {}
+    }
+
+    function storeDirectMessageLocally(otherUserLower, msg) {
+      const dms = loadLocalDms();
+      if (!dms[otherUserLower]) dms[otherUserLower] = [];
+      dms[otherUserLower].push(msg);
+      saveLocalDms(dms);
+    }
+
     // Menú superior
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const headerDropdown = document.getElementById('headerDropdown');
@@ -1089,7 +1078,6 @@
       headerDropdown.classList.toggle('open');
     };
     
-    // Controles de Fuente
     const btnFontMenu = document.getElementById('btnFontMenu');
     const fontPopover = document.getElementById('fontPopover');
     btnFontMenu.onclick = (e) => {
@@ -1129,7 +1117,6 @@
       }
     };
 
-    // Toggles Menú
     const optSound = document.getElementById('optSound');
     const optPrivateSound = document.getElementById('optPrivateSound');
     const optBlockDms = document.getElementById('optBlockDms');
@@ -1162,13 +1149,12 @@
       alert(isDmsBlocked ? "Recepción de mensajes privados bloqueada." : "Recepción de mensajes privados habilitada.");
     };
 
-    // Opción Admin: Vaciar toda la sala general
     const optClearChat = document.getElementById('optClearChat');
     optClearChat.onclick = async () => {
       headerDropdown.classList.remove('open');
       if (!currentProfile || currentProfile.role !== 'admin') return;
 
-      const confirmacion = confirm("⚠️ ¿Estás seguro de que deseas vaciar TODOS los mensajes de la Sala General? Esta acción no se puede deshacer.");
+      const confirmacion = confirm("⚠️ ¿Estás seguro de que deseas vaciar TODOS los mensajes de la Sala General?");
       if (!confirmacion) return;
 
       const { error } = await client
@@ -1179,7 +1165,7 @@
       if (error) {
         alert("Error al vaciar la sala: " + error.message);
       } else {
-        allMessages = allMessages.filter(m => m.recipient);
+        publicMessages = [];
         renderFilteredMessages();
         alert("La Sala General ha sido vaciada exitosamente.");
       }
@@ -1222,7 +1208,6 @@
     document.getElementById('optRoles').onclick = () => document.getElementById('adminModal').classList.add('open');
     document.getElementById('closeAdminBtn').onclick = () => document.getElementById('adminModal').classList.remove('open');
 
-    // Salir del chat y volver al inicio limpiamente
     document.getElementById('optLogout').onclick = async () => {
       if (confirm('¿Deseas salir del chat?')) {
         try {
@@ -1249,7 +1234,6 @@
       }
     };
 
-    // --- Menú Contextual (Clic en Nick) ---
     function openUserActions(nick, evt) {
       if (!nick || nick.toLowerCase() === 'bereanobot') return;
 
@@ -1313,7 +1297,7 @@
         alert("Error al eliminar mensajes: " + error.message);
       } else {
         alert(`Mensajes de @${selectedPopupUser} eliminados.`);
-        allMessages = allMessages.filter(m => m.username !== selectedPopupUser);
+        publicMessages = publicMessages.filter(m => m.username !== selectedPopupUser);
         renderFilteredMessages();
       }
     };
@@ -1350,7 +1334,6 @@
     closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
 
     const BOOK_USFM_MAP = {
-      // Antiguo Testamento
       "Génesis": "GEN", "Éxodo": "EXO", "Levítico": "LEV", "Números": "NUM", "Deuteronomio": "DEU",
       "Josué": "JOS", "Jueces": "JDG", "Rut": "RUT", "1 Samuel": "1SA", "2 Samuel": "2SA",
       "1 Reyes": "1KI", "2 Reyes": "2KI", "1 Crónicas": "1CH", "2 Crónicas": "2CH", "Esdras": "EZR",
@@ -1359,8 +1342,6 @@
       "Ezequiel": "EZK", "Daniel": "DAN", "Oseas": "HOS", "Joel": "JOL", "Amós": "AMO",
       "Abdías": "OBA", "Jonás": "JON", "Miqueas": "MIC", "Nahúm": "NAM", "Habacuc": "HAB",
       "Sofonías": "ZEP", "Hageo": "HAG", "Zacarías": "ZEC", "Malaquías": "MAL",
-      
-      // Nuevo Testamento
       "Mateo": "MAT", "Marcos": "MRK", "Lucas": "LUK", "Juan": "JHN", "Hechos": "ACT",
       "Romanos": "ROM", "1 Corintios": "1CO", "2 Corintios": "2CO", "Gálatas": "GAL", "Efesios": "EPH",
       "Filipenses": "PHP", "Colosenses": "COL", "1 Tesalonicenses": "1TH", "2 Tesalonicenses": "2TH",
@@ -1389,9 +1370,7 @@
 
       try {
         const res = await fetch(filePath);
-        if (!res.ok) {
-          throw new Error(`No se encontró el archivo ${filePath} (Código HTTP ${res.status}). Asegúrate de haberlo subido en la raíz de tu repositorio.`);
-        }
+        if (!res.ok) throw new Error(`No se encontró el archivo ${filePath}`);
         const data = await res.json();
         biblesCache[versionKey] = data;
         return data;
@@ -1401,10 +1380,6 @@
     }
 
     function extractVersesFromJSON(bibleData, bookName, chapterNum, startV, endV) {
-      if (!bibleData || !Array.isArray(bibleData.books)) {
-        throw new Error("El archivo JSON no contiene el arreglo raíz 'books'.");
-      }
-
       const targetUsfm = BOOK_USFM_MAP[bookName] || "";
       const targetNorm = normalizeStr(bookName);
 
@@ -1414,9 +1389,7 @@
         return bHuman === targetNorm || bHuman.includes(targetNorm) || targetNorm.includes(bHuman);
       });
 
-      if (!bookObj || !Array.isArray(bookObj.chapters)) {
-        throw new Error(`No se encontró el libro "${bookName}" en el archivo JSON.`);
-      }
+      if (!bookObj || !Array.isArray(bookObj.chapters)) throw new Error(`No se encontró el libro "${bookName}".`);
 
       const chapterUsfmTarget = `${bookObj.usfm}.${chapterNum}`;
       const chapterObj = bookObj.chapters.find(c => {
@@ -1428,9 +1401,7 @@
         return false;
       }) || bookObj.chapters[chapterNum - 1];
 
-      if (!chapterObj || !Array.isArray(chapterObj.items)) {
-        throw new Error(`No se encontró el capítulo ${chapterNum} en ${bookName}.`);
-      }
+      if (!chapterObj || !Array.isArray(chapterObj.items)) throw new Error(`No se encontró el capítulo ${chapterNum}.`);
 
       let results = [];
       chapterObj.items.forEach(item => {
@@ -1439,9 +1410,7 @@
           if (hasMatchingVerse) {
             const vNum = item.verse_numbers[0];
             const textContent = Array.isArray(item.lines) ? item.lines.join(" ").replace(/<[^>]*>/g, '').trim() : "";
-            if (textContent) {
-              results.push(`${vNum} ${textContent}`);
-            }
+            if (textContent) results.push(`${vNum} ${textContent}`);
           }
         }
       });
@@ -1461,14 +1430,8 @@
         return alert("Por favor ingresa números válidos.");
       }
 
-      if (startVerse > endVerse) {
-        return alert("El versículo inicial no puede ser mayor que el final.");
-      }
-
-      const count = (endVerse - startVerse) + 1;
-      if (count > 10) {
-        return alert("Solo puedes citar hasta un máximo de 10 versículos a la vez.");
-      }
+      if (startVerse > endVerse) return alert("El versículo inicial no puede ser mayor que el final.");
+      if ((endVerse - startVerse) + 1 > 10) return alert("Solo puedes citar hasta 10 versículos a la vez.");
 
       const rangeLabel = startVerse === endVerse ? `${chapter}:${startVerse}` : `${chapter}:${startVerse}-${endVerse}`;
 
@@ -1479,12 +1442,9 @@
         const bibleData = await loadBibleVersion(selectedVersion);
         const extractedText = extractVersesFromJSON(bibleData, bookName, chapter, startVerse, endVerse);
 
-        if (!extractedText || extractedText.trim() === '') {
-          throw new Error(`No se encontraron los versículos solicitados para ${bookName} ${rangeLabel}.`);
-        }
+        if (!extractedText || extractedText.trim() === '') throw new Error(`No se encontraron los versículos.`);
 
         const citation = `«${extractedText}» (${bookName} ${rangeLabel} - ${selectedVersion})`;
-
         contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + citation;
         bibleModal.classList.remove('open');
         contentInput.focus();
@@ -1497,7 +1457,6 @@
       }
     };
 
-    // Funciones del Sistema y BereanoBot
     function appendSystemNotice(text) {
       if (currentChannel !== 'general') return;
       const div = document.createElement('div');
@@ -1518,7 +1477,6 @@
       ];
 
       const versiculoAzar = versiculos[Math.floor(Math.random() * versiculos.length)];
-
       const botPayload = {
         username: "BereanoBot",
         role: "bot",
@@ -1529,29 +1487,24 @@
         recipient: null
       };
 
-      const { error } = await client.from('messages').insert([botPayload]);
-      if (error) {
-        console.error("Error al publicar saludo del bot:", error.message);
-      }
+      await client.from('messages').insert([botPayload]);
     }
 
-    // Recordatorio periódico de normas por BereanoBot
     async function triggerPeriodicRulesReminder() {
       if (!currentProfile) return;
 
       const recordatorios = [
-        "Recordatorio de Comunión: Les animamos a repasar las Normas Doctrinales (☰ > Normas Doctrinales) para mantener conversaciones que edifiquen el cuerpo de Cristo.\n«Hágase todo decentemente y con orden.» (1 Corintios 14:40 - RVR1960)",
-        "Edificación Doctrinal: Cuidemos la mansedumbre y la fraternidad en cada intercambio teológico. Pueden consultar las directrices de la sala en el menú superior.\n«Porque el siervo del Señor no debe ser contencioso, sino amable para con todos...» (2 Timoteo 2:24 - RVR1960)",
-        "Fraternidad Cristiana: Recuerden revisar las Normas Doctrinales en el menú de opciones para asegurar un diálogo en santidad, gracia y verdad.\n«La palabra de Cristo more en abundancia en vosotros, enseñándoos y exhortándoos unos a otros en toda sabiduría...» (Colosenses 3:16 - RVR1960)"
+        "Recordatorio de Comunión: Les animamos a repasar las Normas Doctrinales (☰ > Normas Doctrinales).\n«Hágase todo decentemente y con orden.» (1 Corintios 14:40 - RVR1960)",
+        "Edificación Doctrinal: Cuidemos la mansedumbre y la fraternidad en cada diálogo.\n«Porque el siervo del Señor no debe ser contencioso, sino amable para con todos...» (2 Timoteo 2:24 - RVR1960)",
+        "Fraternidad Cristiana: Recuerden revisar las Normas Doctrinales en el menú de opciones.\n«La palabra de Cristo more en abundancia en vosotros, enseñándoos y exhortándoos...» (Colosenses 3:16 - RVR1960)"
       ];
 
-      const textoRecordatorio = recordatorios[Math.floor(Math.random() * recordatorios.length)];
-
+      const texto = recordatorios[Math.floor(Math.random() * recordatorios.length)];
       const payload = {
         username: "BereanoBot",
         role: "bot",
         doctrine_affinity: "Soli Deo Gloria",
-        content: textoRecordatorio,
+        content: texto,
         font_family: "system-ui, sans-serif",
         text_color: "#ecfdf5",
         recipient: null
@@ -1559,9 +1512,7 @@
 
       const lastReminder = localStorage.getItem('last_rules_reminder');
       const now = Date.now();
-      const quinceMinutos = 15 * 60 * 1000;
-
-      if (!lastReminder || (now - parseInt(lastReminder, 10)) > quinceMinutos) {
+      if (!lastReminder || (now - parseInt(lastReminder, 10)) > (15 * 60 * 1000)) {
         localStorage.setItem('last_rules_reminder', now.toString());
         await client.from('messages').insert([payload]);
       }
@@ -1573,34 +1524,18 @@
       }
     }, 15 * 60 * 1000);
 
-    // Ejecuta la función SQL purge_guest_private_messages() en Supabase
-    async function executeGuestDmsPurge() {
-      try {
-        await client.rpc('purge_guest_private_messages');
-      } catch (e) {
-        console.debug("Aviso al ejecutar purga automática de invitados:", e);
-      }
-    }
-
-    // Función para eliminar un mensaje individual (según la política RLS aplicada)
-    async function deleteSingleMessage(msgId) {
-      if (!msgId) return;
-      if (!confirm("¿Deseas eliminar este mensaje?")) return;
-
-      const { error } = await client
-        .from('messages')
-        .delete()
-        .eq('id', msgId);
-
-      if (error) {
-        alert("Error al eliminar el mensaje: " + error.message);
-      } else {
-        allMessages = allMessages.filter(m => m.id !== msgId);
+    // Borrado individual de un mensaje local en privado
+    function deleteLocalDirectMessage(msgId) {
+      if (!confirm("¿Deseas eliminar este mensaje privado de tu navegador?")) return;
+      const dms = loadLocalDms();
+      if (dms[currentChannel]) {
+        dms[currentChannel] = dms[currentChannel].filter(m => m.id !== msgId);
+        saveLocalDms(dms);
         renderFilteredMessages();
       }
     }
 
-    // Pestañas de Navegación
+    // Pestañas y Canales
     function selectChannel(channelName) {
       currentChannel = channelName;
       document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
@@ -1618,7 +1553,7 @@
           if (badge) badge.remove();
         }
         currentViewLabel.textContent = `@${channelName}`;
-        currentViewDesc.textContent = "Conversación privada y directa";
+        currentViewDesc.textContent = "Privado local (solo en sus navegadores)";
         contentInput.placeholder = `Escribe un mensaje privado a @${channelName}...`;
       }
 
@@ -1646,7 +1581,7 @@
             🔒 @${escapeHtml(nick)}
           </span>
           <span style="display: flex; align-items: center; gap: 4px;">
-            <button type="button" class="channel-item-close" title="Cerrar y eliminar conversación">✕</button>
+            <button type="button" class="channel-item-close" title="Cerrar y eliminar del navegador">✕</button>
           </span>
         `;
 
@@ -1674,41 +1609,26 @@
       }
     }
 
-    // Cerrar y eliminar permanentemente la conversación privada para que no reaparezca
-    async function closeDirectTab(targetLower) {
-      if (!confirm(`¿Deseas cerrar y eliminar la conversación privada con @${targetLower}?`)) {
+    // Cierre y borrado de la conversación en el navegador (localStorage)
+    function closeDirectTab(targetLower) {
+      if (!confirm(`¿Deseas cerrar y eliminar la conversación con @${targetLower}? Se borrará por completo de este navegador.`)) {
         return;
       }
 
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-
-      // 1. Eliminar visualmente del panel y del estado local
+      // 1. Quitar pestaña
       directConversations.delete(targetLower);
       const tab = document.getElementById(`tab-dm-${targetLower}`);
       if (tab) tab.remove();
 
+      // 2. Eliminar del localStorage del usuario
+      const dms = loadLocalDms();
+      delete dms[targetLower];
+      saveLocalDms(dms);
+
       if (currentChannel === targetLower) {
         selectChannel('general');
-      }
-
-      // 2. Limpiar mensajes locales intercambiados en este privado
-      allMessages = allMessages.filter(m => {
-        const s = (m.username || '').toLowerCase();
-        const r = (m.recipient || '').toLowerCase();
-        const isThisChat = (s === myNick && r === targetLower) || (s === targetLower && r === myNick);
-        return !isThisChat;
-      });
-
-      renderFilteredMessages();
-
-      // 3. Borrar los mensajes en la base de datos de Supabase
-      try {
-        await client
-          .from('messages')
-          .delete()
-          .or(`and(username.ilike.${myNick},recipient.ilike.${targetLower}),and(username.ilike.${targetLower},recipient.ilike.${myNick})`);
-      } catch (err) {
-        console.warn("Aviso al eliminar conversación privada en el servidor:", err);
+      } else {
+        renderFilteredMessages();
       }
     }
 
@@ -1724,21 +1644,14 @@
 
     function renderFilteredMessages() {
       chatBox.innerHTML = '';
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
 
-      allMessages.forEach(msg => {
-        const sender = (msg.username || '').toLowerCase();
-        const recipient = (msg.recipient || '').toLowerCase();
-        const isPrivate = !!recipient;
-
-        if (currentChannel === 'general') {
-          if (!isPrivate) appendMessageDOM(msg);
-        } else {
-          const isBetween = (sender === myNick && recipient === currentChannel) ||
-                            (sender === currentChannel && recipient === myNick);
-          if (isBetween) appendMessageDOM(msg);
-        }
-      });
+      if (currentChannel === 'general') {
+        publicMessages.forEach(msg => appendMessageDOM(msg));
+      } else {
+        const dms = loadLocalDms();
+        const chatHistory = dms[currentChannel] || [];
+        chatHistory.forEach(msg => appendMessageDOM(msg));
+      }
 
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -1780,7 +1693,7 @@
           <span class="badge-doc">${escapeHtml(data.doctrine_affinity || 'General')}</span>
           <span class="time">
             ${formatTime(data.created_at)}
-            ${canDelete ? `<button type="button" class="btn-msg-delete" title="Eliminar mensaje">🗑️</button>` : ''}
+            ${canDelete ? `<button type="button" class="btn-msg-delete" title="Eliminar del navegador">🗑️</button>` : ''}
           </span>
         </div>
         <div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>
@@ -1799,49 +1712,13 @@
           delBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            deleteSingleMessage(data.id);
+            deleteLocalDirectMessage(data.id);
           });
         }
       }
 
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function processIncomingMessage(newMsg, isLive = false) {
-      allMessages.push(newMsg);
-
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-      const sender = (newMsg.username || '').toLowerCase();
-      const recipient = (newMsg.recipient || '').toLowerCase();
-      const isPrivate = !!recipient;
-
-      if (isPrivate) {
-        if (sender !== myNick && recipient !== myNick) return;
-        if (recipient === myNick && isDmsBlocked) return;
-
-        const otherUser = sender === myNick ? recipient : sender;
-        const isCurrentlyViewing = currentChannel === otherUser;
-
-        ensureDirectTab(otherUser, !isCurrentlyViewing);
-
-        if (isCurrentlyViewing) {
-          appendMessageDOM(newMsg);
-        }
-
-        if (isLive && sender !== myNick) {
-          playPrivateSound();
-        }
-      } else {
-        if (currentChannel === 'general') {
-          appendMessageDOM(newMsg);
-        }
-        if (isLive && sender !== myNick) {
-          const isMention = myNick && newMsg.content && newMsg.content.toLowerCase().includes(myNick);
-          if (isMention) playMentionSound();
-          else playMessageSound();
-        }
-      }
     }
 
     function getRoleIconPrefix(role) {
@@ -1891,9 +1768,7 @@
         li.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (u.isBot) {
-            return;
-          }
+          if (u.isBot) return;
           openUserActions(u.username, e);
           if (window.innerWidth <= 768) {
             usersSidebar.classList.remove('mobile-open');
@@ -1904,6 +1779,7 @@
       });
     }
 
+    // ENVÍO DE MENSAJES: PÚBLICO VA A SUPABASE, PRIVADO VA POR BROADCAST Y LOCALSTORAGE
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const content = contentInput.value.trim();
@@ -1920,47 +1796,64 @@
       const chosenColor = document.getElementById('textColorPicker').value;
 
       const payload = {
+        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
         username: currentProfile.username,
         doctrine_affinity: currentProfile.doctrine_affinity,
         content: content,
         font_family: chosenFont,
         text_color: chosenColor,
-        role: currentProfile.role || 'novice'
+        role: currentProfile.role || 'novice',
+        created_at: new Date().toISOString()
       };
 
-      if (currentChannel !== 'general') {
+      if (currentChannel === 'general') {
+        // Enviar a la base de datos de Supabase
+        payload.recipient = null;
+        const { error } = await client.from('messages').insert([payload]);
+        if (error) alert("Error al enviar mensaje: " + error.message);
+      } else {
+        // PRIVADO: NO SE GUARDA EN SUPABASE. SE ENVÍA POR BROADCAST Y SE GUARDA EN LOCALSTORAGE
         payload.recipient = currentChannel;
-      }
 
-      const { error } = await client.from('messages').insert([payload]);
-      if (error) alert("Error al enviar mensaje: " + error.message);
+        // 1. Transmitir por tiempo real al destinatario
+        if (roomChannel) {
+          roomChannel.send({
+            type: 'broadcast',
+            event: 'direct_message',
+            payload: payload
+          });
+        }
+
+        // 2. Guardar en el navegador del remitente
+        storeDirectMessageLocally(currentChannel, payload);
+        appendMessageDOM(payload);
+      }
     });
 
-    async function loadMessages() {
-      executeGuestDmsPurge();
-
+    async function loadPublicMessages() {
+      // Solo carga mensajes públicos de la Sala General desde Supabase
       const { data } = await client
         .from('messages')
         .select('*')
+        .is('recipient', null)
         .order('created_at', { ascending: true })
         .limit(100);
 
       if (data) {
-        allMessages = [];
-        data.forEach(msg => {
-          allMessages.push(msg);
+        publicMessages = data;
+        if (currentChannel === 'general') {
+          renderFilteredMessages();
+        }
+      }
+    }
 
-          const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-          const sender = (msg.username || '').toLowerCase();
-          const recipient = (msg.recipient || '').toLowerCase();
-
-          // Solo abrir pestaña si existen mensajes activos y no eliminados
-          if (recipient && (sender === myNick || recipient === myNick)) {
-            const otherUser = sender === myNick ? recipient : sender;
-            ensureDirectTab(otherUser, false);
-          }
-        });
-        renderFilteredMessages();
+    function initLocalDmsTabs() {
+      // Reabrir solo las pestañas de privados que existan en el localStorage del usuario
+      const dms = loadLocalDms();
+      for (const targetUser in dms) {
+        if (Array.isArray(dms[targetUser]) && dms[targetUser].length > 0) {
+          ensureDirectTab(targetUser, false);
+        }
       }
     }
 
@@ -1972,7 +1865,8 @@
           isGuest = true;
           document.getElementById('authModal').classList.remove('open');
           initRealtime();
-          loadMessages();
+          loadPublicMessages();
+          initLocalDmsTabs();
           return;
         } catch(e) {}
       }
@@ -2003,7 +1897,8 @@
       }
 
       initRealtime();
-      loadMessages();
+      loadPublicMessages();
+      initLocalDmsTabs();
     }
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -2145,7 +2040,6 @@
       }
     });
 
-    // Control de Tamaño de fuente
     let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
     document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
     
@@ -2165,7 +2059,6 @@
       }
     };
 
-    // Preferencias de formato
     const fontSelect = document.getElementById('fontFamilySelect');
     const savedUserFont = localStorage.getItem('user_editor_font') || 'system-ui, sans-serif';
     fontSelect.value = savedUserFont;
@@ -2207,20 +2100,57 @@
     function initRealtime() {
       if (roomChannel) roomChannel.unsubscribe();
       roomChannel = client.channel('general-room', {
-        config: { presence: { key: currentProfile ? currentProfile.username : 'anon' } }
+        config: { 
+          presence: { key: currentProfile ? currentProfile.username : 'anon' },
+          broadcast: { self: false }
+        }
       });
 
+      // 1. Mensajes Públicos desde la base de datos de Supabase
       roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-        processIncomingMessage(payload.new, true);
+        if (!payload.new.recipient) {
+          publicMessages.push(payload.new);
+          if (currentChannel === 'general') {
+            appendMessageDOM(payload.new);
+            const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
+            if (payload.new.username.toLowerCase() !== myNick) {
+              const isMention = myNick && payload.new.content && payload.new.content.toLowerCase().includes(myNick);
+              if (isMention) playMentionSound();
+              else playMessageSound();
+            }
+          }
+        }
       });
 
       roomChannel.on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
         const deletedId = payload.old ? payload.old.id : null;
         if (deletedId) {
-          allMessages = allMessages.filter(m => m.id !== deletedId);
-          renderFilteredMessages();
-        } else {
-          loadMessages();
+          publicMessages = publicMessages.filter(m => m.id !== deletedId);
+          if (currentChannel === 'general') renderFilteredMessages();
+        }
+      });
+
+      // 2. RECEPCIÓN DE PRIVADOS VÍA BROADCAST (DIRECTO AL NAVEGADOR)
+      roomChannel.on('broadcast', { event: 'direct_message' }, ({ payload }) => {
+        const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
+        const targetRecipient = (payload.recipient || '').toLowerCase();
+        const sender = (payload.username || '').toLowerCase();
+
+        // Solo procesar si el mensaje privado va dirigido estrictamente a mí
+        if (targetRecipient === myNick) {
+          if (isDmsBlocked) return;
+
+          // Guardar en el almacenamiento del navegador del receptor
+          storeDirectMessageLocally(sender, payload);
+
+          const isCurrentlyViewing = (currentChannel === sender);
+          ensureDirectTab(sender, !isCurrentlyViewing);
+
+          if (isCurrentlyViewing) {
+            appendMessageDOM(payload);
+          }
+
+          playPrivateSound();
         }
       });
 
@@ -2232,7 +2162,6 @@
         newPresences.forEach(presence => {
           if (presence.username) {
             appendSystemNotice(`🟢 @${presence.username} se ha unido a la sala.`);
-
             const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
             if (myNick && presence.username.toLowerCase() === myNick) {
               setTimeout(() => {
