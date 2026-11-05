@@ -610,12 +610,21 @@
     <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rango</button>
   </div>
 
-  <!-- Modal Selector Bíblico -->
+  <!-- Modal Selector Bíblico con Selector de Versión -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
         <h2>Citar Pasaje Bíblico</h2>
         <button class="close-btn" id="closeBibleBtn">&times;</button>
+      </div>
+
+      <!-- Selector de Versión de la Biblia -->
+      <div class="auth-field">
+        <label for="bibleVersionSelect">Versión:</label>
+        <select id="bibleVersionSelect">
+          <option value="RVR1960" selected>Reina-Valera 1960 (RVR1960)</option>
+          <option value="RVSBT18">Reina Valera SBT 2018 (RVSBT18)</option>
+        </select>
       </div>
 
       <div class="auth-field">
@@ -706,7 +715,7 @@
       </div>
 
       <div style="margin: 6px 0 12px; font-size: 0.78rem; color: var(--text-muted);">
-        * Máximo 10 versículos por cita. Consulta directa desde tu archivo RVR1960.json.
+        * Máximo 10 versículos por cita. Consulta directa desde tu archivo JSON.
       </div>
 
       <div style="display: flex; gap: 8px;">
@@ -778,7 +787,7 @@
     </div>
   </div>
 
-  <!-- Modal Editar Perfil (Nacionalidad y Edad incluidas) -->
+  <!-- Modal Editar Perfil -->
   <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -949,7 +958,14 @@
     let allMessages = [];
     let directConversations = new Set();
 
-    let localBibleCache = null;
+    // Caché en memoria para las versiones de la Biblia
+    const biblesCache = {};
+
+    // Diccionario de versiones disponibles
+    const BIBLE_FILES = {
+      "RVR1960": "./RVR1960.json",
+      "RVSBT18": "./RVSBT18.json"
+    };
 
     // Preferencias
     let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
@@ -1180,7 +1196,6 @@
 
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
       
-      // Si el usuario hace clic en su propio nick, se abre la edición de perfil si está registrado
       if (nick.toLowerCase() === myNick) {
         openEditProfileModal();
         return;
@@ -1265,11 +1280,12 @@
       document.getElementById('adminModal').classList.add('open');
     };
 
-    // --- Modal Bíblico: Lógica con mapeo USFM estándar ---
+    // --- Modal Bíblico: Lógica con selector de versión y mapeo USFM ---
     const bibleModal = document.getElementById('bibleModal');
     const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
     const closeBibleBtn = document.getElementById('closeBibleBtn');
     const btnFetchAndInsertVerse = document.getElementById('btnFetchAndInsertVerse');
+    const bibleVersionSelect = document.getElementById('bibleVersionSelect');
 
     btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
     closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
@@ -1305,19 +1321,21 @@
         .trim();
     }
 
-    async function loadLocalBible() {
-      if (localBibleCache) return localBibleCache;
+    async function loadBibleVersion(versionKey) {
+      if (biblesCache[versionKey]) return biblesCache[versionKey];
 
+      const filePath = BIBLE_FILES[versionKey] || './RVR1960.json';
       btnFetchAndInsertVerse.disabled = true;
-      btnFetchAndInsertVerse.textContent = "Cargando texto bíblico...";
+      btnFetchAndInsertVerse.textContent = `Cargando ${versionKey}...`;
 
       try {
-        const res = await fetch('./RVR1960.json');
+        const res = await fetch(filePath);
         if (!res.ok) {
-          throw new Error(`No se encontró el archivo RVR1960.json (Código HTTP ${res.status}). Asegúrate de tenerlo en la raíz del repositorio.`);
+          throw new Error(`No se encontró el archivo ${filePath} (Código HTTP ${res.status}). Asegúrate de haberlo subido en la raíz de tu repositorio.`);
         }
-        localBibleCache = await res.json();
-        return localBibleCache;
+        const data = await res.json();
+        biblesCache[versionKey] = data;
+        return data;
       } catch (err) {
         throw err;
       }
@@ -1361,7 +1379,8 @@
           const hasMatchingVerse = item.verse_numbers.some(n => n >= startV && n <= endV);
           if (hasMatchingVerse) {
             const vNum = item.verse_numbers[0];
-            const textContent = Array.isArray(item.lines) ? item.lines.join(" ").trim() : "";
+            // En caso de que contenga etiquetas <i>...</i> de la RVSBT18, se eliminan para insertar texto plano limpio
+            const textContent = Array.isArray(item.lines) ? item.lines.join(" ").replace(/<[^>]*>/g, '').trim() : "";
             if (textContent) {
               results.push(`${vNum} ${textContent}`);
             }
@@ -1373,6 +1392,7 @@
     }
 
     btnFetchAndInsertVerse.onclick = async () => {
+      const selectedVersion = bibleVersionSelect.value;
       const bookSelect = document.getElementById('bibleBookSelect');
       const bookName = bookSelect.value;
       const chapter = parseInt(document.getElementById('bibleChapter').value, 10);
@@ -1398,14 +1418,14 @@
       btnFetchAndInsertVerse.textContent = "Buscando...";
 
       try {
-        const bibleData = await loadLocalBible();
+        const bibleData = await loadBibleVersion(selectedVersion);
         const extractedText = extractVersesFromJSON(bibleData, bookName, chapter, startVerse, endVerse);
 
         if (!extractedText || extractedText.trim() === '') {
           throw new Error(`No se encontraron los versículos solicitados para ${bookName} ${rangeLabel}.`);
         }
 
-        const citation = `«${extractedText}» (${bookName} ${rangeLabel} - RVR1960)`;
+        const citation = `«${extractedText}» (${bookName} ${rangeLabel} - ${selectedVersion})`;
 
         contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + citation;
         bibleModal.classList.remove('open');
@@ -1433,10 +1453,10 @@
       if (!newUserNick) return;
 
       const versiculos = [
-        "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna...» (Juan 5:39)",
-        "«La gracia del Señor Jesucristo, el amor de Dios, y la comunión del Espíritu Santo sean con todos vosotros.» (2 Corintios 13:14)",
-        "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir...» (2 Timoteo 3:16)",
-        "«Pero la palabra del Señor permanece para siempre.» (1 Pedro 1:25)"
+        "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna...» (Juan 5:39 - RVR1960)",
+        "«La gracia del Señor Jesucristo, el amor de Dios, y la comunión del Espíritu Santo sean con todos vosotros.» (2 Corintios 13:14 - RVR1960)",
+        "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir...» (2 Timoteo 3:16 - RVR1960)",
+        "«Pero la palabra del Señor permanece para siempre.» (1 Pedro 1:25 - RVR1960)"
       ];
 
       const versiculoAzar = versiculos[Math.floor(Math.random() * versiculos.length)];
@@ -1875,7 +1895,7 @@
     tabRegister.onclick = () => switchAuthTab(tabRegister, registerForm);
     tabGuest.onclick = () => switchAuthTab(tabGuest, guestForm);
 
-    // Guardar cambios en el perfil (Incluyendo País y Edad)
+    // Guardar cambios en el perfil
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (isGuest) return;
