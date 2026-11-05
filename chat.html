@@ -274,7 +274,17 @@
     .msg.mentioned { background: var(--msg-bg); border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
     .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
 
-    /* Mensajes informativos de entrada, salida y sistema */
+    /* Estilos de Insignias para los 5 Niveles */
+    .badge-role { font-size: 0.72em; padding: 1px 6px; border-radius: 4px; font-weight: bold; }
+    .badge-role.admin { background: #a16207; color: #fef08a; }
+    .badge-role.moderator { background: #0369a1; color: #bae6fd; }
+    .badge-role.veteran { background: #6b21a8; color: #f3e8ff; }
+    .badge-role.member { background: #1e3a8a; color: #dbeafe; }
+    .badge-role.novice { background: #374151; color: #d1d5db; }
+    .badge-role.guest { background: #475569; color: #cbd5e1; font-style: italic; }
+    .badge-role.bot { background: #047857; color: #a7f3d0; }
+
+    /* Mensajes del Sistema y Bot */
     .msg-system {
       align-self: center;
       background: rgba(30, 41, 59, 0.6);
@@ -289,24 +299,14 @@
       font-style: italic;
     }
 
-    /* Mensaje visual destacado para el Bot */
     .msg.bot {
       border-left-color: #10b981;
       background: rgba(16, 185, 129, 0.08);
-    }
-    .badge-role.bot {
-      background: #047857;
-      color: #a7f3d0;
     }
     
     .msg-meta { font-size: 0.78em; color: var(--text-muted); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: system-ui, sans-serif; }
     .user-clickable { color: var(--accent); cursor: pointer; font-weight: bold; }
     .user-clickable:hover { text-decoration: underline; }
-    
-    .badge-role { font-size: 0.72em; padding: 1px 5px; border-radius: 4px; font-weight: bold; }
-    .badge-role.admin { background: #a16207; color: #fef08a; }
-    .badge-role.moderator { background: #0369a1; color: #bae6fd; }
-    .badge-role.guest { background: #475569; color: #cbd5e1; font-style: italic; }
     .badge-doc { font-size: 0.72em; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 4px; }
     .msg-meta .time { font-size: 0.72em; color: var(--text-muted); margin-left: auto; }
     .msg-text { word-break: break-word; line-height: 1.4; white-space: pre-wrap; }
@@ -607,7 +607,7 @@
     <div id="adminActionsDivider" class="dropdown-divider" style="display: none;"></div>
     <button type="button" class="popup-btn" id="popupPurgeBtn" style="display: none; color: #fca5a5;">🗑️ Borrar mensajes</button>
     <button type="button" class="popup-btn" id="popupSilenceBtn" style="display: none; color: #fde047;">🔇 Silenciar usuario</button>
-    <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rol</button>
+    <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rango</button>
   </div>
 
   <!-- Modal Selector Bíblico -->
@@ -715,6 +715,7 @@
     </div>
   </div>
 
+  <!-- Modal Auth (Si no hay sesión) -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-card">
       <div class="auth-tabs">
@@ -777,6 +778,7 @@
     </div>
   </div>
 
+  <!-- Modal Editar Perfil (Nacionalidad y Edad incluidas) -->
   <div class="modal-overlay" id="profileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -785,9 +787,10 @@
       </div>
       <form id="profileForm">
         <div class="auth-field">
-          <label>Nick:</label>
+          <label>Nick público:</label>
           <input type="text" id="editUsername" required maxlength="30">
         </div>
+
         <div class="auth-field">
           <label>Postura doctrinal:</label>
           <select id="editDoctrine">
@@ -800,35 +803,83 @@
             <option value="Otro trasfondo">Otro trasfondo</option>
           </select>
         </div>
+
         <div class="auth-field">
-          <label>Rol:</label>
-          <input type="text" id="viewRole" disabled style="background: var(--bg-body); color: var(--text-muted);">
+          <label>Nacionalidad / País:</label>
+          <select id="editCountry">
+            <option value="No responde" selected>No responde</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Bolivia">Bolivia</option>
+            <option value="Chile">Chile</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Costa Rica">Costa Rica</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="El Salvador">El Salvador</option>
+            <option value="España">España</option>
+            <option value="Estados Unidos">Estados Unidos</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Honduras">Honduras</option>
+            <option value="México">México</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Panamá">Panamá</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Perú">Perú</option>
+            <option value="Puerto Rico">Puerto Rico</option>
+            <option value="República Dominicana">República Dominicana</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Venezuela">Venezuela</option>
+            <option value="Otro">Otro</option>
+          </select>
         </div>
+
+        <div class="auth-field">
+          <label>Rango de edad:</label>
+          <select id="editAge">
+            <option value="No responde" selected>No responde</option>
+            <option value="Menor de 18 años">Menor de 18 años</option>
+            <option value="18 a 24 años">18 a 24 años</option>
+            <option value="25 a 34 años">25 a 34 años</option>
+            <option value="35 a 44 años">35 a 44 años</option>
+            <option value="45 a 54 años">45 a 54 años</option>
+            <option value="55 a 64 años">55 a 64 años</option>
+            <option value="65 años o más">65 años o más</option>
+          </select>
+        </div>
+
+        <div class="auth-field">
+          <label>Rango en la Comunidad:</label>
+          <input type="text" id="viewRole" disabled style="background: var(--bg-body); color: var(--accent); font-weight: bold;">
+        </div>
+
         <button type="submit" class="btn-primary" style="margin-top: 8px;">Guardar Cambios</button>
       </form>
     </div>
   </div>
 
+  <!-- Panel de Roles con los 5 Rangos -->
   <div class="modal-overlay" id="adminModal">
     <div class="modal-card">
       <div class="modal-header">
-        <h2>Panel de Roles</h2>
+        <h2>Panel de Rangos de Usuario</h2>
         <button class="close-btn" id="closeAdminBtn">&times;</button>
       </div>
       <form id="adminRoleForm">
         <div class="auth-field">
           <label>Nick del usuario:</label>
-          <input type="text" id="adminTargetUser" required>
+          <input type="text" id="adminTargetUser" required placeholder="Nick exacto">
         </div>
         <div class="auth-field">
-          <label>Rol:</label>
+          <label>Rango jerárquico a asignar:</label>
           <select id="adminRoleSelect">
-            <option value="moderator">🛡️ Moderador</option>
-            <option value="admin">👑 Administrador</option>
-            <option value="member">Miembro regular</option>
+            <option value="novice">🌱 Novicio / Oyente (Nivel 1)</option>
+            <option value="member">📖 Miembro Regular (Nivel 2)</option>
+            <option value="veteran">🏛️ Veterano / Maestro (Nivel 3)</option>
+            <option value="moderator">🛡️ Moderador (Nivel 4)</option>
+            <option value="admin">👑 Administrador (Nivel 5)</option>
           </select>
         </div>
-        <button type="submit" class="btn-primary" style="margin-top: 8px;">Aplicar Rol</button>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">Aplicar Rango</button>
       </form>
     </div>
   </div>
@@ -898,7 +949,6 @@
     let allMessages = [];
     let directConversations = new Set();
 
-    // Variable global para almacenar la Biblia en memoria
     let localBibleCache = null;
 
     // Preferencias
@@ -1065,30 +1115,76 @@
     document.getElementById('optRules').onclick = () => document.getElementById('rulesModal').classList.add('open');
     document.getElementById('closeRulesBtn').onclick = () => document.getElementById('rulesModal').classList.remove('open');
 
-    document.getElementById('optProfile').onclick = () => {
-      if (isGuest) return alert("Los invitados no pueden editar su perfil. Crea una cuenta para guardar tus datos.");
-      document.getElementById('editUsername').value = currentProfile.username;
-      document.getElementById('editDoctrine').value = currentProfile.doctrine_affinity;
-      document.getElementById('viewRole').value = currentProfile.role.toUpperCase();
+    function getRoleLabel(role) {
+      switch (role) {
+        case 'admin': return '👑 Administrador (Nivel 5)';
+        case 'moderator': return '🛡️ Moderador (Nivel 4)';
+        case 'veteran': return '🏛️ Veterano / Maestro (Nivel 3)';
+        case 'member': return '📖 Miembro Regular (Nivel 2)';
+        case 'novice': return '🌱 Novicio / Oyente (Nivel 1)';
+        case 'bot': return '🤖 Bot Asistente';
+        default: return '👤 Invitado';
+      }
+    }
+
+    function openEditProfileModal() {
+      if (isGuest) {
+        return alert("Los invitados no poseen un perfil permanente. Regístrate para personalizar tu perfil, nacionalidad y edad.");
+      }
+      if (!currentProfile) return;
+
+      document.getElementById('editUsername').value = currentProfile.username || '';
+      document.getElementById('editDoctrine').value = currentProfile.doctrine_affinity || 'Reformada';
+      document.getElementById('editCountry').value = currentProfile.country || 'No responde';
+      document.getElementById('editAge').value = currentProfile.age || 'No responde';
+      document.getElementById('viewRole').value = getRoleLabel(currentProfile.role);
       document.getElementById('profileModal').classList.add('open');
-    };
+    }
+
+    document.getElementById('optProfile').onclick = openEditProfileModal;
     document.getElementById('closeProfileBtn').onclick = () => document.getElementById('profileModal').classList.remove('open');
 
     document.getElementById('optRoles').onclick = () => document.getElementById('adminModal').classList.add('open');
     document.getElementById('closeAdminBtn').onclick = () => document.getElementById('adminModal').classList.remove('open');
 
+    // Salir del chat y volver al inicio limpiamente
     document.getElementById('optLogout').onclick = async () => {
       if (confirm('¿Deseas salir del chat?')) {
-        if (isGuest) localStorage.removeItem('guest_user');
-        else await client.auth.signOut();
-        window.location.href = 'index.html';
+        try {
+          if (roomChannel) {
+            await roomChannel.untrack();
+            await roomChannel.unsubscribe();
+          }
+        } catch (e) {
+          console.warn("Error al desconectar presencia:", e);
+        }
+
+        localStorage.removeItem('guest_user');
+        sessionStorage.clear();
+
+        if (!isGuest) {
+          try {
+            await client.auth.signOut();
+          } catch (e) {
+            console.warn("Error al cerrar sesión de auth:", e);
+          }
+        }
+
+        window.location.replace('index.html');
       }
     };
 
     // --- Menú Contextual (Clic en Nick) ---
     function openUserActions(nick, evt) {
       if (!nick) return;
-      if (currentProfile && nick.toLowerCase() === currentProfile.username.toLowerCase()) return;
+
+      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
+      
+      // Si el usuario hace clic en su propio nick, se abre la edición de perfil si está registrado
+      if (nick.toLowerCase() === myNick) {
+        openEditProfileModal();
+        return;
+      }
 
       selectedPopupUser = nick;
       popupHeaderNick.textContent = `@${nick}`;
@@ -1178,7 +1274,6 @@
     btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
     closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
 
-    // Mapeo inequívoco entre nombre del selector y código USFM del JSON
     const BOOK_USFM_MAP = {
       // Antiguo Testamento
       "Génesis": "GEN", "Éxodo": "EXO", "Levítico": "LEV", "Números": "NUM", "Deuteronomio": "DEU",
@@ -1219,7 +1314,7 @@
       try {
         const res = await fetch('./RVR1960.json');
         if (!res.ok) {
-          throw new Error(`No se encontró el archivo RVR1960.json (Código HTTP ${res.status}). Asegúrate de haberlo subido en la raíz de tu repositorio.`);
+          throw new Error(`No se encontró el archivo RVR1960.json (Código HTTP ${res.status}). Asegúrate de tenerlo en la raíz del repositorio.`);
         }
         localBibleCache = await res.json();
         return localBibleCache;
@@ -1236,7 +1331,6 @@
       const targetUsfm = BOOK_USFM_MAP[bookName] || "";
       const targetNorm = normalizeStr(bookName);
 
-      // 1. Encontrar el libro (prioridad a código USFM, respaldo a coincidencia de nombre)
       const bookObj = bibleData.books.find(b => {
         if (targetUsfm && b.usfm && b.usfm.toUpperCase() === targetUsfm) return true;
         const bHuman = normalizeStr(b.human);
@@ -1247,7 +1341,6 @@
         throw new Error(`No se encontró el libro "${bookName}" en el archivo JSON.`);
       }
 
-      // 2. Localizar el capítulo solicitado
       const chapterUsfmTarget = `${bookObj.usfm}.${chapterNum}`;
       const chapterObj = bookObj.chapters.find(c => {
         if (c.usfm && c.usfm.toUpperCase() === chapterUsfmTarget) return true;
@@ -1262,7 +1355,6 @@
         throw new Error(`No se encontró el capítulo ${chapterNum} en ${bookName}.`);
       }
 
-      // 3. Filtrar versículos dentro de 'items', omitiendo subtítulos y uniendo líneas
       let results = [];
       chapterObj.items.forEach(item => {
         if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
@@ -1327,7 +1419,7 @@
       }
     };
 
-    // Funciones del Sistema y Bot
+    // Funciones del Sistema y BereanoBot
     function appendSystemNotice(text) {
       if (currentChannel !== 'general') return;
       const div = document.createElement('div');
@@ -1479,6 +1571,20 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    // Render de insignias para los 5 niveles en mensajes
+    function getRoleBadgeMarkup(role, isBot) {
+      if (isBot) return '<span class="badge-role bot">🤖 BOT</span>';
+      switch (role) {
+        case 'admin': return '<span class="badge-role admin">👑 Admin</span>';
+        case 'moderator': return '<span class="badge-role moderator">🛡️ Mod</span>';
+        case 'veteran': return '<span class="badge-role veteran">🏛️ Maestro</span>';
+        case 'member': return '<span class="badge-role member">📖 Miembro</span>';
+        case 'novice': return '<span class="badge-role novice">🌱 Oyente</span>';
+        case 'guest': return '<span class="badge-role guest">Invitado</span>';
+        default: return '';
+      }
+    }
+
     function appendMessageDOM(data) {
       const myNick = currentProfile ? currentProfile.username : '';
       const div = document.createElement('div');
@@ -1487,12 +1593,7 @@
       const isPrivate = !!data.recipient;
       const isBot = data.role === 'bot' || data.username === 'BereanoBot';
 
-      let roleBadge = '';
-      if (data.role === 'admin') roleBadge = '<span class="badge-role admin">👑 Admin</span>';
-      else if (data.role === 'moderator') roleBadge = '<span class="badge-role moderator">🛡️ Mod</span>';
-      else if (data.role === 'guest') roleBadge = '<span class="badge-role guest">Invitado</span>';
-      else if (isBot) roleBadge = '<span class="badge-role bot">🤖 BOT</span>';
-
+      const roleBadge = getRoleBadgeMarkup(data.role, isBot);
       const messageFont = data.font_family || 'system-ui, sans-serif';
       const messageColor = data.text_color || '#f8fafc';
 
@@ -1555,13 +1656,26 @@
       }
     }
 
+    function getRoleIconPrefix(role) {
+      switch (role) {
+        case 'admin': return '👑 ';
+        case 'moderator': return '🛡️ ';
+        case 'veteran': return '🏛️ ';
+        case 'member': return '📖 ';
+        case 'novice': return '🌱 ';
+        default: return '👤 ';
+      }
+    }
+
     function renderOnlineUsers(presenceState) {
       usersList.innerHTML = '';
       const activeUsers = [];
 
       for (const key in presenceState) {
         presenceState[key].forEach(u => {
-          if (u.username) activeUsers.push(u);
+          if (u.username && u.username.toLowerCase() !== 'bereanobot') {
+            activeUsers.push(u);
+          }
         });
       }
 
@@ -1571,7 +1685,7 @@
       activeUsers.forEach(u => {
         const li = document.createElement('li');
         li.className = 'user-item';
-        let rolePrefix = u.role === 'admin' ? '👑 ' : (u.role === 'moderator' ? '🛡️ ' : (u.role === 'guest' ? '👤 ' : ''));
+        const rolePrefix = getRoleIconPrefix(u.role);
 
         li.innerHTML = `
           <div class="user-item-name"><span class="online-dot"></span>${rolePrefix}${escapeHtml(u.username)}</div>
@@ -1611,10 +1725,9 @@
         doctrine_affinity: currentProfile.doctrine_affinity,
         content: content,
         font_family: chosenFont,
-        text_color: chosenColor
+        text_color: chosenColor,
+        role: currentProfile.role || 'novice'
       };
-
-      if (currentProfile.role) payload.role = currentProfile.role;
 
       if (currentChannel !== 'general') {
         payload.recipient = currentChannel;
@@ -1679,6 +1792,8 @@
 
       if (profile) {
         currentProfile = profile;
+        if (!currentProfile.role) currentProfile.role = 'novice';
+
         if (currentProfile.role === 'admin') {
           document.getElementById('optRoles').style.display = 'flex';
           document.getElementById('optClearChat').style.display = 'flex';
@@ -1726,7 +1841,7 @@
       if (error) alert(error.message);
       else {
         localStorage.removeItem('guest_user');
-        alert("¡Registro exitoso! Iniciando sesión...");
+        alert("¡Registro exitoso! Iniciando sesión como Novicio...");
         location.reload();
       }
     });
@@ -1735,7 +1850,11 @@
       e.preventDefault();
       const nick = document.getElementById('guestNick').value.trim();
       if (!nick) return;
-      localStorage.setItem('guest_user', JSON.stringify({ username: nick, doctrine_affinity: document.getElementById('guestDoctrine').value, role: 'guest' }));
+      localStorage.setItem('guest_user', JSON.stringify({ 
+        username: nick, 
+        doctrine_affinity: document.getElementById('guestDoctrine').value, 
+        role: 'guest' 
+      }));
       location.reload();
     });
 
@@ -1756,24 +1875,37 @@
     tabRegister.onclick = () => switchAuthTab(tabRegister, registerForm);
     tabGuest.onclick = () => switchAuthTab(tabGuest, guestForm);
 
+    // Guardar cambios en el perfil (Incluyendo País y Edad)
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (isGuest) return;
 
       const newUsername = document.getElementById('editUsername').value.trim();
       const newDoctrine = document.getElementById('editDoctrine').value;
+      const newCountry = document.getElementById('editCountry').value;
+      const newAge = document.getElementById('editAge').value;
 
       const { error } = await client
         .from('profiles')
-        .update({ username: newUsername, doctrine_affinity: newDoctrine })
+        .update({ 
+          username: newUsername, 
+          doctrine_affinity: newDoctrine,
+          country: newCountry,
+          age: newAge
+        })
         .eq('id', currentSessionUser.id);
 
-      if (error) alert("Error al actualizar perfil: " + error.message);
-      else {
+      if (error) {
+        alert("Error al actualizar perfil: " + error.message);
+      } else {
         currentProfile.username = newUsername;
         currentProfile.doctrine_affinity = newDoctrine;
+        currentProfile.country = newCountry;
+        currentProfile.age = newAge;
+
         document.getElementById('profileModal').classList.remove('open');
         alert("Perfil actualizado correctamente.");
+
         if (roomChannel) {
           roomChannel.track({
             username: currentProfile.username,
@@ -1784,6 +1916,7 @@
       }
     });
 
+    // Panel de Asignación de Roles por Administrador
     document.getElementById('adminRoleForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const targetUser = document.getElementById('adminTargetUser').value.trim();
@@ -1805,9 +1938,9 @@
         .update({ role: newRole })
         .eq('id', targetProfile.id);
 
-      if (updateError) alert("Error al asignar rol: " + updateError.message);
+      if (updateError) alert("Error al asignar rango: " + updateError.message);
       else {
-        alert(`Rol '${newRole}' asignado a ${targetUser}.`);
+        alert(`Rango '${newRole}' asignado con éxito a ${targetUser}.`);
         document.getElementById('adminModal').classList.remove('open');
       }
     });
@@ -1878,12 +2011,10 @@
         config: { presence: { key: currentProfile ? currentProfile.username : 'anon' } }
       });
 
-      // Escuchar nuevos mensajes
       roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
         processIncomingMessage(payload.new, true);
       });
 
-      // Escuchar eliminación de mensajes (purgas o vaciado de sala)
       roomChannel.on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
         const deletedId = payload.old ? payload.old.id : null;
         if (deletedId) {
@@ -1894,18 +2025,15 @@
         }
       });
 
-      // Sincronizar usuarios conectados
       roomChannel.on('presence', { event: 'sync' }, () => {
         renderOnlineUsers(roomChannel.presenceState());
       });
 
-      // Evento: Alguien entra a la sala
       roomChannel.on('presence', { event: 'join' }, ({ key, newPresences }) => {
         newPresences.forEach(presence => {
           if (presence.username) {
             appendSystemNotice(`🟢 @${presence.username} se ha unido a la sala.`);
 
-            // Candado anti-duplicados: Solo el cliente que ingresa dispara la inserción
             const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
             if (myNick && presence.username.toLowerCase() === myNick) {
               setTimeout(() => {
@@ -1916,7 +2044,6 @@
         });
       });
 
-      // Evento: Alguien sale de la sala
       roomChannel.on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
         leftPresences.forEach(presence => {
           if (presence.username) {
