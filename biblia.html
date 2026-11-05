@@ -35,7 +35,6 @@
       overflow-x: hidden;
     }
 
-    /* Barra superior de controles adaptable */
     header {
       position: sticky;
       top: 0;
@@ -59,7 +58,7 @@
       flex-wrap: wrap;
     }
 
-    .btn-back-chat {
+    .btn-nav-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -73,8 +72,9 @@
       font-weight: 600;
       transition: background 0.15s;
       white-space: nowrap;
+      cursor: pointer;
     }
-    .btn-back-chat:hover { background: var(--border-color); }
+    .btn-nav-link:hover { background: var(--border-color); }
 
     select, button.control-btn {
       background: var(--bg-surface);
@@ -99,7 +99,6 @@
       font-weight: bold;
     }
 
-    /* Contenedor del texto bíblico a todo el ancho */
     main.reader-container {
       flex: 1;
       width: 100%;
@@ -155,7 +154,6 @@
       background: var(--bg-surface);
     }
 
-    /* Flujo del texto bíblico a ancho completo */
     .bible-text-flow {
       width: 100%;
       font-family: var(--font-family);
@@ -196,7 +194,6 @@
       user-select: none;
     }
 
-    /* Navegación inferior */
     .bottom-nav {
       display: flex;
       justify-content: space-between;
@@ -229,6 +226,123 @@
       border: 1px solid var(--border-color);
     }
 
+    /* Modal de Búsqueda */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      align-items: center;
+      justify-content: center;
+      z-index: 120;
+      padding: 16px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      max-width: 650px;
+      width: 100%;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .modal-header h2 {
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin: 0;
+    }
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    .search-input-area {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      gap: 8px;
+      background: var(--bg-surface);
+    }
+    .search-input-area input {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .search-input-area input:focus { border-color: var(--accent); }
+    .btn-search-exec {
+      background: var(--accent-btn);
+      color: white;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .btn-search-exec:hover { background: var(--accent-btn-hover); }
+
+    .search-results-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-result-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+    .search-result-item:hover {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+    }
+    .result-ref {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .result-text {
+      font-size: 0.92rem;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+    .result-highlight {
+      background: #ca8a04;
+      color: #000;
+      padding: 1px 3px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+
     .toast-msg {
       position: fixed;
       bottom: 24px;
@@ -243,7 +357,7 @@
       box-shadow: 0 8px 25px rgba(0,0,0,0.5);
       opacity: 0;
       transition: all 0.25s ease;
-      z-index: 100;
+      z-index: 130;
     }
     .toast-msg.show {
       transform: translateX(-50%) translateY(0);
@@ -251,27 +365,12 @@
     }
 
     @media (max-width: 768px) {
-      header {
-        padding: 8px 12px;
-        gap: 8px;
-      }
-      .nav-controls, .reader-settings {
-        width: 100%;
-        justify-content: space-between;
-      }
-      .nav-controls select {
-        flex: 1;
-        min-width: 0;
-      }
-      main.reader-container {
-        padding: 16px 12px 50px 12px;
-      }
-      .bible-text-flow {
-        text-align: left;
-      }
-      .chapter-heading-area h1 {
-        font-size: 1.6rem;
-      }
+      header { padding: 8px 12px; gap: 8px; }
+      .nav-controls, .reader-settings { width: 100%; justify-content: space-between; }
+      .nav-controls select { flex: 1; min-width: 0; }
+      main.reader-container { padding: 16px 12px 50px 12px; }
+      .bible-text-flow { text-align: left; }
+      .chapter-heading-area h1 { font-size: 1.6rem; }
     }
   </style>
 </head>
@@ -279,8 +378,9 @@
 
   <header>
     <div class="nav-controls">
-      <a href="index.html" class="btn-back-chat" title="Volver a la página principal">🏠 Inicio</a>
-      <a href="chat.html" class="btn-back-chat" title="Volver al chat">💬 Chat</a>
+      <a href="index.html" class="btn-nav-link" title="Volver a la página principal">🏠 Inicio</a>
+      <a href="chat.html" class="btn-nav-link" title="Volver al chat">💬 Chat</a>
+      <button type="button" class="btn-nav-link" id="btnOpenSearch" title="Buscar versículos por palabra o frase">🔍 Buscar</button>
 
       <select id="versionSelect" title="Seleccionar versión">
         <option value="RVR1960">RVR1960</option>
@@ -319,10 +419,31 @@
 
     <div class="bottom-nav">
       <button type="button" class="btn-nav-page" id="btnPrevChapter">← Anterior</button>
-      <a href="index.html" class="btn-back-chat" title="Volver a la página principal">🏠 Inicio</a>
+      <a href="index.html" class="btn-nav-link" title="Volver a la página principal">🏠 Inicio</a>
       <button type="button" class="btn-nav-page" id="btnNextChapter">Siguiente →</button>
     </div>
   </main>
+
+  <!-- Modal Buscador por Palabras -->
+  <div class="modal-overlay" id="searchModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Buscador Bíblico (<span id="searchVersionTag">RVR1960</span>)</h2>
+        <button class="close-btn" id="btnCloseSearch">&times;</button>
+      </div>
+
+      <div class="search-input-area">
+        <input type="text" id="searchInput" placeholder="Escribe una palabra o frase (ej. gracia, fe, justificación)..." autocomplete="off">
+        <button type="button" class="btn-search-exec" id="btnExecSearch">Buscar</button>
+      </div>
+
+      <div style="padding: 6px 16px; font-size: 0.78rem; color: var(--text-muted); background: var(--bg-panel);" id="searchStatusInfo">
+        Escribe un término y presiona Enter o Buscar.
+      </div>
+
+      <div class="search-results-list" id="searchResultsList"></div>
+    </div>
+  </div>
 
   <div class="toast-msg" id="toast">Texto copiado al portapapeles</div>
 
@@ -344,7 +465,6 @@
 
     let currentVersionKey = localStorage.getItem('bible_version') || 'RVR1960';
 
-    // Recuperar último libro y capítulo visto (o iniciar en Juan 1 por defecto)
     let currentBookIndex = parseInt(localStorage.getItem('bible_last_book'), 10);
     if (isNaN(currentBookIndex)) currentBookIndex = 42; // Juan
 
@@ -364,6 +484,7 @@
 
     versionSelect.value = currentVersionKey;
 
+    // Configuración visual
     const fontSelect = document.getElementById('fontSelect');
     let currentFontSizeRem = parseFloat(localStorage.getItem('bible_font_size')) || 1.15;
     let currentFontFamily = localStorage.getItem('bible_font_family') || "'Georgia', serif";
@@ -426,12 +547,12 @@
     async function switchVersion(versionKey) {
       currentVersionKey = versionKey;
       localStorage.setItem('bible_version', versionKey);
+      document.getElementById('searchVersionTag').textContent = BIBLE_VERSIONS[versionKey].tag;
 
       try {
         await loadVersionData(versionKey);
         populateBookSelect();
-        
-        // Validar índice de libro guardado contra la cantidad de libros de la versión
+
         if (currentBookIndex >= biblesCache[currentVersionKey].books.length) {
           currentBookIndex = 0;
         }
@@ -469,7 +590,6 @@
       chapterSelect.innerHTML = '';
       const totalChapters = bookObj.chapters.length;
 
-      // Asegurar que el capítulo guardado no exceda el total del libro
       if (currentChapterNum > totalChapters) {
         currentChapterNum = 1;
       }
@@ -487,7 +607,6 @@
       const activeBible = biblesCache[currentVersionKey];
       if (!activeBible) return;
 
-      // Persistir la posición actual de lectura
       localStorage.setItem('bible_last_book', currentBookIndex);
       localStorage.setItem('bible_last_chapter', currentChapterNum);
 
@@ -516,6 +635,7 @@
 
           const span = document.createElement('span');
           span.className = 'verse-inline';
+          span.id = `verse-${vNum}`;
           span.dataset.verseNum = vNum;
           span.dataset.text = textRaw.replace(/<[^>]*>/g, '');
           span.title = "Haz clic para copiar este versículo";
@@ -606,6 +726,135 @@
       renderCurrentChapter();
     };
 
+    // --- Motor de Búsqueda de Texto Completo ---
+    const searchModal = document.getElementById('searchModal');
+    const btnOpenSearch = document.getElementById('btnOpenSearch');
+    const btnCloseSearch = document.getElementById('btnCloseSearch');
+    const searchInput = document.getElementById('searchInput');
+    const btnExecSearch = document.getElementById('btnExecSearch');
+    const searchResultsList = document.getElementById('searchResultsList');
+    const searchStatusInfo = document.getElementById('searchStatusInfo');
+
+    btnOpenSearch.onclick = () => {
+      searchModal.classList.add('open');
+      searchInput.focus();
+    };
+    btnCloseSearch.onclick = () => searchModal.classList.remove('open');
+
+    function stripAccents(str) {
+      return (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function executeBibleSearch() {
+      const query = searchInput.value.trim();
+      if (!query || query.length < 3) {
+        return alert("Por favor escribe al menos 3 letras para buscar.");
+      }
+
+      const activeBible = biblesCache[currentVersionKey];
+      if (!activeBible || !Array.isArray(activeBible.books)) {
+        return alert("El texto bíblico aún se está cargando. Espera un momento.");
+      }
+
+      const queryNormalized = stripAccents(query);
+      searchResultsList.innerHTML = '';
+      searchStatusInfo.textContent = "Buscando coincidencias...";
+
+      let matches = [];
+      const MAX_MATCHES = 150; // Límite para rendimiento óptimo
+
+      for (let bIdx = 0; bIdx < activeBible.books.length; bIdx++) {
+        const book = activeBible.books[bIdx];
+        for (let cIdx = 0; cIdx < book.chapters.length; cIdx++) {
+          const chap = book.chapters[cIdx];
+          const chapNum = cIdx + 1;
+
+          if (Array.isArray(chap.items)) {
+            for (let i = 0; i < chap.items.length; i++) {
+              const item = chap.items[i];
+              if (item.type === 'verse' && Array.isArray(item.lines)) {
+                const rawText = item.lines.join(' ').replace(/<[^>]*>/g, '');
+                const normText = stripAccents(rawText);
+
+                if (normText.includes(queryNormalized)) {
+                  matches.push({
+                    bookIndex: bIdx,
+                    bookName: book.human,
+                    chapterNum: chapNum,
+                    verseNum: item.verse_numbers[0],
+                    text: rawText
+                  });
+
+                  if (matches.length >= MAX_MATCHES) break;
+                }
+              }
+            }
+          }
+          if (matches.length >= MAX_MATCHES) break;
+        }
+        if (matches.length >= MAX_MATCHES) break;
+      }
+
+      renderSearchResults(matches, query);
+    }
+
+    function renderSearchResults(matches, term) {
+      searchResultsList.innerHTML = '';
+
+      if (matches.length === 0) {
+        searchStatusInfo.textContent = `No se hallaron resultados para "${term}".`;
+        return;
+      }
+
+      searchStatusInfo.textContent = `Se encontraron ${matches.length} concordancias (máx. 150):`;
+
+      const regex = new RegExp(`(${escapeRegExp(term)})`, 'gi');
+
+      matches.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'search-result-item';
+
+        const highlightedText = escapeHtml(m.text).replace(regex, '<span class="result-highlight">$1</span>');
+
+        div.innerHTML = `
+          <div class="result-ref">${m.bookName} ${m.chapterNum}:${m.verseNum}</div>
+          <div class="result-text">${highlightedText}</div>
+        `;
+
+        div.onclick = () => {
+          searchModal.classList.remove('open');
+          navigateToPassage(m.bookIndex, m.chapterNum, m.verseNum);
+        };
+
+        searchResultsList.appendChild(div);
+      });
+    }
+
+    function navigateToPassage(bIndex, cNum, vNum) {
+      currentBookIndex = bIndex;
+      currentChapterNum = cNum;
+
+      bookSelect.selectedIndex = currentBookIndex;
+      updateChapterSelect();
+      chapterSelect.value = currentChapterNum;
+      renderCurrentChapter();
+
+      // Desplazamiento y resaltado del versículo destino
+      setTimeout(() => {
+        const targetEl = document.getElementById(`verse-${vNum}`);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetEl.classList.add('copied');
+          setTimeout(() => targetEl.classList.remove('copied'), 2000);
+        }
+      }, 250);
+    }
+
+    btnExecSearch.onclick = executeBibleSearch;
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') executeBibleSearch();
+    });
+
     function cleanHtmlPreserveItalics(str) {
       if (!str) return '';
       return str
@@ -616,6 +865,14 @@
         .replace(/'/g, '&#39;')
         .replace(/&lt;i&gt;/g, '<i>')
         .replace(/&lt;\/i&gt;/g, '</i>');
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
+    }
+
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
     switchVersion(currentVersionKey);
