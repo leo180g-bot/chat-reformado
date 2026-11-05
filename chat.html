@@ -269,10 +269,35 @@
 
     #chat-box { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: var(--chat-font-size); }
     
-    .msg { background: var(--msg-bg); padding: 9px 12px; border-radius: 6px; max-width: 85%; border-left: 4px solid var(--msg-border); }
+    .msg { 
+      background: var(--msg-bg); 
+      padding: 9px 12px; 
+      border-radius: 6px; 
+      max-width: 85%; 
+      border-left: 4px solid var(--msg-border); 
+      position: relative;
+    }
     .msg.ref { border-left-color: var(--accent); }
     .msg.mentioned { background: var(--msg-bg); border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
     .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
+
+    /* Botón de eliminación en mensajes privados */
+    .btn-msg-delete {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.78rem;
+      padding: 0 4px;
+      margin-left: 6px;
+      border-radius: 4px;
+      opacity: 0.6;
+      transition: opacity 0.15s, color 0.15s;
+    }
+    .btn-msg-delete:hover {
+      opacity: 1;
+      color: #f87171;
+    }
 
     /* Estilos de Insignias */
     .badge-role { font-size: 0.72em; padding: 1px 6px; border-radius: 4px; font-weight: bold; }
@@ -308,7 +333,7 @@
     .user-clickable { color: var(--accent); cursor: pointer; font-weight: bold; }
     .user-clickable:hover { text-decoration: underline; }
     .badge-doc { font-size: 0.72em; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 4px; }
-    .msg-meta .time { font-size: 0.72em; color: var(--text-muted); margin-left: auto; }
+    .msg-meta .time { font-size: 0.72em; color: var(--text-muted); margin-left: auto; display: flex; align-items: center; }
     .msg-text { word-break: break-word; line-height: 1.4; white-space: pre-wrap; }
 
     aside.users-sidebar {
@@ -1512,13 +1537,12 @@
 
     // Recordatorio periódico de normas por BereanoBot
     async function triggerPeriodicRulesReminder() {
-      // Solo emitir si el usuario está registrado o activo en la sala
       if (!currentProfile) return;
 
       const recordatorios = [
-        "Recordatorio de Comunión: Les animamos a repasar las Normas Doctrinales (☰ > Normas Doctrinales) para mantener conversaciones que edifiquen el cuerpo de Cristo.\n«Hágase todo decentemente y con orden.» (1 Corintios 14:40)",
-        "Edificación Doctrinal: Cuidemos la mansedumbre y la fraternidad en cada intercambio teológico. Pueden consultar las directrices de la sala en el menú superior.\n«Porque el siervo del Señor no debe ser contencioso, sino amable para con todos...» (2 Timoteo 2:24)",
-        "Fraternidad Cristiana: Recuerden revisar las Normas Doctrinales en el menú de opciones para asegurar un diálogo en santidad, gracia y verdad.\n«La palabra de Cristo more en abundancia en vosotros, enseñándoos y exhortándoos unos a otros en toda sabiduría...» (Colosenses 3:16)"
+        "Recordatorio de Comunión: Les animamos a repasar las Normas Doctrinales (☰ > Normas Doctrinales) para mantener conversaciones que edifiquen el cuerpo de Cristo.\n«Hágase todo decentemente y con orden.» (1 Corintios 14:40 - RVR1960)",
+        "Edificación Doctrinal: Cuidemos la mansedumbre y la fraternidad en cada intercambio teológico. Pueden consultar las directrices de la sala en el menú superior.\n«Porque el siervo del Señor no debe ser contencioso, sino amable para con todos...» (2 Timoteo 2:24 - RVR1960)",
+        "Fraternidad Cristiana: Recuerden revisar las Normas Doctrinales en el menú de opciones para asegurar un diálogo en santidad, gracia y verdad.\n«La palabra de Cristo more en abundancia en vosotros, enseñándoos y exhortándoos unos a otros en toda sabiduría...» (Colosenses 3:16 - RVR1960)"
       ];
 
       const textoRecordatorio = recordatorios[Math.floor(Math.random() * recordatorios.length)];
@@ -1533,7 +1557,6 @@
         recipient: null
       };
 
-      // Si es administrador o si han pasado al menos 15 minutos desde el último recordatorio
       const lastReminder = localStorage.getItem('last_rules_reminder');
       const now = Date.now();
       const quinceMinutos = 15 * 60 * 1000;
@@ -1544,13 +1567,38 @@
       }
     }
 
-    // Configurar temporizador cada 15 minutos para recordar las reglas
     setInterval(() => {
-      // Solo el usuario con sesión activa en primer plano promueve el recordatorio
       if (document.visibilityState === 'visible' && currentProfile && !isGuest) {
         triggerPeriodicRulesReminder();
       }
     }, 15 * 60 * 1000);
+
+    // Ejecuta la función SQL purge_guest_private_messages() en Supabase
+    async function executeGuestDmsPurge() {
+      try {
+        await client.rpc('purge_guest_private_messages');
+      } catch (e) {
+        console.debug("Aviso al ejecutar purga automática de invitados:", e);
+      }
+    }
+
+    // Función para eliminar un mensaje individual (según la política RLS aplicada)
+    async function deleteSingleMessage(msgId) {
+      if (!msgId) return;
+      if (!confirm("¿Deseas eliminar este mensaje?")) return;
+
+      const { error } = await client
+        .from('messages')
+        .delete()
+        .eq('id', msgId);
+
+      if (error) {
+        alert("Error al eliminar el mensaje: " + error.message);
+      } else {
+        allMessages = allMessages.filter(m => m.id !== msgId);
+        renderFilteredMessages();
+      }
+    }
 
     // Pestañas de Navegación
     function selectChannel(channelName) {
@@ -1687,6 +1735,10 @@
       const isPrivate = !!data.recipient;
       const isBot = data.role === 'bot' || data.username === 'BereanoBot';
 
+      // Solo el autor puede eliminar según la política SQL creada
+      const isMyMessage = myNick && data.username && data.username.toLowerCase() === myNick.toLowerCase();
+      const canDelete = isPrivate && isMyMessage;
+
       const roleBadge = getRoleBadgeMarkup(data.role, isBot);
       const messageFont = data.font_family || 'system-ui, sans-serif';
       const messageColor = data.text_color || '#f8fafc';
@@ -1698,7 +1750,10 @@
           <span class="user-clickable">${escapeHtml(data.username)}</span>
           ${roleBadge}
           <span class="badge-doc">${escapeHtml(data.doctrine_affinity || 'General')}</span>
-          <span class="time">${formatTime(data.created_at)}</span>
+          <span class="time">
+            ${formatTime(data.created_at)}
+            ${canDelete ? `<button type="button" class="btn-msg-delete" title="Eliminar mensaje">🗑️</button>` : ''}
+          </span>
         </div>
         <div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>
       `;
@@ -1709,6 +1764,17 @@
         e.stopPropagation();
         if (!isBot) openUserActions(data.username, e);
       });
+
+      if (canDelete) {
+        const delBtn = div.querySelector('.btn-msg-delete');
+        if (delBtn) {
+          delBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteSingleMessage(data.id);
+          });
+        }
+      }
 
       chatBox.appendChild(div);
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -1774,7 +1840,6 @@
         });
       }
 
-      // BereanoBot siempre visible como bot asistente
       activeUsers.unshift({
         username: "BereanoBot",
         doctrine: "Soli Deo Gloria",
@@ -1844,6 +1909,9 @@
     });
 
     async function loadMessages() {
+      // Purga automática de mensajes viejos de invitados
+      executeGuestDmsPurge();
+
       const { data } = await client
         .from('messages')
         .select('*')
