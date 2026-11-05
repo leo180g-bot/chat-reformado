@@ -379,7 +379,6 @@
   <header>
     <div class="nav-controls">
       <a href="index.html" class="btn-nav-link" title="Volver a la página principal">🏠 Inicio</a>
-      <a href="chat.html" class="btn-nav-link" title="Volver al chat">💬 Chat</a>
       <button type="button" class="btn-nav-link" id="btnOpenSearch" title="Buscar versículos por palabra o frase">🔍 Buscar</button>
 
       <select id="versionSelect" title="Seleccionar versión">
@@ -484,7 +483,6 @@
 
     versionSelect.value = currentVersionKey;
 
-    // Configuración visual
     const fontSelect = document.getElementById('fontSelect');
     let currentFontSizeRem = parseFloat(localStorage.getItem('bible_font_size')) || 1.15;
     let currentFontFamily = localStorage.getItem('bible_font_family') || "'Georgia', serif";
@@ -726,7 +724,7 @@
       renderCurrentChapter();
     };
 
-    // --- Motor de Búsqueda de Texto Completo ---
+    // --- Motor de Búsqueda ---
     const searchModal = document.getElementById('searchModal');
     const btnOpenSearch = document.getElementById('btnOpenSearch');
     const btnCloseSearch = document.getElementById('btnCloseSearch');
@@ -761,7 +759,7 @@
       searchStatusInfo.textContent = "Buscando coincidencias...";
 
       let matches = [];
-      const MAX_MATCHES = 150; // Límite para rendimiento óptimo
+      const MAX_MATCHES = 150;
 
       for (let bIdx = 0; bIdx < activeBible.books.length; bIdx++) {
         const book = activeBible.books[bIdx];
@@ -839,7 +837,6 @@
       chapterSelect.value = currentChapterNum;
       renderCurrentChapter();
 
-      // Desplazamiento y resaltado del versículo destino
       setTimeout(() => {
         const targetEl = document.getElementById(`verse-${vNum}`);
         if (targetEl) {
