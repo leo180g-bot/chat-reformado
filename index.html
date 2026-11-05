@@ -240,6 +240,66 @@
       background: var(--accent-btn-hover);
     }
 
+    /* Tarjeta inferior para Lector Bíblico */
+    .bible-reader-link-card {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .bible-cover-link {
+      display: block;
+      width: 100%;
+      max-width: 320px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      line-height: 0;
+    }
+
+    .bible-cover-link:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .bible-cover-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .bible-reader-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      background: var(--bg-subpanel);
+      color: var(--accent);
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .bible-reader-btn:hover {
+      background: var(--accent-btn);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
     .footer-note {
       text-align: center;
       margin-top: 18px;
@@ -342,6 +402,16 @@
       <button type="submit" class="btn-primary">Acceder como Invitado</button>
     </form>
 
+    <!-- Enlace Inferior al Lector Bíblico con biblia.jpeg -->
+    <section class="bible-reader-link-card" aria-label="Lector bíblico">
+      <a href="biblia.html" class="bible-cover-link" title="Abrir Lector de la Biblia RVR1960">
+        <img src="biblia.jpeg" alt="Santa Biblia Reina-Valera 1960" class="bible-cover-img" onerror="this.src='biblia.jpg';">
+      </a>
+      <a href="biblia.html" class="bible-reader-btn" title="Leer la Biblia en línea">
+        📖 Abrir Lector Bíblico RVR1960
+      </a>
+    </section>
+
     <div class="footer-note">
       Soli Deo Gloria &bull; <span>Comunión Doctrinal</span>
     </div>
@@ -352,7 +422,6 @@
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Colección de versículos clave para el banner superior
     const VERSES = [
       { text: "«Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.»", ref: "Efesios 2:8-9 (RVR1960)" },
       { text: "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.»", ref: "2 Timoteo 3:16 (RVR1960)" },
@@ -386,7 +455,6 @@
     displayRandomVerse();
     btnNextVerse.onclick = () => displayRandomVerse();
 
-    // Redirigir directamente al chat si ya existe una sesión guardada
     async function checkExistingSession() {
       const savedGuest = localStorage.getItem('guest_user');
       if (savedGuest) {
@@ -400,7 +468,6 @@
     }
     checkExistingSession();
 
-    // Gestión de pestañas (Tabs)
     const tabLogin = document.getElementById('tabLogin');
     const tabRegister = document.getElementById('tabRegister');
     const tabGuest = document.getElementById('tabGuest');
@@ -419,7 +486,6 @@
     tabRegister.onclick = () => switchTab(tabRegister, registerForm);
     tabGuest.onclick = () => switchTab(tabGuest, guestForm);
 
-    // 1. Envío Formulario de Login
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const nick = document.getElementById('loginNick').value.trim();
@@ -450,7 +516,6 @@
       }
     });
 
-    // 2. Envío Formulario de Registro
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim();
@@ -486,7 +551,6 @@
       }
     });
 
-    // 3. Envío Formulario de Invitado
     guestForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const nick = document.getElementById('guestNick').value.trim();
