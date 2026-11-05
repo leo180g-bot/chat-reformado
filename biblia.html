@@ -96,7 +96,7 @@
       position: relative;
     }
 
-    /* Menús desplegables contextuales */
+    /* Menú desplegable contextual */
     .dropdown-popover {
       display: none;
       position: absolute;
@@ -107,7 +107,7 @@
       border-radius: 8px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.65);
       z-index: 100;
-      min-width: 180px;
+      min-width: 190px;
       flex-direction: column;
       overflow: hidden;
     }
@@ -467,7 +467,7 @@
       <!-- Botón de Configuración de Fuentes -->
       <button type="button" class="btn-icon-control" id="btnFontToggle" title="Ajustes de fuente y tamaño">Aa</button>
 
-      <!-- Popover de Configuración de Fuentes -->
+      <!-- Popover de Fuentes -->
       <div class="font-settings-popover" id="fontPopover">
         <div class="font-popover-row">
           <select id="fontSelect" title="Fuente tipográfica">
@@ -482,10 +482,9 @@
         </div>
       </div>
 
-      <!-- Menú Desplegable de Navegación -->
+      <!-- Menú Desplegable con Enlace a Inicio y Chat -->
       <button type="button" class="btn-icon-control" id="btnNavMenu" title="Menú de navegación">☰</button>
 
-      <!-- Opciones de Navegación agrupadas -->
       <div class="dropdown-popover" id="navDropdown">
         <a href="index.html" class="dropdown-link">🏠 Inicio</a>
         <a href="chat.html" target="_blank" rel="noopener noreferrer" class="dropdown-link">💬 Chat (Nueva pestaña) ↗</a>
@@ -573,7 +572,7 @@
 
     versionSelect.value = currentVersionKey;
 
-    // Configuración visual
+    // Configuración visual y ampliación de escala tipográfica
     const fontSelect = document.getElementById('fontSelect');
     let currentFontSizeRem = parseFloat(localStorage.getItem('bible_font_size')) || 1.15;
     let currentFontFamily = localStorage.getItem('bible_font_family') || "'Georgia', serif";
@@ -591,8 +590,9 @@
       applyReaderStyles();
     };
 
+    // Aumento hasta 2.5rem (más de 2 veces el tamaño original de 1.15rem)
     document.getElementById('btnFontInc').onclick = () => {
-      if (currentFontSizeRem < 1.7) {
+      if (currentFontSizeRem < 2.5) {
         currentFontSizeRem = Math.round((currentFontSizeRem + 0.1) * 100) / 100;
         localStorage.setItem('bible_font_size', currentFontSizeRem);
         applyReaderStyles();
@@ -607,7 +607,7 @@
       }
     };
 
-    // Toggle de Menús flotantes (Navegación y Fuentes)
+    // Menús desplegables
     const btnNavMenu = document.getElementById('btnNavMenu');
     const navDropdown = document.getElementById('navDropdown');
     const btnFontToggle = document.getElementById('btnFontToggle');
