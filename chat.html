@@ -349,7 +349,6 @@
       color: #f87171;
     }
 
-    /* Estilos de Insignias */
     .badge-role { font-size: 0.72em; padding: 1px 6px; border-radius: 4px; font-weight: bold; }
     .badge-role.admin { background: #a16207; color: #fef08a; }
     .badge-role.moderator { background: #0369a1; color: #bae6fd; }
@@ -405,7 +404,6 @@
     .online-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .user-item-doc { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
 
-    /* Menú contextual */
     .user-action-popup {
       display: none;
       position: fixed;
@@ -433,7 +431,6 @@
     }
     .popup-btn:hover { background: var(--border-color); }
 
-    /* Barra de entrada */
     form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-panel); border-top: 1px solid var(--border-color); flex-shrink: 0; position: relative; }
     .input-wrapper { flex: 1; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 6px 0 10px; min-width: 0; }
     .input-wrapper:focus-within { border-color: var(--accent); }
@@ -445,11 +442,10 @@
     .color-picker-label input[type="color"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
     .color-indicator { width: 12px; height: 12px; border-radius: 2px; background: #f8fafc; }
     
-    .tool-btn { background: transparent; border: none; color: var(--text-muted); padding: 4px 6px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .tool-btn { background: transparent; border: none; color: var(--text-muted); padding: 4px 6px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 600; }
     .tool-btn:hover { color: var(--text-main); background: var(--border-color); }
     .tool-btn.active { color: var(--accent); background: var(--bg-panel); }
 
-    /* Popover para fuentes */
     .font-settings-popover {
       display: none;
       position: absolute;
@@ -471,10 +467,68 @@
     .font-size-btn { flex: 1; padding: 4px; background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
     .font-size-btn:hover { background: var(--border-color); }
 
+    /* Popover para GIFs de Giphy */
+    .gif-picker-popover {
+      display: none;
+      position: absolute;
+      bottom: 58px;
+      right: 20px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      width: 320px;
+      max-height: 380px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
+      z-index: 60;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .gif-picker-popover.open { display: flex; }
+
+    .gif-search-bar {
+      padding: 8px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-subpanel);
+    }
+    .gif-search-bar input {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .gif-search-bar input:focus { border-color: var(--accent); }
+
+    .gif-results-grid {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      max-height: 300px;
+    }
+    .gif-item {
+      width: 100%;
+      height: 95px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.1s, border-color 0.1s;
+      background: var(--bg-subpanel);
+    }
+    .gif-item:hover {
+      transform: scale(1.02);
+      border-color: var(--accent);
+    }
+
     button#sendBtn { padding: 8px 13px; border-radius: 6px; border: none; background: var(--accent-btn); color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; font-size: 0.85rem; flex-shrink: 0; }
     button#sendBtn:hover { background: var(--accent-btn-hover); }
 
-    /* Modales */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); align-items: center; justify-content: center; z-index: 110; padding: 14px; }
     .modal-overlay.open { display: flex; }
     .modal-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 18px; }
@@ -538,6 +592,7 @@
       
       .emoji-picker { right: 8px; bottom: 55px; }
       .font-settings-popover { right: 8px; }
+      .gif-picker-popover { right: 8px; width: 280px; }
     }
   </style>
 </head>
@@ -652,8 +707,15 @@
         <button type="button" class="emoji-item">🛡️</button>
       </div>
 
+      <!-- Popover de Buscador Giphy -->
+      <div class="gif-picker-popover" id="gifPicker">
+        <div class="gif-search-bar">
+          <input type="text" id="gifSearchInput" placeholder="Buscar GIFs en Giphy..." autocomplete="off">
+        </div>
+        <div class="gif-results-grid" id="gifResults"></div>
+      </div>
+
       <form id="chat-form">
-        <!-- Input de archivo de imagen oculto -->
         <input type="file" id="imageFileInput" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;">
 
         <div class="input-wrapper">
@@ -665,8 +727,8 @@
               <input type="color" id="textColorPicker" value="#f8fafc">
             </label>
 
-            <!-- Botón para adjuntar imagen (Solo registrados) -->
             <button type="button" class="tool-btn" id="btnAttachImage" title="Enviar imagen (Solo registrados)">🖼️</button>
+            <button type="button" class="tool-btn" id="btnGifToggle" title="Buscar y enviar GIF (Solo registrados)">GIF</button>
             <button type="button" class="tool-btn" id="btnFontMenu" title="Ajustes de fuente y tamaño">Aa</button>
             <button type="button" class="tool-btn" id="btnOpenBibleModal" title="Citar texto bíblico (1 a 10 versículos)">📖</button>
             <button type="button" class="tool-btn" id="btnEmojiToggle">😊</button>
@@ -1006,6 +1068,7 @@
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
+    const GIPHY_API_KEY = "b4WtjSwJeeaO5vY2rl5P2CwDbmy3aBoc";
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const chatBox = document.getElementById('chat-box');
@@ -1023,6 +1086,12 @@
 
     const imageFileInput = document.getElementById('imageFileInput');
     const btnAttachImage = document.getElementById('btnAttachImage');
+
+    const btnGifToggle = document.getElementById('btnGifToggle');
+    const gifPicker = document.getElementById('gifPicker');
+    const gifSearchInput = document.getElementById('gifSearchInput');
+    const gifResults = document.getElementById('gifResults');
+    let gifSearchDebounce = null;
 
     const userPopup = document.getElementById('userPopup');
     const popupHeaderNick = document.getElementById('popupHeaderNick');
@@ -1153,6 +1222,9 @@
       if (!fontPopover.contains(e.target) && e.target !== btnFontMenu) {
         fontPopover.classList.remove('open');
         btnFontMenu.classList.remove('active');
+      }
+      if (!gifPicker.contains(e.target) && e.target !== btnGifToggle) {
+        gifPicker.classList.remove('open');
       }
       if (!userPopup.contains(e.target)) {
         userPopup.classList.remove('open');
@@ -1700,7 +1772,7 @@
       contentInput.focus();
     }
 
-    // Aprobación y Rechazo de Moderación de Imágenes (Nivel 1)
+    // Aprobación y Rechazo de Moderación de Imágenes y GIFs (Nivel 1)
     async function approveImageMessage(msgId) {
       const { error } = await client
         .from('messages')
@@ -1717,7 +1789,7 @@
     }
 
     async function rejectImageMessage(msgId) {
-      if (!confirm("¿Rechazar y eliminar esta imagen?")) return;
+      if (!confirm("¿Rechazar y eliminar esta imagen o GIF?")) return;
       const { error } = await client
         .from('messages')
         .delete()
@@ -1739,8 +1811,6 @@
 
       if (currentChannel === 'general') {
         publicMessages.forEach(msg => {
-          // Filtrado de moderación:
-          // Se muestra si está aprobado, o si es mi mensaje, o si soy Staff (admin/mod)
           const isMine = myNick && (msg.username || '').toLowerCase() === myNick;
           const isVisible = (msg.is_approved !== false) || isMine || esStaff;
 
@@ -1796,7 +1866,7 @@
         imageMarkup = `
           <div class="msg-img-container">
             <a href="${escapeHtml(data.image_url)}" target="_blank" rel="noopener noreferrer">
-              <img src="${escapeHtml(data.image_url)}" class="msg-img" alt="Imagen compartida" loading="lazy">
+              <img src="${escapeHtml(data.image_url)}" class="msg-img" alt="Imagen o GIF compartido" loading="lazy">
             </a>
           </div>
         `;
@@ -1908,7 +1978,7 @@
       });
     }
 
-    // Control de Subida de Imágenes
+    // --- Subida de Imágenes Locales ---
     btnAttachImage.onclick = () => {
       if (isGuest) {
         return alert("Solo los usuarios registrados pueden enviar imágenes. Por favor inicia sesión o regístrate.");
@@ -1920,7 +1990,6 @@
       const file = imageFileInput.files[0];
       if (!file) return;
 
-      // Validación de tamaño (máx 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert("La imagen no puede superar los 5MB.");
         imageFileInput.value = '';
@@ -1947,7 +2016,6 @@
 
         const uploadedUrl = publicUrlData.publicUrl;
 
-        // Enviar mensaje con la imagen
         await sendMessagePayload(contentInput.value.trim(), uploadedUrl);
         contentInput.value = '';
 
@@ -1960,6 +2028,80 @@
       }
     };
 
+    // --- Buscador e Integración de GIFs con Giphy API ---
+    btnGifToggle.onclick = (e) => {
+      e.stopPropagation();
+      if (isGuest) {
+        return alert("Solo los usuarios registrados pueden enviar GIFs. Por favor inicia sesión o regístrate.");
+      }
+
+      gifPicker.classList.toggle('open');
+      if (gifPicker.classList.contains('open')) {
+        gifSearchInput.focus();
+        if (!gifSearchInput.value.trim()) {
+          fetchTrendingGiphy();
+        }
+      }
+    };
+
+    async function fetchTrendingGiphy() {
+      const url = `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=20&rating=g`;
+      loadGiphyFromUrl(url);
+    }
+
+    async function searchGiphy(term) {
+      if (!term.trim()) return fetchTrendingGiphy();
+      const url = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(term)}&limit=20&rating=g&lang=es`;
+      loadGiphyFromUrl(url);
+    }
+
+    gifSearchInput.addEventListener('input', (e) => {
+      clearTimeout(gifSearchDebounce);
+      gifSearchDebounce = setTimeout(() => {
+        searchGiphy(e.target.value);
+      }, 400);
+    });
+
+    async function loadGiphyFromUrl(url) {
+      gifResults.innerHTML = '<div style="grid-column: span 2; text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">Cargando GIFs...</div>';
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const resJson = await res.json();
+        gifResults.innerHTML = '';
+
+        const items = resJson.data || [];
+        if (items.length === 0) {
+          gifResults.innerHTML = '<div style="grid-column: span 2; text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">No se encontraron resultados.</div>';
+          return;
+        }
+
+        items.forEach(item => {
+          const previewUrl = item.images.fixed_height_small?.url || item.images.fixed_height?.url;
+          const fullUrl = item.images.original?.url || previewUrl;
+
+          const img = document.createElement('img');
+          img.src = previewUrl;
+          img.className = 'gif-item';
+          img.alt = item.title || 'GIF';
+          img.loading = 'lazy';
+
+          img.onclick = async () => {
+            gifPicker.classList.remove('open');
+            await sendMessagePayload('', fullUrl);
+          };
+
+          gifResults.appendChild(img);
+        });
+
+      } catch (err) {
+        gifResults.innerHTML = '<div style="grid-column: span 2; text-align: center; color: #fca5a5; font-size: 0.8rem; padding: 12px;">Error al conectar con Giphy.</div>';
+        console.error("Error Giphy:", err);
+      }
+    }
+
+    // Envío unificado (Texto, Imagen o GIF)
     async function sendMessagePayload(text, imageUrl = null) {
       if (!text && !imageUrl) return;
       if (!currentProfile) return;
@@ -1972,8 +2114,6 @@
       const chosenFont = document.getElementById('fontFamilySelect').value;
       const chosenColor = document.getElementById('textColorPicker').value;
 
-      // Regla de Moderación:
-      // Si el rol es 'novice' (Nivel 1) y contiene imagen en sala general, requiere aprobación previa
       const userRole = currentProfile.role || 'novice';
       let needsApproval = false;
       if (imageUrl && userRole === 'novice' && currentChannel === 'general') {
@@ -1997,10 +2137,9 @@
         const { error } = await client.from('messages').insert([payload]);
         if (error) alert("Error al enviar mensaje: " + error.message);
         else if (needsApproval) {
-          alert("Tu imagen ha sido enviada y quedará visible una vez sea aprobada por un moderador o administrador.");
+          alert("Tu archivo/GIF ha sido enviado y quedará visible una vez sea aprobado por un moderador o administrador.");
         }
       } else {
-        // Enviar por Broadcast al privado
         payload.id = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
         payload.recipient = currentChannel;
         payload.is_approved = true;
@@ -2059,8 +2198,8 @@
           isGuest = true;
           document.getElementById('authModal').classList.remove('open');
           
-          // Ocultar botón de adjuntar imágenes a invitados
           btnAttachImage.style.display = 'none';
+          btnGifToggle.style.display = 'none';
 
           initRealtime();
           loadPublicMessages();
@@ -2073,12 +2212,14 @@
       if (!session) {
         document.getElementById('authModal').classList.add('open');
         btnAttachImage.style.display = 'none';
+        btnGifToggle.style.display = 'none';
         return;
       }
 
       currentSessionUser = session.user;
       document.getElementById('authModal').classList.remove('open');
       btnAttachImage.style.display = 'flex';
+      btnGifToggle.style.display = 'flex';
 
       const { data: profile } = await client
         .from('profiles')
@@ -2329,7 +2470,7 @@
         }
       });
 
-      // 2. Actualización de Moderación (UPDATE para cuando se aprueba una imagen)
+      // 2. Actualización de Moderación (UPDATE)
       roomChannel.on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, payload => {
         const idx = publicMessages.findIndex(m => m.id === payload.new.id);
         if (idx !== -1) {
