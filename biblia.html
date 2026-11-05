@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Comunión Doctrinal - Lector Bíblico RVR1960</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-body: #0f172a;
+      --bg-panel: #1e293b;
+      --bg-surface: #111827;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-btn: #0284c7;
+      --accent-btn-hover: #0369a1;
+      --verse-num: #facc15;
+      --copy-highlight: rgba(56, 189, 248, 0.15);
+      --font-family: 'Georgia', serif;
+      --font-size: 1.15rem;
+      --line-height: 1.8;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Barra superior de controles */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-back-chat {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--accent);
+      padding: 7px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+    .btn-back-chat:hover { background: var(--border-color); }
+
+    select, button.control-btn {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+    }
+    select:focus { border-color: var(--accent); }
+
+    .reader-settings {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-size {
+      padding: 5px 10px;
+      font-weight: bold;
+    }
+
+    /* Contenedor del texto bíblico */
+    main.reader-container {
+      flex: 1;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    .chapter-heading-area {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .chapter-heading-area h1 {
+      font-size: 1.8rem;
+      color: var(--accent);
+      font-family: var(--font-family);
+      margin-bottom: 6px;
+    }
+    .chapter-heading-area .version-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Barra de copiado del capítulo entero */
+    .chapter-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .btn-action {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-action:hover {
+      color: var(--text-main);
+      border-color: var(--accent);
+      background: var(--bg-surface);
+    }
+
+    .bible-text-flow {
+      font-family: var(--font-family);
+      font-size: var(--font-size);
+      line-height: var(--line-height);
+      color: var(--text-main);
+    }
+
+    /* Subtítulos de sección dentro del capítulo */
+    .section-title {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 22px 0 10px;
+      font-family: system-ui, sans-serif;
+    }
+
+    /* Versículo y su número */
+    .verse-inline {
+      display: inline;
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 0 2px;
+      transition: background 0.15s;
+    }
+    .verse-inline:hover {
+      background: rgba(56, 189, 248, 0.1);
+    }
+    .verse-inline.copied {
+      background: var(--copy-highlight);
+    }
+    .v-num {
+      font-size: 0.72em;
+      font-weight: bold;
+      color: var(--verse-num);
+      vertical-align: super;
+      margin-right: 4px;
+      user-select: none;
+    }
+
+    /* Navegación inferior (Capítulo anterior / siguiente) */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+    .btn-nav-page {
+      background: var(--accent-btn);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-nav-page:hover { background: var(--accent-btn-hover); }
+    .btn-nav-page:disabled {
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Toast de notificación de copiado */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0284c7;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 100;
+    }
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 8px 12px; }
+      .nav-controls, .reader-settings { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-controls">
+      <a href="chat.html" class="btn-back-chat" title="Volver al chat">💬 Chat</a>
+
+      <select id="bookSelect" title="Seleccionar libro"></select>
+      <select id="chapterSelect" title="Seleccionar capítulo"></select>
+    </div>
+
+    <div class="reader-settings">
+      <select id="fontSelect" title="Fuente tipográfica">
+        <option value="'Georgia', serif" selected>Serif (Georgia)</option>
+        <option value="system-ui, -apple-system, sans-serif">Sans (Moderna)</option>
+        <option value="'Courier New', monospace">Mono (Espaciada)</option>
+      </select>
+
+      <button type="button" class="control-btn btn-size" id="btnFontDec" title="Reducir tamaño">A-</button>
+      <button type="button" class="control-btn btn-size" id="btnFontInc" title="Aumentar tamaño">A+</button>
+    </div>
+  </header>
+
+  <main class="reader-container">
+    <div class="chapter-heading-area">
+      <h1 id="chapterTitle">Cargando...</h1>
+      <span class="version-sub">Reina-Valera 1960 (RVR1960)</span>
+    </div>
+
+    <div class="chapter-actions">
+      <button type="button" class="btn-action" id="btnCopyChapter" title="Copiar todo el capítulo con formato de cita">
+        📋 Copiar capítulo completo
+      </button>
+    </div>
+
+    <article class="bible-text-flow" id="bibleContent"></article>
+
+    <div class="bottom-nav">
+      <button type="button" class="btn-nav-page" id="btnPrevChapter">← Anterior</button>
+      <button type="button" class="btn-nav-page" id="btnNextChapter">Siguiente →</button>
+    </div>
+  </main>
+
+  <div class="toast-msg" id="toast">Texto copiado al portapapeles</div>
+
+  <script>
+    // Mapeo inequívoco USFM idéntico a tu chat
+    const BOOK_USFM_MAP = {
+      "Génesis": "GEN", "Éxodo": "EXO", "Levítico": "LEV", "Números": "NUM", "Deuteronomio": "DEU",
+      "Josué": "JOS", "Jueces": "JDG", "Rut": "RUT", "1 Samuel": "1SA", "2 Samuel": "2SA",
+      "1 Reyes": "1KI", "2 Reyes": "2KI", "1 Crónicas": "1CH", "2 Crónicas": "2CH", "Esdras": "EZR",
+      "Nehemías": "NEH", "Ester": "EST", "Job": "JOB", "Salmos": "PSA", "Proverbios": "PRO",
+      "Eclesiastés": "ECC", "Cantares": "SNG", "Isaías": "ISA", "Jeremías": "JER", "Lamentaciones": "LAM",
+      "Ezequiel": "EZK", "Daniel": "DAN", "Oseas": "HOS", "Joel": "JOL", "Amós": "AMO",
+      "Abdías": "OBA", "Jonás": "JON", "Miqueas": "MIC", "Nahúm": "NAM", "Habacuc": "HAB",
+      "Sofonías": "ZEP", "Hageo": "HAG", "Zacarías": "ZEC", "Malaquías": "MAL",
+      "Mateo": "MAT", "Marcos": "MRK", "Lucas": "LUK", "Juan": "JHN", "Hechos": "ACT",
+      "Romanos": "ROM", "1 Corintios": "1CO", "2 Corintios": "2CO", "Gálatas": "GAL", "Efesios": "EPH",
+      "Filipenses": "PHP", "Colosenses": "COL", "1 Tesalonicenses": "1TH", "2 Tesalonicenses": "2TH",
+      "1 Timoteo": "1TI", "2 Timoteo": "2TI", "Tito": "TIT", "Filemón": "PHM", "Hebreos": "HEB",
+      "Santiago": "JAS", "1 Pedro": "1PE", "2 Pedro": "2PE", "1 Juan": "1JN", "2 Juan": "2JN",
+      "3 Juan": "3JN", "Judas": "JUD", "Apocalipsis": "REV"
+    };
+
+    let bibleData = null;
+    let currentBookIndex = 42; // Inicia en Juan por defecto
+    let currentChapterNum = 1;
+
+    const bookSelect = document.getElementById('bookSelect');
+    const chapterSelect = document.getElementById('chapterSelect');
+    const chapterTitle = document.getElementById('chapterTitle');
+    const bibleContent = document.getElementById('bibleContent');
+    const btnPrevChapter = document.getElementById('btnPrevChapter');
+    const btnNextChapter = document.getElementById('btnNextChapter');
+    const btnCopyChapter = document.getElementById('btnCopyChapter');
+    const toast = document.getElementById('toast');
+
+    // Preferencias de tipografía y tamaño
+    const fontSelect = document.getElementById('fontSelect');
+    let currentFontSizeRem = parseFloat(localStorage.getItem('bible_font_size')) || 1.15;
+    let currentFontFamily = localStorage.getItem('bible_font_family') || "'Georgia', serif";
+
+    function applyReaderStyles() {
+      document.documentElement.style.setProperty('--font-size', `${currentFontSizeRem}rem`);
+      document.documentElement.style.setProperty('--font-family', currentFontFamily);
+      fontSelect.value = currentFontFamily;
+    }
+    applyReaderStyles();
+
+    fontSelect.onchange = (e) => {
+      currentFontFamily = e.target.value;
+      localStorage.setItem('bible_font_family', currentFontFamily);
+      applyReaderStyles();
+    };
+
+    document.getElementById('btnFontInc').onclick = () => {
+      if (currentFontSizeRem < 1.7) {
+        currentFontSizeRem = Math.round((currentFontSizeRem + 0.1) * 100) / 100;
+        localStorage.setItem('bible_font_size', currentFontSizeRem);
+        applyReaderStyles();
+      }
+    };
+
+    document.getElementById('btnFontDec').onclick = () => {
+      if (currentFontSizeRem > 0.85) {
+        currentFontSizeRem = Math.round((currentFontSizeRem - 0.1) * 100) / 100;
+        localStorage.setItem('bible_font_size', currentFontSizeRem);
+        applyReaderStyles();
+      }
+    };
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    // Carga de RVR1960.json desde la raíz del proyecto
+    async function loadBible() {
+      try {
+        const res = await fetch('./RVR1960.json');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        bibleData = await res.json();
+        
+        populateBookSelect();
+        bookSelect.selectedIndex = currentBookIndex;
+        updateChapterSelect();
+        renderCurrentChapter();
+      } catch (err) {
+        chapterTitle.textContent = "Error al cargar la Biblia";
+        bibleContent.innerHTML = `<p style="color: #fca5a5; text-align: center;">No se pudo leer <code>RVR1960.json</code>. Asegúrate de que el archivo se encuentre en la raíz de tu proyecto en GitHub/Vercel.</p>`;
+      }
+    }
+
+    function populateBookSelect() {
+      bookSelect.innerHTML = '';
+      bibleData.books.forEach((b, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = b.human;
+        bookSelect.appendChild(opt);
+      });
+    }
+
+    function updateChapterSelect() {
+      const bookObj = bibleData.books[currentBookIndex];
+      chapterSelect.innerHTML = '';
+      const totalChapters = bookObj.chapters.length;
+
+      for (let i = 1; i <= totalChapters; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `Capítulo ${i}`;
+        chapterSelect.appendChild(opt);
+      }
+      chapterSelect.value = currentChapterNum;
+    }
+
+    function renderCurrentChapter() {
+      const bookObj = bibleData.books[currentBookIndex];
+      const chapterObj = bookObj.chapters[currentChapterNum - 1];
+
+      chapterTitle.textContent = `${bookObj.human} ${currentChapterNum}`;
+      bibleContent.innerHTML = '';
+
+      if (!chapterObj || !Array.isArray(chapterObj.items)) {
+        bibleContent.innerHTML = `<p style="color: var(--text-muted);">Capítulo no disponible.</p>`;
+        return;
+      }
+
+      // Renderiza encabezados y versículos en flujo continuo
+      chapterObj.items.forEach(item => {
+        if (item.type === 'heading1' && Array.isArray(item.lines)) {
+          const h = document.createElement('h2');
+          h.className = 'section-title';
+          h.textContent = item.lines.join(' ');
+          bibleContent.appendChild(h);
+        } else if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
+          const vNum = item.verse_numbers[0];
+          const text = Array.isArray(item.lines) ? item.lines.join(' ').trim() : '';
+
+          const span = document.createElement('span');
+          span.className = 'verse-inline';
+          span.dataset.verseNum = vNum;
+          span.dataset.text = text;
+          span.title = "Haz clic para copiar este versículo";
+
+          span.innerHTML = `<span class="v-num">${vNum}</span>${escapeHtml(text)} `;
+
+          // Clic individual copia el versículo al portapapeles
+          span.onclick = () => {
+            const citation = `«${text}» (${bookObj.human} ${currentChapterNum}:${vNum} - RVR1960)`;
+            navigator.clipboard.writeText(citation).then(() => {
+              span.classList.add('copied');
+              setTimeout(() => span.classList.remove('copied'), 600);
+              showToast(`Copiado ${bookObj.human} ${currentChapterNum}:${vNum}`);
+            });
+          };
+
+          bibleContent.appendChild(span);
+        }
+      });
+
+      // Actualizar estado de botones inferior
+      btnPrevChapter.disabled = (currentBookIndex === 0 && currentChapterNum === 1);
+      btnNextChapter.disabled = (currentBookIndex === bibleData.books.length - 1 && currentChapterNum === bookObj.chapters.length);
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Copiar todo el capítulo con formato doctrinal
+    btnCopyChapter.onclick = () => {
+      const bookObj = bibleData.books[currentBookIndex];
+      const chapterObj = bookObj.chapters[currentChapterNum - 1];
+
+      let versesText = [];
+      chapterObj.items.forEach(item => {
+        if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
+          const vNum = item.verse_numbers[0];
+          const text = Array.isArray(item.lines) ? item.lines.join(' ').trim() : '';
+          versesText.push(`${vNum} ${text}`);
+        }
+      });
+
+      const fullCitation = `«${versesText.join(' ')}» (${bookObj.human} ${currentChapterNum} - RVR1960)`;
+      navigator.clipboard.writeText(fullCitation).then(() => {
+        showToast(`Capítulo ${bookObj.human} ${currentChapterNum} copiado`);
+      });
+    };
+
+    // Cambios en los desplegables
+    bookSelect.onchange = () => {
+      currentBookIndex = parseInt(bookSelect.value, 10);
+      currentChapterNum = 1;
+      updateChapterSelect();
+      renderCurrentChapter();
+    };
+
+    chapterSelect.onchange = () => {
+      currentChapterNum = parseInt(chapterSelect.value, 10);
+      renderCurrentChapter();
+    };
+
+    // Navegación secuencial de capítulos
+    btnPrevChapter.onclick = () => {
+      if (currentChapterNum > 1) {
+        currentChapterNum--;
+      } else if (currentBookIndex > 0) {
+        currentBookIndex--;
+        bookSelect.selectedIndex = currentBookIndex;
+        updateChapterSelect();
+        currentChapterNum = bibleData.books[currentBookIndex].chapters.length;
+      }
+      chapterSelect.value = currentChapterNum;
+      renderCurrentChapter();
+    };
+
+    btnNextChapter.onclick = () => {
+      const currentBookTotalChaps = bibleData.books[currentBookIndex].chapters.length;
+      if (currentChapterNum < currentBookTotalChaps) {
+        currentChapterNum++;
+      } else if (currentBookIndex < bibleData.books.length - 1) {
+        currentBookIndex++;
+        bookSelect.selectedIndex = currentBookIndex;
+        updateChapterSelect();
+        currentChapterNum = 1;
+      }
+      chapterSelect.value = currentChapterNum;
+      renderCurrentChapter();
+    };
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
+    }
+
+    loadBible();
+  </script>
+</body>
+</html>
