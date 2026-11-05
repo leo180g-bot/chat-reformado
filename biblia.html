@@ -58,25 +58,26 @@
       flex-wrap: wrap;
     }
 
-    .btn-nav-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .btn-icon-control {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
-      color: var(--accent);
-      padding: 7px 12px;
+      color: var(--text-main);
+      padding: 7px 11px;
       border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: background 0.15s;
-      white-space: nowrap;
+      font-size: 0.95rem;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
     }
-    .btn-nav-link:hover { background: var(--border-color); }
+    .btn-icon-control:hover, .btn-icon-control.active {
+      background: var(--border-color);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
 
-    select, button.control-btn {
+    select {
       background: var(--bg-surface);
       color: var(--text-main);
       border: 1px solid var(--border-color);
@@ -88,15 +89,87 @@
     }
     select:focus { border-color: var(--accent); }
 
-    .reader-settings {
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 8px;
+      position: relative;
     }
 
-    .btn-size {
-      padding: 5px 12px;
+    /* Menús desplegables contextuales */
+    .dropdown-popover {
+      display: none;
+      position: absolute;
+      top: 44px;
+      right: 0;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.65);
+      z-index: 100;
+      min-width: 180px;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .dropdown-popover.open { display: flex; }
+
+    .dropdown-link {
+      padding: 10px 14px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .dropdown-link:hover {
+      background: var(--bg-surface);
+      color: var(--accent);
+    }
+
+    /* Popover para fuentes */
+    .font-settings-popover {
+      display: none;
+      position: absolute;
+      top: 44px;
+      right: 0;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.65);
+      z-index: 100;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 190px;
+    }
+    .font-settings-popover.open { display: flex; }
+
+    .font-popover-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .font-popover-row select {
+      width: 100%;
+      font-size: 0.82rem;
+    }
+    .btn-font-size {
+      flex: 1;
+      padding: 6px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: 4px;
+      cursor: pointer;
       font-weight: bold;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+    .btn-font-size:hover {
+      background: var(--border-color);
+      color: var(--accent);
     }
 
     main.reader-container {
@@ -366,7 +439,7 @@
 
     @media (max-width: 768px) {
       header { padding: 8px 12px; gap: 8px; }
-      .nav-controls, .reader-settings { width: 100%; justify-content: space-between; }
+      .nav-controls { width: 100%; justify-content: space-between; }
       .nav-controls select { flex: 1; min-width: 0; }
       main.reader-container { padding: 16px 12px 50px 12px; }
       .bible-text-flow { text-align: left; }
@@ -378,9 +451,6 @@
 
   <header>
     <div class="nav-controls">
-      <a href="index.html" class="btn-nav-link" title="Volver a la página principal">🏠 Inicio</a>
-      <button type="button" class="btn-nav-link" id="btnOpenSearch" title="Buscar versículos por palabra o frase">🔍 Buscar</button>
-
       <select id="versionSelect" title="Seleccionar versión">
         <option value="RVR1960">RVR1960</option>
         <option value="RVSBT18">RVSBT18</option>
@@ -390,15 +460,36 @@
       <select id="chapterSelect" title="Seleccionar capítulo"></select>
     </div>
 
-    <div class="reader-settings">
-      <select id="fontSelect" title="Fuente tipográfica">
-        <option value="'Georgia', serif" selected>Serif (Georgia)</option>
-        <option value="system-ui, -apple-system, sans-serif">Sans (Moderna)</option>
-        <option value="'Courier New', monospace">Mono (Espaciada)</option>
-      </select>
+    <div class="header-actions">
+      <!-- Botón de Búsqueda -->
+      <button type="button" class="btn-icon-control" id="btnOpenSearch" title="Buscar versículos">🔍</button>
 
-      <button type="button" class="control-btn btn-size" id="btnFontDec" title="Reducir tamaño">A-</button>
-      <button type="button" class="control-btn btn-size" id="btnFontInc" title="Aumentar tamaño">A+</button>
+      <!-- Botón de Configuración de Fuentes -->
+      <button type="button" class="btn-icon-control" id="btnFontToggle" title="Ajustes de fuente y tamaño">Aa</button>
+
+      <!-- Popover de Configuración de Fuentes -->
+      <div class="font-settings-popover" id="fontPopover">
+        <div class="font-popover-row">
+          <select id="fontSelect" title="Fuente tipográfica">
+            <option value="'Georgia', serif" selected>Serif (Georgia)</option>
+            <option value="system-ui, -apple-system, sans-serif">Sans (Moderna)</option>
+            <option value="'Courier New', monospace">Mono (Espaciada)</option>
+          </select>
+        </div>
+        <div class="font-popover-row">
+          <button type="button" class="btn-font-size" id="btnFontDec" title="Reducir tamaño">A -</button>
+          <button type="button" class="btn-font-size" id="btnFontInc" title="Aumentar tamaño">A +</button>
+        </div>
+      </div>
+
+      <!-- Menú Desplegable de Navegación -->
+      <button type="button" class="btn-icon-control" id="btnNavMenu" title="Menú de navegación">☰</button>
+
+      <!-- Opciones de Navegación agrupadas -->
+      <div class="dropdown-popover" id="navDropdown">
+        <a href="index.html" class="dropdown-link">🏠 Inicio</a>
+        <a href="chat.html" target="_blank" rel="noopener noreferrer" class="dropdown-link">💬 Chat (Nueva pestaña) ↗</a>
+      </div>
     </div>
   </header>
 
@@ -418,7 +509,6 @@
 
     <div class="bottom-nav">
       <button type="button" class="btn-nav-page" id="btnPrevChapter">← Anterior</button>
-      <a href="index.html" class="btn-nav-link" title="Volver a la página principal">🏠 Inicio</a>
       <button type="button" class="btn-nav-page" id="btnNextChapter">Siguiente →</button>
     </div>
   </main>
@@ -483,6 +573,7 @@
 
     versionSelect.value = currentVersionKey;
 
+    // Configuración visual
     const fontSelect = document.getElementById('fontSelect');
     let currentFontSizeRem = parseFloat(localStorage.getItem('bible_font_size')) || 1.15;
     let currentFontFamily = localStorage.getItem('bible_font_family') || "'Georgia', serif";
@@ -515,6 +606,39 @@
         applyReaderStyles();
       }
     };
+
+    // Toggle de Menús flotantes (Navegación y Fuentes)
+    const btnNavMenu = document.getElementById('btnNavMenu');
+    const navDropdown = document.getElementById('navDropdown');
+    const btnFontToggle = document.getElementById('btnFontToggle');
+    const fontPopover = document.getElementById('fontPopover');
+
+    btnNavMenu.onclick = (e) => {
+      e.stopPropagation();
+      fontPopover.classList.remove('open');
+      btnFontToggle.classList.remove('active');
+      navDropdown.classList.toggle('open');
+      btnNavMenu.classList.toggle('active');
+    };
+
+    btnFontToggle.onclick = (e) => {
+      e.stopPropagation();
+      navDropdown.classList.remove('open');
+      btnNavMenu.classList.remove('active');
+      fontPopover.classList.toggle('open');
+      btnFontToggle.classList.toggle('active');
+    };
+
+    document.addEventListener('click', (e) => {
+      if (!navDropdown.contains(e.target) && e.target !== btnNavMenu) {
+        navDropdown.classList.remove('open');
+        btnNavMenu.classList.remove('active');
+      }
+      if (!fontPopover.contains(e.target) && e.target !== btnFontToggle) {
+        fontPopover.classList.remove('open');
+        btnFontToggle.classList.remove('active');
+      }
+    });
 
     function showToast(msg) {
       toast.textContent = msg;
