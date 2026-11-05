@@ -279,6 +279,58 @@
     .msg.ref { border-left-color: var(--accent); }
     .msg.mentioned { background: var(--msg-bg); border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
     .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
+    .msg.pending { opacity: 0.85; border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.05); }
+
+    .msg-img-container {
+      margin-top: 8px;
+      max-width: 100%;
+    }
+    .msg-img {
+      max-width: 280px;
+      max-height: 280px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      display: block;
+      cursor: pointer;
+      object-fit: cover;
+    }
+
+    .pending-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      background: #78350f;
+      color: #fde68a;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      font-weight: bold;
+    }
+
+    .mod-actions-bar {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+    }
+    .btn-mod-approve {
+      background: #065f46;
+      color: #a7f3d0;
+      border: 1px solid #059669;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-mod-reject {
+      background: #991b1b;
+      color: #fecaca;
+      border: 1px solid #dc2626;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
     .btn-msg-delete {
       background: transparent;
@@ -601,8 +653,11 @@
       </div>
 
       <form id="chat-form">
+        <!-- Input de archivo de imagen oculto -->
+        <input type="file" id="imageFileInput" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;">
+
         <div class="input-wrapper">
-          <input type="text" id="content" placeholder="Escribe tu mensaje en # Sala General..." required autocomplete="off">
+          <input type="text" id="content" placeholder="Escribe tu mensaje en # Sala General..." autocomplete="off">
           
           <div class="input-toolbar">
             <label class="color-picker-label" title="Color de tu mensaje">
@@ -610,6 +665,8 @@
               <input type="color" id="textColorPicker" value="#f8fafc">
             </label>
 
+            <!-- Botón para adjuntar imagen (Solo registrados) -->
+            <button type="button" class="tool-btn" id="btnAttachImage" title="Enviar imagen (Solo registrados)">🖼️</button>
             <button type="button" class="tool-btn" id="btnFontMenu" title="Ajustes de fuente y tamaño">Aa</button>
             <button type="button" class="tool-btn" id="btnOpenBibleModal" title="Citar texto bíblico (1 a 10 versículos)">📖</button>
             <button type="button" class="tool-btn" id="btnEmojiToggle">😊</button>
@@ -964,6 +1021,9 @@
     const currentViewLabel = document.getElementById('currentViewLabel');
     const currentViewDesc = document.getElementById('currentViewDesc');
 
+    const imageFileInput = document.getElementById('imageFileInput');
+    const btnAttachImage = document.getElementById('btnAttachImage');
+
     const userPopup = document.getElementById('userPopup');
     const popupHeaderNick = document.getElementById('popupHeaderNick');
     const popupMentionBtn = document.getElementById('popupMentionBtn');
@@ -1042,7 +1102,7 @@
       sndPrivate.play().catch(() => {});
     }
 
-    // --- ALMACENAMIENTO LOCAL DE MENSAJES PRIVADOS (CLIENT-SIDE) ---
+    // --- ALMACENAMIENTO LOCAL DE PRIVADOS ---
     function getLocalDmsStorageKey() {
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : 'anon';
       return `local_dms_${myNick}`;
@@ -1484,7 +1544,8 @@
         content: `¡Gracia y paz, @${newUserNick}! Te damos la bienvenida a Comunión Doctrinal.\n${versiculoAzar}`,
         font_family: "system-ui, sans-serif",
         text_color: "#ecfdf5",
-        recipient: null
+        recipient: null,
+        is_approved: true
       };
 
       await client.from('messages').insert([botPayload]);
@@ -1507,7 +1568,8 @@
         content: texto,
         font_family: "system-ui, sans-serif",
         text_color: "#ecfdf5",
-        recipient: null
+        recipient: null,
+        is_approved: true
       };
 
       const lastReminder = localStorage.getItem('last_rules_reminder');
@@ -1524,7 +1586,6 @@
       }
     }, 15 * 60 * 1000);
 
-    // Borrado individual de un mensaje local en privado
     function deleteLocalDirectMessage(msgId) {
       if (!confirm("¿Deseas eliminar este mensaje privado de tu navegador?")) return;
       const dms = loadLocalDms();
@@ -1609,18 +1670,15 @@
       }
     }
 
-    // Cierre y borrado de la conversación en el navegador (localStorage)
     function closeDirectTab(targetLower) {
-      if (!confirm(`¿Deseas cerrar y eliminar la conversación con @${targetLower}? Se borrará por completo de este navegador.`)) {
+      if (!confirm(`¿Deseas cerrar y eliminar la conversación con @${targetLower}? Se borrará de este navegador.`)) {
         return;
       }
 
-      // 1. Quitar pestaña
       directConversations.delete(targetLower);
       const tab = document.getElementById(`tab-dm-${targetLower}`);
       if (tab) tab.remove();
 
-      // 2. Eliminar del localStorage del usuario
       const dms = loadLocalDms();
       delete dms[targetLower];
       saveLocalDms(dms);
@@ -1642,11 +1700,54 @@
       contentInput.focus();
     }
 
+    // Aprobación y Rechazo de Moderación de Imágenes (Nivel 1)
+    async function approveImageMessage(msgId) {
+      const { error } = await client
+        .from('messages')
+        .update({ is_approved: true })
+        .eq('id', msgId);
+
+      if (error) {
+        alert("Error al aprobar: " + error.message);
+      } else {
+        const m = publicMessages.find(item => item.id === msgId);
+        if (m) m.is_approved = true;
+        renderFilteredMessages();
+      }
+    }
+
+    async function rejectImageMessage(msgId) {
+      if (!confirm("¿Rechazar y eliminar esta imagen?")) return;
+      const { error } = await client
+        .from('messages')
+        .delete()
+        .eq('id', msgId);
+
+      if (error) {
+        alert("Error al rechazar: " + error.message);
+      } else {
+        publicMessages = publicMessages.filter(item => item.id !== msgId);
+        renderFilteredMessages();
+      }
+    }
+
     function renderFilteredMessages() {
       chatBox.innerHTML = '';
+      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
+      const myRole = currentProfile ? currentProfile.role : 'guest';
+      const esStaff = (myRole === 'admin' || myRole === 'moderator');
 
       if (currentChannel === 'general') {
-        publicMessages.forEach(msg => appendMessageDOM(msg));
+        publicMessages.forEach(msg => {
+          // Filtrado de moderación:
+          // Se muestra si está aprobado, o si es mi mensaje, o si soy Staff (admin/mod)
+          const isMine = myNick && (msg.username || '').toLowerCase() === myNick;
+          const isVisible = (msg.is_approved !== false) || isMine || esStaff;
+
+          if (isVisible) {
+            appendMessageDOM(msg);
+          }
+        });
       } else {
         const dms = loadLocalDms();
         const chatHistory = dms[currentChannel] || [];
@@ -1671,32 +1772,60 @@
 
     function appendMessageDOM(data) {
       const myNick = currentProfile ? currentProfile.username : '';
+      const myRole = currentProfile ? currentProfile.role : 'guest';
       const div = document.createElement('div');
       const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
       const isMention = myNick && data.content && data.content.toLowerCase().includes(myNick.toLowerCase()) && data.username !== myNick;
       const isPrivate = !!data.recipient;
       const isBot = data.role === 'bot' || data.username === 'BereanoBot';
+      const isPending = data.is_approved === false;
 
       const isMyMessage = myNick && data.username && data.username.toLowerCase() === myNick.toLowerCase();
       const canDelete = isPrivate && isMyMessage;
+      const esStaff = (myRole === 'admin' || myRole === 'moderator');
 
       const roleBadge = getRoleBadgeMarkup(data.role, isBot);
       const messageFont = data.font_family || 'system-ui, sans-serif';
       const messageColor = data.text_color || '#f8fafc';
 
-      div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''} ${isBot ? 'bot' : ''}`;
+      div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''} ${isBot ? 'bot' : ''} ${isPending ? 'pending' : ''}`;
       div.dataset.msgId = data.id || '';
+
+      let imageMarkup = '';
+      if (data.image_url) {
+        imageMarkup = `
+          <div class="msg-img-container">
+            <a href="${escapeHtml(data.image_url)}" target="_blank" rel="noopener noreferrer">
+              <img src="${escapeHtml(data.image_url)}" class="msg-img" alt="Imagen compartida" loading="lazy">
+            </a>
+          </div>
+        `;
+      }
+
+      let modMarkup = '';
+      if (isPending && esStaff && !isPrivate) {
+        modMarkup = `
+          <div class="mod-actions-bar">
+            <button type="button" class="btn-mod-approve" onclick="approveImageMessage('${data.id}')">✅ Aprobar imagen</button>
+            <button type="button" class="btn-mod-reject" onclick="rejectImageMessage('${data.id}')">❌ Rechazar</button>
+          </div>
+        `;
+      }
+
       div.innerHTML = `
         <div class="msg-meta">
           <span class="user-clickable">${escapeHtml(data.username)}</span>
           ${roleBadge}
           <span class="badge-doc">${escapeHtml(data.doctrine_affinity || 'General')}</span>
+          ${isPending ? `<span class="pending-badge">⏳ Pendiente de moderación</span>` : ''}
           <span class="time">
             ${formatTime(data.created_at)}
             ${canDelete ? `<button type="button" class="btn-msg-delete" title="Eliminar del navegador">🗑️</button>` : ''}
           </span>
         </div>
-        <div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>
+        ${data.content ? `<div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>` : ''}
+        ${imageMarkup}
+        ${modMarkup}
       `;
 
       const clickableNick = div.querySelector('.user-clickable');
@@ -1779,43 +1908,103 @@
       });
     }
 
-    // ENVÍO DE MENSAJES: PÚBLICO VA A SUPABASE, PRIVADO VA POR BROADCAST Y LOCALSTORAGE
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const content = contentInput.value.trim();
-      if (!content || !currentProfile) return;
+    // Control de Subida de Imágenes
+    btnAttachImage.onclick = () => {
+      if (isGuest) {
+        return alert("Solo los usuarios registrados pueden enviar imágenes. Por favor inicia sesión o regístrate.");
+      }
+      imageFileInput.click();
+    };
+
+    imageFileInput.onchange = async () => {
+      const file = imageFileInput.files[0];
+      if (!file) return;
+
+      // Validación de tamaño (máx 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("La imagen no puede superar los 5MB.");
+        imageFileInput.value = '';
+        return;
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+      const filePath = `uploads/${fileName}`;
+
+      btnAttachImage.textContent = "⏳";
+      btnAttachImage.disabled = true;
+
+      try {
+        const { error: uploadError } = await client.storage
+          .from('chat-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicUrlData } = client.storage
+          .from('chat-images')
+          .getPublicUrl(filePath);
+
+        const uploadedUrl = publicUrlData.publicUrl;
+
+        // Enviar mensaje con la imagen
+        await sendMessagePayload(contentInput.value.trim(), uploadedUrl);
+        contentInput.value = '';
+
+      } catch (err) {
+        alert("Error al subir imagen: " + err.message);
+      } finally {
+        btnAttachImage.textContent = "🖼️";
+        btnAttachImage.disabled = false;
+        imageFileInput.value = '';
+      }
+    };
+
+    async function sendMessagePayload(text, imageUrl = null) {
+      if (!text && !imageUrl) return;
+      if (!currentProfile) return;
 
       if (usuariosSilenciados.has(currentProfile.username.toLowerCase())) {
         alert("🔇 Te encuentras silenciado en esta sala.");
         return;
       }
 
-      contentInput.value = '';
-
       const chosenFont = document.getElementById('fontFamilySelect').value;
       const chosenColor = document.getElementById('textColorPicker').value;
 
+      // Regla de Moderación:
+      // Si el rol es 'novice' (Nivel 1) y contiene imagen en sala general, requiere aprobación previa
+      const userRole = currentProfile.role || 'novice';
+      let needsApproval = false;
+      if (imageUrl && userRole === 'novice' && currentChannel === 'general') {
+        needsApproval = true;
+      }
+
       const payload = {
-        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
         username: currentProfile.username,
         doctrine_affinity: currentProfile.doctrine_affinity,
-        content: content,
+        content: text || '',
+        image_url: imageUrl,
         font_family: chosenFont,
         text_color: chosenColor,
-        role: currentProfile.role || 'novice',
+        role: userRole,
+        is_approved: !needsApproval,
         created_at: new Date().toISOString()
       };
 
       if (currentChannel === 'general') {
-        // Enviar a la base de datos de Supabase
         payload.recipient = null;
         const { error } = await client.from('messages').insert([payload]);
         if (error) alert("Error al enviar mensaje: " + error.message);
+        else if (needsApproval) {
+          alert("Tu imagen ha sido enviada y quedará visible una vez sea aprobada por un moderador o administrador.");
+        }
       } else {
-        // PRIVADO: NO SE GUARDA EN SUPABASE. SE ENVÍA POR BROADCAST Y SE GUARDA EN LOCALSTORAGE
+        // Enviar por Broadcast al privado
+        payload.id = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
         payload.recipient = currentChannel;
+        payload.is_approved = true;
 
-        // 1. Transmitir por tiempo real al destinatario
         if (roomChannel) {
           roomChannel.send({
             type: 'broadcast',
@@ -1824,14 +2013,20 @@
           });
         }
 
-        // 2. Guardar en el navegador del remitente
         storeDirectMessageLocally(currentChannel, payload);
         appendMessageDOM(payload);
       }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const content = contentInput.value.trim();
+      if (!content) return;
+      contentInput.value = '';
+      await sendMessagePayload(content, null);
     });
 
     async function loadPublicMessages() {
-      // Solo carga mensajes públicos de la Sala General desde Supabase
       const { data } = await client
         .from('messages')
         .select('*')
@@ -1848,7 +2043,6 @@
     }
 
     function initLocalDmsTabs() {
-      // Reabrir solo las pestañas de privados que existan en el localStorage del usuario
       const dms = loadLocalDms();
       for (const targetUser in dms) {
         if (Array.isArray(dms[targetUser]) && dms[targetUser].length > 0) {
@@ -1864,6 +2058,10 @@
           currentProfile = JSON.parse(savedGuest);
           isGuest = true;
           document.getElementById('authModal').classList.remove('open');
+          
+          // Ocultar botón de adjuntar imágenes a invitados
+          btnAttachImage.style.display = 'none';
+
           initRealtime();
           loadPublicMessages();
           initLocalDmsTabs();
@@ -1874,11 +2072,13 @@
       const { data: { session } } = await client.auth.getSession();
       if (!session) {
         document.getElementById('authModal').classList.add('open');
+        btnAttachImage.style.display = 'none';
         return;
       }
 
       currentSessionUser = session.user;
       document.getElementById('authModal').classList.remove('open');
+      btnAttachImage.style.display = 'flex';
 
       const { data: profile } = await client
         .from('profiles')
@@ -2106,13 +2306,20 @@
         }
       });
 
-      // 1. Mensajes Públicos desde la base de datos de Supabase
+      // 1. Mensajes Públicos (INSERT)
       roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
         if (!payload.new.recipient) {
           publicMessages.push(payload.new);
           if (currentChannel === 'general') {
-            appendMessageDOM(payload.new);
             const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
+            const myRole = currentProfile ? currentProfile.role : 'guest';
+            const esStaff = (myRole === 'admin' || myRole === 'moderator');
+            const isMine = myNick && (payload.new.username || '').toLowerCase() === myNick;
+
+            if (payload.new.is_approved !== false || isMine || esStaff) {
+              appendMessageDOM(payload.new);
+            }
+
             if (payload.new.username.toLowerCase() !== myNick) {
               const isMention = myNick && payload.new.content && payload.new.content.toLowerCase().includes(myNick);
               if (isMention) playMentionSound();
@@ -2122,6 +2329,18 @@
         }
       });
 
+      // 2. Actualización de Moderación (UPDATE para cuando se aprueba una imagen)
+      roomChannel.on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, payload => {
+        const idx = publicMessages.findIndex(m => m.id === payload.new.id);
+        if (idx !== -1) {
+          publicMessages[idx] = payload.new;
+        } else {
+          publicMessages.push(payload.new);
+        }
+        if (currentChannel === 'general') renderFilteredMessages();
+      });
+
+      // 3. Mensajes Públicos (DELETE)
       roomChannel.on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
         const deletedId = payload.old ? payload.old.id : null;
         if (deletedId) {
@@ -2130,17 +2349,15 @@
         }
       });
 
-      // 2. RECEPCIÓN DE PRIVADOS VÍA BROADCAST (DIRECTO AL NAVEGADOR)
+      // 4. Recepción de Privados Vía Broadcast
       roomChannel.on('broadcast', { event: 'direct_message' }, ({ payload }) => {
         const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
         const targetRecipient = (payload.recipient || '').toLowerCase();
         const sender = (payload.username || '').toLowerCase();
 
-        // Solo procesar si el mensaje privado va dirigido estrictamente a mí
         if (targetRecipient === myNick) {
           if (isDmsBlocked) return;
 
-          // Guardar en el almacenamiento del navegador del receptor
           storeDirectMessageLocally(sender, payload);
 
           const isCurrentlyViewing = (currentChannel === sender);
