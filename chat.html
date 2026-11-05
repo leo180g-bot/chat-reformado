@@ -281,10 +281,7 @@
     .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
     .msg.pending { opacity: 0.85; border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.05); }
 
-    .msg-img-container {
-      margin-top: 8px;
-      max-width: 100%;
-    }
+    .msg-img-container { margin-top: 8px; max-width: 100%; }
     .msg-img {
       max-width: 280px;
       max-height: 280px;
@@ -294,6 +291,9 @@
       cursor: pointer;
       object-fit: cover;
     }
+
+    .msg-audio-container { margin-top: 8px; max-width: 100%; }
+    .msg-audio { width: 250px; height: 36px; border-radius: 20px; outline: none; }
 
     .pending-badge {
       display: inline-block;
@@ -306,11 +306,7 @@
       font-weight: bold;
     }
 
-    .mod-actions-bar {
-      margin-top: 6px;
-      display: flex;
-      gap: 6px;
-    }
+    .mod-actions-bar { margin-top: 6px; display: flex; gap: 6px; }
     .btn-mod-approve {
       background: #065f46;
       color: #a7f3d0;
@@ -344,10 +340,7 @@
       opacity: 0.6;
       transition: opacity 0.15s, color 0.15s;
     }
-    .btn-msg-delete:hover {
-      opacity: 1;
-      color: #f87171;
-    }
+    .btn-msg-delete:hover { opacity: 1; color: #f87171; }
 
     .badge-role { font-size: 0.72em; padding: 1px 6px; border-radius: 4px; font-weight: bold; }
     .badge-role.admin { background: #a16207; color: #fef08a; }
@@ -445,6 +438,13 @@
     .tool-btn { background: transparent; border: none; color: var(--text-muted); padding: 4px 6px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 600; }
     .tool-btn:hover { color: var(--text-main); background: var(--border-color); }
     .tool-btn.active { color: var(--accent); background: var(--bg-panel); }
+    .tool-btn.recording { color: #ef4444; animation: pulseRecord 1s infinite; }
+
+    @keyframes pulseRecord {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
 
     .font-settings-popover {
       display: none;
@@ -467,7 +467,6 @@
     .font-size-btn { flex: 1; padding: 4px; background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
     .font-size-btn:hover { background: var(--border-color); }
 
-    /* Popover para GIFs de Giphy */
     .gif-picker-popover {
       display: none;
       position: absolute;
@@ -484,12 +483,7 @@
       overflow: hidden;
     }
     .gif-picker-popover.open { display: flex; }
-
-    .gif-search-bar {
-      padding: 8px;
-      border-bottom: 1px solid var(--border-color);
-      background: var(--bg-subpanel);
-    }
+    .gif-search-bar { padding: 8px; border-bottom: 1px solid var(--border-color); background: var(--bg-subpanel); }
     .gif-search-bar input {
       width: 100%;
       padding: 7px 10px;
@@ -501,7 +495,6 @@
       outline: none;
     }
     .gif-search-bar input:focus { border-color: var(--accent); }
-
     .gif-results-grid {
       flex: 1;
       overflow-y: auto;
@@ -521,10 +514,7 @@
       transition: transform 0.1s, border-color 0.1s;
       background: var(--bg-subpanel);
     }
-    .gif-item:hover {
-      transform: scale(1.02);
-      border-color: var(--accent);
-    }
+    .gif-item:hover { transform: scale(1.02); border-color: var(--accent); }
 
     button#sendBtn { padding: 8px 13px; border-radius: 6px; border: none; background: var(--accent-btn); color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; font-size: 0.85rem; flex-shrink: 0; }
     button#sendBtn:hover { background: var(--accent-btn-hover); }
@@ -550,7 +540,6 @@
       width: 100%;
       margin-bottom: 8px;
     }
-
     .bible-numbers-row .auth-field { margin-bottom: 0; min-width: 0; }
     .bible-numbers-row label { font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .bible-numbers-row input[type="number"] { width: 100%; padding: 6px 4px; font-size: 0.85rem; text-align: center; appearance: textfield; -moz-appearance: textfield; }
@@ -707,7 +696,7 @@
         <button type="button" class="emoji-item">🛡️</button>
       </div>
 
-      <!-- Popover de Buscador Giphy -->
+      <!-- Popover Giphy -->
       <div class="gif-picker-popover" id="gifPicker">
         <div class="gif-search-bar">
           <input type="text" id="gifSearchInput" placeholder="Buscar GIFs en Giphy..." autocomplete="off">
@@ -727,6 +716,7 @@
               <input type="color" id="textColorPicker" value="#f8fafc">
             </label>
 
+            <button type="button" class="tool-btn" id="btnRecordAudio" title="Grabar nota de voz (Requiere permiso)">🎙️</button>
             <button type="button" class="tool-btn" id="btnAttachImage" title="Enviar imagen (Solo registrados)">🖼️</button>
             <button type="button" class="tool-btn" id="btnGifToggle" title="Buscar y enviar GIF (Solo registrados)">GIF</button>
             <button type="button" class="tool-btn" id="btnFontMenu" title="Ajustes de fuente y tamaño">Aa</button>
@@ -1086,6 +1076,7 @@
 
     const imageFileInput = document.getElementById('imageFileInput');
     const btnAttachImage = document.getElementById('btnAttachImage');
+    const btnRecordAudio = document.getElementById('btnRecordAudio');
 
     const btnGifToggle = document.getElementById('btnGifToggle');
     const gifPicker = document.getElementById('gifPicker');
@@ -1112,6 +1103,11 @@
     let currentChannel = 'general';
     let publicMessages = [];
     let directConversations = new Set();
+
+    // Grabación de Audio
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
 
     const biblesCache = {};
     const BIBLE_FILES = {
@@ -1772,7 +1768,7 @@
       contentInput.focus();
     }
 
-    // Aprobación y Rechazo de Moderación de Imágenes y GIFs (Nivel 1)
+    // Aprobación y Rechazo de Moderación (Nivel 1)
     async function approveImageMessage(msgId) {
       const { error } = await client
         .from('messages')
@@ -1789,7 +1785,7 @@
     }
 
     async function rejectImageMessage(msgId) {
-      if (!confirm("¿Rechazar y eliminar esta imagen o GIF?")) return;
+      if (!confirm("¿Rechazar y eliminar este contenido?")) return;
       const { error } = await client
         .from('messages')
         .delete()
@@ -1861,13 +1857,20 @@
       div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''} ${isBot ? 'bot' : ''} ${isPending ? 'pending' : ''}`;
       div.dataset.msgId = data.id || '';
 
-      let imageMarkup = '';
+      let mediaMarkup = '';
       if (data.image_url) {
-        imageMarkup = `
+        mediaMarkup += `
           <div class="msg-img-container">
             <a href="${escapeHtml(data.image_url)}" target="_blank" rel="noopener noreferrer">
-              <img src="${escapeHtml(data.image_url)}" class="msg-img" alt="Imagen o GIF compartido" loading="lazy">
+              <img src="${escapeHtml(data.image_url)}" class="msg-img" alt="Imagen o GIF" loading="lazy">
             </a>
+          </div>
+        `;
+      }
+      if (data.audio_url) {
+        mediaMarkup += `
+          <div class="msg-audio-container">
+            <audio controls src="${escapeHtml(data.audio_url)}" class="msg-audio" preload="none"></audio>
           </div>
         `;
       }
@@ -1876,7 +1879,7 @@
       if (isPending && esStaff && !isPrivate) {
         modMarkup = `
           <div class="mod-actions-bar">
-            <button type="button" class="btn-mod-approve" onclick="approveImageMessage('${data.id}')">✅ Aprobar imagen</button>
+            <button type="button" class="btn-mod-approve" onclick="approveImageMessage('${data.id}')">✅ Aprobar</button>
             <button type="button" class="btn-mod-reject" onclick="rejectImageMessage('${data.id}')">❌ Rechazar</button>
           </div>
         `;
@@ -1894,7 +1897,7 @@
           </span>
         </div>
         ${data.content ? `<div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>` : ''}
-        ${imageMarkup}
+        ${mediaMarkup}
         ${modMarkup}
       `;
 
@@ -1981,7 +1984,7 @@
     // --- Subida de Imágenes Locales ---
     btnAttachImage.onclick = () => {
       if (isGuest) {
-        return alert("Solo los usuarios registrados pueden enviar imágenes. Por favor inicia sesión o regístrate.");
+        return alert("Solo los usuarios registrados pueden enviar imágenes.");
       }
       imageFileInput.click();
     };
@@ -2014,9 +2017,7 @@
           .from('chat-images')
           .getPublicUrl(filePath);
 
-        const uploadedUrl = publicUrlData.publicUrl;
-
-        await sendMessagePayload(contentInput.value.trim(), uploadedUrl);
+        await sendMessagePayload(contentInput.value.trim(), publicUrlData.publicUrl, null);
         contentInput.value = '';
 
       } catch (err) {
@@ -2028,11 +2029,85 @@
       }
     };
 
-    // --- Buscador e Integración de GIFs con Giphy API ---
+    // --- Grabador de Notas de Voz ---
+    btnRecordAudio.onclick = async () => {
+      if (isGuest) {
+        return alert("Solo los usuarios registrados pueden enviar notas de voz.");
+      }
+
+      const userRole = currentProfile ? currentProfile.role : 'guest';
+      const hasAudioPermission = currentProfile && (currentProfile.can_audio === true || userRole === 'admin' || userRole === 'moderator');
+
+      if (!hasAudioPermission) {
+        return alert("Aún no tienes habilitado el permiso para enviar notas de voz. Consulta con un moderador o administrador.");
+      }
+
+      if (!isRecording) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+
+          mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+          };
+
+          mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            stream.getTracks().forEach(track => track.stop());
+
+            if (audioBlob.size > 10 * 1024 * 1024) {
+              return alert("El audio supera el tamaño máximo permitido (10MB).");
+            }
+
+            const fileName = `audio_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.webm`;
+            const filePath = `uploads/${fileName}`;
+
+            btnRecordAudio.textContent = "⏳";
+            btnRecordAudio.disabled = true;
+
+            try {
+              const { error: uploadError } = await client.storage
+                .from('chat-audios')
+                .upload(filePath, audioBlob, { contentType: 'audio/webm' });
+
+              if (uploadError) throw uploadError;
+
+              const { data: publicUrlData } = client.storage
+                .from('chat-audios')
+                .getPublicUrl(filePath);
+
+              await sendMessagePayload('', null, publicUrlData.publicUrl);
+
+            } catch (err) {
+              alert("Error al subir audio: " + err.message);
+            } finally {
+              btnRecordAudio.textContent = "🎙️";
+              btnRecordAudio.disabled = false;
+            }
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          btnRecordAudio.classList.add('recording');
+          btnRecordAudio.title = "Haz clic para detener y enviar grabación";
+
+        } catch (err) {
+          alert("No se pudo acceder al micrófono: " + err.message);
+        }
+      } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        btnRecordAudio.classList.remove('recording');
+        btnRecordAudio.title = "Grabar nota de voz";
+      }
+    };
+
+    // --- Buscador Giphy ---
     btnGifToggle.onclick = (e) => {
       e.stopPropagation();
       if (isGuest) {
-        return alert("Solo los usuarios registrados pueden enviar GIFs. Por favor inicia sesión o regístrate.");
+        return alert("Solo los usuarios registrados pueden enviar GIFs.");
       }
 
       gifPicker.classList.toggle('open');
@@ -2089,7 +2164,7 @@
 
           img.onclick = async () => {
             gifPicker.classList.remove('open');
-            await sendMessagePayload('', fullUrl);
+            await sendMessagePayload('', fullUrl, null);
           };
 
           gifResults.appendChild(img);
@@ -2101,9 +2176,9 @@
       }
     }
 
-    // Envío unificado (Texto, Imagen o GIF)
-    async function sendMessagePayload(text, imageUrl = null) {
-      if (!text && !imageUrl) return;
+    // Envío unificado (Texto, Imagen, GIF o Audio)
+    async function sendMessagePayload(text, imageUrl = null, audioUrl = null) {
+      if (!text && !imageUrl && !audioUrl) return;
       if (!currentProfile) return;
 
       if (usuariosSilenciados.has(currentProfile.username.toLowerCase())) {
@@ -2125,6 +2200,7 @@
         doctrine_affinity: currentProfile.doctrine_affinity,
         content: text || '',
         image_url: imageUrl,
+        audio_url: audioUrl,
         font_family: chosenFont,
         text_color: chosenColor,
         role: userRole,
@@ -2137,7 +2213,7 @@
         const { error } = await client.from('messages').insert([payload]);
         if (error) alert("Error al enviar mensaje: " + error.message);
         else if (needsApproval) {
-          alert("Tu archivo/GIF ha sido enviado y quedará visible una vez sea aprobado por un moderador o administrador.");
+          alert("Tu archivo ha sido enviado y quedará visible una vez sea aprobado por un moderador o administrador.");
         }
       } else {
         payload.id = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
@@ -2162,7 +2238,7 @@
       const content = contentInput.value.trim();
       if (!content) return;
       contentInput.value = '';
-      await sendMessagePayload(content, null);
+      await sendMessagePayload(content, null, null);
     });
 
     async function loadPublicMessages() {
@@ -2200,6 +2276,7 @@
           
           btnAttachImage.style.display = 'none';
           btnGifToggle.style.display = 'none';
+          btnRecordAudio.style.display = 'none';
 
           initRealtime();
           loadPublicMessages();
@@ -2213,6 +2290,7 @@
         document.getElementById('authModal').classList.add('open');
         btnAttachImage.style.display = 'none';
         btnGifToggle.style.display = 'none';
+        btnRecordAudio.style.display = 'none';
         return;
       }
 
@@ -2220,6 +2298,7 @@
       document.getElementById('authModal').classList.remove('open');
       btnAttachImage.style.display = 'flex';
       btnGifToggle.style.display = 'flex';
+      btnRecordAudio.style.display = 'flex';
 
       const { data: profile } = await client
         .from('profiles')
