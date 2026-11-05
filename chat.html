@@ -274,7 +274,7 @@
     .msg.mentioned { background: var(--msg-bg); border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
     .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
 
-    /* Estilos de Insignias para los 5 Niveles */
+    /* Estilos de Insignias */
     .badge-role { font-size: 0.72em; padding: 1px 6px; border-radius: 4px; font-weight: bold; }
     .badge-role.admin { background: #a16207; color: #fef08a; }
     .badge-role.moderator { background: #0369a1; color: #bae6fd; }
@@ -961,7 +961,6 @@
     // Caché en memoria para las versiones de la Biblia
     const biblesCache = {};
 
-    // Diccionario de versiones disponibles
     const BIBLE_FILES = {
       "RVR1960": "./RVR1960.json",
       "RVSBT18": "./RVSBT18.json"
@@ -1192,7 +1191,7 @@
 
     // --- Menú Contextual (Clic en Nick) ---
     function openUserActions(nick, evt) {
-      if (!nick) return;
+      if (!nick || nick.toLowerCase() === 'bereanobot') return;
 
       const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
       
@@ -1280,7 +1279,7 @@
       document.getElementById('adminModal').classList.add('open');
     };
 
-    // --- Modal Bíblico: Lógica con selector de versión y mapeo USFM ---
+    // --- Modal Bíblico ---
     const bibleModal = document.getElementById('bibleModal');
     const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
     const closeBibleBtn = document.getElementById('closeBibleBtn');
@@ -1379,7 +1378,6 @@
           const hasMatchingVerse = item.verse_numbers.some(n => n >= startV && n <= endV);
           if (hasMatchingVerse) {
             const vNum = item.verse_numbers[0];
-            // En caso de que contenga etiquetas <i>...</i> de la RVSBT18, se eliminan para insertar texto plano limpio
             const textContent = Array.isArray(item.lines) ? item.lines.join(" ").replace(/<[^>]*>/g, '').trim() : "";
             if (textContent) {
               results.push(`${vNum} ${textContent}`);
@@ -1591,7 +1589,6 @@
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Render de insignias para los 5 niveles en mensajes
     function getRoleBadgeMarkup(role, isBot) {
       if (isBot) return '<span class="badge-role bot">🤖 BOT</span>';
       switch (role) {
@@ -1683,10 +1680,12 @@
         case 'veteran': return '🏛️ ';
         case 'member': return '📖 ';
         case 'novice': return '🌱 ';
+        case 'bot': return '🤖 ';
         default: return '👤 ';
       }
     }
 
+    // Render de usuarios conectados con BereanoBot incluido
     function renderOnlineUsers(presenceState) {
       usersList.innerHTML = '';
       const activeUsers = [];
@@ -1698,6 +1697,14 @@
           }
         });
       }
+
+      // BereanoBot oñemoĩ avei usuario conectado ramo
+      activeUsers.unshift({
+        username: "BereanoBot",
+        doctrine: "Soli Deo Gloria",
+        role: "bot",
+        isBot: true
+      });
 
       usersCount.textContent = activeUsers.length;
       btnUsersCount.textContent = activeUsers.length;
@@ -1715,6 +1722,9 @@
         li.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
+          if (u.isBot) {
+            return; // BereanoBot ndorekói acciones contextuales
+          }
           openUserActions(u.username, e);
           if (window.innerWidth <= 768) {
             usersSidebar.classList.remove('mobile-open');
@@ -1895,7 +1905,6 @@
     tabRegister.onclick = () => switchAuthTab(tabRegister, registerForm);
     tabGuest.onclick = () => switchAuthTab(tabGuest, guestForm);
 
-    // Guardar cambios en el perfil
     document.getElementById('profileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (isGuest) return;
@@ -1936,7 +1945,6 @@
       }
     });
 
-    // Panel de Asignación de Roles por Administrador
     document.getElementById('adminRoleForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const targetUser = document.getElementById('adminTargetUser').value.trim();
@@ -2024,7 +2032,6 @@
       };
     });
 
-    // Realtime con listener de inserciones, eliminaciones y presencia
     function initRealtime() {
       if (roomChannel) roomChannel.unsubscribe();
       roomChannel = client.channel('general-room', {
