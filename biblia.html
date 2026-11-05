@@ -123,7 +123,6 @@
       text-transform: uppercase;
     }
 
-    /* Barra de copiado del capítulo entero */
     .chapter-actions {
       display: flex;
       justify-content: flex-end;
@@ -156,7 +155,6 @@
       color: var(--text-main);
     }
 
-    /* Subtítulos de sección dentro del capítulo */
     .section-title {
       font-size: 1.1em;
       font-weight: 700;
@@ -165,7 +163,6 @@
       font-family: system-ui, sans-serif;
     }
 
-    /* Versículo y su número */
     .verse-inline {
       display: inline;
       cursor: pointer;
@@ -188,10 +185,11 @@
       user-select: none;
     }
 
-    /* Navegación inferior (Capítulo anterior / siguiente) */
+    /* Navegación inferior */
     .bottom-nav {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
       margin-top: 40px;
       padding-top: 20px;
@@ -219,7 +217,7 @@
       border: 1px solid var(--border-color);
     }
 
-    /* Toast de notificación de copiado */
+    /* Toast de notificación */
     .toast-msg {
       position: fixed;
       bottom: 24px;
@@ -251,6 +249,8 @@
 
   <header>
     <div class="nav-controls">
+      <!-- Enlaces de regreso -->
+      <a href="index.html" class="btn-back-chat" title="Volver a la página principal">🏠 Inicio</a>
       <a href="chat.html" class="btn-back-chat" title="Volver al chat">💬 Chat</a>
 
       <select id="bookSelect" title="Seleccionar libro"></select>
@@ -285,6 +285,7 @@
 
     <div class="bottom-nav">
       <button type="button" class="btn-nav-page" id="btnPrevChapter">← Anterior</button>
+      <a href="index.html" class="btn-back-chat" title="Volver a la página principal">🏠 Inicio</a>
       <button type="button" class="btn-nav-page" id="btnNextChapter">Siguiente →</button>
     </div>
   </main>
@@ -292,24 +293,6 @@
   <div class="toast-msg" id="toast">Texto copiado al portapapeles</div>
 
   <script>
-    // Mapeo inequívoco USFM idéntico a tu chat
-    const BOOK_USFM_MAP = {
-      "Génesis": "GEN", "Éxodo": "EXO", "Levítico": "LEV", "Números": "NUM", "Deuteronomio": "DEU",
-      "Josué": "JOS", "Jueces": "JDG", "Rut": "RUT", "1 Samuel": "1SA", "2 Samuel": "2SA",
-      "1 Reyes": "1KI", "2 Reyes": "2KI", "1 Crónicas": "1CH", "2 Crónicas": "2CH", "Esdras": "EZR",
-      "Nehemías": "NEH", "Ester": "EST", "Job": "JOB", "Salmos": "PSA", "Proverbios": "PRO",
-      "Eclesiastés": "ECC", "Cantares": "SNG", "Isaías": "ISA", "Jeremías": "JER", "Lamentaciones": "LAM",
-      "Ezequiel": "EZK", "Daniel": "DAN", "Oseas": "HOS", "Joel": "JOL", "Amós": "AMO",
-      "Abdías": "OBA", "Jonás": "JON", "Miqueas": "MIC", "Nahúm": "NAM", "Habacuc": "HAB",
-      "Sofonías": "ZEP", "Hageo": "HAG", "Zacarías": "ZEC", "Malaquías": "MAL",
-      "Mateo": "MAT", "Marcos": "MRK", "Lucas": "LUK", "Juan": "JHN", "Hechos": "ACT",
-      "Romanos": "ROM", "1 Corintios": "1CO", "2 Corintios": "2CO", "Gálatas": "GAL", "Efesios": "EPH",
-      "Filipenses": "PHP", "Colosenses": "COL", "1 Tesalonicenses": "1TH", "2 Tesalonicenses": "2TH",
-      "1 Timoteo": "1TI", "2 Timoteo": "2TI", "Tito": "TIT", "Filemón": "PHM", "Hebreos": "HEB",
-      "Santiago": "JAS", "1 Pedro": "1PE", "2 Pedro": "2PE", "1 Juan": "1JN", "2 Juan": "2JN",
-      "3 Juan": "3JN", "Judas": "JUD", "Apocalipsis": "REV"
-    };
-
     let bibleData = null;
     let currentBookIndex = 42; // Inicia en Juan por defecto
     let currentChapterNum = 1;
@@ -323,7 +306,6 @@
     const btnCopyChapter = document.getElementById('btnCopyChapter');
     const toast = document.getElementById('toast');
 
-    // Preferencias de tipografía y tamaño
     const fontSelect = document.getElementById('fontSelect');
     let currentFontSizeRem = parseFloat(localStorage.getItem('bible_font_size')) || 1.15;
     let currentFontFamily = localStorage.getItem('bible_font_family') || "'Georgia', serif";
@@ -363,7 +345,6 @@
       setTimeout(() => toast.classList.remove('show'), 2200);
     }
 
-    // Carga de RVR1960.json desde la raíz del proyecto
     async function loadBible() {
       try {
         const res = await fetch('./RVR1960.json');
@@ -376,7 +357,7 @@
         renderCurrentChapter();
       } catch (err) {
         chapterTitle.textContent = "Error al cargar la Biblia";
-        bibleContent.innerHTML = `<p style="color: #fca5a5; text-align: center;">No se pudo leer <code>RVR1960.json</code>. Asegúrate de que el archivo se encuentre en la raíz de tu proyecto en GitHub/Vercel.</p>`;
+        bibleContent.innerHTML = `<p style="color: #fca5a5; text-align: center;">No se pudo leer <code>RVR1960.json</code>. Verifica que esté en la raíz del repositorio.</p>`;
       }
     }
 
@@ -416,7 +397,6 @@
         return;
       }
 
-      // Renderiza encabezados y versículos en flujo continuo
       chapterObj.items.forEach(item => {
         if (item.type === 'heading1' && Array.isArray(item.lines)) {
           const h = document.createElement('h2');
@@ -435,7 +415,6 @@
 
           span.innerHTML = `<span class="v-num">${vNum}</span>${escapeHtml(text)} `;
 
-          // Clic individual copia el versículo al portapapeles
           span.onclick = () => {
             const citation = `«${text}» (${bookObj.human} ${currentChapterNum}:${vNum} - RVR1960)`;
             navigator.clipboard.writeText(citation).then(() => {
@@ -449,14 +428,12 @@
         }
       });
 
-      // Actualizar estado de botones inferior
       btnPrevChapter.disabled = (currentBookIndex === 0 && currentChapterNum === 1);
       btnNextChapter.disabled = (currentBookIndex === bibleData.books.length - 1 && currentChapterNum === bookObj.chapters.length);
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Copiar todo el capítulo con formato doctrinal
     btnCopyChapter.onclick = () => {
       const bookObj = bibleData.books[currentBookIndex];
       const chapterObj = bookObj.chapters[currentChapterNum - 1];
@@ -476,7 +453,6 @@
       });
     };
 
-    // Cambios en los desplegables
     bookSelect.onchange = () => {
       currentBookIndex = parseInt(bookSelect.value, 10);
       currentChapterNum = 1;
@@ -489,7 +465,6 @@
       renderCurrentChapter();
     };
 
-    // Navegación secuencial de capítulos
     btnPrevChapter.onclick = () => {
       if (currentChapterNum > 1) {
         currentChapterNum--;
