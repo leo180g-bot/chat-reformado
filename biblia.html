@@ -250,7 +250,6 @@
       opacity: 1;
     }
 
-    /* Ajustes específicos según pantalla */
     @media (max-width: 768px) {
       header {
         padding: 8px 12px;
@@ -265,10 +264,10 @@
         min-width: 0;
       }
       main.reader-container {
-        padding: 16px 12px 50px 12px; /* Margen mínimo en móviles para aprovechar toda la pantalla */
+        padding: 16px 12px 50px 12px;
       }
       .bible-text-flow {
-        text-align: left; /* Mayor legibilidad en pantallas angostas */
+        text-align: left;
       }
       .chapter-heading-area h1 {
         font-size: 1.6rem;
@@ -344,8 +343,13 @@
     const biblesCache = {};
 
     let currentVersionKey = localStorage.getItem('bible_version') || 'RVR1960';
-    let currentBookIndex = 42; // Juan por defecto
-    let currentChapterNum = 1;
+
+    // Recuperar último libro y capítulo visto (o iniciar en Juan 1 por defecto)
+    let currentBookIndex = parseInt(localStorage.getItem('bible_last_book'), 10);
+    if (isNaN(currentBookIndex)) currentBookIndex = 42; // Juan
+
+    let currentChapterNum = parseInt(localStorage.getItem('bible_last_chapter'), 10);
+    if (isNaN(currentChapterNum)) currentChapterNum = 1;
 
     const versionSelect = document.getElementById('versionSelect');
     const bookSelect = document.getElementById('bookSelect');
@@ -426,6 +430,12 @@
       try {
         await loadVersionData(versionKey);
         populateBookSelect();
+        
+        // Validar índice de libro guardado contra la cantidad de libros de la versión
+        if (currentBookIndex >= biblesCache[currentVersionKey].books.length) {
+          currentBookIndex = 0;
+        }
+
         bookSelect.selectedIndex = currentBookIndex;
         updateChapterSelect();
         renderCurrentChapter();
@@ -459,6 +469,11 @@
       chapterSelect.innerHTML = '';
       const totalChapters = bookObj.chapters.length;
 
+      // Asegurar que el capítulo guardado no exceda el total del libro
+      if (currentChapterNum > totalChapters) {
+        currentChapterNum = 1;
+      }
+
       for (let i = 1; i <= totalChapters; i++) {
         const opt = document.createElement('option');
         opt.value = i;
@@ -471,6 +486,10 @@
     function renderCurrentChapter() {
       const activeBible = biblesCache[currentVersionKey];
       if (!activeBible) return;
+
+      // Persistir la posición actual de lectura
+      localStorage.setItem('bible_last_book', currentBookIndex);
+      localStorage.setItem('bible_last_chapter', currentChapterNum);
 
       const currentConfig = BIBLE_VERSIONS[currentVersionKey];
       const bookObj = activeBible.books[currentBookIndex];
