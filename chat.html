@@ -1646,7 +1646,7 @@
             🔒 @${escapeHtml(nick)}
           </span>
           <span style="display: flex; align-items: center; gap: 4px;">
-            <button type="button" class="channel-item-close" title="Cerrar chat">✕</button>
+            <button type="button" class="channel-item-close" title="Cerrar y eliminar conversación">✕</button>
           </span>
         `;
 
@@ -1674,12 +1674,41 @@
       }
     }
 
-    function closeDirectTab(nickLower) {
-      directConversations.delete(nickLower);
-      const tab = document.getElementById(`tab-dm-${nickLower}`);
+    // Cerrar y eliminar permanentemente la conversación privada para que no reaparezca
+    async function closeDirectTab(targetLower) {
+      if (!confirm(`¿Deseas cerrar y eliminar la conversación privada con @${targetLower}?`)) {
+        return;
+      }
+
+      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
+
+      // 1. Eliminar visualmente del panel y del estado local
+      directConversations.delete(targetLower);
+      const tab = document.getElementById(`tab-dm-${targetLower}`);
       if (tab) tab.remove();
-      if (currentChannel === nickLower) {
+
+      if (currentChannel === targetLower) {
         selectChannel('general');
+      }
+
+      // 2. Limpiar mensajes locales intercambiados en este privado
+      allMessages = allMessages.filter(m => {
+        const s = (m.username || '').toLowerCase();
+        const r = (m.recipient || '').toLowerCase();
+        const isThisChat = (s === myNick && r === targetLower) || (s === targetLower && r === myNick);
+        return !isThisChat;
+      });
+
+      renderFilteredMessages();
+
+      // 3. Borrar los mensajes en la base de datos de Supabase
+      try {
+        await client
+          .from('messages')
+          .delete()
+          .or(`and(username.ilike.${myNick},recipient.ilike.${targetLower}),and(username.ilike.${targetLower},recipient.ilike.${myNick})`);
+      } catch (err) {
+        console.warn("Aviso al eliminar conversación privada en el servidor:", err);
       }
     }
 
@@ -1735,7 +1764,6 @@
       const isPrivate = !!data.recipient;
       const isBot = data.role === 'bot' || data.username === 'BereanoBot';
 
-      // Solo el autor puede eliminar según la política SQL creada
       const isMyMessage = myNick && data.username && data.username.toLowerCase() === myNick.toLowerCase();
       const canDelete = isPrivate && isMyMessage;
 
@@ -1909,7 +1937,6 @@
     });
 
     async function loadMessages() {
-      // Purga automática de mensajes viejos de invitados
       executeGuestDmsPurge();
 
       const { data } = await client
@@ -1927,6 +1954,7 @@
           const sender = (msg.username || '').toLowerCase();
           const recipient = (msg.recipient || '').toLowerCase();
 
+          // Solo abrir pestaña si existen mensajes activos y no eliminados
           if (recipient && (sender === myNick || recipient === myNick)) {
             const otherUser = sender === myNick ? recipient : sender;
             ensureDirectTab(otherUser, false);
