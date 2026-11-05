@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Comunión Doctrinal - Lector Bíblico</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -31,8 +31,11 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      width: 100%;
+      overflow-x: hidden;
     }
 
+    /* Barra superior de controles adaptable */
     header {
       position: sticky;
       top: 0;
@@ -46,6 +49,7 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      width: 100%;
     }
 
     .nav-controls {
@@ -68,6 +72,7 @@
       font-size: 0.85rem;
       font-weight: 600;
       transition: background 0.15s;
+      white-space: nowrap;
     }
     .btn-back-chat:hover { background: var(--border-color); }
 
@@ -90,16 +95,17 @@
     }
 
     .btn-size {
-      padding: 5px 10px;
+      padding: 5px 12px;
       font-weight: bold;
     }
 
+    /* Contenedor del texto bíblico a todo el ancho */
     main.reader-container {
       flex: 1;
-      max-width: 820px;
       width: 100%;
-      margin: 0 auto;
-      padding: 30px 20px 60px;
+      max-width: 100%;
+      margin: 0;
+      padding: 24px 24px 60px 24px;
     }
 
     .chapter-heading-area {
@@ -107,15 +113,16 @@
       margin-bottom: 25px;
       padding-bottom: 15px;
       border-bottom: 1px solid var(--border-color);
+      width: 100%;
     }
     .chapter-heading-area h1 {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: var(--accent);
       font-family: var(--font-family);
       margin-bottom: 6px;
     }
     .chapter-heading-area .version-sub {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -126,15 +133,16 @@
       display: flex;
       justify-content: flex-end;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      width: 100%;
     }
     .btn-action {
       background: var(--bg-panel);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -147,36 +155,40 @@
       background: var(--bg-surface);
     }
 
+    /* Flujo del texto bíblico a ancho completo */
     .bible-text-flow {
+      width: 100%;
       font-family: var(--font-family);
       font-size: var(--font-size);
       line-height: var(--line-height);
       color: var(--text-main);
+      text-align: justify;
     }
 
     .section-title {
-      font-size: 1.1em;
+      font-size: 1.25em;
       font-weight: 700;
       color: var(--accent);
-      margin: 22px 0 10px;
+      margin: 26px 0 12px;
       font-family: system-ui, sans-serif;
+      text-align: left;
     }
 
     .verse-inline {
       display: inline;
       cursor: pointer;
       border-radius: 4px;
-      padding: 0 2px;
+      padding: 0 3px;
       transition: background 0.15s;
     }
     .verse-inline:hover {
-      background: rgba(56, 189, 248, 0.1);
+      background: rgba(56, 189, 248, 0.15);
     }
     .verse-inline.copied {
       background: var(--copy-highlight);
     }
     .v-num {
-      font-size: 0.72em;
+      font-size: 0.74em;
       font-weight: bold;
       color: var(--verse-num);
       vertical-align: super;
@@ -184,6 +196,7 @@
       user-select: none;
     }
 
+    /* Navegación inferior */
     .bottom-nav {
       display: flex;
       justify-content: space-between;
@@ -192,14 +205,15 @@
       margin-top: 40px;
       padding-top: 20px;
       border-top: 1px solid var(--border-color);
+      width: 100%;
     }
     .btn-nav-page {
       background: var(--accent-btn);
       color: white;
       border: none;
-      padding: 10px 16px;
+      padding: 10px 18px;
       border-radius: 6px;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -236,9 +250,29 @@
       opacity: 1;
     }
 
-    @media (max-width: 600px) {
-      header { padding: 8px 12px; }
-      .nav-controls, .reader-settings { width: 100%; justify-content: space-between; }
+    /* Ajustes específicos según pantalla */
+    @media (max-width: 768px) {
+      header {
+        padding: 8px 12px;
+        gap: 8px;
+      }
+      .nav-controls, .reader-settings {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .nav-controls select {
+        flex: 1;
+        min-width: 0;
+      }
+      main.reader-container {
+        padding: 16px 12px 50px 12px; /* Margen mínimo en móviles para aprovechar toda la pantalla */
+      }
+      .bible-text-flow {
+        text-align: left; /* Mayor legibilidad en pantallas angostas */
+      }
+      .chapter-heading-area h1 {
+        font-size: 1.6rem;
+      }
     }
   </style>
 </head>
@@ -249,10 +283,9 @@
       <a href="index.html" class="btn-back-chat" title="Volver a la página principal">🏠 Inicio</a>
       <a href="chat.html" class="btn-back-chat" title="Volver al chat">💬 Chat</a>
 
-      <!-- Selector de Versión Bíblica -->
       <select id="versionSelect" title="Seleccionar versión">
-        <option value="RVR1960">Reina-Valera 1960 (RVR1960)</option>
-        <option value="RVSBT18">Reina Valera SBT 2018 (RVSBT18)</option>
+        <option value="RVR1960">RVR1960</option>
+        <option value="RVSBT18">RVSBT18</option>
       </select>
 
       <select id="bookSelect" title="Seleccionar libro"></select>
@@ -295,7 +328,6 @@
   <div class="toast-msg" id="toast">Texto copiado al portapapeles</div>
 
   <script>
-    // Configuración de versiones
     const BIBLE_VERSIONS = {
       "RVR1960": {
         name: "Reina-Valera 1960 (RVR1960)",
@@ -309,11 +341,10 @@
       }
     };
 
-    // Caché en memoria para evitar descargar el JSON cada vez que se alterne
     const biblesCache = {};
 
     let currentVersionKey = localStorage.getItem('bible_version') || 'RVR1960';
-    let currentBookIndex = 42; // Inicia en Juan por defecto
+    let currentBookIndex = 42; // Juan por defecto
     let currentChapterNum = 1;
 
     const versionSelect = document.getElementById('versionSelect');
@@ -329,7 +360,6 @@
 
     versionSelect.value = currentVersionKey;
 
-    // Tipografía y tamaños
     const fontSelect = document.getElementById('fontSelect');
     let currentFontSizeRem = parseFloat(localStorage.getItem('bible_font_size')) || 1.15;
     let currentFontFamily = localStorage.getItem('bible_font_family') || "'Georgia', serif";
@@ -384,7 +414,7 @@
         return data;
       } catch (err) {
         chapterTitle.textContent = "Error al cargar la Biblia";
-        bibleContent.innerHTML = `<p style="color: #fca5a5; text-align: center;">No se pudo leer <code>${config.file}</code>. Asegúrate de que el archivo esté subido en la raíz de tu proyecto en GitHub/Vercel.</p>`;
+        bibleContent.innerHTML = `<p style="color: #fca5a5; text-align: center;">No se pudo leer <code>${config.file}</code>. Asegúrate de tenerlo en la raíz del repositorio.</p>`;
         throw err;
       }
     }
@@ -463,16 +493,14 @@
           bibleContent.appendChild(h);
         } else if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
           const vNum = item.verse_numbers[0];
-          // Las líneas pueden contener <i>...</i> en RVSBT18 para palabras suplidas
           const textRaw = Array.isArray(item.lines) ? item.lines.join(' ').trim() : '';
 
           const span = document.createElement('span');
           span.className = 'verse-inline';
           span.dataset.verseNum = vNum;
-          span.dataset.text = textRaw.replace(/<[^>]*>/g, ''); // Texto limpio para copiar
+          span.dataset.text = textRaw.replace(/<[^>]*>/g, '');
           span.title = "Haz clic para copiar este versículo";
 
-          // Se inserta permitiendo las cursivas originales de los textos suplidos
           span.innerHTML = `<span class="v-num">${vNum}</span>${cleanHtmlPreserveItalics(textRaw)} `;
 
           span.onclick = () => {
@@ -495,7 +523,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Copiar todo el capítulo con la etiqueta de la versión activa
     btnCopyChapter.onclick = () => {
       const activeBible = biblesCache[currentVersionKey];
       if (!activeBible) return;
@@ -560,7 +587,6 @@
       renderCurrentChapter();
     };
 
-    // Sanitizador seguro que respeta únicamente las etiquetas <i> y </i> del texto bíblico
     function cleanHtmlPreserveItalics(str) {
       if (!str) return '';
       return str
