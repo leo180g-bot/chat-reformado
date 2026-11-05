@@ -415,6 +415,42 @@
     .auth-field input, .auth-field select { padding: 8px 10px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); font-size: 0.88rem; }
     .btn-primary { width: 100%; padding: 10px; background: var(--accent-btn); border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
 
+    /* Fila compacta para selección de capítulo y versículos */
+    .bible-numbers-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .bible-numbers-row .auth-field {
+      margin-bottom: 0;
+      min-width: 0;
+    }
+
+    .bible-numbers-row label {
+      font-size: 0.72rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bible-numbers-row input[type="number"] {
+      width: 100%;
+      padding: 6px 4px;
+      font-size: 0.85rem;
+      text-align: center;
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    .bible-numbers-row input[type="number"]::-webkit-outer-spin-button,
+    .bible-numbers-row input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
     .emoji-picker { display: none; position: absolute; bottom: 58px; right: 20px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; grid-template-columns: repeat(7, 1fr); gap: 5px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 290px; max-height: 200px; overflow-y: auto; }
     .emoji-picker.open { display: grid; }
     .emoji-item { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; padding: 4px; border-radius: 4px; }
@@ -610,7 +646,7 @@
     <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rango</button>
   </div>
 
-  <!-- Modal Selector Bíblico con Selector de Versión -->
+  <!-- Modal Selector Bíblico con Selector de Versión y Campos Compactos -->
   <div class="modal-overlay" id="bibleModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -699,28 +735,27 @@
         </select>
       </div>
 
-      <div style="display: flex; gap: 8px;">
-        <div class="auth-field" style="flex: 1;">
+      <!-- Fila compacta de 3 columnas para Capítulo y Versículos -->
+      <div class="bible-numbers-row">
+        <div class="auth-field">
           <label for="bibleChapter">Capítulo:</label>
           <input type="number" id="bibleChapter" min="1" value="1">
         </div>
-        <div class="auth-field" style="flex: 1;">
+        <div class="auth-field">
           <label for="bibleVerseStart">Desde v.:</label>
           <input type="number" id="bibleVerseStart" min="1" value="12">
         </div>
-        <div class="auth-field" style="flex: 1;">
+        <div class="auth-field">
           <label for="bibleVerseEnd">Hasta v.:</label>
           <input type="number" id="bibleVerseEnd" min="1" value="13">
         </div>
       </div>
 
-      <div style="margin: 6px 0 12px; font-size: 0.78rem; color: var(--text-muted);">
-        * Máximo 10 versículos por cita. Consulta directa desde tu archivo JSON.
+      <div style="margin: 6px 0 12px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.35;">
+        * Máximo 10 versículos por cita.
       </div>
 
-      <div style="display: flex; gap: 8px;">
-        <button type="button" class="btn-primary" id="btnFetchAndInsertVerse">Obtener y Pegar</button>
-      </div>
+      <button type="button" class="btn-primary" id="btnFetchAndInsertVerse">Obtener y Pegar</button>
     </div>
   </div>
 
@@ -1475,6 +1510,48 @@
       }
     }
 
+    // Recordatorio periódico de normas por BereanoBot
+    async function triggerPeriodicRulesReminder() {
+      // Solo emitir si el usuario está registrado o activo en la sala
+      if (!currentProfile) return;
+
+      const recordatorios = [
+        "Recordatorio de Comunión: Les animamos a repasar las Normas Doctrinales (☰ > Normas Doctrinales) para mantener conversaciones que edifiquen el cuerpo de Cristo.\n«Hágase todo decentemente y con orden.» (1 Corintios 14:40)",
+        "Edificación Doctrinal: Cuidemos la mansedumbre y la fraternidad en cada intercambio teológico. Pueden consultar las directrices de la sala en el menú superior.\n«Porque el siervo del Señor no debe ser contencioso, sino amable para con todos...» (2 Timoteo 2:24)",
+        "Fraternidad Cristiana: Recuerden revisar las Normas Doctrinales en el menú de opciones para asegurar un diálogo en santidad, gracia y verdad.\n«La palabra de Cristo more en abundancia en vosotros, enseñándoos y exhortándoos unos a otros en toda sabiduría...» (Colosenses 3:16)"
+      ];
+
+      const textoRecordatorio = recordatorios[Math.floor(Math.random() * recordatorios.length)];
+
+      const payload = {
+        username: "BereanoBot",
+        role: "bot",
+        doctrine_affinity: "Soli Deo Gloria",
+        content: textoRecordatorio,
+        font_family: "system-ui, sans-serif",
+        text_color: "#ecfdf5",
+        recipient: null
+      };
+
+      // Si es administrador o si han pasado al menos 15 minutos desde el último recordatorio
+      const lastReminder = localStorage.getItem('last_rules_reminder');
+      const now = Date.now();
+      const quinceMinutos = 15 * 60 * 1000;
+
+      if (!lastReminder || (now - parseInt(lastReminder, 10)) > quinceMinutos) {
+        localStorage.setItem('last_rules_reminder', now.toString());
+        await client.from('messages').insert([payload]);
+      }
+    }
+
+    // Configurar temporizador cada 15 minutos para recordar las reglas
+    setInterval(() => {
+      // Solo el usuario con sesión activa en primer plano promueve el recordatorio
+      if (document.visibilityState === 'visible' && currentProfile && !isGuest) {
+        triggerPeriodicRulesReminder();
+      }
+    }, 15 * 60 * 1000);
+
     // Pestañas de Navegación
     function selectChannel(channelName) {
       currentChannel = channelName;
@@ -1685,7 +1762,6 @@
       }
     }
 
-    // Render de usuarios conectados con BereanoBot incluido
     function renderOnlineUsers(presenceState) {
       usersList.innerHTML = '';
       const activeUsers = [];
@@ -1698,7 +1774,7 @@
         });
       }
 
-      // BereanoBot oñemoĩ avei usuario conectado ramo
+      // BereanoBot siempre visible como bot asistente
       activeUsers.unshift({
         username: "BereanoBot",
         doctrine: "Soli Deo Gloria",
@@ -1723,7 +1799,7 @@
           e.preventDefault();
           e.stopPropagation();
           if (u.isBot) {
-            return; // BereanoBot ndorekói acciones contextuales
+            return;
           }
           openUserActions(u.username, e);
           if (window.innerWidth <= 768) {
