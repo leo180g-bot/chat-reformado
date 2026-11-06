@@ -1107,7 +1107,7 @@
           window.location.replace('index.html');
           return;
         }
-      } } else {
+      } else {
         const { data: { session }, error: sessionErr } = await client.auth.getSession();
         if (sessionErr || !session) {
           window.location.replace('index.html');
@@ -1215,7 +1215,8 @@
       `;
       pillEl.title = `${currentUser.username} (${roleDisplay}) - Clic para ver / editar mi perfil`;
     }
-// 2. CONTROL DE PRESENCIA, DUPLICADOS Y ANUNCIO DE ENTRADA/SALIDA
+
+    // 2. CONTROL DE PRESENCIA, DUPLICADOS Y ANUNCIO DE ENTRADA/SALIDA
     function setupPresence() {
       const myNickLower = currentUser.username.trim().toLowerCase();
 
@@ -1307,9 +1308,9 @@
 
       Object.keys(state).forEach(k => {
         const entry = state[k][0];
-          if (entry && entry.username && entry.role) {
-            userRolesCache[entry.username.toLowerCase()] = normalizeRole(entry.role);
-          }
+        if (entry && entry.username && entry.role) {
+          userRolesCache[entry.username.toLowerCase()] = normalizeRole(entry.role);
+        }
         const isMe = entry.username.toLowerCase() === currentUser.username.toLowerCase();
 
         const liDesktop = createOnlineUserElement(entry, isMe, false);
@@ -1747,7 +1748,8 @@
         })
         .subscribe();
     }
-// 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
+
+    // 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
     document.getElementById('btnShowOnline').onclick = () => {
       if (window.innerWidth <= 768) {
         document.getElementById('onlineMobileModal').classList.add('open');
@@ -1774,7 +1776,6 @@
 
     // 8. BEREANOBOT: ASISTENTE BÍBLICO Y CONFESIONAL
     function initBereanoBot() {
-      // Saludo inicial de Bereanobot al usuario recién conectado
       setTimeout(() => {
         appendBotMessage(`¡Gracia y paz, hermano/a **${currentUser.username}**! Soy **BereanoBot 📖**. Puedes consultar pasajes bíblicos o teología con: \`!berea\`, \`!versiculo\`, \`!solas\`, \`!1689\`, \`!westminster\` o \`!dort\`.`);
       }, 1200);
@@ -1877,7 +1878,6 @@
 
       const timeStr = new Date(msg.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       
-      // Resolver rol dinámico: si el mensaje es del usuario actual, forzar siempre su rol actual de la sesión
       let effectiveRole = isSelf 
         ? currentUser.role 
         : (userRolesCache[senderNick.toLowerCase()] || normalizeRole(msg.role));
@@ -1904,7 +1904,6 @@
       messagesContainer.appendChild(div);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      // Sonido de mensaje entrante si no es propio
       if (!isSelf) {
         playSound('incoming');
       }
@@ -1953,7 +1952,6 @@
       appendMessage(newMsg);
       playSound('outgoing');
 
-      // Comprobar comandos de Bereanobot
       const isCmd = checkBereanoBotCommands(text, currentUser.username);
 
       if (!isCmd) {
