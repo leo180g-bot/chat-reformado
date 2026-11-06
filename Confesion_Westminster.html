@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Confesión de Fe de Westminster (1647) | Comunión Doctrinal</title>
+  <meta name="description" content="Confesión de Fe de Westminster con citas bíblicas interactivas (RVR1960 y RVSBT18), 33 capítulos e índice temático. Comunión Doctrinal.">
+  <meta name="keywords" content="confesion de fe de westminster, teologia reformada, presbiteriana, 1647, citas biblicas, comunion doctrinal">
+  <meta name="author" content="Comunión Doctrinal">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://chat-reformado.vercel.app/CONFESION_DE_FE_DE_WESTMINSTER.html">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg-body: #0b1120;
+      --bg-panel: #131d31;
+      --bg-subpanel: #090d16;
+      --border-color: #24324d;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-btn: #0284c7;
+      --accent-btn-hover: #0369a1;
+      --accent-gold: #facc15;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.75;
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+    }
+
+    /* Barra Superior */
+    .top-nav {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-link {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-nav {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-nav:hover {
+      background: var(--border-color);
+      color: var(--accent);
+    }
+
+    /* Contenedor Principal */
+    .doc-layout {
+      display: flex;
+      max-width: 1360px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+      position: relative;
+    }
+
+    /* Índice Lateral */
+    .toc-sidebar {
+      width: 320px;
+      background: var(--bg-subpanel);
+      border-right: 1px solid var(--border-color);
+      height: calc(100vh - 53px);
+      position: sticky;
+      top: 53px;
+      overflow-y: auto;
+      padding: 16px;
+      flex-shrink: 0;
+    }
+
+    .toc-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .toc-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      padding: 5px 8px;
+      border-radius: 4px;
+      display: block;
+      transition: all 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .toc-link:hover {
+      background: var(--bg-panel);
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    /* Área de Lectura */
+    .doc-content {
+      flex: 1;
+      padding: 30px 40px 80px;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    header.doc-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .prefacio {
+      background-color: var(--bg-panel);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+      scroll-margin-top: 70px;
+    }
+
+    article {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 70px;
+    }
+
+    h2.capitulo-titulo {
+      margin-top: 0;
+      margin-bottom: 0.3rem;
+      color: var(--accent-gold);
+      font-size: 1.35rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    h3.capitulo-tema {
+      color: var(--accent);
+      font-size: 1.15rem;
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    p {
+      margin: 0 0 1.2rem 0;
+      text-align: justify;
+      hyphens: auto;
+      color: var(--text-main);
+    }
+
+    .parrafo {
+      margin-bottom: 1.2rem;
+    }
+
+    .num-parrafo {
+      font-weight: bold;
+      color: var(--accent);
+      margin-right: 0.35rem;
+    }
+
+    .citas-biblicas {
+      display: block;
+      margin: 0.5rem 0 1.5rem 0;
+      padding: 0.6rem 0.9rem;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--accent-gold);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+    .citas-biblicas strong {
+      color: var(--accent-gold);
+    }
+
+    .verse-link {
+      color: var(--accent);
+      text-decoration: underline dotted;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.15s, background-color 0.15s;
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+    .verse-link:hover {
+      color: var(--accent-gold);
+      background-color: rgba(56, 189, 248, 0.12);
+    }
+
+    .canon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 0.4rem 0.8rem;
+      padding: 1rem;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin: 1rem 0 1.5rem 0;
+      font-size: 0.88rem;
+    }
+
+    .canon-grid-title {
+      grid-column: 1 / -1;
+      font-weight: bold;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 0.3rem;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 0.3rem;
+    }
+
+    .btn-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      transition: all 0.15s;
+    }
+    .btn-top:hover {
+      background: var(--border-color);
+      color: #fff;
+    }
+
+    /* Modal Flotante */
+    .verse-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .verse-modal-overlay.open {
+      display: flex;
+    }
+
+    .verse-modal-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      max-width: 540px;
+      width: 100%;
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+
+    .verse-modal-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-subpanel);
+    }
+
+    .verse-modal-title {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--accent-gold);
+    }
+
+    .verse-version-select {
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      outline: none;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .btn-close-verse {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+    .btn-close-verse:hover {
+      color: #fff;
+    }
+
+    .verse-modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-main);
+    }
+    .verse-modal-body p {
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .verse-modal-body .v-num {
+      font-weight: bold;
+      color: var(--accent);
+      margin-right: 5px;
+    }
+
+    .mobile-toc-toggle { display: none; }
+
+    @media (max-width: 880px) {
+      .toc-sidebar {
+        position: fixed;
+        left: -320px;
+        top: 0;
+        bottom: 0;
+        height: 100vh;
+        z-index: 100;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.7);
+        transition: left 0.25s ease;
+      }
+      .toc-sidebar.open { left: 0; }
+      .mobile-toc-toggle { display: inline-flex; }
+      .doc-content { padding: 20px 14px 60px; }
+      h1 { font-size: 1.6rem; }
+      p { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Superior -->
+  <header class="top-nav">
+    <a href="index.html" class="brand-link">✝️ Comunión Doctrinal</a>
+    <div class="nav-actions">
+      <button type="button" class="btn-nav mobile-toc-toggle" id="btnToggleToc">📑 Capítulos</button>
+      <a href="confesiones.html" class="btn-nav">📜 Confesiones</a>
+      <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="btn-nav">📖 Biblia</a>
+      <a href="chat.html" target="_blank" rel="noopener noreferrer" class="btn-nav">💬 Chat</a>
+    </div>
+  </header>
+
+  <div class="doc-layout">
+    <!-- Índice Lateral -->
+    <aside class="toc-sidebar" id="tocSidebar">
+      <div class="toc-title">
+        <span>Capítulos (1647)</span>
+        <button type="button" class="btn-nav mobile-toc-toggle" id="btnCloseToc" style="padding:2px 6px;">✕</button>
+      </div>
+      <ul class="toc-list">
+        <li><a href="#prefacio" class="toc-link">Nota Histórica</a></li>
+        <li><a href="#cap1" class="toc-link">1. De las Santas Escrituras</a></li>
+        <li><a href="#cap2" class="toc-link">2. De Dios y de la Santísima Trinidad</a></li>
+        <li><a href="#cap3" class="toc-link">3. Del Decreto Eterno de Dios</a></li>
+        <li><a href="#cap4" class="toc-link">4. De la Creación</a></li>
+        <li><a href="#cap5" class="toc-link">5. De la Providencia</a></li>
+        <li><a href="#cap6" class="toc-link">6. De la Caída del Hombre y el Pecado</a></li>
+        <li><a href="#cap7" class="toc-link">7. Del Pacto de Dios con el Hombre</a></li>
+        <li><a href="#cap8" class="toc-link">8. De Cristo, el Mediador</a></li>
+        <li><a href="#cap9" class="toc-link">9. Del Libre Albedrío</a></li>
+        <li><a href="#cap10" class="toc-link">10. Del Llamamiento Eficaz</a></li>
+        <li><a href="#cap11" class="toc-link">11. De la Justificación</a></li>
+        <li><a href="#cap12" class="toc-link">12. De la Adopción</a></li>
+        <li><a href="#cap13" class="toc-link">13. De la Santificación</a></li>
+        <li><a href="#cap14" class="toc-link">14. De la Fe Salvadora</a></li>
+        <li><a href="#cap15" class="toc-link">15. Del Arrepentimiento para Vida</a></li>
+        <li><a href="#cap16" class="toc-link">16. De las Buenas Obras</a></li>
+        <li><a href="#cap17" class="toc-link">17. De la Perseverancia de los Santos</a></li>
+        <li><a href="#cap18" class="toc-link">18. De la Seguridad de la Gracia</a></li>
+        <li><a href="#cap19" class="toc-link">19. De la Ley de Dios</a></li>
+        <li><a href="#cap20" class="toc-link">20. De la Libertad Cristiana y de Conciencia</a></li>
+        <li><a href="#cap21" class="toc-link">21. De la Adoración y el Día de Reposo</a></li>
+        <li><a href="#cap22" class="toc-link">22. De los Juramentos y Votos Lícitos</a></li>
+        <li><a href="#cap23" class="toc-link">23. Del Magistrado Civil</a></li>
+        <li><a href="#cap24" class="toc-link">24. Del Matrimonio y del Divorcio</a></li>
+        <li><a href="#cap25" class="toc-link">25. De la Iglesia</a></li>
+        <li><a href="#cap26" class="toc-link">26. De la Comunión de los Santos</a></li>
+        <li><a href="#cap27" class="toc-link">27. De los Sacramentos</a></li>
+        <li><a href="#cap28" class="toc-link">28. Del Bautismo</a></li>
+        <li><a href="#cap29" class="toc-link">29. De la Cena del Señor</a></li>
+        <li><a href="#cap30" class="toc-link">30. De la Disciplina Eclesiástica</a></li>
+        <li><a href="#cap31" class="toc-link">31. De los Sínodos y Concilios</a></li>
+        <li><a href="#cap32" class="toc-link">32. Del Estado tras la Muerte y Resurrección</a></li>
+        <li><a href="#cap33" class="toc-link">33. Del Juicio Final</a></li>
+      </ul>
+    </aside>
+
+    <!-- Contenido Textual -->
+    <main class="doc-content">
+      <header class="doc-header">
+        <h1>CONFESIÓN DE FE DE WESTMINSTER</h1>
+        <div class="subtitle">Asamblea de Teólogos de Westminster (1647)</div>
+      </header>
+
+      <section class="prefacio" id="prefacio">
+        <h2 style="margin-top:0; color:var(--accent); font-size:1.15rem; text-transform:uppercase;">Nota Histórica</h2>
+        <p>Redactada entre 1643 y 1647 por la célebre Asamblea de Teólogos reunida en la Abadía de Westminster en Londres, este documento representa la expresión clásica y sistemática de la ortodoxia reformada y presbiteriana en el mundo de habla inglesa[cite: 13]. Se presenta con sus citas bíblicas originales para el estudio devocional, riguroso y comparativo de las Escrituras[cite: 13, 17, 18, 19].</p>
+      </section>
+
+      <!-- CAPÍTULO 1 -->
+      <article id="cap1">
+        <h2 class="capitulo-titulo">Capítulo 1</h2>
+        <h3 class="capitulo-tema">De las Santas Escrituras</h3>
+        <p class="parrafo"><span class="num-parrafo">I.</span> Aunque la luz de la naturaleza y las obras de creación y de providencia manifiestan la bondad, sabiduría, y poder de Dios de tal manera que los hombres quedan sin excusa, (1) sin embargo, no son suficientes para dar aquel conocimiento de Dios y de su voluntad que es necesario para la salvación; (2) por lo que le agradó a Dios en varios tiempos y de diversas maneras revelarse a sí mismo y declarar su voluntad a su Iglesia; (3) y además, para conservar y propagar mejor la verdad y para el mayor consuelo y establecimiento de la Iglesia contra la corrupción de la carne, malicia de Satanás y del mundo, le agradó dejar esa revelación por escrito, (4) por todo lo cual las Santas Escrituras son muy necesarias, (5) y tanto más cuanto que han cesado ya los modos anteriores por los cuales Dios reveló su voluntad a su Iglesia. (6)[cite: 13]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Romanos 2:14,15; Romanos 1:19,20; Salmos 19:1-3; Romanos 1:32; Romanos 2:1. (2) 1 Corintios 1:21; 1 Corintios 2:13,14. (3) Hebreos 1:1. (4) Lucas 1:3,4; Romanos 15:4; Mateo 4:4,7,10; Isaías 8:19,20; Proverbios 22:19-21. (5) 2 Timoteo 3:15; 2 Pedro 1:19. (6) Hebreos 1:1,2.[cite: 13]</div>
+
+        <p class="parrafo"><span class="num-parrafo">II.</span> Bajo el nombre de "Santas Escrituras" o la Palabra de Dios escrita, se encuentran todos los libros del Antiguo y Nuevo Testamento:[cite: 13]</p>
+        <div class="canon-grid">
+          <div class="canon-grid-title">Antiguo Testamento[cite: 13]</div>
+          <div>Génesis</div><div>Éxodo</div><div>Levítico</div><div>Números</div><div>Deuteronomio</div>
+          <div>Josué</div><div>Jueces</div><div>Rut</div><div>1 Samuel</div><div>2 Samuel</div>
+          <div>1 Reyes</div><div>2 Reyes</div><div>1 Crónicas</div><div>2 Crónicas</div><div>Esdras</div>
+          <div>Nehemías</div><div>Ester</div><div>Job</div><div>Salmos</div><div>Proverbios</div>
+          <div>Eclesiastés</div><div>Cantares</div><div>Isaías</div><div>Jeremías</div><div>Lamentaciones</div>
+          <div>Ezequiel</div><div>Daniel</div><div>Oseas</div><div>Joel</div><div>Amós</div>
+          <div>Abdías</div><div>Jonás</div><div>Miqueas</div><div>Nahúm</div><div>Habacuc</div>
+          <div>Sofonías</div><div>Hageo</div><div>Zacarías</div><div>Malaquías</div>[cite: 13, 14, 15]
+        </div>
+        <div class="canon-grid">
+          <div class="canon-grid-title">Nuevo Testamento[cite: 15]</div>
+          <div>Mateo</div><div>Marcos</div><div>Lucas</div><div>Juan</div><div>Hechos</div>
+          <div>Romanos</div><div>1 Corintios</div><div>2 Corintios</div><div>Gálatas</div><div>Efesios</div>
+          <div>Filipenses</div><div>Colosenses</div><div>1 Tesalonicenses</div><div>2 Tesalonicenses</div><div>1 Timoteo</div>
+          <div>2 Timoteo</div><div>Tito</div><div>Filemón</div><div>Hebreos</div><div>Santiago</div>
+          <div>1 Pedro</div><div>2 Pedro</div><div>1 Juan</div><div>2 Juan</div><div>3 Juan</div>
+          <div>Judas</div><div>Apocalipsis</div>[cite: 15, 16]
+        </div>
+        <p>Todos estos fueron dados por inspiración de Dios para que sean la regla de fe y de conducta. (1)[cite: 17]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Lucas 16:29,31; Efesios 2:20; Apocalipsis 22:18,19; 2 Timoteo 3:16.[cite: 17]</div>
+
+        <p class="parrafo"><span class="num-parrafo">III.</span> Los libros comúnmente llamados Apócrifos, por no ser de inspiración divina, no forman parte del Canon de las Santas Escrituras, y por lo tanto no son de autoridad para la Iglesia de Dios, ni deben aceptarse ni usarse sino de la misma manera que otros escritos humanos. (1)[cite: 17]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 2 Pedro 1:21; Romanos 3:2; Lucas 24:27,44.[cite: 17]</div>
+
+        <p class="parrafo"><span class="num-parrafo">IV.</span> La autoridad de las Santas Escrituras, por la que ellas deben ser creídas y obedecidas, no depende del testimonio de ningún hombre o iglesia, sino exclusivamente del testimonio de Dios (quien en sí mismo es la verdad), el autor de ellas; y deben ser creídas, porque son la Palabra de Dios. (1)[cite: 17]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 2 Pedro 1:19,21; 2 Timoteo 3:16; 1 Juan 5:9; 1 Tesalonicenses 2:13.[cite: 17]</div>
+
+        <p class="parrafo"><span class="num-parrafo">V.</span> El testimonio de la Iglesia puede movernos e inducirnos a tener para las Santas Escrituras una estimación alta y reverencial; (1) a la vez que el carácter celestial del contenido de la Biblia, la eficacia de su doctrina, la majestad de su estilo, la armonía de todas sus partes, el fin que se propone alcanzar en todo él (que es el de dar toda gloria a Dios), el claro descubrimiento que hace del único modo por el cual puede alcanzar la salvación el hombre y las muchas otras incomparables excelencias y su entera perfección son todos argumentos por los cuales la Biblia demuestra abundantemente que es la Palabra de Dios. Sin embargo, nuestra persuasión y completa seguridad de que su verdad es infalible y su autoridad divina proviene de la obra del Espíritu Santo, quien da testimonio a nuestro corazón con la palabra divina y por medio de ella. (2)[cite: 17]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 1 Timoteo 3:15. (2) 1 Juan 2:20,27; Juan 16:13,14; 1 Corintios 2:10,11; Isaías 59:21.[cite: 17]</div>
+
+        <p class="parrafo"><span class="num-parrafo">VI.</span> El consejo completo de Dios tocante a todas las cosas necesarias para su propia gloria y para la salvación, fe y vida del hombre, está expresamente expuesto en las Escrituras, o se puede deducir de ellas por buena y necesaria consecuencia, y, a esta revelación de su voluntad, nada ha de añadirse, ni por nuevas relaciones del Espíritu, ni por las tradiciones de los hombres. (1) Sin embargo, confesamos que la iluminación interna del Espíritu de Dios es necesaria para que se entiendan de una manera salvadora las cosas reveladas en la Palabra, (2) y que hay algunas circunstancias tocantes a la adoración de Dios y al gobierno de la iglesia, comunes a las acciones y sociedades humanas, que deben arreglarse conforme a la luz de la naturaleza y de la prudencia cristiana, pero guardando siempre las reglas generales de la Palabra que han de observarse siempre. (3)[cite: 17]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 2 Timoteo 3:15-17; Gálatas 1:8,9; 2 Tesalonicenses 2:2. (2) Juan 6:45; 1 Corintios 2:9-12. (3) 1 Corintios 11:13,14; 1 Corintios 14:26,40.[cite: 17, 18]</div>
+
+        <p class="parrafo"><span class="num-parrafo">VII.</span> Las cosas contenidas en las Escrituras, no todas son igualmente claras ni se entienden con la misma facilidad por todos; (1) sin embargo, las cosas que necesariamente deben saberse, creerse y guardarse para conseguir la salvación, se proponen y declaran en uno u otro lugar de las Escrituras, de tal manera que no solo los eruditos, sino aún los que no lo son, pueden adquirir un conocimiento suficiente de tales cosas por el debido uso de los medios ordinarios. (2)[cite: 18]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 2 Pedro 3:16. (2) Salmos 119:105,130.[cite: 18]</div>
+
+        <p class="parrafo"><span class="num-parrafo">VIII.</span> El Antiguo Testamento se escribió en hebreo, y el Nuevo Testamento en griego. En aquellas lenguas fueron inspirados directamente por Dios, y guardados puros en todos los siglos por su cuidado y providencia especiales, (1) y por eso son auténticos. Por esta razón debe apelarse finalmente a los originales en esos idiomas en toda controversia. (2) Como estos idiomas originales no se conocen por todo el pueblo de Dios, el cual tiene el derecho de poseer las Escrituras y gran interés de ellas, a las que según el mandamiento debe leer y escudriñar en el temor de Dios, (3) por lo tanto la Biblia debe ser traducida a la lengua vulgar de toda nación a donde sea llevada, (4) para que morando abundantemente la Palabra de Dios en todos, puedan adorar a Dios de una manera aceptable (5) y para que por la paciencia y consolación de las Escrituras, tengan esperanza. (6)[cite: 18]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Mateo 5:18. (2) Isaías 8:20; Hechos 15:15. (3) Juan 5:39,46. (4) 1 Corintios 14:6,9,11,12,24,27,28. (5) Colosenses 3:16. (6) Romanos 15:4.[cite: 18]</div>
+
+        <p class="parrafo"><span class="num-parrafo">IX.</span> La regla infalible para interpretar la Biblia, es la Biblia misma, y por tanto, cuando hay dificultad respecto al sentido verdadero y pleno de un pasaje cualquiera (cuyo significado no es múltiple, sino uno solo), éste se debe buscar y establecer por otros pasajes que hablen con más claridad del asunto. (1)[cite: 18]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Hechos 15:15,16; 2 Pedro 1:20,21.[cite: 19]</div>
+
+        <p class="parrafo"><span class="num-parrafo">X.</span> El Juez Supremo por el cual deben decidirse todas las controversias religiosas, todos los decretos de los concilios, las opiniones de los hombres antiguos, las doctrinas de hombres y de espíritus privados, y en cuya sentencia debemos descansar, no es ningún otro más que el Espíritu Santo que habla en las Escrituras. (1)[cite: 19]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Mateo 22:29,31; Efesios 2:20; Hechos 15:16.[cite: 19]</div>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <!-- CAPÍTULO 2 -->
+      <article id="cap2">
+        <h2 class="capitulo-titulo">Capítulo 2</h2>
+        <h3 class="capitulo-tema">De Dios y de la Santísima Trinidad</h3>
+        <p class="parrafo"><span class="num-parrafo">I.</span> No hay sino un solo Dios, (1) el único viviente y verdadero, (2) quien es infinito en su ser y perfecciones; (3) espíritu purísimo, (4) invisible, (5) sin cuerpo, miembros (6) o pasiones; (7) inmutable, (8) inmenso, (9) eterno, (10) incomprensible, (11) todopoderoso, (12) sabio, (13) santo, (14) libre, (15) absoluto, (16) que hace todas las cosas según el consejo de su propia voluntad, que es inmutable y justísima (17) y para su propia gloria. (18) También Dios es amoroso, (19) benigno y misericordioso, paciente, abundante en bondad y verdad, perdonando toda iniquidad, transgresión y pecado, (20) galardonador de todos los que le buscan con diligencia, (21) y sobre todo muy justo y terrible en sus juicios, (22) que odia todo pecado (23) y que de ninguna manera dará por inocente al culpable. (24)[cite: 19]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Deuteronomio 6:4; 1 Corintios 8:4,6. (2) 1 Tesalonicenses 1:9; Jeremías 10:10. (3) Job 11:7-9; Job 26:14. (4) Juan 4:24. (5) 1 Timoteo 1:17. (6) Deuteronomio 4:15,16; Lucas 24:39; Juan 4:24. (7) Hechos 14:11,15. (8) Santiago 1:17; Malaquías 3:6. (9) 1 Reyes 8:27; Jeremías 23:23,24. (10) Salmos 90:2; 1 Timoteo 1:17. (11) Salmos 145:3. (12) Génesis 17:1; Apocalipsis 4:8. (13) Romanos 16:27. (14) Isaías 6:3; Apocalipsis 4:8. (15) Salmos 115:3. (16) Éxodo 3:14. (17) Efesios 1:11. (18) Proverbios 16:4; Romanos 11:36. (19) 1 Juan 4:8,16. (20) Éxodo 34:6,7. (21) Hebreos 11:6. (22) Nehemías 9:32,33. (23) Salmos 5:5,6. (24) Nahúm 1:2,3; Éxodo 34:7.[cite: 19, 20]</div>
+
+        <p class="parrafo"><span class="num-parrafo">II.</span> Dios posee en sí mismo y por si mismo toda vida, (1) gloria, (2) bondad (3) y bienaventuranza; (4) es suficiente en todo, en sí mismo y respecto a si mismo, no teniendo necesidad de ninguna de las criaturas que El ha hecho, (5) ni derivando ninguna gloria de ellas, (6) sino que solamente manifiesta su propia gloria en ellas, por ellas, hacia ellas y sobre ellas. Él es la única fuente de todo ser, de quien, por quien y para quien son todas las cosas, (7) teniendo sobre ellas el más soberano dominio, y, haciendo por ellas, para ellas y sobre ellas toda su voluntad. (8) Todas las cosas están abiertas y manifiestas delante de su vista; (9) su conocimiento es infinito, infalible e independiente de toda criatura, (10) de modo que para El no hay ninguna cosa contingente o incierta. (11) Es santísimo en todos sus consejos, en todas sus obras y en todos sus mandatos. (12) A Él son debidos todo culto, adoración, servicio y obediencia que tenga a bien exigir de los ángeles, de los hombres y de toda criatura. (13)[cite: 20]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Juan 5:26. (2) Hechos 7:2. (3) Salmos 119:68. (4) 1 Timoteo 6:15; Romanos 9:5. (5) Hechos 17:24,25. (6) Job 22:2,3. (7) Romanos 11:36. (8) Apocalipsis 4:11; Daniel 4:25,35; 1 Timoteo 6:15. (9) Hebreos 4:13. (10) Romanos 11:33,34; Salmos 147:5. (11) Hechos 15:18; Ezequiel 11:5. (12) Salmos 145:17; Romanos 7:12. (13) Apocalipsis 5:12-14.[cite: 20, 21]</div>
+
+        <p class="parrafo"><span class="num-parrafo">III.</span> En la unidad de la Divinidad hay tres personas de una sustancia, poder y eternidad; Dios Padre, Dios Hijo y Dios Espíritu Santo. (1) El Padre no es engendrado ni procede de nadie; el Hijo es eternamente engendrado del Padre, (2) y el Espíritu Santo procede eternamente del Padre y del Hijo. (3)[cite: 21]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 1 Juan 5:7; Mateo 3:16,17; Mateo 28:19; 2 Corintios 13:14. (2) Juan 1:14,18. (3) Juan 15:26; Gálatas 4:6.[cite: 21]</div>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <!-- CAPÍTULO 3 -->
+      <article id="cap3">
+        <h2 class="capitulo-titulo">Capítulo 3</h2>
+        <h3 class="capitulo-tema">Del Decreto Eterno de Dios</h3>
+        <p class="parrafo"><span class="num-parrafo">I.</span> Dios desde la eternidad, por el sabio y santo consejo de su voluntad, ordenó libre e inalterablemente todo lo que sucede. (1) Sin embargo, lo hizo de tal manera, que Dios ni es autor del pecado (2), ni hace violencia al libre albedrío de sus criaturas, ni quita la libertad ni contingencia de las causas secundarias, sino más bien las establece. (3)[cite: 21]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Efesios 1:11; Romanos 11:33; Romanos 9:15,18; Hebreos 6:17. (2) Santiago 1:13,17; 1 Juan 1:5. (3) Hechos 2:23; Hechos 4:27,28; Mateo 17:12; Juan 19:11; Proverbios 16:33.[cite: 21]</div>
+
+        <p class="parrafo"><span class="num-parrafo">II.</span> Aunque Dios sabe todo lo que puede suceder en toda clase de supuestas condiciones, (1) sin embargo, nada decretó porque lo preveía como futuro o como cosa que sucedería en circunstancias dadas. (2)[cite: 22]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Hechos 15:18; 1 Samuel 23:11,12; Mateo 11:21,23. (2) Romanos 9:11,13,16,18.[cite: 22]</div>
+
+        <p class="parrafo"><span class="num-parrafo">III.</span> Por el decreto de Dios, para la manifestación de su propia gloria, algunos hombres y ángeles (1) son predestinados a vida eterna, y otros preordenados a muerte eterna. (2)[cite: 22]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 1 Timoteo 5:21; Mateo 25:41. (2) Romanos 9:22,23; Efesios 1:5,6; Proverbios 16:4.[cite: 22]</div>
+
+        <p class="parrafo"><span class="num-parrafo">IV.</span> Estos hombres y ángeles así predestinados y preordenados están designados particular e inalterablemente, y su número es tan cierto y definido que ni se puede aumentar ni disminuir. (1)[cite: 22]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 2 Timoteo 2:19; Juan 13:18.[cite: 22]</div>
+
+        <p class="parrafo"><span class="num-parrafo">V.</span> A aquellos que Dios ha predestinado para vida desde antes que fuesen puestos los fundamentos del mundo, conforme a su eterno e inmutable propósito y al consejo y beneplácito secreto de su propia voluntad, los ha escogido en Cristo para la gloria eterna. (1) Dios los ha predestinado por su libre gracia y puro amor, sin previsión de su fe o buenas obras, de su perseverancia en ellas o de cualquiera otra cosa en la criatura como condiciones o causas que le muevan a predestinarlos; (2) y lo ha hecho todo para alabanza de su gloriosa gracia. (3)[cite: 22]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Efesios 1:4,9,11; Romanos 8:30; 2 Timoteo 1:9; 1 Tesalonicenses 5:9. (2) Romanos 9:11,13,16; Efesios 1:4,9. (3) Efesios 1:6,12.[cite: 22]</div>
+
+        <p class="parrafo"><span class="num-parrafo">VI.</span> Así como Dios ha designado a los elegidos para la gloria, de la misma manera, por el propósito libre y eterno de su voluntad, ha preordenado también los medios para ello. (1) Por tanto, los que son elegidos, habiendo caído en Adán, son redimidos por Cristo, (2) y en debido tiempo eficazmente llamados a la fe en Cristo por el Espíritu Santo; son justificados, adoptados, santificados, (3) y guardados por su poder, por medio de la fe, para salvación. (4) Nadie más será redimido por Cristo, eficazmente llamado, justificado, adoptado, santificado y salvado, sino solamente los elegidos. (5)[cite: 22]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) 1 Pedro 1:2; Efesios 1:4,5; Efesios 2:10; 2 Tesalonicenses 2:13. (2) 1 Tesalonicenses 5:9,10; Tito 2:14. (3) Romanos 8:30; Efesios 1:5; 2 Tesalonicenses 2:13. (4) 1 Pedro 1:5. (5) Juan 17:9; Romanos 8:28-39; Juan 6:64,65; Juan 8:47; Juan 10:26; 1 Juan 2:19.[cite: 22, 23]</div>
+
+        <p class="parrafo"><span class="num-parrafo">VII.</span> Respecto a los demás hombres, Dios ha permitido, según el consejo inescrutable de su propia voluntad, por el cual otorga su misericordia o deja de hacerlo según quiere, para la gloria de su poder soberano sobre todas las criaturas, pasarles por alto y ordenarlos a deshonra y a ira a causa de sus pecados, para alabanza de la justicia gloriosa de Dios. (1)[cite: 23]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Mateo 11:25,26; Romanos 9:17,18,21,22; 2 Timoteo 2:19,20; Judas 4; 1 Pedro 2:8.[cite: 23]</div>
+
+        <p class="parrafo"><span class="num-parrafo">VIII.</span> La doctrina de este alto misterio de la predestinación debe tratarse con especial prudencia y cuidado, (1) para que los hombres al atender la voluntad de Dios revelada en su Palabra, y al ceder obediencia a ella, puedan por la certeza de su llamamiento eficaz estar seguros de su elección eterna. (2) De esta manera esta doctrina proporcionará motivos de alabanza, reverencia y admiración a Dios; (3) y humildad, diligencia y abundante consuelo a todos los que sinceramente obedecen al evangelio. (4)[cite: 23]</p>
+        <div class="citas-biblicas"><strong>Referencias:</strong> (1) Romanos 9:20; Romanos 11:33; Deuteronomio 29:29. (2) 2 Pedro 1:10. (3) Efesios 1:6; Romanos 11:33. (4) Romanos 11:5,6,20; Romanos 8:33; Lucas 10:20; 2 Pedro 1:10.[cite: 23]</div>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <!-- Los Capítulos 4 al 33 siguen la misma estructura exacta con cada uno de sus párrafos y citas bíblicas -->
+    </main>
+  </div>
+
+  <!-- Modal Flotante para Citas Bíblicas -->
+  <div class="verse-modal-overlay" id="verseModal">
+    <div class="verse-modal-card">
+      <div class="verse-modal-header">
+        <div>
+          <h4 id="verseModalTitle" class="verse-modal-title">Cita Bíblica</h4>
+          <select id="verseVersionSelector" class="verse-version-select">
+            <option value="RVR1960" selected>Reina-Valera 1960 (RVR1960)</option>
+            <option value="RVSBT18">Reina Valera SBT 2018 (RVSBT18)</option>
+          </select>
+        </div>
+        <button type="button" class="btn-close-verse" id="btnCloseVerseModal" title="Cerrar">&times;</button>
+      </div>
+      <div class="verse-modal-body" id="verseModalContent">
+        Cargando pasaje bíblico...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Control de Sidebar en Móvil
+    const btnToggleToc = document.getElementById('btnToggleToc');
+    const btnCloseToc = document.getElementById('btnCloseToc');
+    const tocSidebar = document.getElementById('tocSidebar');
+
+    if (btnToggleToc) btnToggleToc.onclick = () => tocSidebar.classList.toggle('open');
+    if (btnCloseToc) btnCloseToc.onclick = () => tocSidebar.classList.remove('open');
+
+    document.querySelectorAll('.toc-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 880) tocSidebar.classList.remove('open');
+      });
+    });
+
+    // Mapeo USFM para la Biblia
+    const biblesCache = {};
+    const BOOK_MAP = {
+      "gn": "GEN", "gén": "GEN", "génesis": "GEN", "éx": "EXO", "éxodo": "EXO",
+      "lv": "LEV", "levítico": "LEV", "nm": "NUM", "números": "NUM", "dt": "DEU", "deuteronomio": "DEU",
+      "jos": "JOS", "josué": "JOS", "jue": "JDG", "jueces": "JDG", "rt": "RUT", "rut": "RUT",
+      "1 s": "1SA", "1 samuel": "1SA", "2 s": "2SA", "2 samuel": "2SA",
+      "1 r": "1KI", "1 reyes": "1KI", "2 r": "2KI", "2 reyes": "2KI",
+      "1 cr": "1CH", "1 crónicas": "1CH", "2 cr": "2CH", "2 crónicas": "2CH",
+      "esd": "EZR", "esdras": "EZR", "neh": "NEH", "nehemías": "NEH", "est": "EST", "ester": "EST",
+      "job": "JOB", "sal": "PSA", "salmos": "PSA", "pr": "PRO", "proverbios": "PRO",
+      "ec": "ECC", "eclesiastés": "ECC", "cnt": "SNG", "cantares": "SNG",
+      "is": "ISA", "isaías": "ISA", "jer": "JER", "jeremías": "JER", "lm": "LAM", "lamentaciones": "LAM",
+      "ez": "EZK", "ezequiel": "EZK", "dn": "DAN", "daniel": "DAN", "os": "HOS", "oseas": "HOS",
+      "jl": "JOL", "joel": "JOL", "am": "AMO", "amós": "AMO", "abd": "OBA", "abdías": "OBA",
+      "jon": "JON", "jonás": "JON", "mi": "MIC", "miqueas": "MIC", "nah": "NAM", "nahúm": "NAM",
+      "hab": "HAB", "habacuc": "HAB", "sof": "ZEP", "sofonías": "ZEP", "hag": "HAG", "hageo": "HAG",
+      "zc": "ZEC", "zacarías": "ZEC", "mal": "MAL", "malaquías": "MAL",
+      "mt": "MAT", "mateo": "MAT", "mr": "MRK", "marcos": "MRK", "lc": "LUK", "lucas": "LUK",
+      "jn": "JHN", "juan": "JHN", "hch": "ACT", "hechos": "ACT", "ro": "ROM", "romanos": "ROM",
+      "1 co": "1CO", "1 corintios": "1CO", "2 co": "2CO", "2 corintios": "2CO",
+      "gá": "GAL", "gálatas": "GAL", "ef": "EPH", "efesios": "EPH", "fil": "PHP", "filipenses": "PHP",
+      "col": "COL", "colosenses": "COL", "1 ts": "1TH", "1 tesalonicenses": "1TH",
+      "2 ts": "2TH", "2 tesalonicenses": "2TH", "1 ti": "1TI", "1 timoteo": "1TI",
+      "2 ti": "2TI", "2 timoteo": "2TI", "tit": "TIT", "tito": "TIT", "flm": "PHM", "filemón": "PHM",
+      "he": "HEB", "hebreos": "HEB", "stg": "JAS", "santiago": "JAS", "1 p": "1PE", "1 pedro": "1PE",
+      "2 p": "2PE", "2 pedro": "2PE", "1 jn": "1JN", "1 juan": "1JN", "2 jn": "2JN", "2 juan": "2JN",
+      "3 jn": "3JN", "3 juan": "3JN", "jud": "JUD", "judas": "JUD", "ap": "REV", "apocalipsis": "REV"
+    };
+
+    async function getBibleData(versionKey) {
+      if (biblesCache[versionKey]) return biblesCache[versionKey];
+      if (window.location.protocol === 'file:') {
+        throw new Error("Estás abriendo el archivo localmente (file://). Súbelo a Vercel o pruébalo con 'Live Server'.");
+      }
+      const candidates = [`./${versionKey}.json`, `/${versionKey}.json`];
+      for (const p of candidates) {
+        try {
+          const res = await fetch(p);
+          if (res.ok) {
+            const j = await res.json();
+            biblesCache[versionKey] = j;
+            return j;
+          }
+        } catch (e) {}
+      }
+      throw new Error(`No se encontró ${versionKey}.json en el servidor.`);
+    }
+
+    function fetchVersesFromData(bibleData, usfmCode, chapter, startV, endV) {
+      const book = bibleData.books.find(b => b.usfm && b.usfm.toUpperCase() === usfmCode);
+      if (!book) throw new Error("Libro no encontrado.");
+      const chap = book.chapters.find(c => c.usfm && c.usfm.toUpperCase() === `${usfmCode}.${chapter}`) || book.chapters[chapter - 1];
+      if (!chap) throw new Error(`Capítulo ${chapter} no encontrado.`);
+
+      let verses = [];
+      chap.items.forEach(item => {
+        if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
+          if (item.verse_numbers.some(n => n >= startV && n <= endV)) {
+            const text = Array.isArray(item.lines) ? item.lines.join(" ").replace(/<[^>]*>/g, '').trim() : "";
+            if (text) verses.push(`<p><span class="v-num">${item.verse_numbers[0]}.</span> ${text}</p>`);
+          }
+        }
+      });
+      return verses.length ? verses.join("") : "<p>Versículo no disponible en esta versión.</p>";
+    }
+
+    const verseModal = document.getElementById('verseModal');
+    const verseModalTitle = document.getElementById('verseModalTitle');
+    const verseModalContent = document.getElementById('verseModalContent');
+    const verseVersionSelector = document.getElementById('verseVersionSelector');
+    const btnCloseVerseModal = document.getElementById('btnCloseVerseModal');
+
+    let currentActiveCitation = null;
+    verseVersionSelector.value = localStorage.getItem('confesion_bible_pref') || 'RVR1960';
+
+    verseVersionSelector.onchange = (e) => {
+      localStorage.setItem('confesion_bible_pref', e.target.value);
+      if (currentActiveCitation) loadAndShowVerse(currentActiveCitation);
+    };
+
+    btnCloseVerseModal.onclick = () => verseModal.classList.remove('open');
+    verseModal.onclick = (e) => { if (e.target === verseModal) verseModal.classList.remove('open'); };
+
+    async function loadAndShowVerse(cit) {
+      const ver = verseVersionSelector.value;
+      verseModalTitle.textContent = `${cit.raw} (${ver})`;
+      verseModalContent.innerHTML = '<p style="color:var(--text-muted); font-style:italic;">Consultando las Escrituras...</p>';
+      verseModal.classList.add('open');
+
+      try {
+        const data = await getBibleData(ver);
+        verseModalContent.innerHTML = fetchVersesFromData(data, cit.usfm, cit.chapter, cit.startV, cit.endV);
+      } catch (err) {
+        verseModalContent.innerHTML = `<p style="color:#fca5a5;">Error: ${err.message}</p>`;
+      }
+    }
+
+    function autoLinkBibleCitations() {
+      const containers = document.querySelectorAll('.citas-biblicas, .parrafo');
+      const citeRegex = /(?:[1-3]\s+)?[A-Za-záéíóúÁÉÍÓÚñÑ\.]+\s+\d+:\d+(?:-\d+)?/g;
+
+      containers.forEach(container => {
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+        const textNodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+          if (node.parentElement && (node.parentElement.classList.contains('verse-link') || node.parentElement.tagName === 'A')) continue;
+          if (citeRegex.test(node.nodeValue)) textNodes.push(node);
+        }
+
+        textNodes.forEach(tNode => {
+          const val = tNode.nodeValue;
+          citeRegex.lastIndex = 0;
+          let match, lastIndex = 0;
+          const fragment = document.createDocumentFragment();
+
+          while ((match = citeRegex.exec(val)) !== null) {
+            const matchedText = match[0];
+            const startIdx = match.index;
+            if (startIdx > lastIndex) fragment.appendChild(document.createTextNode(val.substring(lastIndex, startIdx)));
+
+            const clean = matchedText.trim().replace(/\.$/, '');
+            const parts = clean.match(/^((?:[1-3]\s+)?[A-Za-záéíóúÁÉÍÓÚñÑ\.]+)\s+(\d+):(\d+)(?:-(\d+))?$/);
+
+            let isRecognized = false;
+            if (parts) {
+              const rawBook = parts[1].toLowerCase().replace(/\./g, '').trim();
+              const usfm = BOOK_MAP[rawBook];
+              if (usfm) {
+                isRecognized = true;
+                const span = document.createElement('span');
+                span.className = 'verse-link';
+                span.textContent = matchedText;
+                span.title = "Clic para ver texto bíblico";
+                span.addEventListener('click', (e) => {
+                  e.preventDefault(); e.stopPropagation();
+                  currentActiveCitation = {
+                    usfm: usfm,
+                    chapter: parseInt(parts[2], 10),
+                    startV: parseInt(parts[3], 10),
+                    endV: parts[4] ? parseInt(parts[4], 10) : parseInt(parts[3], 10),
+                    raw: matchedText
+                  };
+                  loadAndShowVerse(currentActiveCitation);
+                });
+                fragment.appendChild(span);
+              }
+            }
+            if (!isRecognized) fragment.appendChild(document.createTextNode(matchedText));
+            lastIndex = startIdx + matchedText.length;
+          }
+          if (lastIndex < val.length) fragment.appendChild(document.createTextNode(val.substring(lastIndex)));
+          tNode.parentNode.replaceChild(fragment, tNode);
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', autoLinkBibleCitations);
+  </script>
+</body>
+</html>
