@@ -1106,12 +1106,15 @@
       alert("Perfil actualizado correctamente.");
     });
 
-    // 5. SISTEMA DE PRIVADOS Y MODAL
+    // 5. SISTEMA DE PRIVADOS EN TIEMPO REAL (BROADCAST + LOCALSTORAGE)
     const privatesModal = document.getElementById('privatesModal');
     const privateMessagesList = document.getElementById('privateMessagesList');
+    let privateBroadcastChannel = null;
+    let unreadPrivatesCount = 0;
 
     document.getElementById('btnOpenPrivates').onclick = () => {
       privatesModal.classList.add('open');
+      unreadPrivatesCount = 0;
       document.getElementById('privatesUnreadBadge').style.display = 'none';
       if (!activePrivatePartner) {
         privateMessagesList.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:20px;">Haz clic en el nick de cualquier usuario para iniciar una conversación privada.</p>';
@@ -1128,6 +1131,8 @@
       activePrivatePartner = partnerNick;
       document.getElementById('privatePartnerNick').textContent = partnerNick;
       privatesModal.classList.add('open');
+      unreadPrivatesCount = 0;
+      document.getElementById('privatesUnreadBadge').style.display = 'none';
       renderPrivateHistory();
     }
 
@@ -1143,23 +1148,27 @@
       const msgs = raw ? JSON.parse(raw) : [];
 
       privateMessagesList.innerHTML = '';
-      msgs.forEach(m => {
-        const isMe = m.sender.toLowerCase() === currentUser.username.toLowerCase();
-        const pDiv = document.createElement('div');
-        pDiv.className = `message-item ${isMe ? 'self' : 'other'}`;
-        pDiv.innerHTML = `
-          <div class="msg-header">
-            <strong>${m.sender}</strong>
-            <span class="msg-time">${m.time}</span>
-          </div>
-          <div class="msg-body">${escapeHTML(m.text)}</div>
-        `;
-        privateMessagesList.appendChild(pDiv);
-      });
+      if (msgs.length === 0) {
+        privateMessagesList.innerHTML = `<p style="color:var(--text-muted); text-align:center; font-size:0.8rem; margin-top:20px;">Inicio de la conversación con ${escapeHTML(activePrivatePartner)}. Los mensajes se transmiten en directo y se guardan de forma privada en tu navegador.</p>`;
+      } else {
+        msgs.forEach(m => {
+          const isMe = m.sender.toLowerCase() === currentUser.username.toLowerCase();
+          const pDiv = document.createElement('div');
+          pDiv.className = `message-item ${isMe ? 'self' : 'other'}`;
+          pDiv.innerHTML = `
+            <div class="msg-header">
+              <strong>${escapeHTML(m.sender)}</strong>
+              <span class="msg-time">${m.time}</span>
+            </div>
+            <div class="msg-body">${escapeHTML(m.text)}</div>
+          `;
+          privateMessagesList.appendChild(pDiv);
+        });
+      }
       privateMessagesList.scrollTop = privateMessagesList.scrollHeight;
     }
 
-    document.getElementById('privateSendForm').addEventListener('submit', (e) => {
+    document.getElementById('privateSendForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = document.getElementById('privateMsgInput');
       const text = input.value.trim();
@@ -1176,16 +1185,58 @@
         text: text,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
+
+      // 1. Guardar en el historial local del emisor
       msgs.push(newMsg);
       localStorage.setItem(key, JSON.stringify(msgs));
       renderPrivateHistory();
+
+      // 2. Transmitir en tiempo real al destinatario vía Broadcast de Supabase
+      if (privateBroadcastChannel) {
+        await privateBroadcastChannel.send({
+          type: 'broadcast',
+          event: 'direct_message',
+          payload: newMsg
+        });
+      }
     });
 
     function setupPrivateMessaging() {
-      // Listener opcional para privados
-    }
+      // Canal global de mensajería privada directa en tiempo real
+      privateBroadcastChannel = client.channel('direct_messages_broadcast');
 
-    // 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
+      privateBroadcastChannel
+        .on('broadcast', { event: 'direct_message' }, ({ payload }) => {
+          if (!payload || !payload.receiver || !payload.sender) return;
+
+          // Verificar si el mensaje está dirigido a este usuario
+          const myNick = currentUser.username.trim().toLowerCase();
+          const targetNick = payload.receiver.trim().toLowerCase();
+
+          if (targetNick === myNick) {
+            // Guardar en el historial local del receptor
+            const key = getPrivateStorageKey(payload.sender);
+            const raw = localStorage.getItem(key);
+            const msgs = raw ? JSON.parse(raw) : [];
+            msgs.push(payload);
+            localStorage.setItem(key, JSON.stringify(msgs));
+
+            // Si el modal está abierto y conversando con ese usuario, renderizarlo al instante
+            const isModalOpen = privatesModal.classList.contains('open');
+            if (isModalOpen && activePrivatePartner && activePrivatePartner.toLowerCase() === payload.sender.toLowerCase()) {
+              renderPrivateHistory();
+            } else {
+              // Notificar con el contador en el botón de Privados
+              unreadPrivatesCount++;
+              const badge = document.getElementById('privatesUnreadBadge');
+              badge.textContent = unreadPrivatesCount;
+              badge.style.display = 'inline-block';
+            }
+          }
+        })
+        .subscribe();
+    }
+// 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
     document.getElementById('btnShowOnline').onclick = () => {
       if (window.innerWidth <= 768) {
         document.getElementById('onlineMobileModal').classList.add('open');
