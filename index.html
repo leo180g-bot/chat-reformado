@@ -74,7 +74,7 @@
       overflow-x: hidden;
     }
 
-    /* Versículo Superior de Pantalla Completa */
+    /* Versículo Superior de Pantalla Completa (Web) */
     .top-verse-banner {
       width: 100%;
       background: rgba(15, 23, 42, 0.75);
@@ -139,6 +139,60 @@
     .btn-refresh-verse:hover {
       background: var(--border-color);
       color: var(--accent);
+    }
+
+    /* BARRA DE MENÚ MÓVIL (Solo se muestra en pantallas pequeñas) */
+    .mobile-top-bar {
+      display: none;
+      width: 100%;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      padding: 8px 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .mobile-nav-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .mobile-links-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mobile-quick-btn {
+      background: var(--bg-subpanel);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .mobile-quick-btn:hover, .mobile-quick-btn:active {
+      background: var(--accent-btn);
+      color: #fff;
+      border-color: var(--accent);
     }
 
     /* Contenedor Principal de Pantalla Completa (Full Screen Web) */
@@ -345,27 +399,33 @@
         justify-content: flex-start;
       }
 
+      /* Activar barra de menú móvil superior */
+      .mobile-top-bar {
+        display: flex;
+      }
+
       .top-verse-banner {
-        padding: 8px 14px;
+        padding: 6px 12px;
+        background: rgba(15, 23, 42, 0.95);
       }
       .verse-quote {
-        display: none; /* Oculta texto largo para mantenerlo limpio */
+        display: none;
       }
       .verse-reference {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
       }
 
       .app-viewport-wrapper {
         display: flex;
         flex-direction: column;
-        padding: 12px 14px 24px;
-        gap: 16px;
+        padding: 10px 14px 20px;
+        gap: 12px;
         max-width: 100%;
       }
 
       .showcase-column {
         width: 100%;
-        gap: 10px;
+        gap: 8px;
       }
 
       .brand-banner-container {
@@ -373,7 +433,7 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
       }
 
-      /* Minimalismo: Se ocultan los enlaces secundarios grandes en móviles para ir directo al chat */
+      /* Ocultar las tarjetas grandes inferiores en móviles para dar paso al menú superior */
       .resources-row {
         display: none;
       }
@@ -383,7 +443,7 @@
       }
 
       .auth-card {
-        padding: 18px 14px;
+        padding: 14px 10px;
         border-radius: 8px;
         background: transparent;
         border: none;
@@ -391,14 +451,14 @@
       }
 
       .auth-header {
-        display: none; /* El banner ya contiene el título y lema */
+        display: none;
       }
 
       .auth-field {
-        margin-bottom: 11px;
+        margin-bottom: 10px;
       }
       .auth-field input, .auth-field select {
-        padding: 11px 12px; /* Mayor tamaño táctil */
+        padding: 11px 12px;
       }
 
       .footer-bar {
@@ -409,6 +469,19 @@
   </style>
 </head>
 <body>
+
+  <!-- Barra de Acceso Rápido Superior (Visible exclusivamente en Móvil) -->
+  <nav class="mobile-top-bar" aria-label="Menú móvil">
+    <span class="mobile-nav-title">✝️ Recursos</span>
+    <div class="mobile-links-container">
+      <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="mobile-quick-btn" title="Ir a Chapel Library">
+        📚 Chapel Library
+      </a>
+      <a href="biblia.html" class="mobile-quick-btn" title="Abrir Lector de la Biblia">
+        📖 Leer Biblia
+      </a>
+    </div>
+  </nav>
 
   <!-- Barra Superior de Versículo -->
   <header class="top-verse-banner" aria-label="Versículo del día">
@@ -422,7 +495,7 @@
 
   <!-- Contenedor de Pantalla Completa -->
   <main class="app-viewport-wrapper">
-    <!-- Columna Izquierda: Banner y Recursos -->
+    <!-- Columna Izquierda: Banner y Recursos (Web) -->
     <section class="showcase-column">
       <div class="brand-banner-container">
         <img src="logo.jpeg" alt="Comunión Doctrinal - Teología Reformada" class="app-main-banner" onerror="if (this.src.indexOf('logo.jpeg') !== -1) { this.src='logo.jpg'; } else { this.style.display='none'; }">
