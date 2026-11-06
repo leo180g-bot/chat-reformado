@@ -14,7 +14,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://chat-reformado.vercel.app/">
 
-  <!-- Open Graph / Redes Sociales (WhatsApp, Facebook, Telegram) -->
+  <!-- Open Graph / Redes Sociales -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Comunión Doctrinal">
   <meta property="og:url" content="https://chat-reformado.vercel.app/">
@@ -32,7 +32,7 @@
 
   <meta name="theme-color" content="#0f172a">
 
-  <!-- Datos Estructurados JSON-LD (Schema.org para Google) -->
+  <!-- Datos Estructurados JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -49,10 +49,10 @@
     * { box-sizing: border-box; }
 
     :root {
-      --bg-body: #0f172a;
-      --bg-panel: #1e293b;
-      --bg-subpanel: #111827;
-      --border-color: #334155;
+      --bg-body: #0b1120;
+      --bg-panel: #131d31;
+      --bg-subpanel: #090d16;
+      --border-color: #24324d;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #38bdf8;
@@ -66,44 +66,63 @@
       background: var(--bg-body);
       color: var(--text-main);
       margin: 0;
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0 16px 30px;
+      justify-content: space-between;
+      width: 100vw;
+      overflow-x: hidden;
     }
 
-    /* Banner Superior de Versículo Aleatorio */
+    /* Versículo Superior de Pantalla Completa */
     .top-verse-banner {
       width: 100%;
-      max-width: 680px;
-      margin: 16px 0 12px 0;
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.9));
-      border: 1px solid var(--border-color);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 12px 16px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
-      position: relative;
-    }
-
-    .verse-header-row {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .verse-content-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      overflow: hidden;
     }
 
     .verse-badge {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      white-space: nowrap;
       display: flex;
       align-items: center;
       gap: 5px;
+    }
+
+    .verse-quote {
+      margin: 0;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: #cbd5e1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .verse-reference {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+      white-space: nowrap;
     }
 
     .btn-refresh-verse {
@@ -111,127 +130,139 @@
       border: 1px solid var(--border-color);
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 0.78rem;
-      padding: 2px 7px;
+      font-size: 0.75rem;
+      padding: 4px 10px;
       border-radius: 4px;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
+      white-space: nowrap;
     }
-
     .btn-refresh-verse:hover {
-      background: var(--bg-subpanel);
+      background: var(--border-color);
       color: var(--accent);
-      border-color: var(--accent);
     }
 
-    .verse-quote {
-      margin: 0;
-      font-size: 0.88rem;
-      font-style: italic;
-      color: #e2e8f0;
-      line-height: 1.45;
-    }
-
-    .verse-reference {
-      margin: 4px 0 0 0;
-      text-align: right;
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: var(--accent-gold);
-    }
-
-    /* Contenedor Principal */
-    .main-card {
+    /* Contenedor Principal de Pantalla Completa (Full Screen Web) */
+    .app-viewport-wrapper {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
       width: 100%;
-      max-width: 460px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      gap: 40px;
+      align-items: center;
+    }
+
+    /* Columna Izquierda: Banner y Enlaces */
+    .showcase-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .brand-banner-container {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      line-height: 0;
+      background: var(--bg-subpanel);
+    }
+
+    .app-main-banner {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    .resources-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .resource-card {
       background: var(--bg-panel);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 22px 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .brand-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    /* Logo Principal con el mismo ancho que las demás portadas */
-    .app-main-logo {
-      width: 100%;
-      max-width: 320px;
-      max-height: 160px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-      margin: 0 auto 14px auto;
-      display: block;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .app-main-logo:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-    }
-
-    .brand-header h1 {
-      margin: 0;
-      font-size: 1.55rem;
-      color: var(--accent);
-      letter-spacing: -0.02em;
-    }
-
-    .brand-header p {
-      margin: 6px 0 0;
-      font-size: 0.84rem;
-      color: var(--text-muted);
-    }
-
-    /* Banner Chapel Library */
-    .chapel-banner-container {
+      padding: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: var(--bg-subpanel);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 18px;
       text-align: center;
+      transition: transform 0.2s, border-color 0.2s;
     }
-
-    .chapel-link {
-      display: inline-block;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      line-height: 0;
-    }
-
-    .chapel-link:hover {
-      transform: scale(1.03);
-      opacity: 0.95;
+    .resource-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
     }
 
     .chapel-logo {
-      max-width: 190px;
+      max-width: 160px;
       width: 100%;
       height: auto;
-      object-fit: contain;
       border-radius: 4px;
     }
 
-    .chapel-caption {
-      margin: 8px 0 0 0;
-      font-size: 0.74rem;
-      color: var(--text-muted);
-      line-height: 1.35;
+    .bible-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+    }
+    .bible-btn:hover {
+      background: var(--accent-btn);
+      color: #fff;
     }
 
-    /* Pestañas de Acceso */
+    /* Columna Derecha: Tarjeta de Acceso */
+    .auth-column {
+      display: flex;
+      justify-content: center;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 26px 22px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-header {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .auth-header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+    .auth-header p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
     .auth-tabs {
       display: flex;
       border-bottom: 1px solid var(--border-color);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .auth-tab {
@@ -239,14 +270,13 @@
       background: none;
       border: none;
       color: var(--text-muted);
-      padding: 9px 4px;
+      padding: 10px 4px;
       font-weight: 700;
       cursor: pointer;
       border-bottom: 2px solid transparent;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       transition: color 0.15s, border-color 0.15s;
     }
-
     .auth-tab.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
@@ -256,227 +286,240 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       text-align: left;
     }
 
     .auth-field label {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 600;
     }
 
     .auth-field input, .auth-field select {
-      padding: 9px 12px;
+      padding: 10px 12px;
       border-radius: 6px;
       border: 1px solid var(--border-color);
       background: var(--bg-subpanel);
       color: var(--text-main);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       outline: none;
       transition: border-color 0.15s;
     }
-
     .auth-field input:focus, .auth-field select:focus {
       border-color: var(--accent);
     }
 
     .btn-primary {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       background: var(--accent-btn);
       border: none;
       border-radius: 6px;
       color: white;
       font-weight: 700;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: background 0.2s;
       margin-top: 6px;
     }
-
     .btn-primary:hover {
       background: var(--accent-btn-hover);
     }
 
-    /* Tarjeta inferior para Lector Bíblico */
-    .bible-reader-link-card {
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .footer-bar {
+      width: 100%;
+      padding: 12px 20px;
       text-align: center;
-    }
-
-    .bible-cover-link {
-      display: block;
-      width: 100%;
-      max-width: 320px;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s ease, border-color 0.2s ease;
-      line-height: 0;
-    }
-
-    .bible-cover-link:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-    }
-
-    .bible-cover-img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .bible-reader-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 12px;
-      background: var(--bg-subpanel);
-      color: var(--accent);
-      border: 1px solid var(--border-color);
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .bible-reader-btn:hover {
-      background: var(--accent-btn);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    .footer-note {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      background: rgba(11, 17, 32, 0.9);
+      flex-shrink: 0;
     }
-    .footer-note span {
-      color: var(--accent);
-      font-style: italic;
+
+    /* VERSIÓN MÓVIL MINIMALISTA */
+    @media (max-width: 860px) {
+      body {
+        padding: 0;
+        justify-content: flex-start;
+      }
+
+      .top-verse-banner {
+        padding: 8px 14px;
+      }
+      .verse-quote {
+        display: none; /* Oculta texto largo para mantenerlo limpio */
+      }
+      .verse-reference {
+        font-size: 0.75rem;
+      }
+
+      .app-viewport-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 12px 14px 24px;
+        gap: 16px;
+        max-width: 100%;
+      }
+
+      .showcase-column {
+        width: 100%;
+        gap: 10px;
+      }
+
+      .brand-banner-container {
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Minimalismo: Se ocultan los enlaces secundarios grandes en móviles para ir directo al chat */
+      .resources-row {
+        display: none;
+      }
+
+      .auth-column {
+        width: 100%;
+      }
+
+      .auth-card {
+        padding: 18px 14px;
+        border-radius: 8px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+      }
+
+      .auth-header {
+        display: none; /* El banner ya contiene el título y lema */
+      }
+
+      .auth-field {
+        margin-bottom: 11px;
+      }
+      .auth-field input, .auth-field select {
+        padding: 11px 12px; /* Mayor tamaño táctil */
+      }
+
+      .footer-bar {
+        padding: 8px 12px;
+        font-size: 0.72rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Banner Superior: Versículo Bíblico Aleatorio -->
-  <section class="top-verse-banner" aria-label="Versículo del día">
-    <div class="verse-header-row">
-      <span class="verse-badge">📖 Palabra de Gracia</span>
-      <button type="button" class="btn-refresh-verse" id="btnNextVerse" title="Cargar otro pasaje">🔄 Cambiar</button>
+  <!-- Barra Superior de Versículo -->
+  <header class="top-verse-banner" aria-label="Versículo del día">
+    <div class="verse-content-box">
+      <span class="verse-badge">📖 Gracia</span>
+      <p class="verse-quote" id="verseText">Cargando pasaje...</p>
+      <span class="verse-reference" id="verseRef">—</span>
     </div>
-    <p class="verse-quote" id="verseText">Cargando pasaje...</p>
-    <div class="verse-reference" id="verseRef">—</div>
-  </section>
+    <button type="button" class="btn-refresh-verse" id="btnNextVerse" title="Cargar otro pasaje">🔄 Cambiar</button>
+  </header>
 
-  <!-- Tarjeta Central de Ingreso -->
-  <main class="main-card">
-    <header class="brand-header">
-      <!-- Logo Principal: adaptado al mismo ancho estándar de las portadas (320px) -->
-      <img src="logo.jpeg" alt="Logo Comunión Doctrinal" class="app-main-logo" onerror="if (this.src.indexOf('logo.jpeg') !== -1) { this.src='logo.jpg'; } else { this.style.display='none'; }">
-      <h1>Comunión Doctrinal</h1>
-      <p>Plataforma de diálogo teológico y edificación reformada</p>
-    </header>
+  <!-- Contenedor de Pantalla Completa -->
+  <main class="app-viewport-wrapper">
+    <!-- Columna Izquierda: Banner y Recursos -->
+    <section class="showcase-column">
+      <div class="brand-banner-container">
+        <img src="logo.jpeg" alt="Comunión Doctrinal - Teología Reformada" class="app-main-banner" onerror="if (this.src.indexOf('logo.jpeg') !== -1) { this.src='logo.jpg'; } else { this.style.display='none'; }">
+      </div>
 
-    <!-- Enlace a Biblioteca Externa con logo_chapel.png -->
-    <div class="chapel-banner-container">
-      <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="chapel-link" title="Visitar Chapel Library">
-        <img src="logo_chapel.png" alt="Chapel Library" class="chapel-logo" onerror="this.style.display='none'; document.getElementById('chapelFallbackText').style.display='block';">
-      </a>
-      <span id="chapelFallbackText" style="display:none; font-weight:bold; color:var(--accent); font-size:0.85rem; margin-bottom:4px;">Chapel Library ↗</span>
-      <p class="chapel-caption">Explora tratados, libros y literatura confesional en PDF sin costo.</p>
-    </div>
+      <div class="resources-row">
+        <div class="resource-card">
+          <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" style="line-height: 0;" title="Visitar Chapel Library">
+            <img src="logo_chapel.png" alt="Chapel Library" class="chapel-logo" onerror="this.style.display='none';">
+          </a>
+          <span style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">Literatura y tratados confesionales</span>
+        </div>
 
-    <!-- Pestañas de Acceso -->
-    <div class="auth-tabs">
-      <button type="button" class="auth-tab active" id="tabLogin">Iniciar Sesión</button>
-      <button type="button" class="auth-tab" id="tabRegister">Registrarse</button>
-      <button type="button" class="auth-tab" id="tabGuest">Invitado</button>
-    </div>
-
-    <!-- Formulario 1: Iniciar Sesión -->
-    <form id="loginForm">
-      <div class="auth-field">
-        <label for="loginNick">Nick o usuario:</label>
-        <input type="text" id="loginNick" placeholder="Tu nick registrado" required autocomplete="username">
+        <div class="resource-card">
+          <a href="biblia.html" class="bible-btn" title="Abrir Lector Bíblico RVR1960">
+            📖 Abrir Lector RVR1960
+          </a>
+          <span style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">Consulta el texto sagrado en línea</span>
+        </div>
       </div>
-      <div class="auth-field">
-        <label for="loginPassword">Contraseña:</label>
-        <input type="password" id="loginPassword" placeholder="Tu contraseña" required autocomplete="current-password">
-      </div>
-      <button type="submit" class="btn-primary" id="btnLoginSubmit">Entrar a la Sala</button>
-    </form>
-
-    <!-- Formulario 2: Registro de Nueva Cuenta -->
-    <form id="registerForm" style="display: none;">
-      <div class="auth-field">
-        <label for="regUsername">Nick público deseado:</label>
-        <input type="text" id="regUsername" placeholder="Ej. Calvino_1536" required maxlength="30">
-      </div>
-      <div class="auth-field">
-        <label for="regEmail">Correo electrónico:</label>
-        <input type="email" id="regEmail" placeholder="correo@ejemplo.com" required autocomplete="email">
-      </div>
-      <div class="auth-field">
-        <label for="regPassword">Contraseña:</label>
-        <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
-      </div>
-      <div class="auth-field">
-        <label for="regPasswordConfirm">Confirmar contraseña:</label>
-        <input type="password" id="regPasswordConfirm" placeholder="Repite la contraseña" required minlength="6" autocomplete="new-password">
-      </div>
-      <button type="submit" class="btn-primary" id="btnRegisterSubmit">Crear Cuenta (Novicio)</button>
-    </form>
-
-    <!-- Formulario 3: Ingreso como Invitado -->
-    <form id="guestForm" style="display: none;">
-      <div class="auth-field">
-        <label for="guestNick">Alias para esta sesión:</label>
-        <input type="text" id="guestNick" placeholder="Ej. Oyente_Berea" required maxlength="25">
-      </div>
-      <div class="auth-field">
-        <label for="guestDoctrine">Postura o trasfondo doctrinal:</label>
-        <select id="guestDoctrine">
-          <option value="Reformada">Reformado(a)</option>
-          <option value="Presbiteriano">Presbiteriano(a)</option>
-          <option value="Bautista Reformado">Bautista Reformado(a)</option>
-          <option value="Bautista General">Bautista General</option>
-          <option value="Metodista / Trad. Wesleyana">Metodista / Trad. Wesleyana</option>
-          <option value="Pentecostal">Pentecostal</option>
-          <option value="Otro trasfondo">Otro trasfondo</option>
-        </select>
-      </div>
-      <button type="submit" class="btn-primary">Acceder como Invitado</button>
-    </form>
-
-    <!-- Enlace Inferior al Lector Bíblico con biblia.jpeg -->
-    <section class="bible-reader-link-card" aria-label="Lector bíblico">
-      <a href="biblia.html" class="bible-cover-link" title="Abrir Lector de la Biblia RVR1960">
-        <img src="biblia.jpeg" alt="Santa Biblia Reina-Valera 1960" class="bible-cover-img" onerror="this.src='biblia.jpg';">
-      </a>
-      <a href="biblia.html" class="bible-reader-btn" title="Leer la Biblia en línea">
-        📖 Abrir Lector Bíblico RVR1960
-      </a>
     </section>
 
-    <div class="footer-note">
-      Soli Deo Gloria &bull; <span>Comunión Doctrinal</span>
-    </div>
+    <!-- Columna Derecha: Tarjeta de Acceso -->
+    <section class="auth-column">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>Comunión Doctrinal</h1>
+          <p>Estudio de las Escrituras y comunión en la gracia</p>
+        </div>
+
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab active" id="tabLogin">Iniciar Sesión</button>
+          <button type="button" class="auth-tab" id="tabRegister">Registrarse</button>
+          <button type="button" class="auth-tab" id="tabGuest">Invitado</button>
+        </div>
+
+        <!-- Formulario 1: Iniciar Sesión -->
+        <form id="loginForm">
+          <div class="auth-field">
+            <label for="loginNick">Nick o usuario:</label>
+            <input type="text" id="loginNick" placeholder="Tu nick registrado" required autocomplete="username">
+          </div>
+          <div class="auth-field">
+            <label for="loginPassword">Contraseña:</label>
+            <input type="password" id="loginPassword" placeholder="Tu contraseña" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn-primary" id="btnLoginSubmit">Entrar a la Sala</button>
+        </form>
+
+        <!-- Formulario 2: Registro de Nueva Cuenta -->
+        <form id="registerForm" style="display: none;">
+          <div class="auth-field">
+            <label for="regUsername">Nick público:</label>
+            <input type="text" id="regUsername" placeholder="Ej. Calvino_1536" required maxlength="30">
+          </div>
+          <div class="auth-field">
+            <label for="regEmail">Correo electrónico:</label>
+            <input type="email" id="regEmail" placeholder="correo@ejemplo.com" required autocomplete="email">
+          </div>
+          <div class="auth-field">
+            <label for="regPassword">Contraseña:</label>
+            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
+          </div>
+          <div class="auth-field">
+            <label for="regPasswordConfirm">Confirmar contraseña:</label>
+            <input type="password" id="regPasswordConfirm" placeholder="Repite la contraseña" required minlength="6" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn-primary" id="btnRegisterSubmit">Crear Cuenta (Novicio)</button>
+        </form>
+
+        <!-- Formulario 3: Ingreso como Invitado -->
+        <form id="guestForm" style="display: none;">
+          <div class="auth-field">
+            <label for="guestNick">Alias para esta sesión:</label>
+            <input type="text" id="guestNick" placeholder="Ej. Oyente_Berea" required maxlength="25">
+          </div>
+          <div class="auth-field">
+            <label for="guestDoctrine">Trasfondo doctrinal:</label>
+            <select id="guestDoctrine">
+              <option value="Reformada">Reformado(a)</option>
+              <option value="Presbiteriano">Presbiteriano(a)</option>
+              <option value="Bautista Reformado">Bautista Reformado(a)</option>
+              <option value="Bautista General">Bautista General</option>
+              <option value="Metodista / Trad. Wesleyana">Metodista / Trad. Wesleyana</option>
+              <option value="Pentecostal">Pentecostal</option>
+              <option value="Otro trasfondo">Otro trasfondo</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary">Acceder como Invitado</button>
+        </form>
+      </div>
+    </section>
   </main>
+
+  <footer class="footer-bar">
+    Soli Deo Gloria &bull; <span>Comunión Doctrinal</span>
+  </footer>
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
@@ -484,16 +527,16 @@
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const VERSES = [
-      { text: "«Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.»", ref: "Efesios 2:8-9 (RVR1960)" },
-      { text: "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.»", ref: "2 Timoteo 3:16 (RVR1960)" },
-      { text: "«Porque de él, y por él, y para él, son todas las cosas. A él sea la gloria por los siglos. Amén.»", ref: "Romanos 11:36 (RVR1960)" },
-      { text: "«Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo.»", ref: "Romanos 5:1 (RVR1960)" },
-      { text: "«Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre.»", ref: "1 Timoteo 2:5 (RVR1960)" },
-      { text: "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí.»", ref: "Juan 5:39 (RVR1960)" },
-      { text: "«Sécase la hierba, marchítase la flor; mas la palabra del Dios nuestro permanece para siempre.»", ref: "Isaías 40:8 (RVR1960)" },
-      { text: "«Porque ¿quién te distingue? ¿o qué tienes que no hayas recibido? Y si lo recibiste, ¿por qué te glorías como si no hubieras recibido?»", ref: "1 Corintios 4:7 (RVR1960)" },
-      { text: "«Y estos eran más nobles que los que estaban en Tesalónica, pues recibieron la palabra con toda solicitud, escudriñando cada día las Escrituras para ver si estas cosas eran así.»", ref: "Hechos 17:11 (RVR1960)" },
-      { text: "«A Jehová he puesto siempre delante de mí; porque está a mi diestra, no seré conmovido.»", ref: "Salmos 16:8 (RVR1960)" }
+      { text: "«Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.»", ref: "Efesios 2:8-9" },
+      { text: "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.»", ref: "2 Timoteo 3:16" },
+      { text: "«Porque de él, y por él, y para él, son todas las cosas. A él sea la gloria por los siglos. Amén.»", ref: "Romanos 11:36" },
+      { text: "«Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo.»", ref: "Romanos 5:1" },
+      { text: "«Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre.»", ref: "1 Timoteo 2:5" },
+      { text: "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí.»", ref: "Juan 5:39" },
+      { text: "«Sécase la hierba, marchítase la flor; mas la palabra del Dios nuestro permanece para siempre.»", ref: "Isaías 40:8" },
+      { text: "«Porque ¿quién te distingue? ¿o qué tienes que no hayas recibido? Y si lo recibiste, ¿por qué te glorías como si no hubieras recibido?»", ref: "1 Corintios 4:7" },
+      { text: "«Y estos eran más nobles que los que estaban en Tesalónica, pues recibieron la palabra con toda solicitud, escudriñando cada día las Escrituras...»", ref: "Hechos 17:11" },
+      { text: "«A Jehová he puesto siempre delante de mí; porque está a mi diestra, no seré conmovido.»", ref: "Salmos 16:8" }
     ];
 
     const verseTextEl = document.getElementById('verseText');
