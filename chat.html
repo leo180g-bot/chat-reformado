@@ -345,6 +345,167 @@
 
     .msg-body {
       color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    /* Herramientas de entrada: Estilos y Emojis */
+    .input-tools-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-input-tool {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-input-tool:hover {
+      background: var(--border-color);
+      color: var(--accent);
+    }
+    .btn-input-tool.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    /* Popovers Flotantes (Emojis y Estilos) */
+    .popover-panel {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 14px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+      z-index: 60;
+      animation: fadeIn 0.15s ease;
+      overflow: hidden;
+    }
+    .popover-panel.show {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .emoji-popover {
+      width: 310px;
+      max-height: 260px;
+    }
+    .popover-header {
+      padding: 8px 12px;
+      background: var(--bg-subpanel);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+    .emoji-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 4px;
+      line-height: 1;
+      transition: transform 0.1s, background-color 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .emoji-btn:hover {
+      background: var(--bg-subpanel);
+      transform: scale(1.2);
+    }
+
+    .style-popover {
+      width: 320px;
+      padding: 14px;
+      gap: 12px;
+    }
+    .style-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .style-field label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .style-field select, .style-field input {
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subpanel);
+      color: var(--text-main);
+      font-size: 0.86rem;
+      outline: none;
+    }
+    .color-swatches {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .swatch-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .swatch-btn:hover, .swatch-btn.selected {
+      transform: scale(1.2);
+      border-color: #fff;
+    }
+    .style-preview-box {
+      padding: 8px 12px;
+      background: var(--bg-subpanel);
+      border: 1px dashed var(--border-color);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.92rem;
+      margin-top: 4px;
+    }
+    .btn-reset-style {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      align-self: flex-end;
+    }
+    .btn-reset-style:hover {
+      background: var(--border-color);
+      color: var(--text-main);
     }
 
     /* Barra de Entrada */
@@ -765,6 +926,12 @@
       .brand-link span {
         display: none;
       }
+
+      .popover-panel {
+        left: 8px;
+        right: 8px;
+        width: auto;
+      }
     }
 
     @media (min-width: 769px) {
@@ -829,12 +996,110 @@
   <!-- Cuerpo del Chat -->
   <div class="chat-layout">
     <!-- Panel Central de Mensajes -->
-    <main class="chat-main">
+    <main class="chat-main" style="position:relative;">
       <div class="messages-container" id="messagesContainer">
         <!-- Los mensajes en tiempo real se cargan aquí -->
       </div>
 
+      <!-- Popover de Emojis -->
+      <div class="popover-panel emoji-popover" id="emojiPopover">
+        <div class="popover-header">
+          <span>✝️ Emojis Bíblicos y de Comunión</span>
+          <button type="button" class="btn-close-modal" id="btnCloseEmojiPopover" style="font-size:1.1rem;">&times;</button>
+        </div>
+        <div class="emoji-grid" id="emojiGridContainer">
+          <button type="button" class="emoji-btn" data-emoji="✝️">✝️</button>
+          <button type="button" class="emoji-btn" data-emoji="📖">📖</button>
+          <button type="button" class="emoji-btn" data-emoji="🙏">🙏</button>
+          <button type="button" class="emoji-btn" data-emoji="🕊️">🕊️</button>
+          <button type="button" class="emoji-btn" data-emoji="🕯️">🕯️</button>
+          <button type="button" class="emoji-btn" data-emoji="⛪">⛪</button>
+          <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+          <button type="button" class="emoji-btn" data-emoji="👑">👑</button>
+          <button type="button" class="emoji-btn" data-emoji="🛡️">🛡️</button>
+          <button type="button" class="emoji-btn" data-emoji="📜">📜</button>
+          <button type="button" class="emoji-btn" data-emoji="🙌">🙌</button>
+          <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
+          <button type="button" class="emoji-btn" data-emoji="🤝">🤝</button>
+          <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+          <button type="button" class="emoji-btn" data-emoji="✊">✊</button>
+          <button type="button" class="emoji-btn" data-emoji="🫂">🫂</button>
+          <button type="button" class="emoji-btn" data-emoji="😀">😀</button>
+          <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
+          <button type="button" class="emoji-btn" data-emoji="😇">😇</button>
+          <button type="button" class="emoji-btn" data-emoji="😌">😌</button>
+          <button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
+          <button type="button" class="emoji-btn" data-emoji="🧐">🧐</button>
+          <button type="button" class="emoji-btn" data-emoji="😢">😢</button>
+          <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+          <button type="button" class="emoji-btn" data-emoji="✨">✨</button>
+          <button type="button" class="emoji-btn" data-emoji="🌟">🌟</button>
+          <button type="button" class="emoji-btn" data-emoji="🍞">🍞</button>
+          <button type="button" class="emoji-btn" data-emoji="🍷">🍷</button>
+          <button type="button" class="emoji-btn" data-emoji="🌿">🌿</button>
+          <button type="button" class="emoji-btn" data-emoji="⚓">⚓</button>
+          <button type="button" class="emoji-btn" data-emoji="🎺">🎺</button>
+          <button type="button" class="emoji-btn" data-emoji="🐑">🐑</button>
+          <button type="button" class="emoji-btn" data-emoji="☀️">☀️</button>
+          <button type="button" class="emoji-btn" data-emoji="🌈">🌈</button>
+        </div>
+      </div>
+
+      <!-- Popover de Estilos de Texto -->
+      <div class="popover-panel style-popover" id="stylePopover">
+        <div class="popover-header">
+          <span>🎨 Formato de Mis Mensajes</span>
+          <button type="button" class="btn-close-modal" id="btnCloseStylePopover" style="font-size:1.1rem;">&times;</button>
+        </div>
+
+        <div class="style-field">
+          <label>Fuente:</label>
+          <select id="userFontSelect">
+            <option value="default" selected>Estándar (Sans-serif)</option>
+            <option value="Georgia, serif">Clásica / Serif (Georgia)</option>
+            <option value="'Courier New', monospace">Monospace (Máquina)</option>
+            <option value="'Trebuchet MS', sans-serif">Trebuchet Modern</option>
+            <option value="'Times New Roman', serif">Times New Roman</option>
+            <option value="'Segoe Script', cursive">Manuscrita / Cursiva</option>
+          </select>
+        </div>
+
+        <div class="style-field">
+          <label>Color de texto:</label>
+          <div class="color-swatches">
+            <button type="button" class="swatch-btn selected" data-color="default" style="background:#f8fafc;" title="Blanco estándar"></button>
+            <button type="button" class="swatch-btn" data-color="#38bdf8" style="background:#38bdf8;" title="Cian"></button>
+            <button type="button" class="swatch-btn" data-color="#facc15" style="background:#facc15;" title="Dorado"></button>
+            <button type="button" class="swatch-btn" data-color="#34d399" style="background:#34d399;" title="Esmeralda"></button>
+            <button type="button" class="swatch-btn" data-color="#f472b6" style="background:#f472b6;" title="Rosa"></button>
+            <button type="button" class="swatch-btn" data-color="#fb923c" style="background:#fb923c;" title="Naranja"></button>
+            <button type="button" class="swatch-btn" data-color="#a78bfa" style="background:#a78bfa;" title="Lavanda"></button>
+            <input type="color" id="customColorPicker" value="#38bdf8" style="width:24px; height:24px; padding:0; border:none; border-radius:4px; cursor:pointer;" title="Más colores">
+          </div>
+        </div>
+
+        <div class="style-field">
+          <label>Tamaño:</label>
+          <select id="userFontSizeSelect">
+            <option value="0.82rem">Pequeño (82%)</option>
+            <option value="normal" selected>Normal (100%)</option>
+            <option value="1.05rem">Grande (105%)</option>
+            <option value="1.15rem">Destacado (115%)</option>
+          </select>
+        </div>
+
+        <div class="style-preview-box" id="stylePreviewBox">
+          Vista previa del texto
+        </div>
+
+        <button type="button" class="btn-reset-style" id="btnResetStyle">Restablecer por defecto</button>
+      </div>
+
       <form class="chat-input-bar" id="chatForm">
+        <div class="input-tools-group">
+          <button type="button" class="btn-input-tool" id="btnToggleEmoji" title="Insertar emojis (✝️, 📖, 🙏...)">😀</button>
+          <button type="button" class="btn-input-tool" id="btnToggleStyle" title="Personalizar fuente, color y tamaño">🎨</button>
+        </div>
         <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea para ayuda..." autocomplete="off" required maxlength="1000">
         <button type="submit" class="btn-send">Enviar</button>
       </form>
@@ -938,7 +1203,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: MENSAJES PRIVADOS (Con vista de quién envió y clic para abrir) -->
+  <!-- MODAL 3: MENSAJES PRIVADOS -->
   <div class="modal-overlay" id="privatesModal">
     <div class="modal-card" style="max-width:500px;">
       <div class="modal-header">
@@ -1028,14 +1293,10 @@
           audio.currentTime = 0;
           const playPromise = audio.play();
           if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {
-              // Silencio seguro si el navegador bloquea autoplay antes de interacción
-            });
+            playPromise.catch(() => {});
           }
         }
-      } catch (err) {
-        // Manejo silencioso de audio
-      }
+      } catch (err) {}
     }
 
     // Botón de alternar sonido
@@ -1118,24 +1379,17 @@
         const authUserNick = session.user.user_metadata?.username || '';
         let profile = null;
 
-        // Intento 1: Consultar profiles por id = authUserId
+        // Intento 1: Consultar profiles por id
         try {
-          const { data: pById, error: err1 } = await client
+          const { data: pById } = await client
             .from('profiles')
             .select('*')
             .eq('id', authUserId)
             .maybeSingle();
+          if (pById) profile = pById;
+        } catch (e) {}
 
-          if (pById) {
-            profile = pById;
-          } else if (err1) {
-            console.warn("Aviso al consultar profiles por id:", err1.message);
-          }
-        } catch (e) {
-          console.warn("Fallo intento 1 por id:", e);
-        }
-
-        // Intento 2: Consultar profiles por user_id = authUserId (por si la columna foránea se llama user_id)
+        // Intento 2: Consultar profiles por user_id
         if (!profile) {
           try {
             const { data: pByUserId } = await client
@@ -1147,7 +1401,7 @@
           } catch (e) {}
         }
 
-        // Intento 3: Consultar profiles por username (insensible a mayúsculas/minúsculas)
+        // Intento 3: Consultar profiles por username
         if (!profile && authUserNick) {
           try {
             const { data: pByNick } = await client
@@ -1159,7 +1413,7 @@
           } catch (e) {}
         }
 
-        // Intento 4: Llamar RPC get_my_profile si estuviera disponible
+        // Intento 4: Llamar RPC get_my_profile si existe
         if (!profile) {
           try {
             const { data: rpcProfile } = await client.rpc('get_my_profile');
@@ -1167,13 +1421,6 @@
           } catch (e) {}
         }
 
-        console.log("Datos de sesión y perfil obtenidos:", {
-          authId: authUserId,
-          authUserNick: authUserNick,
-          profileEncontrado: profile
-        });
-
-        // Extraer rol con soporte para 'role' o 'rol'
         const rawRole = (profile && (profile.role || profile.rol))
           ? (profile.role || profile.rol)
           : (session.user.user_metadata?.role || 'novice');
@@ -1203,6 +1450,7 @@
       subscribeToMessages();
       setupPrivateMessaging();
       initBereanoBot();
+      initStyleAndEmojiControls();
     }
 
     function updateUserUI() {
@@ -1214,6 +1462,193 @@
         <span class="msg-role-tag role-${currentUser.role}" style="margin-left:4px; font-size:0.62rem;">${roleDisplay}</span>
       `;
       pillEl.title = `${currentUser.username} (${roleDisplay}) - Clic para ver / editar mi perfil`;
+    }
+
+    // ==========================================
+    // SISTEMA DE FUENTES, COLORES, TAMAÑOS Y EMOJIS
+    // ==========================================
+    let userTextStyle = {
+      font: 'default',
+      color: 'default',
+      size: 'normal'
+    };
+
+    try {
+      const savedStyle = localStorage.getItem('cd_user_text_style');
+      if (savedStyle) userTextStyle = { ...userTextStyle, ...JSON.parse(savedStyle) };
+    } catch(e) {}
+
+    const msgInput = document.getElementById('msgInput');
+    const emojiPopover = document.getElementById('emojiPopover');
+    const stylePopover = document.getElementById('stylePopover');
+    const btnToggleEmoji = document.getElementById('btnToggleEmoji');
+    const btnToggleStyle = document.getElementById('btnToggleStyle');
+    const userFontSelect = document.getElementById('userFontSelect');
+    const userFontSizeSelect = document.getElementById('userFontSizeSelect');
+    const stylePreviewBox = document.getElementById('stylePreviewBox');
+    const customColorPicker = document.getElementById('customColorPicker');
+    const colorSwatches = document.querySelectorAll('.swatch-btn');
+
+    function applyStyleToInput() {
+      if (!msgInput) return;
+      msgInput.style.fontFamily = userTextStyle.font !== 'default' ? userTextStyle.font : '';
+      msgInput.style.color = userTextStyle.color !== 'default' ? userTextStyle.color : '';
+      msgInput.style.fontSize = userTextStyle.size !== 'normal' ? userTextStyle.size : '';
+
+      if (stylePreviewBox) {
+        stylePreviewBox.style.fontFamily = userTextStyle.font !== 'default' ? userTextStyle.font : '';
+        stylePreviewBox.style.color = userTextStyle.color !== 'default' ? userTextStyle.color : 'var(--text-main)';
+        stylePreviewBox.style.fontSize = userTextStyle.size !== 'normal' ? userTextStyle.size : '0.92rem';
+      }
+    }
+
+    function initStyleAndEmojiControls() {
+      if (userFontSelect) userFontSelect.value = userTextStyle.font;
+      if (userFontSizeSelect) userFontSizeSelect.value = userTextStyle.size;
+
+      colorSwatches.forEach(btn => {
+        btn.classList.toggle('selected', btn.getAttribute('data-color') === userTextStyle.color);
+      });
+
+      applyStyleToInput();
+
+      if (userFontSelect) {
+        userFontSelect.onchange = (e) => {
+          userTextStyle.font = e.target.value;
+          saveAndApplyStyle();
+        };
+      }
+
+      if (userFontSizeSelect) {
+        userFontSizeSelect.onchange = (e) => {
+          userTextStyle.size = e.target.value;
+          saveAndApplyStyle();
+        };
+      }
+
+      colorSwatches.forEach(btn => {
+        btn.onclick = () => {
+          colorSwatches.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          userTextStyle.color = btn.getAttribute('data-color');
+          saveAndApplyStyle();
+        };
+      });
+
+      if (customColorPicker) {
+        customColorPicker.oninput = (e) => {
+          colorSwatches.forEach(b => b.classList.remove('selected'));
+          userTextStyle.color = e.target.value;
+          saveAndApplyStyle();
+        };
+      }
+
+      const btnResetStyle = document.getElementById('btnResetStyle');
+      if (btnResetStyle) {
+        btnResetStyle.onclick = () => {
+          userTextStyle = { font: 'default', color: 'default', size: 'normal' };
+          if (userFontSelect) userFontSelect.value = 'default';
+          if (userFontSizeSelect) userFontSizeSelect.value = 'normal';
+          colorSwatches.forEach(b => {
+            b.classList.toggle('selected', b.getAttribute('data-color') === 'default');
+          });
+          saveAndApplyStyle();
+        };
+      }
+
+      // Emojis
+      if (btnToggleEmoji) {
+        btnToggleEmoji.onclick = (e) => {
+          e.stopPropagation();
+          stylePopover.classList.remove('show');
+          btnToggleStyle.classList.remove('active');
+          const isShow = emojiPopover.classList.toggle('show');
+          btnToggleEmoji.classList.toggle('active', isShow);
+        };
+      }
+      const btnCloseEmojiPopover = document.getElementById('btnCloseEmojiPopover');
+      if (btnCloseEmojiPopover) {
+        btnCloseEmojiPopover.onclick = () => {
+          emojiPopover.classList.remove('show');
+          btnToggleEmoji.classList.remove('active');
+        };
+      }
+
+      // Estilos
+      if (btnToggleStyle) {
+        btnToggleStyle.onclick = (e) => {
+          e.stopPropagation();
+          emojiPopover.classList.remove('show');
+          btnToggleEmoji.classList.remove('active');
+          const isShow = stylePopover.classList.toggle('show');
+          btnToggleStyle.classList.toggle('active', isShow);
+        };
+      }
+      const btnCloseStylePopover = document.getElementById('btnCloseStylePopover');
+      if (btnCloseStylePopover) {
+        btnCloseStylePopover.onclick = () => {
+          stylePopover.classList.remove('show');
+          btnToggleStyle.classList.remove('active');
+        };
+      }
+
+      // Inserción de emoji en el cursor
+      document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.onclick = () => {
+          const emoji = btn.getAttribute('data-emoji');
+          if (!emoji) return;
+          const start = msgInput.selectionStart || msgInput.value.length;
+          const end = msgInput.selectionEnd || msgInput.value.length;
+          const val = msgInput.value;
+          msgInput.value = val.substring(0, start) + emoji + val.substring(end);
+          msgInput.focus();
+          msgInput.selectionStart = msgInput.selectionEnd = start + emoji.length;
+        };
+      });
+
+      document.addEventListener('click', (e) => {
+        if (emojiPopover && !emojiPopover.contains(e.target) && e.target !== btnToggleEmoji) {
+          emojiPopover.classList.remove('show');
+          if (btnToggleEmoji) btnToggleEmoji.classList.remove('active');
+        }
+        if (stylePopover && !stylePopover.contains(e.target) && e.target !== btnToggleStyle) {
+          stylePopover.classList.remove('show');
+          if (btnToggleStyle) btnToggleStyle.classList.remove('active');
+        }
+      });
+    }
+
+    function saveAndApplyStyle() {
+      applyStyleToInput();
+      try {
+        localStorage.setItem('cd_user_text_style', JSON.stringify(userTextStyle));
+      } catch(e) {}
+    }
+
+    function packStyledContent(text) {
+      if (userTextStyle.font === 'default' && userTextStyle.color === 'default' && userTextStyle.size === 'normal') {
+        return text;
+      }
+      return `[CD_STYLE:${userTextStyle.font}|${userTextStyle.color}|${userTextStyle.size}]${text}[/CD_STYLE]`;
+    }
+
+    function unpackStyledContent(rawContent) {
+      if (!rawContent) return { text: '', font: 'default', color: 'default', size: 'normal' };
+      const m = String(rawContent).match(/^\[CD_STYLE:([^\|]+)\|([^\|]+)\|([^\]]+)\]([\s\S]*?)\[\/CD_STYLE\]$/);
+      if (m) {
+        return {
+          font: m[1],
+          color: m[2],
+          size: m[3],
+          text: m[4]
+        };
+      }
+      return {
+        font: 'default',
+        color: 'default',
+        size: 'normal',
+        text: rawContent
+      };
     }
 
     // 2. CONTROL DE PRESENCIA, DUPLICADOS Y ANUNCIO DE ENTRADA/SALIDA
@@ -1256,7 +1691,6 @@
           });
 
           if (!isInitialPresenceSync) {
-            // Usuarios que acaban de entrar
             currentNicks.forEach(nick => {
               if (!previousOnlineUsers.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
                 appendSystemNotice(`🚪 Hermano/a ${nick} ha ingresado a la comunión.`);
@@ -1264,7 +1698,6 @@
               }
             });
 
-            // Usuarios que acaban de salir
             previousOnlineUsers.forEach(nick => {
               if (!currentNicks.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
                 appendSystemNotice(`🚶 Hermano/a ${nick} se ha retirado de la sala.`);
@@ -1321,7 +1754,6 @@
       });
     }
 
-    // En versión móvil, al hacer clic en un usuario: CERRAMOS Usuarios en línea y ABRIMOS Opciones de usuario
     function createOnlineUserElement(userData, isMe, isMobileList) {
       const li = document.createElement('li');
       li.className = 'online-user-item';
@@ -1331,7 +1763,6 @@
       `;
       li.onclick = () => {
         if (isMobileList) {
-          // Requerimiento: Cerrar 'Usuarios en línea' en versión móvil
           document.getElementById('onlineMobileModal').classList.remove('open');
         }
         openUserActionModal(userData);
@@ -1352,13 +1783,11 @@
       const adminSection = document.getElementById('adminActionSection');
       const btnRole = document.getElementById('btnChangeRole');
 
-      // Si soy yo mismo, abrimos editar perfil
       if (isMe) {
         openEditProfileModal();
         return;
       }
 
-      // Herramientas de Admin / Moderador
       const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
       adminSection.style.display = isStaff ? 'flex' : 'none';
       btnRole.style.display = currentUser.role === 'admin' ? 'block' : 'none';
@@ -1370,7 +1799,6 @@
       document.getElementById('userActionModal').classList.remove('open');
     };
 
-    // Iniciar Privado desde el Modal de Usuario
     document.getElementById('btnStartPrivateChat').onclick = () => {
       document.getElementById('userActionModal').classList.remove('open');
       if (selectedTargetUser) {
@@ -1378,7 +1806,6 @@
       }
     };
 
-    // Herramientas de Moderador / Admin
     document.getElementById('btnMuteUser').onclick = () => {
       if (!selectedTargetUser) return;
       alert(`Se ha aplicado silencio temporal a ${selectedTargetUser.username}.`);
@@ -1506,7 +1933,6 @@
       showPrivatesContactsView();
     };
 
-    // Requerimiento: Cerrar un privado desde "Mensajes privados" y que se borren los mensajes
     btnDeleteConversation.onclick = () => {
       if (!activePrivatePartner) return;
       deletePrivateConversation(activePrivatePartner);
@@ -1549,7 +1975,6 @@
       return `priv_msgs_${pair}`;
     }
 
-    // Listar quiénes enviaron mensajes o conversaciones abiertas
     function getPrivateConversationsIndex() {
       const conversations = [];
       const myNick = currentUser.username.toLowerCase();
@@ -1607,13 +2032,11 @@
           </div>
         `;
 
-        // Al hacer clic en la fila (excepto el botón de borrar), abre el chat
         div.onclick = (e) => {
           if (e.target.closest('.btn-delete-contact')) return;
           startPrivateChatWith(c.partner);
         };
 
-        // Botón directo para borrar y cerrar desde la lista
         div.querySelector('.btn-delete-contact').onclick = (e) => {
           e.stopPropagation();
           deletePrivateConversation(c.partner);
@@ -1699,7 +2122,6 @@
       renderPrivateHistory();
       playSound('outgoing');
 
-      // Transmisión Realtime Broadcast al destinatario
       if (privateBroadcastChannel) {
         await privateBroadcastChannel.send({
           type: 'broadcast',
@@ -1884,13 +2306,21 @@
 
       const roleDisplay = getRoleDisplayName(effectiveRole);
 
+      // Desempaquetar estilo (fuente, color, tamaño)
+      const unpacked = unpackStyledContent(msg.content);
+      let inlineStyles = [];
+      if (unpacked.font && unpacked.font !== 'default') inlineStyles.push(`font-family: ${unpacked.font}`);
+      if (unpacked.color && unpacked.color !== 'default') inlineStyles.push(`color: ${unpacked.color}`);
+      if (unpacked.size && unpacked.size !== 'normal') inlineStyles.push(`font-size: ${unpacked.size}`);
+      const styleString = inlineStyles.length ? `style="${inlineStyles.join('; ')}"` : '';
+
       div.innerHTML = `
         <div class="msg-header">
           <span class="msg-sender" data-nick="${escapeHTML(senderNick)}" data-role="${effectiveRole}">${escapeHTML(senderNick)}</span>
           <span class="msg-role-tag role-${effectiveRole}">${roleDisplay}</span>
           <span class="msg-time">${timeStr}</span>
         </div>
-        <div class="msg-body">${escapeHTML(msg.content)}</div>
+        <div class="msg-body" ${styleString}>${escapeHTML(unpacked.text)}</div>
       `;
 
       div.querySelector('.msg-sender').onclick = () => {
@@ -1941,11 +2371,14 @@
 
       input.value = '';
 
+      // Empaquetar estilo elegido por el usuario (si configuró fuente, color o tamaño)
+      const formattedContent = packStyledContent(text);
+
       const newMsg = {
         sender_id: currentUser.id,
         username: currentUser.username,
         role: currentUser.role,
-        content: text,
+        content: formattedContent,
         created_at: new Date().toISOString()
       };
 
