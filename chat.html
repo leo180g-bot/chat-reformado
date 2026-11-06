@@ -2,83 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Comunión Doctrinal - Sala General</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sala General | Comunión Doctrinal</title>
+  <meta name="description" content="Sala de chat en tiempo real para el diálogo cristiano reformado y estudio bíblico fraternal. Comunión Doctrinal.">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     * { box-sizing: border-box; }
 
-    :root, [data-theme="noche"] {
-      --bg-body: #0f172a;
-      --bg-panel: #1e293b;
-      --bg-subpanel: #111827;
-      --bg-chat: #0b1120;
-      --bg-input: #0f172a;
-      --border-color: #334155;
-      --border-subtle: #1e293b;
+    :root {
+      --bg-body: #0b1120;
+      --bg-panel: #131d31;
+      --bg-subpanel: #090d16;
+      --border-color: #24324d;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #38bdf8;
       --accent-btn: #0284c7;
       --accent-btn-hover: #0369a1;
-      --msg-bg: #1e293b;
-      --msg-private-bg: #172554;
-      --msg-border: #64748b;
-      --chat-font-size: 0.95rem;
-    }
-
-    [data-theme="carbon"] {
-      --bg-body: #000000;
-      --bg-panel: #121212;
-      --bg-subpanel: #0a0a0a;
-      --bg-chat: #000000;
-      --bg-input: #181818;
-      --border-color: #27272a;
-      --border-subtle: #18181b;
-      --text-main: #fafafa;
-      --text-muted: #a1a1aa;
-      --accent: #60a5fa;
-      --accent-btn: #2563eb;
-      --accent-btn-hover: #1d4ed8;
-      --msg-bg: #18181b;
-      --msg-private-bg: #271e38;
-      --msg-border: #52525b;
-    }
-
-    [data-theme="pergamino"] {
-      --bg-body: #2b2621;
-      --bg-panel: #383129;
-      --bg-subpanel: #201c18;
-      --bg-chat: #26211c;
-      --bg-input: #201c18;
-      --border-color: #4d4439;
-      --border-subtle: #383129;
-      --text-main: #f5f0e6;
-      --text-muted: #c2b69d;
-      --accent: #eab308;
-      --accent-btn: #b45309;
-      --accent-btn-hover: #92400e;
-      --msg-bg: #332c25;
-      --msg-private-bg: #3d2c1d;
-      --msg-border: #786b59;
-    }
-
-    [data-theme="bosque"] {
-      --bg-body: #0b1a16;
-      --bg-panel: #132b24;
-      --bg-subpanel: #081310;
-      --bg-chat: #07120e;
-      --bg-input: #081310;
-      --border-color: #21443a;
-      --border-subtle: #132b24;
-      --text-main: #ecfdf5;
-      --text-muted: #86efac;
-      --accent: #34d399;
-      --accent-btn: #059669;
-      --accent-btn-hover: #047857;
-      --msg-bg: #14352b;
-      --msg-private-bg: #1b3838;
-      --msg-border: #3b7664;
+      --accent-gold: #facc15;
+      --msg-self: #1e3a8a;
+      --msg-other: #1e293b;
     }
 
     body {
@@ -86,2556 +33,549 @@
       background: var(--bg-body);
       color: var(--text-main);
       margin: 0;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
-      height: 100dvh;
       overflow: hidden;
-      transition: background 0.2s, color 0.2s;
-    }
-    
-    header {
-      background: var(--bg-panel);
-      padding: 8px 14px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
-      position: relative;
-    }
-    .header-left { display: flex; align-items: center; gap: 8px; }
-    
-    .btn-toggle-nav {
-      background: var(--bg-body);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: none;
-    }
-    .header-text h1 { margin: 0; font-size: 1.05rem; color: var(--accent); display: flex; align-items: center; gap: 6px; }
-    .room-badge { font-size: 0.72rem; background: var(--accent-btn); color: #fff; padding: 2px 7px; border-radius: 9999px; font-weight: 500; border: 1px solid var(--accent); }
-    
-    .header-right { display: flex; align-items: center; gap: 6px; }
-    
-    .btn-icon-header {
-      background: var(--bg-body);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 6px 11px;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: background 0.15s;
-    }
-    .btn-icon-header:hover { background: var(--border-color); }
-    .badge-counter {
-      background: var(--accent-btn);
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: bold;
-      padding: 1px 6px;
-      border-radius: 10px;
     }
 
-    .dropdown-menu {
-      display: none;
-      position: absolute;
-      right: 14px;
-      top: 50px;
+    /* Barra Superior */
+    header.chat-header {
       background: var(--bg-panel);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      min-width: 220px;
-      z-index: 100;
-      overflow: hidden;
-      flex-direction: column;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 20;
     }
-    .dropdown-menu.open { display: flex; }
-    .dropdown-item {
-      padding: 9px 12px;
-      background: none;
-      border: none;
-      color: var(--text-main);
-      font-size: 0.85rem;
-      text-align: left;
-      cursor: pointer;
+
+    .brand-section {
       display: flex;
       align-items: center;
       gap: 10px;
-      width: 100%;
-      transition: background 0.15s;
     }
-    .dropdown-item:hover { background: var(--border-color); }
-    .dropdown-item.danger { color: #fca5a5; }
-    .dropdown-item.danger:hover { background: #7f1d1d; }
-    .dropdown-divider { height: 1px; background: var(--border-color); margin: 4px 0; }
-    
-    .theme-selector-container {
-      padding: 6px 12px 10px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .theme-selector-container label {
-      font-size: 0.74rem;
-      color: var(--text-muted);
+
+    .brand-link {
+      font-size: 1.05rem;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .theme-select {
-      background: var(--bg-body);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      padding: 5px 8px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      outline: none;
-      width: 100%;
-    }
-
-    .main-container { flex: 1; display: flex; overflow: hidden; position: relative; }
-
-    aside.channels-sidebar {
-      width: 220px;
-      background: var(--bg-body);
-      border-right: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      transition: transform 0.25s ease;
-    }
-    .channels-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px 4px 12px;
-    }
-    .channels-header {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .btn-close-sidebar {
-      display: none;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1rem;
-      cursor: pointer;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .btn-close-sidebar:hover { background: var(--bg-panel); color: #fff; }
-
-    .channel-list { list-style: none; margin: 0; padding: 4px 8px; display: flex; flex-direction: column; gap: 3px; }
-    .channel-list.rooms-list { flex-shrink: 0; }
-    .channel-list.dms-list { flex: 1; overflow-y: auto; }
-    
-    .channel-item {
+      color: var(--accent);
+      text-decoration: none;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 7px 9px;
-      border-radius: 6px;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.15s;
-    }
-    .channel-item:hover { background: var(--bg-panel); color: var(--text-main); }
-    .channel-item.active { background: var(--accent-btn); color: #ffffff; font-weight: 600; }
-    .unread-badge { background: #ef4444; color: white; font-size: 0.68rem; font-weight: bold; padding: 1px 5px; border-radius: 10px; }
-
-    .channel-item-close { background: transparent; border: none; color: var(--text-muted); font-size: 0.8rem; line-height: 1; padding: 2px 5px; border-radius: 4px; cursor: pointer; margin-left: 4px; transition: all 0.15s; }
-    .channel-item-close:hover { background: var(--bg-panel); color: #f87171; }
-    .channel-item.active .channel-item-close { color: #e0f2fe; }
-    .channel-item.active .channel-item-close:hover { background: var(--accent-btn-hover); color: #fca5a5; }
-
-    .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; width: 100%; background: var(--bg-chat); }
-    .chat-header-bar { padding: 8px 14px; background: var(--bg-panel); border-bottom: 1px solid var(--border-subtle); font-size: 0.82rem; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
-    .chat-header-bar strong { color: var(--accent); }
-
-    #chat-box { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: var(--chat-font-size); }
-    
-    .msg { 
-      background: var(--msg-bg); 
-      padding: 9px 12px; 
-      border-radius: 6px; 
-      max-width: 85%; 
-      border-left: 4px solid var(--msg-border); 
-      position: relative;
-    }
-    .msg.ref { border-left-color: var(--accent); }
-    .msg.mentioned { background: var(--msg-bg); border-left: 4px solid #eab308; box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.2); }
-    .msg.private { background: var(--msg-private-bg); border-left: 4px solid #a855f7; }
-    .msg.pending { opacity: 0.85; border-left-color: #f59e0b; background: rgba(245, 158, 11, 0.05); }
-
-    .msg-img-container { margin-top: 8px; max-width: 100%; }
-    .msg-img {
-      max-width: 280px;
-      max-height: 280px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      display: block;
-      cursor: pointer;
-      object-fit: cover;
+      gap: 6px;
     }
 
-    .msg-audio-container { margin-top: 8px; max-width: 100%; }
-    .msg-audio { width: 250px; height: 36px; border-radius: 20px; outline: none; }
-
-    .pending-badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      background: #78350f;
-      color: #fde68a;
-      padding: 1px 6px;
-      border-radius: 4px;
-      margin-left: 6px;
-      font-weight: bold;
-    }
-
-    .mod-actions-bar { margin-top: 6px; display: flex; gap: 6px; }
-    .btn-mod-approve {
-      background: #065f46;
-      color: #a7f3d0;
-      border: 1px solid #059669;
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .btn-mod-reject {
-      background: #991b1b;
-      color: #fecaca;
-      border: 1px solid #dc2626;
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .btn-msg-delete {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.78rem;
-      padding: 0 4px;
-      margin-left: 6px;
-      border-radius: 4px;
-      opacity: 0.6;
-      transition: opacity 0.15s, color 0.15s;
-    }
-    .btn-msg-delete:hover { opacity: 1; color: #f87171; }
-
-    .badge-role { font-size: 0.72em; padding: 1px 6px; border-radius: 4px; font-weight: bold; }
-    .badge-role.admin { background: #a16207; color: #fef08a; }
-    .badge-role.moderator { background: #0369a1; color: #bae6fd; }
-    .badge-role.veteran { background: #6b21a8; color: #f3e8ff; }
-    .badge-role.member { background: #1e3a8a; color: #dbeafe; }
-    .badge-role.novice { background: #374151; color: #d1d5db; }
-    .badge-role.guest { background: #475569; color: #cbd5e1; font-style: italic; }
-    .badge-role.bot { background: #047857; color: #a7f3d0; }
-
-    .msg-system {
-      align-self: center;
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      font-size: 0.76rem;
-      padding: 4px 12px;
-      border-radius: 9999px;
-      margin: 4px auto;
-      text-align: center;
-      max-width: 90%;
-      font-style: italic;
-    }
-
-    .msg.bot {
-      border-left-color: #10b981;
-      background: rgba(16, 185, 129, 0.08);
-    }
-    
-    .msg-meta { font-size: 0.78em; color: var(--text-muted); margin-bottom: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-family: system-ui, sans-serif; }
-    .user-clickable { color: var(--accent); cursor: pointer; font-weight: bold; }
-    .user-clickable:hover { text-decoration: underline; }
-    .badge-doc { font-size: 0.72em; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 1px 5px; border-radius: 4px; }
-    .msg-meta .time { font-size: 0.72em; color: var(--text-muted); margin-left: auto; display: flex; align-items: center; }
-    .msg-text { word-break: break-word; line-height: 1.4; white-space: pre-wrap; }
-
-    aside.users-sidebar {
-      width: 210px;
+    .user-pill {
       background: var(--bg-subpanel);
-      border-left: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      transition: width 0.2s ease, opacity 0.2s ease;
-    }
-    aside.users-sidebar.hidden-desktop { display: none; }
-    
-    .sidebar-header { padding: 10px 12px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); font-size: 0.82rem; font-weight: bold; color: var(--text-main); display: flex; justify-content: space-between; align-items: center; }
-    .users-count { background: var(--accent-btn); color: white; padding: 1px 6px; border-radius: 12px; font-size: 0.72rem; }
-    .users-list { flex: 1; overflow-y: auto; padding: 8px; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .user-item { display: flex; flex-direction: column; background: var(--bg-panel); padding: 7px 9px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer; }
-    .user-item:hover { border-color: var(--accent); }
-    .user-item-name { font-size: 0.82rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
-    .online-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-    .user-item-doc { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
-
-    .user-action-popup {
-      display: none;
-      position: fixed;
-      background: var(--bg-panel);
       border: 1px solid var(--border-color);
-      border-radius: 6px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-      z-index: 120;
-      overflow: hidden;
-      min-width: 185px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
-    .user-action-popup.open { display: block; }
-    .popup-btn {
-      width: 100%;
-      padding: 9px 12px;
-      background: none;
-      border: none;
-      color: var(--text-main);
-      font-size: 0.85rem;
-      text-align: left;
-      cursor: pointer;
+
+    .header-nav {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .popup-btn:hover { background: var(--border-color); }
 
-    form#chat-form { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: var(--bg-panel); border-top: 1px solid var(--border-color); flex-shrink: 0; position: relative; }
-    .input-wrapper { flex: 1; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 6px; padding: 0 6px 0 10px; min-width: 0; }
-    .input-wrapper:focus-within { border-color: var(--accent); }
-    input#content { flex: 1; background: transparent; border: none; color: var(--text-main); padding: 9px 0; font-size: 0.92rem; min-width: 60px; }
-    input#content:focus { outline: none; }
-
-    .input-toolbar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; position: relative; }
-    .color-picker-label { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--border-color); cursor: pointer; position: relative; overflow: hidden; background: var(--bg-panel); }
-    .color-picker-label input[type="color"] { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
-    .color-indicator { width: 12px; height: 12px; border-radius: 2px; background: #f8fafc; }
-    
-    .tool-btn { background: transparent; border: none; color: var(--text-muted); padding: 4px 6px; border-radius: 4px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 600; }
-    .tool-btn:hover { color: var(--text-main); background: var(--border-color); }
-    .tool-btn.active { color: var(--accent); background: var(--bg-panel); }
-    .tool-btn.recording { color: #ef4444; animation: pulseRecord 1s infinite; }
-
-    @keyframes pulseRecord {
-      0% { opacity: 1; }
-      50% { opacity: 0.3; }
-      100% { opacity: 1; }
-    }
-
-    .font-settings-popover {
-      display: none;
-      position: absolute;
-      bottom: 42px;
-      right: 32px;
-      background: var(--bg-panel);
+    .btn-header {
+      background: var(--bg-subpanel);
       border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 5px 10px;
       border-radius: 6px;
-      padding: 8px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      z-index: 60;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 140px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .font-settings-popover.open { display: flex; }
-    .font-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-    .font-select-popover { background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 6px; font-size: 0.78rem; width: 100%; outline: none; }
-    .font-size-btn { flex: 1; padding: 4px; background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; text-align: center; }
-    .font-size-btn:hover { background: var(--border-color); }
+    .btn-header:hover {
+      background: var(--accent-btn);
+      border-color: var(--accent);
+      color: #fff;
+    }
 
-    .gif-picker-popover {
-      display: none;
-      position: absolute;
-      bottom: 58px;
-      right: 20px;
-      background: var(--bg-panel);
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
+    .btn-logout:hover {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: #fff;
+    }
+
+    /* Área Principal */
+    .chat-layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      overflow: hidden;
+    }
+
+    /* Panel de Mensajes */
+    .chat-main {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border-right: 1px solid var(--border-color);
+      overflow: hidden;
+      background: var(--bg-body);
+    }
+
+    .messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message-item {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      position: relative;
+      word-break: break-word;
+    }
+
+    .message-item.self {
+      align-self: flex-end;
+      background: var(--msg-self);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-bottom-right-radius: 2px;
+    }
+
+    .message-item.other {
+      align-self: flex-start;
+      background: var(--msg-other);
       border: 1px solid var(--border-color);
+      border-bottom-left-radius: 2px;
+    }
+
+    .msg-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+      font-size: 0.74rem;
+    }
+
+    .msg-sender {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .msg-role-tag {
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-muted);
+    }
+
+    .msg-time {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .msg-body {
+      color: var(--text-main);
+    }
+
+    /* Barra de Entrada */
+    .chat-input-bar {
+      padding: 12px 16px;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .chat-input-bar input[type="text"] {
+      flex: 1;
+      padding: 11px 14px;
       border-radius: 8px;
-      width: 320px;
-      max-height: 380px;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
-      z-index: 60;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subpanel);
+      color: var(--text-main);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .chat-input-bar input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+
+    .btn-send {
+      background: var(--accent-btn);
+      border: none;
+      color: #fff;
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-send:hover {
+      background: var(--accent-btn-hover);
+    }
+
+    /* Barra Lateral de Usuarios Conectados */
+    .online-sidebar {
+      background: var(--bg-subpanel);
+      display: flex;
       flex-direction: column;
       overflow: hidden;
     }
-    .gif-picker-popover.open { display: flex; }
-    .gif-search-bar { padding: 8px; border-bottom: 1px solid var(--border-color); background: var(--bg-subpanel); }
-    .gif-search-bar input {
-      width: 100%;
-      padding: 7px 10px;
-      border-radius: 4px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-body);
-      color: var(--text-main);
-      font-size: 0.85rem;
-      outline: none;
+
+    .sidebar-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .gif-search-bar input:focus { border-color: var(--accent); }
-    .gif-results-grid {
-      flex: 1;
+
+    .user-list {
+      list-style: none;
+      margin: 0;
+      padding: 10px;
       overflow-y: auto;
-      padding: 8px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 6px;
-      max-height: 300px;
+      flex: 1;
     }
-    .gif-item {
-      width: 100%;
-      height: 95px;
-      object-fit: cover;
-      border-radius: 4px;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: transform 0.1s, border-color 0.1s;
-      background: var(--bg-subpanel);
+
+    .online-user-item {
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .gif-item:hover { transform: scale(1.02); border-color: var(--accent); }
 
-    button#sendBtn { padding: 8px 13px; border-radius: 6px; border: none; background: var(--accent-btn); color: #fff; font-weight: bold; cursor: pointer; transition: background 0.2s; font-size: 0.85rem; flex-shrink: 0; }
-    button#sendBtn:hover { background: var(--accent-btn-hover); }
-
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); align-items: center; justify-content: center; z-index: 110; padding: 14px; }
-    .modal-overlay.open { display: flex; }
-    .modal-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 18px; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 12px; }
-    .modal-header h2 { margin: 0; font-size: 1.1rem; color: var(--accent); }
-    .close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
-    .auth-tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 12px; }
-    .auth-tab { flex: 1; background: none; border: none; color: var(--text-muted); padding: 8px 4px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; font-size: 0.85rem; }
-    .auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .auth-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-    .auth-field label { font-size: 0.8rem; color: var(--text-muted); }
-    .auth-field input, .auth-field select { padding: 8px 10px; border-radius: 4px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); font-size: 0.88rem; }
-    .btn-primary { width: 100%; padding: 10px; background: var(--accent-btn); border: none; border-radius: 4px; color: white; font-weight: bold; font-size: 0.9rem; cursor: pointer; }
-
-    .bible-numbers-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 6px;
-      width: 100%;
-      margin-bottom: 8px;
+    .online-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      display: inline-block;
+      margin-right: 6px;
     }
-    .bible-numbers-row .auth-field { margin-bottom: 0; min-width: 0; }
-    .bible-numbers-row label { font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .bible-numbers-row input[type="number"] { width: 100%; padding: 6px 4px; font-size: 0.85rem; text-align: center; appearance: textfield; -moz-appearance: textfield; }
-    .bible-numbers-row input[type="number"]::-webkit-outer-spin-button,
-    .bible-numbers-row input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-    .emoji-picker { display: none; position: absolute; bottom: 58px; right: 20px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; grid-template-columns: repeat(7, 1fr); gap: 5px; box-shadow: 0 10px 28px rgba(0,0,0,0.6); z-index: 50; max-width: 290px; max-height: 200px; overflow-y: auto; }
-    .emoji-picker.open { display: grid; }
-    .emoji-item { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; padding: 4px; border-radius: 4px; }
 
     @media (max-width: 768px) {
-      .btn-toggle-nav { display: inline-flex; }
-      .btn-close-sidebar { display: inline-block; }
-      
-      aside.channels-sidebar {
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        z-index: 40;
-        transform: translateX(-100%);
-        width: 220px;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.5);
+      .chat-layout {
+        grid-template-columns: 1fr;
       }
-      aside.channels-sidebar.mobile-open { transform: translateX(0); }
-      
-      aside.users-sidebar {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        z-index: 40;
-        transform: translateX(100%);
-        width: 210px;
-        box-shadow: -4px 0 15px rgba(0,0,0,0.5);
+      .online-sidebar {
+        display: none;
       }
-      aside.users-sidebar.mobile-open { transform: translateX(0); }
-      aside.users-sidebar.hidden-desktop { display: flex; }
-      
-      .emoji-picker { right: 8px; bottom: 55px; }
-      .font-settings-popover { right: 8px; }
-      .gif-picker-popover { right: 8px; width: 280px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-      <button class="btn-toggle-nav" id="toggleChannelsMobileBtn" title="Ver salas y privados">💬</button>
-      <div class="header-text">
-        <h1>Comunión Doctrinal <span class="room-badge">General</span></h1>
+
+  <!-- Barra Superior -->
+  <header class="chat-header">
+    <div class="brand-section">
+      <a href="index.html" class="brand-link">✝️ Comunión Doctrinal</a>
+      <div class="user-pill" id="userPill">
+        <span>Conectando...</span>
       </div>
     </div>
-    
-    <div class="header-right">
-      <button class="btn-icon-header" id="btnToggleUsers" title="Ver usuarios conectados">
-        👥 <span class="badge-counter" id="btnUsersCount">0</span>
-      </button>
-
-      <button class="btn-icon-header" id="menuToggleBtn" title="Menú de opciones">
-        ☰
-      </button>
-
-      <div class="dropdown-menu" id="headerDropdown">
-        <div class="theme-selector-container">
-          <label for="themeSelect">🎨 Tema visual</label>
-          <select id="themeSelect" class="theme-select">
-            <option value="noche">🌌 Noche Profunda</option>
-            <option value="carbon">⬛ Carbón Puro</option>
-            <option value="pergamino">📜 Pergamino</option>
-            <option value="bosque">🌲 Bosque Ginebra</option>
-          </select>
-        </div>
-        <div class="dropdown-divider"></div>
-
-        <button class="dropdown-item" id="optSound">🔔 Sonido General: Activado</button>
-        <button class="dropdown-item" id="optPrivateSound">🔕 Sonido Privados: Activado</button>
-        <button class="dropdown-item" id="optBlockDms">🔒 Privados: Permitidos</button>
-        <button class="dropdown-item" id="optProfile">👤 Mi Perfil</button>
-        <button class="dropdown-item" id="optRoles" style="display: none; color: #fef08a;">⚙️ Gestión de Roles</button>
-        <button class="dropdown-item danger" id="optClearChat" style="display: none;">🧹 Vaciar Sala General</button>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item" id="optQr">📱 Código QR</button>
-        <button class="dropdown-item" id="optRules">📜 Normas Doctrinales</button>
-        <div class="dropdown-divider"></div>
-        <button class="dropdown-item danger" id="optLogout">🚪 Salir</button>
-      </div>
-    </div>
+    <nav class="header-nav">
+      <a href="confesiones.html" class="btn-header" title="Confesiones de Fe">📜 Confesiones</a>
+      <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="btn-header" title="Abrir Lector Bíblico">📖 Biblia</a>
+      <button type="button" class="btn-header btn-logout" id="btnLogout" title="Salir de la sesión">🚪 Salir</button>
+    </nav>
   </header>
 
-  <div class="main-container">
-    <aside class="channels-sidebar" id="channelsSidebar">
-      <div class="channels-header-row">
-        <span class="channels-header">Salas</span>
-        <button type="button" class="btn-close-sidebar" id="btnCloseChannels" title="Ocultar">✕</button>
+  <!-- Cuerpo del Chat -->
+  <div class="chat-layout">
+    <!-- Panel Central de Mensajes -->
+    <main class="chat-main">
+      <div class="messages-container" id="messagesContainer">
+        <!-- Los mensajes en tiempo real se cargan aquí -->
       </div>
 
-      <ul class="channel-list rooms-list">
-        <li class="channel-item active" id="channelGeneral" data-channel="general">
-          <span># Sala General</span>
-        </li>
-      </ul>
-
-      <div class="channels-header-row" style="margin-top: 4px;">
-        <span class="channels-header">Mensajes Directos</span>
-      </div>
-      <ul class="channel-list dms-list" id="directMessagesList"></ul>
-    </aside>
-
-    <div class="chat-container">
-      <div class="chat-header-bar">
-        <span>Viendo: <strong id="currentViewLabel"># Sala General</strong></span>
-        <span id="currentViewDesc" style="font-size: 0.75rem; color: var(--text-muted);">Diálogo teológico público</span>
-      </div>
-
-      <div id="chat-box"></div>
-      
-      <div class="font-settings-popover" id="fontPopover">
-        <div class="font-row">
-          <select id="fontFamilySelect" class="font-select-popover">
-            <option value="system-ui, sans-serif">Sans</option>
-            <option value="Georgia, serif">Serif</option>
-            <option value="'Courier New', monospace">Mono</option>
-          </select>
-        </div>
-        <div class="font-row">
-          <button type="button" class="font-size-btn" id="btnFontDec">A -</button>
-          <button type="button" class="font-size-btn" id="btnFontInc">A +</button>
-        </div>
-      </div>
-
-      <div class="emoji-picker" id="emojiPicker">
-        <button type="button" class="emoji-item">📖</button>
-        <button type="button" class="emoji-item">🙏</button>
-        <button type="button" class="emoji-item">✝️</button>
-        <button type="button" class="emoji-item">🕊️</button>
-        <button type="button" class="emoji-item">⛪</button>
-        <button type="button" class="emoji-item">👑</button>
-        <button type="button" class="emoji-item">🍞</button>
-        <button type="button" class="emoji-item">🍷</button>
-        <button type="button" class="emoji-item">🕯️</button>
-        <button type="button" class="emoji-item">🎵</button>
-        <button type="button" class="emoji-item">🙌</button>
-        <button type="button" class="emoji-item">👍</button>
-        <button type="button" class="emoji-item">🤝</button>
-        <button type="button" class="emoji-item">❤️</button>
-        <button type="button" class="emoji-item">😊</button>
-        <button type="button" class="emoji-item">😇</button>
-        <button type="button" class="emoji-item">🤔</button>
-        <button type="button" class="emoji-item">💡</button>
-        <button type="button" class="emoji-item">✍️</button>
-        <button type="button" class="emoji-item">📜</button>
-        <button type="button" class="emoji-item">📚</button>
-        <button type="button" class="emoji-item">🛡️</button>
-      </div>
-
-      <!-- Popover Giphy -->
-      <div class="gif-picker-popover" id="gifPicker">
-        <div class="gif-search-bar">
-          <input type="text" id="gifSearchInput" placeholder="Buscar GIFs en Giphy..." autocomplete="off">
-        </div>
-        <div class="gif-results-grid" id="gifResults"></div>
-      </div>
-
-      <form id="chat-form">
-        <input type="file" id="imageFileInput" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;">
-
-        <div class="input-wrapper">
-          <input type="text" id="content" placeholder="Escribe tu mensaje en # Sala General..." autocomplete="off">
-          
-          <div class="input-toolbar">
-            <label class="color-picker-label" title="Color de tu mensaje">
-              <span class="color-indicator" id="colorIndicator"></span>
-              <input type="color" id="textColorPicker" value="#f8fafc">
-            </label>
-
-            <button type="button" class="tool-btn" id="btnRecordAudio" title="Grabar nota de voz (Requiere permiso)">🎙️</button>
-            <button type="button" class="tool-btn" id="btnAttachImage" title="Enviar imagen (Solo registrados)">🖼️</button>
-            <button type="button" class="tool-btn" id="btnGifToggle" title="Buscar y enviar GIF (Solo registrados)">GIF</button>
-            <button type="button" class="tool-btn" id="btnFontMenu" title="Ajustes de fuente y tamaño">Aa</button>
-            <button type="button" class="tool-btn" id="btnOpenBibleModal" title="Citar texto bíblico (1 a 10 versículos)">📖</button>
-            <button type="button" class="tool-btn" id="btnEmojiToggle">😊</button>
-          </div>
-        </div>
-
-        <button type="submit" id="sendBtn">
-          <span>➤</span>
-        </button>
+      <form class="chat-input-bar" id="chatForm">
+        <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o teológico..." autocomplete="off" required maxlength="1000">
+        <button type="submit" class="btn-send">Enviar</button>
       </form>
-    </div>
+    </main>
 
-    <aside class="users-sidebar" id="usersSidebar">
+    <!-- Barra Lateral de Usuarios Activos -->
+    <aside class="online-sidebar">
       <div class="sidebar-header">
-        <span>Conectados</span>
-        <span class="users-count" id="usersCount">0</span>
+        <span>En Línea</span>
+        <span id="onlineCount" style="color:var(--accent);">0</span>
       </div>
-      <ul class="users-list" id="usersList"></ul>
-    </aside>
-  </div>
-
-  <div class="user-action-popup" id="userPopup">
-    <div style="padding: 6px 12px; font-size: 0.75rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-weight: bold;" id="popupHeaderNick">
-      Usuario
-    </div>
-    <button type="button" class="popup-btn" id="popupMentionBtn">💬 Mencionar</button>
-    <button type="button" class="popup-btn" id="popupPrivateBtn">🔒 Mensaje Privado</button>
-    
-    <div id="adminActionsDivider" class="dropdown-divider" style="display: none;"></div>
-    <button type="button" class="popup-btn" id="popupPurgeBtn" style="display: none; color: #fca5a5;">🗑️ Borrar mensajes</button>
-    <button type="button" class="popup-btn" id="popupSilenceBtn" style="display: none; color: #fde047;">🔇 Silenciar usuario</button>
-    <button type="button" class="popup-btn" id="popupChangeRoleBtn" style="display: none; color: #93c5fd;">👑 Asignar Rango</button>
-  </div>
-
-  <div class="modal-overlay" id="bibleModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Citar Pasaje Bíblico</h2>
-        <button class="close-btn" id="closeBibleBtn">&times;</button>
-      </div>
-
-      <div class="auth-field">
-        <label for="bibleVersionSelect">Versión:</label>
-        <select id="bibleVersionSelect">
-          <option value="RVR1960" selected>Reina-Valera 1960 (RVR1960)</option>
-          <option value="RVSBT18">Reina Valera SBT 2018 (RVSBT18)</option>
-        </select>
-      </div>
-
-      <div class="auth-field">
-        <label for="bibleBookSelect">Libro:</label>
-        <select id="bibleBookSelect">
-          <option value="Génesis">Génesis</option>
-          <option value="Éxodo">Éxodo</option>
-          <option value="Levítico">Levítico</option>
-          <option value="Números">Números</option>
-          <option value="Deuteronomio">Deuteronomio</option>
-          <option value="Josué">Josué</option>
-          <option value="Jueces">Jueces</option>
-          <option value="Rut">Rut</option>
-          <option value="1 Samuel">1 Samuel</option>
-          <option value="2 Samuel">2 Samuel</option>
-          <option value="1 Reyes">1 Reyes</option>
-          <option value="2 Reyes">2 Reyes</option>
-          <option value="1 Crónicas">1 Crónicas</option>
-          <option value="2 Crónicas">2 Crónicas</option>
-          <option value="Esdras">Esdras</option>
-          <option value="Nehemías">Nehemías</option>
-          <option value="Ester">Ester</option>
-          <option value="Job">Job</option>
-          <option value="Salmos">Salmos</option>
-          <option value="Proverbios">Proverbios</option>
-          <option value="Eclesiastés">Eclesiastés</option>
-          <option value="Cantares">Cantares</option>
-          <option value="Isaías">Isaías</option>
-          <option value="Jeremías">Jeremías</option>
-          <option value="Lamentaciones">Lamentaciones</option>
-          <option value="Ezequiel">Ezequiel</option>
-          <option value="Daniel">Daniel</option>
-          <option value="Oseas">Oseas</option>
-          <option value="Joel">Joel</option>
-          <option value="Amós">Amós</option>
-          <option value="Abdías">Abdías</option>
-          <option value="Jonás">Jonás</option>
-          <option value="Miqueas">Miqueas</option>
-          <option value="Nahúm">Nahúm</option>
-          <option value="Habacuc">Habacuc</option>
-          <option value="Sofonías">Sofonías</option>
-          <option value="Hageo">Hageo</option>
-          <option value="Zacarías">Zacarías</option>
-          <option value="Malaquías">Malaquías</option>
-          <option value="Mateo">Mateo</option>
-          <option value="Marcos">Marcos</option>
-          <option value="Lucas">Lucas</option>
-          <option value="Juan" selected>Juan</option>
-          <option value="Hechos">Hechos</option>
-          <option value="Romanos">Romanos</option>
-          <option value="1 Corintios">1 Corintios</option>
-          <option value="2 Corintios">2 Corintios</option>
-          <option value="Gálatas">Gálatas</option>
-          <option value="Efesios">Efesios</option>
-          <option value="Filipenses">Filipenses</option>
-          <option value="Colosenses">Colosenses</option>
-          <option value="1 Tesalonicenses">1 Tesalonicenses</option>
-          <option value="2 Tesalonicenses">2 Tesalonicenses</option>
-          <option value="1 Timoteo">1 Timoteo</option>
-          <option value="2 Timoteo">2 Timoteo</option>
-          <option value="Tito">Tito</option>
-          <option value="Filemón">Filemón</option>
-          <option value="Hebreos">Hebreos</option>
-          <option value="Santiago">Santiago</option>
-          <option value="1 Pedro">1 Pedro</option>
-          <option value="2 Pedro">2 Pedro</option>
-          <option value="1 Juan">1 Juan</option>
-          <option value="2 Juan">2 Juan</option>
-          <option value="3 Juan">3 Juan</option>
-          <option value="Judas">Judas</option>
-          <option value="Apocalipsis">Apocalipsis</option>
-        </select>
-      </div>
-
-      <div class="bible-numbers-row">
-        <div class="auth-field">
-          <label for="bibleChapter">Capítulo:</label>
-          <input type="number" id="bibleChapter" min="1" value="1">
-        </div>
-        <div class="auth-field">
-          <label for="bibleVerseStart">Desde v.:</label>
-          <input type="number" id="bibleVerseStart" min="1" value="12">
-        </div>
-        <div class="auth-field">
-          <label for="bibleVerseEnd">Hasta v.:</label>
-          <input type="number" id="bibleVerseEnd" min="1" value="13">
-        </div>
-      </div>
-
-      <div style="margin: 6px 0 12px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.35;">
-        * Máximo 10 versículos por cita.
-      </div>
-
-      <button type="button" class="btn-primary" id="btnFetchAndInsertVerse">Obtener y Pegar</button>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="authModal">
-    <div class="modal-card">
-      <div class="auth-tabs">
-        <button type="button" class="auth-tab active" id="tabLogin">Iniciar Sesión</button>
-        <button type="button" class="auth-tab" id="tabRegister">Crear Cuenta</button>
-        <button type="button" class="auth-tab" id="tabGuest">Invitado</button>
-      </div>
-
-      <form id="loginForm">
-        <div class="auth-field">
-          <label>Nick / Nombre de usuario:</label>
-          <input type="text" id="loginNick" placeholder="Tu nick registrado" required>
-        </div>
-        <div class="auth-field">
-          <label>Contraseña:</label>
-          <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
-        </div>
-        <button type="submit" class="btn-primary" style="margin-top: 8px;">Entrar a la Sala</button>
-      </form>
-
-      <form id="registerForm" style="display: none;">
-        <div class="auth-field">
-          <label>Nick / Nombre público:</label>
-          <input type="text" id="regUsername" placeholder="Ej. Calvino_1536" required maxlength="30">
-        </div>
-        <div class="auth-field">
-          <label>Correo electrónico:</label>
-          <input type="email" id="regEmail" placeholder="correo@ejemplo.com" required>
-        </div>
-        <div class="auth-field">
-          <label>Contraseña:</label>
-          <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
-        </div>
-        <div class="auth-field">
-          <label>Confirmar Contraseña:</label>
-          <input type="password" id="regPasswordConfirm" placeholder="Repite la contraseña" required minlength="6">
-        </div>
-        <button type="submit" class="btn-primary" style="margin-top: 8px;">Completar Registro</button>
-      </form>
-
-      <form id="guestForm" style="display: none;">
-        <div class="auth-field">
-          <label>Alias para esta sesión:</label>
-          <input type="text" id="guestNick" placeholder="Ej. Invitado_Berea" required maxlength="25">
-        </div>
-        <div class="auth-field">
-          <label>Postura doctrinal o trasfondo:</label>
-          <select id="guestDoctrine">
-            <option value="Reformada">Reformado(a)</option>
-            <option value="Presbiteriano">Presbiteriano(a)</option>
-            <option value="Bautista Reformado">Bautista Reformado(a)</option>
-            <option value="Bautista General">Bautista General</option>
-            <option value="Metodista / Trad. Wesleyana">Metodista / Trad. Wesleyana</option>
-            <option value="Pentecostal">Pentecostal</option>
-            <option value="Otro trasfondo">Otro trasfondo</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary" style="margin-top: 8px;">Entrar como Invitado</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="profileModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Editar Perfil</h2>
-        <button class="close-btn" id="closeProfileBtn">&times;</button>
-      </div>
-      <form id="profileForm">
-        <div class="auth-field">
-          <label>Nick público:</label>
-          <input type="text" id="editUsername" required maxlength="30">
-        </div>
-
-        <div class="auth-field">
-          <label>Postura doctrinal:</label>
-          <select id="editDoctrine">
-            <option value="Reformada">Reformado(a)</option>
-            <option value="Presbiteriano">Presbiteriano(a)</option>
-            <option value="Bautista Reformado">Bautista Reformado(a)</option>
-            <option value="Bautista General">Bautista General</option>
-            <option value="Metodista / Trad. Wesleyana">Metodista / Trad. Wesleyana</option>
-            <option value="Pentecostal">Pentecostal</option>
-            <option value="Otro trasfondo">Otro trasfondo</option>
-          </select>
-        </div>
-
-        <div class="auth-field">
-          <label>Nacionalidad / País:</label>
-          <select id="editCountry">
-            <option value="No responde" selected>No responde</option>
-            <option value="Argentina">Argentina</option>
-            <option value="Bolivia">Bolivia</option>
-            <option value="Chile">Chile</option>
-            <option value="Colombia">Colombia</option>
-            <option value="Costa Rica">Costa Rica</option>
-            <option value="Cuba">Cuba</option>
-            <option value="Ecuador">Ecuador</option>
-            <option value="El Salvador">El Salvador</option>
-            <option value="España">España</option>
-            <option value="Estados Unidos">Estados Unidos</option>
-            <option value="Guatemala">Guatemala</option>
-            <option value="Honduras">Honduras</option>
-            <option value="México">México</option>
-            <option value="Nicaragua">Nicaragua</option>
-            <option value="Panamá">Panamá</option>
-            <option value="Paraguay">Paraguay</option>
-            <option value="Perú">Perú</option>
-            <option value="Puerto Rico">Puerto Rico</option>
-            <option value="República Dominicana">República Dominicana</option>
-            <option value="Uruguay">Uruguay</option>
-            <option value="Venezuela">Venezuela</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-
-        <div class="auth-field">
-          <label>Rango de edad:</label>
-          <select id="editAge">
-            <option value="No responde" selected>No responde</option>
-            <option value="Menor de 18 años">Menor de 18 años</option>
-            <option value="18 a 24 años">18 a 24 años</option>
-            <option value="25 a 34 años">25 a 34 años</option>
-            <option value="35 a 44 años">35 a 44 años</option>
-            <option value="45 a 54 años">45 a 54 años</option>
-            <option value="55 a 64 años">55 a 64 años</option>
-            <option value="65 años o más">65 años o más</option>
-          </select>
-        </div>
-
-        <div class="auth-field">
-          <label>Rango en la Comunidad:</label>
-          <input type="text" id="viewRole" disabled style="background: var(--bg-body); color: var(--accent); font-weight: bold;">
-        </div>
-
-        <button type="submit" class="btn-primary" style="margin-top: 8px;">Guardar Cambios</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Panel de Rangos de Usuario</h2>
-        <button class="close-btn" id="closeAdminBtn">&times;</button>
-      </div>
-      <form id="adminRoleForm">
-        <div class="auth-field">
-          <label>Nick del usuario:</label>
-          <input type="text" id="adminTargetUser" required placeholder="Nick exacto">
-        </div>
-        <div class="auth-field">
-          <label>Rango jerárquico a asignar:</label>
-          <select id="adminRoleSelect">
-            <option value="novice">🌱 Novicio / Oyente (Nivel 1)</option>
-            <option value="member">📖 Miembro Regular (Nivel 2)</option>
-            <option value="veteran">🏛️ Veterano / Maestro (Nivel 3)</option>
-            <option value="moderator">🛡️ Moderador (Nivel 4)</option>
-            <option value="admin">👑 Administrador (Nivel 5)</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary" style="margin-top: 8px;">Aplicar Rango</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="qrModal">
-    <div class="modal-card" style="text-align: center;">
-      <div class="modal-header">
-        <h2>Código QR</h2>
-        <button class="close-btn" id="closeQrBtn">&times;</button>
-      </div>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https%3A%2F%2Fchat-reformado.vercel.app%2F" alt="QR" width="190" height="190" style="margin: 10px auto; background: white; padding: 10px; border-radius: 8px;">
-      <p style="font-size: 0.85rem; color: var(--accent);">https://chat-reformado.vercel.app/</p>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="rulesModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Propósito y Normas</h2>
-        <button class="close-btn" id="closeRulesBtn">&times;</button>
-      </div>
-      <ul style="font-size: 0.85rem; color: var(--text-main); line-height: 1.5; padding-left: 18px;">
-        <li>Eje central: Teología Reformada y las Cinco Solas.</li>
-        <li>Fraternidad, mansedumbre y decoro cristiano (2 Ti. 2:24-25).</li>
-        <li>Prohibidas las agresiones verbales o doctrinas heréticas.</li>
+      <ul class="user-list" id="onlineUserList">
+        <!-- Lista de usuarios presentes -->
       </ul>
-      <p style="text-align: right; color: var(--accent); font-style: italic; font-size: 0.85rem;">Soli Deo Gloria</p>
-    </div>
+    </aside>
   </div>
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
-    const GIPHY_API_KEY = "b4WtjSwJeeaO5vY2rl5P2CwDbmy3aBoc";
-
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const chatBox = document.getElementById('chat-box');
-    const form = document.getElementById('chat-form');
-    const contentInput = document.getElementById('content');
-    const usersList = document.getElementById('usersList');
-    const usersCount = document.getElementById('usersCount');
-    const btnUsersCount = document.getElementById('btnUsersCount');
-    const usersSidebar = document.getElementById('usersSidebar');
-    const channelsSidebar = document.getElementById('channelsSidebar');
-    const directMessagesList = document.getElementById('directMessagesList');
-    const channelGeneral = document.getElementById('channelGeneral');
-    const currentViewLabel = document.getElementById('currentViewLabel');
-    const currentViewDesc = document.getElementById('currentViewDesc');
 
-    const imageFileInput = document.getElementById('imageFileInput');
-    const btnAttachImage = document.getElementById('btnAttachImage');
-    const btnRecordAudio = document.getElementById('btnRecordAudio');
+    let currentUser = null;
+    let presenceChannel = null;
 
-    const btnGifToggle = document.getElementById('btnGifToggle');
-    const gifPicker = document.getElementById('gifPicker');
-    const gifSearchInput = document.getElementById('gifSearchInput');
-    const gifResults = document.getElementById('gifResults');
-    let gifSearchDebounce = null;
+    // 1. INICIALIZACIÓN Y VALIDACIÓN ESTRICTA DE NICK
+    async function initSession() {
+      const guestRaw = localStorage.getItem('guest_user');
 
-    const userPopup = document.getElementById('userPopup');
-    const popupHeaderNick = document.getElementById('popupHeaderNick');
-    const popupMentionBtn = document.getElementById('popupMentionBtn');
-    const popupPrivateBtn = document.getElementById('popupPrivateBtn');
-    const adminActionsDivider = document.getElementById('adminActionsDivider');
-    const popupPurgeBtn = document.getElementById('popupPurgeBtn');
-    const popupSilenceBtn = document.getElementById('popupSilenceBtn');
-    const popupChangeRoleBtn = document.getElementById('popupChangeRoleBtn');
-
-    let currentSessionUser = null;
-    let currentProfile = null;
-    let isGuest = false;
-    let roomChannel = null;
-    let selectedPopupUser = null;
-    let usuariosSilenciados = new Set();
-
-    let currentChannel = 'general';
-    let publicMessages = [];
-    let directConversations = new Set();
-
-    // Grabación de Audio
-    let mediaRecorder = null;
-    let audioChunks = [];
-    let isRecording = false;
-
-    const biblesCache = {};
-    const BIBLE_FILES = {
-      "RVR1960": "./RVR1960.json",
-      "RVSBT18": "./RVSBT18.json"
-    };
-
-    let isSoundEnabled = localStorage.getItem('chat_sound') !== 'false';
-    let isPrivateSoundEnabled = localStorage.getItem('chat_private_sound') !== 'false';
-    let isDmsBlocked = localStorage.getItem('chat_block_dms') === 'true';
-
-    const themeSelect = document.getElementById('themeSelect');
-    const savedTheme = localStorage.getItem('chat_theme') || 'noche';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeSelect.value = savedTheme;
-
-    themeSelect.addEventListener('change', (e) => {
-      const selected = e.target.value;
-      document.documentElement.setAttribute('data-theme', selected);
-      localStorage.setItem('chat_theme', selected);
-    });
-
-    const sndMessage = new Audio('mensaje.mp3');
-    const sndMention = new Audio('mencion.mp3');
-    const sndPrivate = new Audio('privado.mp3');
-    sndMessage.volume = 0.7;
-    sndMention.volume = 0.85;
-    sndPrivate.volume = 0.85;
-
-    const unlockAudio = () => {
-      [sndMessage, sndMention, sndPrivate].forEach(a => {
-        a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
-      });
-      window.removeEventListener('click', unlockAudio);
-      window.removeEventListener('keydown', unlockAudio);
-      window.removeEventListener('touchstart', unlockAudio);
-    };
-    window.addEventListener('click', unlockAudio);
-    window.addEventListener('keydown', unlockAudio);
-    window.addEventListener('touchstart', unlockAudio);
-
-    function playMessageSound() {
-      if (!isSoundEnabled) return;
-      sndMessage.currentTime = 0;
-      sndMessage.play().catch(() => {});
-    }
-
-    function playMentionSound() {
-      if (!isSoundEnabled) return;
-      sndMention.currentTime = 0;
-      sndMention.play().catch(() => {});
-    }
-
-    function playPrivateSound() {
-      if (!isSoundEnabled || !isPrivateSoundEnabled) return;
-      sndPrivate.currentTime = 0;
-      sndPrivate.play().catch(() => {});
-    }
-
-    // --- ALMACENAMIENTO LOCAL DE PRIVADOS ---
-    function getLocalDmsStorageKey() {
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : 'anon';
-      return `local_dms_${myNick}`;
-    }
-
-    function loadLocalDms() {
-      try {
-        const raw = localStorage.getItem(getLocalDmsStorageKey());
-        return raw ? JSON.parse(raw) : {};
-      } catch (e) {
-        return {};
-      }
-    }
-
-    function saveLocalDms(dmsObj) {
-      try {
-        localStorage.setItem(getLocalDmsStorageKey(), JSON.stringify(dmsObj));
-      } catch (e) {}
-    }
-
-    function storeDirectMessageLocally(otherUserLower, msg) {
-      const dms = loadLocalDms();
-      if (!dms[otherUserLower]) dms[otherUserLower] = [];
-      dms[otherUserLower].push(msg);
-      saveLocalDms(dms);
-    }
-
-    // Menú superior
-    const menuToggleBtn = document.getElementById('menuToggleBtn');
-    const headerDropdown = document.getElementById('headerDropdown');
-    menuToggleBtn.onclick = (e) => {
-      e.stopPropagation();
-      headerDropdown.classList.toggle('open');
-    };
-    
-    const btnFontMenu = document.getElementById('btnFontMenu');
-    const fontPopover = document.getElementById('fontPopover');
-    btnFontMenu.onclick = (e) => {
-      e.stopPropagation();
-      fontPopover.classList.toggle('open');
-      btnFontMenu.classList.toggle('active');
-    };
-
-    document.addEventListener('click', (e) => {
-      if (!headerDropdown.contains(e.target) && e.target !== menuToggleBtn) {
-        headerDropdown.classList.remove('open');
-      }
-      if (!fontPopover.contains(e.target) && e.target !== btnFontMenu) {
-        fontPopover.classList.remove('open');
-        btnFontMenu.classList.remove('active');
-      }
-      if (!gifPicker.contains(e.target) && e.target !== btnGifToggle) {
-        gifPicker.classList.remove('open');
-      }
-      if (!userPopup.contains(e.target)) {
-        userPopup.classList.remove('open');
-      }
-    });
-
-    document.getElementById('toggleChannelsMobileBtn').onclick = () => {
-      channelsSidebar.classList.toggle('mobile-open');
-      usersSidebar.classList.remove('mobile-open');
-    };
-
-    document.getElementById('btnCloseChannels').onclick = () => {
-      channelsSidebar.classList.remove('mobile-open');
-    };
-
-    document.getElementById('btnToggleUsers').onclick = () => {
-      if (window.innerWidth <= 768) {
-        usersSidebar.classList.toggle('mobile-open');
-        channelsSidebar.classList.remove('mobile-open');
-      } else {
-        usersSidebar.classList.toggle('hidden-desktop');
-      }
-    };
-
-    const optSound = document.getElementById('optSound');
-    const optPrivateSound = document.getElementById('optPrivateSound');
-    const optBlockDms = document.getElementById('optBlockDms');
-
-    function refreshMenuToggles() {
-      optSound.textContent = isSoundEnabled ? '🔔 Sonido General: Activado' : '🔕 Sonido General: Mudo';
-      optPrivateSound.textContent = isPrivateSoundEnabled ? '🔔 Sonido Privados: Activado' : '🔕 Sonido Privados: Silenciado';
-      optBlockDms.textContent = isDmsBlocked ? '🚫 Privados: Bloqueados' : '🔒 Privados: Permitidos';
-    }
-    refreshMenuToggles();
-
-    optSound.onclick = () => {
-      isSoundEnabled = !isSoundEnabled;
-      localStorage.setItem('chat_sound', isSoundEnabled);
-      refreshMenuToggles();
-      if (isSoundEnabled) playMessageSound();
-    };
-
-    optPrivateSound.onclick = () => {
-      isPrivateSoundEnabled = !isPrivateSoundEnabled;
-      localStorage.setItem('chat_private_sound', isPrivateSoundEnabled);
-      refreshMenuToggles();
-      if (isPrivateSoundEnabled) playPrivateSound();
-    };
-
-    optBlockDms.onclick = () => {
-      isDmsBlocked = !isDmsBlocked;
-      localStorage.setItem('chat_block_dms', isDmsBlocked);
-      refreshMenuToggles();
-      alert(isDmsBlocked ? "Recepción de mensajes privados bloqueada." : "Recepción de mensajes privados habilitada.");
-    };
-
-    const optClearChat = document.getElementById('optClearChat');
-    optClearChat.onclick = async () => {
-      headerDropdown.classList.remove('open');
-      if (!currentProfile || currentProfile.role !== 'admin') return;
-
-      const confirmacion = confirm("⚠️ ¿Estás seguro de que deseas vaciar TODOS los mensajes de la Sala General?");
-      if (!confirmacion) return;
-
-      const { error } = await client
-        .from('messages')
-        .delete()
-        .is('recipient', null);
-
-      if (error) {
-        alert("Error al vaciar la sala: " + error.message);
-      } else {
-        publicMessages = [];
-        renderFilteredMessages();
-        alert("La Sala General ha sido vaciada exitosamente.");
-      }
-    };
-
-    document.getElementById('optQr').onclick = () => document.getElementById('qrModal').classList.add('open');
-    document.getElementById('closeQrBtn').onclick = () => document.getElementById('qrModal').classList.remove('open');
-    document.getElementById('optRules').onclick = () => document.getElementById('rulesModal').classList.add('open');
-    document.getElementById('closeRulesBtn').onclick = () => document.getElementById('rulesModal').classList.remove('open');
-
-    function getRoleLabel(role) {
-      switch (role) {
-        case 'admin': return '👑 Administrador (Nivel 5)';
-        case 'moderator': return '🛡️ Moderador (Nivel 4)';
-        case 'veteran': return '🏛️ Veterano / Maestro (Nivel 3)';
-        case 'member': return '📖 Miembro Regular (Nivel 2)';
-        case 'novice': return '🌱 Novicio / Oyente (Nivel 1)';
-        case 'bot': return '🤖 Bot Asistente';
-        default: return '👤 Invitado';
-      }
-    }
-
-    function openEditProfileModal() {
-      if (isGuest) {
-        return alert("Los invitados no poseen un perfil permanente. Regístrate para personalizar tu perfil, nacionalidad y edad.");
-      }
-      if (!currentProfile) return;
-
-      document.getElementById('editUsername').value = currentProfile.username || '';
-      document.getElementById('editDoctrine').value = currentProfile.doctrine_affinity || 'Reformada';
-      document.getElementById('editCountry').value = currentProfile.country || 'No responde';
-      document.getElementById('editAge').value = currentProfile.age || 'No responde';
-      document.getElementById('viewRole').value = getRoleLabel(currentProfile.role);
-      document.getElementById('profileModal').classList.add('open');
-    }
-
-    document.getElementById('optProfile').onclick = openEditProfileModal;
-    document.getElementById('closeProfileBtn').onclick = () => document.getElementById('profileModal').classList.remove('open');
-
-    document.getElementById('optRoles').onclick = () => document.getElementById('adminModal').classList.add('open');
-    document.getElementById('closeAdminBtn').onclick = () => document.getElementById('adminModal').classList.remove('open');
-
-    document.getElementById('optLogout').onclick = async () => {
-      if (confirm('¿Deseas salir del chat?')) {
+      // CASO A: Ingreso como Invitado
+      if (guestRaw) {
         try {
-          if (roomChannel) {
-            await roomChannel.untrack();
-            await roomChannel.unsubscribe();
+          const guest = JSON.parse(guestRaw);
+
+          // Comprobar si el nick del invitado está registrado oficialmente
+          let isReg = false;
+          const { data: isTaken, error: rpcErr } = await client.rpc('is_nick_registered', { target_nick: guest.username });
+          
+          if (!rpcErr && isTaken) {
+            isReg = true;
+          } else {
+            // Fallback por si la RPC aún no está creada
+            const { data: userEmail } = await client.rpc('get_user_email_by_nick', { target_nick: guest.username });
+            if (userEmail) isReg = true;
           }
+
+          if (isReg) {
+            alert(`El alias "${guest.username}" pertenece a un miembro registrado. Debes iniciar sesión con tu contraseña.`);
+            localStorage.removeItem('guest_user');
+            window.location.replace('index.html');
+            return;
+          }
+
+          currentUser = {
+            id: 'guest_' + Math.random().toString(36).substring(2, 9),
+            username: guest.username,
+            role: 'guest',
+            doctrine: guest.doctrine_affinity || 'Otro'
+          };
+
         } catch (e) {
-          console.warn("Error al desconectar presencia:", e);
+          localStorage.removeItem('guest_user');
+          window.location.replace('index.html');
+          return;
+        }
+      } 
+      // CASO B: Usuario Registrado con Cuenta Oficial
+      else {
+        const { data: { session } } = await client.auth.getSession();
+        if (!session) {
+          window.location.replace('index.html');
+          return;
         }
 
-        localStorage.removeItem('guest_user');
-        sessionStorage.clear();
+        // Obtener el perfil del usuario registrado
+        const { data: profile } = await client
+          .from('profiles')
+          .select('username, role, doctrine_affinity')
+          .eq('id', session.user.id)
+          .single();
 
-        if (!isGuest) {
-          try {
-            await client.auth.signOut();
-          } catch (e) {
-            console.warn("Error al cerrar sesión de auth:", e);
+        currentUser = {
+          id: session.user.id,
+          username: profile ? profile.username : (session.user.user_metadata.username || 'Hermano'),
+          role: profile ? profile.role : 'novice',
+          doctrine: profile ? profile.doctrine_affinity : 'Reformada'
+        };
+      }
+
+      // Actualizar interfaz con el usuario activo
+      document.getElementById('userPill').innerHTML = `
+        <span class="online-status-dot"></span>
+        <strong>${currentUser.username}</strong>
+        <span style="opacity:0.75; font-size:0.7rem;">(${currentUser.role === 'guest' ? 'Invitado' : currentUser.role})</span>
+      `;
+
+      // Inicializar Realtime Presence y Mensajería
+      setupPresence();
+      loadRecentMessages();
+      subscribeToMessages();
+    }
+
+    // 2. CONTROL DE PRESENCIA Y PREVENCIÓN DE DUPLICADOS EN TIEMPO REAL
+    function setupPresence() {
+      const myNickLower = currentUser.username.trim().toLowerCase();
+
+      presenceChannel = client.channel('room_presence', {
+        config: {
+          presence: { key: myNickLower }
+        }
+      });
+
+      presenceChannel
+        .on('presence', { event: 'sync' }, () => {
+          const state = presenceChannel.presenceState();
+          const userListEl = document.getElementById('onlineUserList');
+          const countEl = document.getElementById('onlineCount');
+          
+          userListEl.innerHTML = '';
+          const activeKeys = Object.keys(state);
+          countEl.textContent = activeKeys.length;
+
+          // VERIFICACIÓN DE DUPLICADO: Si hay más de un usuario con este mismo nick y somos invitados
+          if (currentUser.role === 'guest') {
+            const myPresenceEntries = state[myNickLower] || [];
+            if (myPresenceEntries.length > 1) {
+              // Si el ID de presencia más antiguo no es el nuestro, salimos
+              const firstJoinedId = myPresenceEntries[0].user_id;
+              if (firstJoinedId !== currentUser.id) {
+                alert(`Ya hay un usuario conectado con el alias "${currentUser.username}". Elige otro nombre.`);
+                localStorage.removeItem('guest_user');
+                window.location.replace('index.html');
+                return;
+              }
+            }
           }
-        }
 
+          // Pintar lista de usuarios conectados
+          activeKeys.forEach(k => {
+            const entry = state[k][0];
+            const li = document.createElement('li');
+            li.className = 'online-user-item';
+            li.innerHTML = `
+              <span><span class="online-status-dot"></span>${entry.username}</span>
+              <span class="msg-role-tag">${entry.role}</span>
+            `;
+            userListEl.appendChild(li);
+          });
+        })
+        .subscribe(async (status) => {
+          if (status === 'SUBSCRIBED') {
+            await presenceChannel.track({
+              user_id: currentUser.id,
+              username: currentUser.username,
+              role: currentUser.role,
+              doctrine: currentUser.doctrine,
+              online_at: new Date().toISOString()
+            });
+          }
+        });
+    }
+
+    // 3. CARGA Y ENVÍO DE MENSAJES
+    const messagesContainer = document.getElementById('messagesContainer');
+
+    function appendMessage(msg) {
+      const isSelf = msg.username === currentUser.username;
+      const div = document.createElement('div');
+      div.className = `message-item ${isSelf ? 'self' : 'other'}`;
+
+      const timeStr = new Date(msg.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      div.innerHTML = `
+        <div class="msg-header">
+          <span class="msg-sender">${msg.username}</span>
+          <span class="msg-time">${timeStr}</span>
+        </div>
+        <div class="msg-body">${escapeHTML(msg.content)}</div>
+      `;
+      messagesContainer.appendChild(div);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    async function loadRecentMessages() {
+      const { data: messages, error } = await client
+        .from('messages')
+        .select('*')
+        .order('created_at', { ascending: true })
+        .limit(50);
+
+      if (!error && messages) {
+        messagesContainer.innerHTML = '';
+        messages.forEach(m => appendMessage(m));
+      }
+    }
+
+    function subscribeToMessages() {
+      client
+        .channel('public_chat_messages')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+          appendMessage(payload.new);
+        })
+        .subscribe();
+    }
+
+    // Formulario de Envío
+    document.getElementById('chatForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('msgInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      input.value = '';
+
+      const newMsg = {
+        sender_id: currentUser.id,
+        username: currentUser.username,
+        role: currentUser.role,
+        content: text,
+        created_at: new Date().toISOString()
+      };
+
+      // Si la base de datos permite inserts de invitados o autenticados
+      const { error } = await client.from('messages').insert([newMsg]);
+      if (error) {
+        // Fallback local visual por si las políticas RLS bloquean inserción directa
+        appendMessage(newMsg);
+      }
+    });
+
+    // 4. CERRAR SESIÓN
+    document.getElementById('btnLogout').onclick = async () => {
+      if (confirm('¿Deseas salir de la sala de chat?')) {
+        if (presenceChannel) await presenceChannel.untrack();
+        localStorage.removeItem('guest_user');
+        await client.auth.signOut();
         window.location.replace('index.html');
       }
     };
 
-    function openUserActions(nick, evt) {
-      if (!nick || nick.toLowerCase() === 'bereanobot') return;
-
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-      
-      if (nick.toLowerCase() === myNick) {
-        openEditProfileModal();
-        return;
-      }
-
-      selectedPopupUser = nick;
-      popupHeaderNick.textContent = `@${nick}`;
-
-      const myRole = currentProfile ? currentProfile.role : 'guest';
-      const esStaff = myRole === 'admin' || myRole === 'moderator';
-
-      if (esStaff) {
-        adminActionsDivider.style.display = 'block';
-        popupPurgeBtn.style.display = 'flex';
-        popupSilenceBtn.style.display = 'flex';
-        popupSilenceBtn.textContent = usuariosSilenciados.has(nick.toLowerCase()) ? '🔊 Quitar silencio' : '🔇 Silenciar usuario';
-        popupChangeRoleBtn.style.display = myRole === 'admin' ? 'flex' : 'none';
-      } else {
-        adminActionsDivider.style.display = 'none';
-        popupPurgeBtn.style.display = 'none';
-        popupSilenceBtn.style.display = 'none';
-        popupChangeRoleBtn.style.display = 'none';
-      }
-
-      const clientX = evt.clientX || (evt.touches && evt.touches[0] ? evt.touches[0].clientX : 60);
-      const clientY = evt.clientY || (evt.touches && evt.touches[0] ? evt.touches[0].clientY : 60);
-
-      userPopup.style.left = `${Math.min(clientX, window.innerWidth - 195)}px`;
-      userPopup.style.top = `${Math.min(clientY, window.innerHeight - 210)}px`;
-      userPopup.classList.add('open');
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
     }
 
-    popupMentionBtn.onclick = () => {
-      if (selectedPopupUser) {
-        contentInput.value += `@${selectedPopupUser} `;
-        contentInput.focus();
-      }
-      userPopup.classList.remove('open');
-    };
-
-    popupPrivateBtn.onclick = () => {
-      if (selectedPopupUser) {
-        startDirectMessageWith(selectedPopupUser);
-      }
-      userPopup.classList.remove('open');
-    };
-
-    popupPurgeBtn.onclick = async () => {
-      userPopup.classList.remove('open');
-      if (!selectedPopupUser) return;
-
-      if (!confirm(`¿Eliminar los mensajes recientes de @${selectedPopupUser}?`)) return;
-
-      const { error } = await client.from('messages').delete().eq('username', selectedPopupUser);
-      if (error) {
-        alert("Error al eliminar mensajes: " + error.message);
-      } else {
-        alert(`Mensajes de @${selectedPopupUser} eliminados.`);
-        publicMessages = publicMessages.filter(m => m.username !== selectedPopupUser);
-        renderFilteredMessages();
-      }
-    };
-
-    popupSilenceBtn.onclick = () => {
-      userPopup.classList.remove('open');
-      if (!selectedPopupUser) return;
-
-      const userLower = selectedPopupUser.toLowerCase();
-      if (usuariosSilenciados.has(userLower)) {
-        usuariosSilenciados.delete(userLower);
-        alert(`Se ha restablecido la voz a @${selectedPopupUser}.`);
-      } else {
-        usuariosSilenciados.add(userLower);
-        alert(`@${selectedPopupUser} ha sido silenciado localmente.`);
-      }
-    };
-
-    popupChangeRoleBtn.onclick = () => {
-      userPopup.classList.remove('open');
-      if (!selectedPopupUser) return;
-      document.getElementById('adminTargetUser').value = selectedPopupUser;
-      document.getElementById('adminModal').classList.add('open');
-    };
-
-    // --- Modal Bíblico ---
-    const bibleModal = document.getElementById('bibleModal');
-    const btnOpenBibleModal = document.getElementById('btnOpenBibleModal');
-    const closeBibleBtn = document.getElementById('closeBibleBtn');
-    const btnFetchAndInsertVerse = document.getElementById('btnFetchAndInsertVerse');
-    const bibleVersionSelect = document.getElementById('bibleVersionSelect');
-
-    btnOpenBibleModal.onclick = () => bibleModal.classList.add('open');
-    closeBibleBtn.onclick = () => bibleModal.classList.remove('open');
-
-    const BOOK_USFM_MAP = {
-      "Génesis": "GEN", "Éxodo": "EXO", "Levítico": "LEV", "Números": "NUM", "Deuteronomio": "DEU",
-      "Josué": "JOS", "Jueces": "JDG", "Rut": "RUT", "1 Samuel": "1SA", "2 Samuel": "2SA",
-      "1 Reyes": "1KI", "2 Reyes": "2KI", "1 Crónicas": "1CH", "2 Crónicas": "2CH", "Esdras": "EZR",
-      "Nehemías": "NEH", "Ester": "EST", "Job": "JOB", "Salmos": "PSA", "Proverbios": "PRO",
-      "Eclesiastés": "ECC", "Cantares": "SNG", "Isaías": "ISA", "Jeremías": "JER", "Lamentaciones": "LAM",
-      "Ezequiel": "EZK", "Daniel": "DAN", "Oseas": "HOS", "Joel": "JOL", "Amós": "AMO",
-      "Abdías": "OBA", "Jonás": "JON", "Miqueas": "MIC", "Nahúm": "NAM", "Habacuc": "HAB",
-      "Sofonías": "ZEP", "Hageo": "HAG", "Zacarías": "ZEC", "Malaquías": "MAL",
-      "Mateo": "MAT", "Marcos": "MRK", "Lucas": "LUK", "Juan": "JHN", "Hechos": "ACT",
-      "Romanos": "ROM", "1 Corintios": "1CO", "2 Corintios": "2CO", "Gálatas": "GAL", "Efesios": "EPH",
-      "Filipenses": "PHP", "Colosenses": "COL", "1 Tesalonicenses": "1TH", "2 Tesalonicenses": "2TH",
-      "1 Timoteo": "1TI", "2 Timoteo": "2TI", "Tito": "TIT", "Filemón": "PHM", "Hebreos": "HEB",
-      "Santiago": "JAS", "1 Pedro": "1PE", "2 Pedro": "2PE", "1 Juan": "1JN", "2 Juan": "2JN",
-      "3 Juan": "3JN", "Judas": "JUD", "Apocalipsis": "REV"
-    };
-
-    function normalizeStr(str) {
-      return (str || '')
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .replace(/^(san|santo|s\.)\s+/, '')
-        .replace(/^epistola\s+a\s+los\s+/, '')
-        .replace(/^evangelio\s+segun\s+/, '')
-        .trim();
-    }
-
-    async function loadBibleVersion(versionKey) {
-      if (biblesCache[versionKey]) return biblesCache[versionKey];
-
-      const filePath = BIBLE_FILES[versionKey] || './RVR1960.json';
-      btnFetchAndInsertVerse.disabled = true;
-      btnFetchAndInsertVerse.textContent = `Cargando ${versionKey}...`;
-
-      try {
-        const res = await fetch(filePath);
-        if (!res.ok) throw new Error(`No se encontró el archivo ${filePath}`);
-        const data = await res.json();
-        biblesCache[versionKey] = data;
-        return data;
-      } catch (err) {
-        throw err;
-      }
-    }
-
-    function extractVersesFromJSON(bibleData, bookName, chapterNum, startV, endV) {
-      const targetUsfm = BOOK_USFM_MAP[bookName] || "";
-      const targetNorm = normalizeStr(bookName);
-
-      const bookObj = bibleData.books.find(b => {
-        if (targetUsfm && b.usfm && b.usfm.toUpperCase() === targetUsfm) return true;
-        const bHuman = normalizeStr(b.human);
-        return bHuman === targetNorm || bHuman.includes(targetNorm) || targetNorm.includes(bHuman);
-      });
-
-      if (!bookObj || !Array.isArray(bookObj.chapters)) throw new Error(`No se encontró el libro "${bookName}".`);
-
-      const chapterUsfmTarget = `${bookObj.usfm}.${chapterNum}`;
-      const chapterObj = bookObj.chapters.find(c => {
-        if (c.usfm && c.usfm.toUpperCase() === chapterUsfmTarget) return true;
-        if (c.human) {
-          const match = c.human.match(/\d+$/);
-          if (match && parseInt(match[0], 10) === chapterNum) return true;
-        }
-        return false;
-      }) || bookObj.chapters[chapterNum - 1];
-
-      if (!chapterObj || !Array.isArray(chapterObj.items)) throw new Error(`No se encontró el capítulo ${chapterNum}.`);
-
-      let results = [];
-      chapterObj.items.forEach(item => {
-        if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
-          const hasMatchingVerse = item.verse_numbers.some(n => n >= startV && n <= endV);
-          if (hasMatchingVerse) {
-            const vNum = item.verse_numbers[0];
-            const textContent = Array.isArray(item.lines) ? item.lines.join(" ").replace(/<[^>]*>/g, '').trim() : "";
-            if (textContent) results.push(`${vNum} ${textContent}`);
-          }
-        }
-      });
-
-      return results.join(" ");
-    }
-
-    btnFetchAndInsertVerse.onclick = async () => {
-      const selectedVersion = bibleVersionSelect.value;
-      const bookSelect = document.getElementById('bibleBookSelect');
-      const bookName = bookSelect.value;
-      const chapter = parseInt(document.getElementById('bibleChapter').value, 10);
-      const startVerse = parseInt(document.getElementById('bibleVerseStart').value, 10);
-      const endVerse = parseInt(document.getElementById('bibleVerseEnd').value, 10);
-
-      if (isNaN(chapter) || isNaN(startVerse) || isNaN(endVerse) || chapter < 1 || startVerse < 1 || endVerse < 1) {
-        return alert("Por favor ingresa números válidos.");
-      }
-
-      if (startVerse > endVerse) return alert("El versículo inicial no puede ser mayor que el final.");
-      if ((endVerse - startVerse) + 1 > 10) return alert("Solo puedes citar hasta 10 versículos a la vez.");
-
-      const rangeLabel = startVerse === endVerse ? `${chapter}:${startVerse}` : `${chapter}:${startVerse}-${endVerse}`;
-
-      btnFetchAndInsertVerse.disabled = true;
-      btnFetchAndInsertVerse.textContent = "Buscando...";
-
-      try {
-        const bibleData = await loadBibleVersion(selectedVersion);
-        const extractedText = extractVersesFromJSON(bibleData, bookName, chapter, startVerse, endVerse);
-
-        if (!extractedText || extractedText.trim() === '') throw new Error(`No se encontraron los versículos.`);
-
-        const citation = `«${extractedText}» (${bookName} ${rangeLabel} - ${selectedVersion})`;
-        contentInput.value = (contentInput.value ? contentInput.value + ' ' : '') + citation;
-        bibleModal.classList.remove('open');
-        contentInput.focus();
-
-      } catch (err) {
-        alert("Error al cargar pasaje: " + err.message);
-      } finally {
-        btnFetchAndInsertVerse.disabled = false;
-        btnFetchAndInsertVerse.textContent = "Obtener y Pegar";
-      }
-    };
-
-    function appendSystemNotice(text) {
-      if (currentChannel !== 'general') return;
-      const div = document.createElement('div');
-      div.className = 'msg-system';
-      div.textContent = text;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    async function sendPublicBotWelcome(newUserNick) {
-      if (!newUserNick) return;
-
-      const versiculos = [
-        "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna...» (Juan 5:39 - RVR1960)",
-        "«La gracia del Señor Jesucristo, el amor de Dios, y la comunión del Espíritu Santo sean con todos vosotros.» (2 Corintios 13:14 - RVR1960)",
-        "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir...» (2 Timoteo 3:16 - RVR1960)",
-        "«Pero la palabra del Señor permanece para siempre.» (1 Pedro 1:25 - RVR1960)"
-      ];
-
-      const versiculoAzar = versiculos[Math.floor(Math.random() * versiculos.length)];
-      const botPayload = {
-        username: "BereanoBot",
-        role: "bot",
-        doctrine_affinity: "Soli Deo Gloria",
-        content: `¡Gracia y paz, @${newUserNick}! Te damos la bienvenida a Comunión Doctrinal.\n${versiculoAzar}`,
-        font_family: "system-ui, sans-serif",
-        text_color: "#ecfdf5",
-        recipient: null,
-        is_approved: true
-      };
-
-      await client.from('messages').insert([botPayload]);
-    }
-
-    async function triggerPeriodicRulesReminder() {
-      if (!currentProfile) return;
-
-      const recordatorios = [
-        "Recordatorio de Comunión: Les animamos a repasar las Normas Doctrinales (☰ > Normas Doctrinales).\n«Hágase todo decentemente y con orden.» (1 Corintios 14:40 - RVR1960)",
-        "Edificación Doctrinal: Cuidemos la mansedumbre y la fraternidad en cada diálogo.\n«Porque el siervo del Señor no debe ser contencioso, sino amable para con todos...» (2 Timoteo 2:24 - RVR1960)",
-        "Fraternidad Cristiana: Recuerden revisar las Normas Doctrinales en el menú de opciones.\n«La palabra de Cristo more en abundancia en vosotros, enseñándoos y exhortándoos...» (Colosenses 3:16 - RVR1960)"
-      ];
-
-      const texto = recordatorios[Math.floor(Math.random() * recordatorios.length)];
-      const payload = {
-        username: "BereanoBot",
-        role: "bot",
-        doctrine_affinity: "Soli Deo Gloria",
-        content: texto,
-        font_family: "system-ui, sans-serif",
-        text_color: "#ecfdf5",
-        recipient: null,
-        is_approved: true
-      };
-
-      const lastReminder = localStorage.getItem('last_rules_reminder');
-      const now = Date.now();
-      if (!lastReminder || (now - parseInt(lastReminder, 10)) > (15 * 60 * 1000)) {
-        localStorage.setItem('last_rules_reminder', now.toString());
-        await client.from('messages').insert([payload]);
-      }
-    }
-
-    setInterval(() => {
-      if (document.visibilityState === 'visible' && currentProfile && !isGuest) {
-        triggerPeriodicRulesReminder();
-      }
-    }, 15 * 60 * 1000);
-
-    function deleteLocalDirectMessage(msgId) {
-      if (!confirm("¿Deseas eliminar este mensaje privado de tu navegador?")) return;
-      const dms = loadLocalDms();
-      if (dms[currentChannel]) {
-        dms[currentChannel] = dms[currentChannel].filter(m => m.id !== msgId);
-        saveLocalDms(dms);
-        renderFilteredMessages();
-      }
-    }
-
-    // Pestañas y Canales
-    function selectChannel(channelName) {
-      currentChannel = channelName;
-      document.querySelectorAll('.channel-item').forEach(el => el.classList.remove('active'));
-
-      if (channelName === 'general') {
-        channelGeneral.classList.add('active');
-        currentViewLabel.textContent = "# Sala General";
-        currentViewDesc.textContent = "Diálogo teológico público";
-        contentInput.placeholder = "Escribe tu mensaje en # Sala General...";
-      } else {
-        const item = document.getElementById(`tab-dm-${channelName}`);
-        if (item) {
-          item.classList.add('active');
-          const badge = item.querySelector('.unread-badge');
-          if (badge) badge.remove();
-        }
-        currentViewLabel.textContent = `@${channelName}`;
-        currentViewDesc.textContent = "Privado local (solo en sus navegadores)";
-        contentInput.placeholder = `Escribe un mensaje privado a @${channelName}...`;
-      }
-
-      channelsSidebar.classList.remove('mobile-open');
-      renderFilteredMessages();
-    }
-
-    channelGeneral.onclick = () => selectChannel('general');
-
-    function ensureDirectTab(nick, hasUnread = false) {
-      if (!nick) return;
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-      const targetLower = nick.toLowerCase();
-      if (targetLower === myNick || targetLower === 'bereanobot') return;
-
-      if (!directConversations.has(targetLower)) {
-        directConversations.add(targetLower);
-
-        const li = document.createElement('li');
-        li.className = 'channel-item';
-        li.id = `tab-dm-${targetLower}`;
-        
-        li.innerHTML = `
-          <span style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-            🔒 @${escapeHtml(nick)}
-          </span>
-          <span style="display: flex; align-items: center; gap: 4px;">
-            <button type="button" class="channel-item-close" title="Cerrar y eliminar del navegador">✕</button>
-          </span>
-        `;
-
-        li.addEventListener('click', () => selectChannel(targetLower));
-
-        const closeBtn = li.querySelector('.channel-item-close');
-        closeBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          closeDirectTab(targetLower);
-        });
-
-        directMessagesList.appendChild(li);
-      }
-
-      if (hasUnread && currentChannel !== targetLower) {
-        const item = document.getElementById(`tab-dm-${targetLower}`);
-        if (item && !item.querySelector('.unread-badge')) {
-          const badgeContainer = item.querySelector('span:last-child');
-          const badge = document.createElement('span');
-          badge.className = 'unread-badge';
-          badge.textContent = 'Nuevo';
-          badgeContainer.insertBefore(badge, badgeContainer.firstChild);
-        }
-      }
-    }
-
-    function closeDirectTab(targetLower) {
-      if (!confirm(`¿Deseas cerrar y eliminar la conversación con @${targetLower}? Se borrará de este navegador.`)) {
-        return;
-      }
-
-      directConversations.delete(targetLower);
-      const tab = document.getElementById(`tab-dm-${targetLower}`);
-      if (tab) tab.remove();
-
-      const dms = loadLocalDms();
-      delete dms[targetLower];
-      saveLocalDms(dms);
-
-      if (currentChannel === targetLower) {
-        selectChannel('general');
-      } else {
-        renderFilteredMessages();
-      }
-    }
-
-    function startDirectMessageWith(nick) {
-      if (!nick || nick.toLowerCase() === 'bereanobot') return;
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-      if (nick.toLowerCase() === myNick) return;
-
-      ensureDirectTab(nick, false);
-      selectChannel(nick.toLowerCase());
-      contentInput.focus();
-    }
-
-    // Aprobación y Rechazo de Moderación (Nivel 1)
-    async function approveImageMessage(msgId) {
-      const { error } = await client
-        .from('messages')
-        .update({ is_approved: true })
-        .eq('id', msgId);
-
-      if (error) {
-        alert("Error al aprobar: " + error.message);
-      } else {
-        const m = publicMessages.find(item => item.id === msgId);
-        if (m) m.is_approved = true;
-        renderFilteredMessages();
-      }
-    }
-
-    async function rejectImageMessage(msgId) {
-      if (!confirm("¿Rechazar y eliminar este contenido?")) return;
-      const { error } = await client
-        .from('messages')
-        .delete()
-        .eq('id', msgId);
-
-      if (error) {
-        alert("Error al rechazar: " + error.message);
-      } else {
-        publicMessages = publicMessages.filter(item => item.id !== msgId);
-        renderFilteredMessages();
-      }
-    }
-
-    function renderFilteredMessages() {
-      chatBox.innerHTML = '';
-      const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-      const myRole = currentProfile ? currentProfile.role : 'guest';
-      const esStaff = (myRole === 'admin' || myRole === 'moderator');
-
-      if (currentChannel === 'general') {
-        publicMessages.forEach(msg => {
-          const isMine = myNick && (msg.username || '').toLowerCase() === myNick;
-          const isVisible = (msg.is_approved !== false) || isMine || esStaff;
-
-          if (isVisible) {
-            appendMessageDOM(msg);
-          }
-        });
-      } else {
-        const dms = loadLocalDms();
-        const chatHistory = dms[currentChannel] || [];
-        chatHistory.forEach(msg => appendMessageDOM(msg));
-      }
-
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function getRoleBadgeMarkup(role, isBot) {
-      if (isBot) return '<span class="badge-role bot">🤖 BOT</span>';
-      switch (role) {
-        case 'admin': return '<span class="badge-role admin">👑 Admin</span>';
-        case 'moderator': return '<span class="badge-role moderator">🛡️ Mod</span>';
-        case 'veteran': return '<span class="badge-role veteran">🏛️ Maestro</span>';
-        case 'member': return '<span class="badge-role member">📖 Miembro</span>';
-        case 'novice': return '<span class="badge-role novice">🌱 Oyente</span>';
-        case 'guest': return '<span class="badge-role guest">Invitado</span>';
-        default: return '';
-      }
-    }
-
-    function appendMessageDOM(data) {
-      const myNick = currentProfile ? currentProfile.username : '';
-      const myRole = currentProfile ? currentProfile.role : 'guest';
-      const div = document.createElement('div');
-      const isRef = data.doctrine_affinity && data.doctrine_affinity.toLowerCase().includes('reformad');
-      const isMention = myNick && data.content && data.content.toLowerCase().includes(myNick.toLowerCase()) && data.username !== myNick;
-      const isPrivate = !!data.recipient;
-      const isBot = data.role === 'bot' || data.username === 'BereanoBot';
-      const isPending = data.is_approved === false;
-
-      const isMyMessage = myNick && data.username && data.username.toLowerCase() === myNick.toLowerCase();
-      const canDelete = isPrivate && isMyMessage;
-      const esStaff = (myRole === 'admin' || myRole === 'moderator');
-
-      const roleBadge = getRoleBadgeMarkup(data.role, isBot);
-      const messageFont = data.font_family || 'system-ui, sans-serif';
-      const messageColor = data.text_color || '#f8fafc';
-
-      div.className = `msg ${isRef ? 'ref' : ''} ${isMention ? 'mentioned' : ''} ${isPrivate ? 'private' : ''} ${isBot ? 'bot' : ''} ${isPending ? 'pending' : ''}`;
-      div.dataset.msgId = data.id || '';
-
-      let mediaMarkup = '';
-      if (data.image_url) {
-        mediaMarkup += `
-          <div class="msg-img-container">
-            <a href="${escapeHtml(data.image_url)}" target="_blank" rel="noopener noreferrer">
-              <img src="${escapeHtml(data.image_url)}" class="msg-img" alt="Imagen o GIF" loading="lazy">
-            </a>
-          </div>
-        `;
-      }
-      if (data.audio_url) {
-        mediaMarkup += `
-          <div class="msg-audio-container">
-            <audio controls src="${escapeHtml(data.audio_url)}" class="msg-audio" preload="none"></audio>
-          </div>
-        `;
-      }
-
-      let modMarkup = '';
-      if (isPending && esStaff && !isPrivate) {
-        modMarkup = `
-          <div class="mod-actions-bar">
-            <button type="button" class="btn-mod-approve" onclick="approveImageMessage('${data.id}')">✅ Aprobar</button>
-            <button type="button" class="btn-mod-reject" onclick="rejectImageMessage('${data.id}')">❌ Rechazar</button>
-          </div>
-        `;
-      }
-
-      div.innerHTML = `
-        <div class="msg-meta">
-          <span class="user-clickable">${escapeHtml(data.username)}</span>
-          ${roleBadge}
-          <span class="badge-doc">${escapeHtml(data.doctrine_affinity || 'General')}</span>
-          ${isPending ? `<span class="pending-badge">⏳ Pendiente de moderación</span>` : ''}
-          <span class="time">
-            ${formatTime(data.created_at)}
-            ${canDelete ? `<button type="button" class="btn-msg-delete" title="Eliminar del navegador">🗑️</button>` : ''}
-          </span>
-        </div>
-        ${data.content ? `<div class="msg-text" style="font-family: ${escapeHtml(messageFont)}; color: ${escapeHtml(messageColor)};">${escapeHtml(data.content)}</div>` : ''}
-        ${mediaMarkup}
-        ${modMarkup}
-      `;
-
-      const clickableNick = div.querySelector('.user-clickable');
-      clickableNick.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!isBot) openUserActions(data.username, e);
-      });
-
-      if (canDelete) {
-        const delBtn = div.querySelector('.btn-msg-delete');
-        if (delBtn) {
-          delBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            deleteLocalDirectMessage(data.id);
-          });
-        }
-      }
-
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function getRoleIconPrefix(role) {
-      switch (role) {
-        case 'admin': return '👑 ';
-        case 'moderator': return '🛡️ ';
-        case 'veteran': return '🏛️ ';
-        case 'member': return '📖 ';
-        case 'novice': return '🌱 ';
-        case 'bot': return '🤖 ';
-        default: return '👤 ';
-      }
-    }
-
-    function renderOnlineUsers(presenceState) {
-      usersList.innerHTML = '';
-      const activeUsers = [];
-
-      for (const key in presenceState) {
-        presenceState[key].forEach(u => {
-          if (u.username && u.username.toLowerCase() !== 'bereanobot') {
-            activeUsers.push(u);
-          }
-        });
-      }
-
-      activeUsers.unshift({
-        username: "BereanoBot",
-        doctrine: "Soli Deo Gloria",
-        role: "bot",
-        isBot: true
-      });
-
-      usersCount.textContent = activeUsers.length;
-      btnUsersCount.textContent = activeUsers.length;
-
-      activeUsers.forEach(u => {
-        const li = document.createElement('li');
-        li.className = 'user-item';
-        const rolePrefix = getRoleIconPrefix(u.role);
-
-        li.innerHTML = `
-          <div class="user-item-name"><span class="online-dot"></span>${rolePrefix}${escapeHtml(u.username)}</div>
-          <div class="user-item-doc">${escapeHtml(u.doctrine || 'General')}</div>
-        `;
-        
-        li.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (u.isBot) return;
-          openUserActions(u.username, e);
-          if (window.innerWidth <= 768) {
-            usersSidebar.classList.remove('mobile-open');
-          }
-        });
-
-        usersList.appendChild(li);
-      });
-    }
-
-    // --- Subida de Imágenes Locales ---
-    btnAttachImage.onclick = () => {
-      if (isGuest) {
-        return alert("Solo los usuarios registrados pueden enviar imágenes.");
-      }
-      imageFileInput.click();
-    };
-
-    imageFileInput.onchange = async () => {
-      const file = imageFileInput.files[0];
-      if (!file) return;
-
-      if (file.size > 5 * 1024 * 1024) {
-        alert("La imagen no puede superar los 5MB.");
-        imageFileInput.value = '';
-        return;
-      }
-
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-      const filePath = `uploads/${fileName}`;
-
-      btnAttachImage.textContent = "⏳";
-      btnAttachImage.disabled = true;
-
-      try {
-        const { error: uploadError } = await client.storage
-          .from('chat-images')
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        const { data: publicUrlData } = client.storage
-          .from('chat-images')
-          .getPublicUrl(filePath);
-
-        await sendMessagePayload(contentInput.value.trim(), publicUrlData.publicUrl, null);
-        contentInput.value = '';
-
-      } catch (err) {
-        alert("Error al subir imagen: " + err.message);
-      } finally {
-        btnAttachImage.textContent = "🖼️";
-        btnAttachImage.disabled = false;
-        imageFileInput.value = '';
-      }
-    };
-
-    // --- Grabador de Notas de Voz ---
-    btnRecordAudio.onclick = async () => {
-      if (isGuest) {
-        return alert("Solo los usuarios registrados pueden enviar notas de voz.");
-      }
-
-      const userRole = currentProfile ? currentProfile.role : 'guest';
-      const hasAudioPermission = currentProfile && (currentProfile.can_audio === true || userRole === 'admin' || userRole === 'moderator');
-
-      if (!hasAudioPermission) {
-        return alert("Aún no tienes habilitado el permiso para enviar notas de voz. Consulta con un moderador o administrador.");
-      }
-
-      if (!isRecording) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          audioChunks = [];
-          mediaRecorder = new MediaRecorder(stream);
-
-          mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) audioChunks.push(e.data);
-          };
-
-          mediaRecorder.onstop = async () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            stream.getTracks().forEach(track => track.stop());
-
-            if (audioBlob.size > 10 * 1024 * 1024) {
-              return alert("El audio supera el tamaño máximo permitido (10MB).");
-            }
-
-            const fileName = `audio_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.webm`;
-            const filePath = `uploads/${fileName}`;
-
-            btnRecordAudio.textContent = "⏳";
-            btnRecordAudio.disabled = true;
-
-            try {
-              const { error: uploadError } = await client.storage
-                .from('chat-audios')
-                .upload(filePath, audioBlob, { contentType: 'audio/webm' });
-
-              if (uploadError) throw uploadError;
-
-              const { data: publicUrlData } = client.storage
-                .from('chat-audios')
-                .getPublicUrl(filePath);
-
-              await sendMessagePayload('', null, publicUrlData.publicUrl);
-
-            } catch (err) {
-              alert("Error al subir audio: " + err.message);
-            } finally {
-              btnRecordAudio.textContent = "🎙️";
-              btnRecordAudio.disabled = false;
-            }
-          };
-
-          mediaRecorder.start();
-          isRecording = true;
-          btnRecordAudio.classList.add('recording');
-          btnRecordAudio.title = "Haz clic para detener y enviar grabación";
-
-        } catch (err) {
-          alert("No se pudo acceder al micrófono: " + err.message);
-        }
-      } else {
-        mediaRecorder.stop();
-        isRecording = false;
-        btnRecordAudio.classList.remove('recording');
-        btnRecordAudio.title = "Grabar nota de voz";
-      }
-    };
-
-    // --- Buscador Giphy ---
-    btnGifToggle.onclick = (e) => {
-      e.stopPropagation();
-      if (isGuest) {
-        return alert("Solo los usuarios registrados pueden enviar GIFs.");
-      }
-
-      gifPicker.classList.toggle('open');
-      if (gifPicker.classList.contains('open')) {
-        gifSearchInput.focus();
-        if (!gifSearchInput.value.trim()) {
-          fetchTrendingGiphy();
-        }
-      }
-    };
-
-    async function fetchTrendingGiphy() {
-      const url = `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_API_KEY}&limit=20&rating=g`;
-      loadGiphyFromUrl(url);
-    }
-
-    async function searchGiphy(term) {
-      if (!term.trim()) return fetchTrendingGiphy();
-      const url = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(term)}&limit=20&rating=g&lang=es`;
-      loadGiphyFromUrl(url);
-    }
-
-    gifSearchInput.addEventListener('input', (e) => {
-      clearTimeout(gifSearchDebounce);
-      gifSearchDebounce = setTimeout(() => {
-        searchGiphy(e.target.value);
-      }, 400);
-    });
-
-    async function loadGiphyFromUrl(url) {
-      gifResults.innerHTML = '<div style="grid-column: span 2; text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">Cargando GIFs...</div>';
-
-      try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const resJson = await res.json();
-        gifResults.innerHTML = '';
-
-        const items = resJson.data || [];
-        if (items.length === 0) {
-          gifResults.innerHTML = '<div style="grid-column: span 2; text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">No se encontraron resultados.</div>';
-          return;
-        }
-
-        items.forEach(item => {
-          const previewUrl = item.images.fixed_height_small?.url || item.images.fixed_height?.url;
-          const fullUrl = item.images.original?.url || previewUrl;
-
-          const img = document.createElement('img');
-          img.src = previewUrl;
-          img.className = 'gif-item';
-          img.alt = item.title || 'GIF';
-          img.loading = 'lazy';
-
-          img.onclick = async () => {
-            gifPicker.classList.remove('open');
-            await sendMessagePayload('', fullUrl, null);
-          };
-
-          gifResults.appendChild(img);
-        });
-
-      } catch (err) {
-        gifResults.innerHTML = '<div style="grid-column: span 2; text-align: center; color: #fca5a5; font-size: 0.8rem; padding: 12px;">Error al conectar con Giphy.</div>';
-        console.error("Error Giphy:", err);
-      }
-    }
-
-    // Envío unificado (Texto, Imagen, GIF o Audio)
-    async function sendMessagePayload(text, imageUrl = null, audioUrl = null) {
-      if (!text && !imageUrl && !audioUrl) return;
-      if (!currentProfile) return;
-
-      if (usuariosSilenciados.has(currentProfile.username.toLowerCase())) {
-        alert("🔇 Te encuentras silenciado en esta sala.");
-        return;
-      }
-
-      const chosenFont = document.getElementById('fontFamilySelect').value;
-      const chosenColor = document.getElementById('textColorPicker').value;
-
-      const userRole = currentProfile.role || 'novice';
-      let needsApproval = false;
-      if (imageUrl && userRole === 'novice' && currentChannel === 'general') {
-        needsApproval = true;
-      }
-
-      const payload = {
-        username: currentProfile.username,
-        doctrine_affinity: currentProfile.doctrine_affinity,
-        content: text || '',
-        image_url: imageUrl,
-        audio_url: audioUrl,
-        font_family: chosenFont,
-        text_color: chosenColor,
-        role: userRole,
-        is_approved: !needsApproval,
-        created_at: new Date().toISOString()
-      };
-
-      if (currentChannel === 'general') {
-        payload.recipient = null;
-        const { error } = await client.from('messages').insert([payload]);
-        if (error) alert("Error al enviar mensaje: " + error.message);
-        else if (needsApproval) {
-          alert("Tu archivo ha sido enviado y quedará visible una vez sea aprobado por un moderador o administrador.");
-        }
-      } else {
-        payload.id = 'msg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
-        payload.recipient = currentChannel;
-        payload.is_approved = true;
-
-        if (roomChannel) {
-          roomChannel.send({
-            type: 'broadcast',
-            event: 'direct_message',
-            payload: payload
-          });
-        }
-
-        storeDirectMessageLocally(currentChannel, payload);
-        appendMessageDOM(payload);
-      }
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const content = contentInput.value.trim();
-      if (!content) return;
-      contentInput.value = '';
-      await sendMessagePayload(content, null, null);
-    });
-
-    async function loadPublicMessages() {
-      const { data } = await client
-        .from('messages')
-        .select('*')
-        .is('recipient', null)
-        .order('created_at', { ascending: true })
-        .limit(100);
-
-      if (data) {
-        publicMessages = data;
-        if (currentChannel === 'general') {
-          renderFilteredMessages();
-        }
-      }
-    }
-
-    function initLocalDmsTabs() {
-      const dms = loadLocalDms();
-      for (const targetUser in dms) {
-        if (Array.isArray(dms[targetUser]) && dms[targetUser].length > 0) {
-          ensureDirectTab(targetUser, false);
-        }
-      }
-    }
-
-    async function loadActiveProfile() {
-      const savedGuest = localStorage.getItem('guest_user');
-      if (savedGuest) {
-        try {
-          currentProfile = JSON.parse(savedGuest);
-          isGuest = true;
-          document.getElementById('authModal').classList.remove('open');
-          
-          btnAttachImage.style.display = 'none';
-          btnGifToggle.style.display = 'none';
-          btnRecordAudio.style.display = 'none';
-
-          initRealtime();
-          loadPublicMessages();
-          initLocalDmsTabs();
-          return;
-        } catch(e) {}
-      }
-
-      const { data: { session } } = await client.auth.getSession();
-      if (!session) {
-        document.getElementById('authModal').classList.add('open');
-        btnAttachImage.style.display = 'none';
-        btnGifToggle.style.display = 'none';
-        btnRecordAudio.style.display = 'none';
-        return;
-      }
-
-      currentSessionUser = session.user;
-      document.getElementById('authModal').classList.remove('open');
-      btnAttachImage.style.display = 'flex';
-      btnGifToggle.style.display = 'flex';
-      btnRecordAudio.style.display = 'flex';
-
-      const { data: profile } = await client
-        .from('profiles')
-        .select('*')
-        .eq('id', currentSessionUser.id)
-        .single();
-
-      if (profile) {
-        currentProfile = profile;
-        if (!currentProfile.role) currentProfile.role = 'novice';
-
-        if (currentProfile.role === 'admin') {
-          document.getElementById('optRoles').style.display = 'flex';
-          document.getElementById('optClearChat').style.display = 'flex';
-        }
-      }
-
-      initRealtime();
-      loadPublicMessages();
-      initLocalDmsTabs();
-    }
-
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nick = document.getElementById('loginNick').value.trim();
-      const pass = document.getElementById('loginPassword').value;
-
-      const { data: userEmail, error: rpcError } = await client.rpc('get_user_email_by_nick', { target_nick: nick });
-      if (rpcError || !userEmail) {
-        alert("Nick no encontrado. Verifica la escritura o crea una cuenta.");
-        return;
-      }
-
-      const { error } = await client.auth.signInWithPassword({ email: userEmail, password: pass });
-      if (error) alert("Contraseña incorrecta: " + error.message);
-      else {
-        localStorage.removeItem('guest_user');
-        location.reload();
-      }
-    });
-
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('regUsername').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const pass = document.getElementById('regPassword').value;
-      const passConfirm = document.getElementById('regPasswordConfirm').value;
-
-      if (pass !== passConfirm) return alert("Las contraseñas no coinciden.");
-
-      const { error } = await client.auth.signUp({
-        email: email,
-        password: pass,
-        options: { data: { username: username } }
-      });
-
-      if (error) alert(error.message);
-      else {
-        localStorage.removeItem('guest_user');
-        alert("¡Registro exitoso! Iniciando sesión como Novicio...");
-        location.reload();
-      }
-    });
-
-    document.getElementById('guestForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nick = document.getElementById('guestNick').value.trim();
-      if (!nick) return;
-      localStorage.setItem('guest_user', JSON.stringify({ 
-        username: nick, 
-        doctrine_affinity: document.getElementById('guestDoctrine').value, 
-        role: 'guest' 
-      }));
-      location.reload();
-    });
-
-    const tabLogin = document.getElementById('tabLogin');
-    const tabRegister = document.getElementById('tabRegister');
-    const tabGuest = document.getElementById('tabGuest');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const guestForm = document.getElementById('guestForm');
-
-    function switchAuthTab(btn, formToShow) {
-      [tabLogin, tabRegister, tabGuest].forEach(t => t.classList.remove('active'));
-      [loginForm, registerForm, guestForm].forEach(f => f.style.display = 'none');
-      btn.classList.add('active');
-      formToShow.style.display = 'block';
-    }
-    tabLogin.onclick = () => switchAuthTab(tabLogin, loginForm);
-    tabRegister.onclick = () => switchAuthTab(tabRegister, registerForm);
-    tabGuest.onclick = () => switchAuthTab(tabGuest, guestForm);
-
-    document.getElementById('profileForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (isGuest) return;
-
-      const newUsername = document.getElementById('editUsername').value.trim();
-      const newDoctrine = document.getElementById('editDoctrine').value;
-      const newCountry = document.getElementById('editCountry').value;
-      const newAge = document.getElementById('editAge').value;
-
-      const { error } = await client
-        .from('profiles')
-        .update({ 
-          username: newUsername, 
-          doctrine_affinity: newDoctrine,
-          country: newCountry,
-          age: newAge
-        })
-        .eq('id', currentSessionUser.id);
-
-      if (error) {
-        alert("Error al actualizar perfil: " + error.message);
-      } else {
-        currentProfile.username = newUsername;
-        currentProfile.doctrine_affinity = newDoctrine;
-        currentProfile.country = newCountry;
-        currentProfile.age = newAge;
-
-        document.getElementById('profileModal').classList.remove('open');
-        alert("Perfil actualizado correctamente.");
-
-        if (roomChannel) {
-          roomChannel.track({
-            username: currentProfile.username,
-            doctrine: currentProfile.doctrine_affinity,
-            role: currentProfile.role
-          });
-        }
-      }
-    });
-
-    document.getElementById('adminRoleForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const targetUser = document.getElementById('adminTargetUser').value.trim();
-      const newRole = document.getElementById('adminRoleSelect').value;
-
-      const { data: targetProfile, error: searchError } = await client
-        .from('profiles')
-        .select('id')
-        .eq('username', targetUser)
-        .single();
-
-      if (searchError || !targetProfile) {
-        alert("No se encontró ningún usuario con el nick: " + targetUser);
-        return;
-      }
-
-      const { error: updateError } = await client
-        .from('profiles')
-        .update({ role: newRole })
-        .eq('id', targetProfile.id);
-
-      if (updateError) alert("Error al asignar rango: " + updateError.message);
-      else {
-        alert(`Rango '${newRole}' asignado con éxito a ${targetUser}.`);
-        document.getElementById('adminModal').classList.remove('open');
-      }
-    });
-
-    let currentFontSizeRem = parseFloat(localStorage.getItem('chat_font_size')) || 0.95;
-    document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
-    
-    document.getElementById('btnFontInc').onclick = () => {
-      if (currentFontSizeRem < 1.35) {
-        currentFontSizeRem = Math.round((currentFontSizeRem + 0.05) * 100) / 100;
-        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
-        localStorage.setItem('chat_font_size', currentFontSizeRem);
-      }
-    };
-    
-    document.getElementById('btnFontDec').onclick = () => {
-      if (currentFontSizeRem > 0.8) {
-        currentFontSizeRem = Math.round((currentFontSizeRem - 0.05) * 100) / 100;
-        document.documentElement.style.setProperty('--chat-font-size', `${currentFontSizeRem}rem`);
-        localStorage.setItem('chat_font_size', currentFontSizeRem);
-      }
-    };
-
-    const fontSelect = document.getElementById('fontFamilySelect');
-    const savedUserFont = localStorage.getItem('user_editor_font') || 'system-ui, sans-serif';
-    fontSelect.value = savedUserFont;
-    contentInput.style.fontFamily = savedUserFont;
-
-    fontSelect.onchange = (e) => {
-      contentInput.style.fontFamily = e.target.value;
-      localStorage.setItem('user_editor_font', e.target.value);
-    };
-
-    const textColorPicker = document.getElementById('textColorPicker');
-    const colorIndicator = document.getElementById('colorIndicator');
-    const savedColor = localStorage.getItem('user_editor_color') || '#f8fafc';
-    textColorPicker.value = savedColor;
-    colorIndicator.style.background = savedColor;
-    contentInput.style.color = savedColor;
-
-    textColorPicker.oninput = (e) => {
-      const color = e.target.value;
-      colorIndicator.style.background = color;
-      contentInput.style.color = color;
-      localStorage.setItem('user_editor_color', color);
-    };
-
-    const emojiPicker = document.getElementById('emojiPicker');
-    const btnEmojiToggle = document.getElementById('btnEmojiToggle');
-    btnEmojiToggle.onclick = (e) => {
-      e.stopPropagation();
-      emojiPicker.classList.toggle('open');
-    };
-    document.querySelectorAll('.emoji-item').forEach(btn => {
-      btn.onclick = () => {
-        contentInput.value += btn.textContent;
-        contentInput.focus();
-        emojiPicker.classList.remove('open');
-      };
-    });
-
-    function initRealtime() {
-      if (roomChannel) roomChannel.unsubscribe();
-      roomChannel = client.channel('general-room', {
-        config: { 
-          presence: { key: currentProfile ? currentProfile.username : 'anon' },
-          broadcast: { self: false }
-        }
-      });
-
-      // 1. Mensajes Públicos (INSERT)
-      roomChannel.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
-        if (!payload.new.recipient) {
-          publicMessages.push(payload.new);
-          if (currentChannel === 'general') {
-            const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-            const myRole = currentProfile ? currentProfile.role : 'guest';
-            const esStaff = (myRole === 'admin' || myRole === 'moderator');
-            const isMine = myNick && (payload.new.username || '').toLowerCase() === myNick;
-
-            if (payload.new.is_approved !== false || isMine || esStaff) {
-              appendMessageDOM(payload.new);
-            }
-
-            if (payload.new.username.toLowerCase() !== myNick) {
-              const isMention = myNick && payload.new.content && payload.new.content.toLowerCase().includes(myNick);
-              if (isMention) playMentionSound();
-              else playMessageSound();
-            }
-          }
-        }
-      });
-
-      // 2. Actualización de Moderación (UPDATE)
-      roomChannel.on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, payload => {
-        const idx = publicMessages.findIndex(m => m.id === payload.new.id);
-        if (idx !== -1) {
-          publicMessages[idx] = payload.new;
-        } else {
-          publicMessages.push(payload.new);
-        }
-        if (currentChannel === 'general') renderFilteredMessages();
-      });
-
-      // 3. Mensajes Públicos (DELETE)
-      roomChannel.on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, payload => {
-        const deletedId = payload.old ? payload.old.id : null;
-        if (deletedId) {
-          publicMessages = publicMessages.filter(m => m.id !== deletedId);
-          if (currentChannel === 'general') renderFilteredMessages();
-        }
-      });
-
-      // 4. Recepción de Privados Vía Broadcast
-      roomChannel.on('broadcast', { event: 'direct_message' }, ({ payload }) => {
-        const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-        const targetRecipient = (payload.recipient || '').toLowerCase();
-        const sender = (payload.username || '').toLowerCase();
-
-        if (targetRecipient === myNick) {
-          if (isDmsBlocked) return;
-
-          storeDirectMessageLocally(sender, payload);
-
-          const isCurrentlyViewing = (currentChannel === sender);
-          ensureDirectTab(sender, !isCurrentlyViewing);
-
-          if (isCurrentlyViewing) {
-            appendMessageDOM(payload);
-          }
-
-          playPrivateSound();
-        }
-      });
-
-      roomChannel.on('presence', { event: 'sync' }, () => {
-        renderOnlineUsers(roomChannel.presenceState());
-      });
-
-      roomChannel.on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        newPresences.forEach(presence => {
-          if (presence.username) {
-            appendSystemNotice(`🟢 @${presence.username} se ha unido a la sala.`);
-            const myNick = currentProfile ? currentProfile.username.toLowerCase() : '';
-            if (myNick && presence.username.toLowerCase() === myNick) {
-              setTimeout(() => {
-                sendPublicBotWelcome(presence.username);
-              }, 800);
-            }
-          }
-        });
-      });
-
-      roomChannel.on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        leftPresences.forEach(presence => {
-          if (presence.username) {
-            appendSystemNotice(`🔴 @${presence.username} ha salido de la sala.`);
-          }
-        });
-      });
-
-      roomChannel.subscribe(async (status) => {
-        if (status === 'SUBSCRIBED' && currentProfile) {
-          await roomChannel.track({
-            username: currentProfile.username,
-            doctrine: currentProfile.doctrine_affinity,
-            role: currentProfile.role
-          });
-        }
-      });
-    }
-
-    function escapeHtml(str) {
-      return (str || '').replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
-    }
-    function formatTime(isoString) {
-      return isoString ? new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-    }
-
-    loadActiveProfile();
+    // Iniciar
+    initSession();
   </script>
 </body>
 </html>

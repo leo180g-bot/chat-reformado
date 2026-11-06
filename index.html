@@ -482,7 +482,7 @@
       <a href="confesiones.html" class="mobile-quick-btn" title="Confesiones de Fe y Credos">
         📜 Confesiones
       </a>
-      <a href="biblia.html" class="mobile-quick-btn" title="Abrir Lector de la Biblia">
+      <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="mobile-quick-btn" title="Abrir Lector de la Biblia">
         📖 Biblia
       </a>
       <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="mobile-quick-btn" title="Ir a Chapel Library">
@@ -515,12 +515,12 @@
           <a href="confesiones.html" class="resource-btn" title="Ver Confesiones de Fe y Credos">
             📜 Confesiones
           </a>
-          <span class="resource-desc">1689, credos y documentos históricos</span>
+          <span class="resource-desc">1689, Westminster, Dort y Credos</span>
         </div>
 
         <!-- Tarjeta 2: Lector Bíblico -->
         <div class="resource-card">
-          <a href="biblia.html" class="resource-btn" title="Abrir Lector Bíblico RVR1960">
+          <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="resource-btn" title="Abrir Lector Bíblico RVR1960">
             📖 Leer Biblia
           </a>
           <span class="resource-desc">Texto sagrado RVR1960 en línea</span>
@@ -584,7 +584,7 @@
           <button type="submit" class="btn-primary" id="btnRegisterSubmit">Crear Cuenta (Novicio)</button>
         </form>
 
-        <!-- Formulario 3: Ingreso como Invitado -->
+        <!-- Formulario 3: Ingreso como Invitado con VALIDACIÓN PREVENTIVA DE NICKS -->
         <form id="guestForm" style="display: none;">
           <div class="auth-field">
             <label for="guestNick">Alias para esta sesión:</label>
@@ -602,7 +602,7 @@
               <option value="Otro trasfondo">Otro trasfondo</option>
             </select>
           </div>
-          <button type="submit" class="btn-primary">Acceder como Invitado</button>
+          <button type="submit" class="btn-primary" id="btnGuestSubmit">Acceder como Invitado</button>
         </form>
       </div>
     </section>
@@ -681,6 +681,7 @@
     tabRegister.onclick = () => switchTab(tabRegister, registerForm);
     tabGuest.onclick = () => switchTab(tabGuest, guestForm);
 
+    // 1. INICIAR SESIÓN CON NICK Y CONTRASEÑA
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const nick = document.getElementById('loginNick').value.trim();
@@ -711,6 +712,7 @@
       }
     });
 
+    // 2. CREAR CUENTA
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim();
@@ -746,19 +748,53 @@
       }
     });
 
-    guestForm.addEventListener('submit', (e) => {
+    // 3. INGRESO COMO INVITADO CON VALIDACIÓN DE NICK REGISTRADO
+    guestForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const nick = document.getElementById('guestNick').value.trim();
       const doctrine = document.getElementById('guestDoctrine').value;
+      const submitBtn = document.getElementById('btnGuestSubmit');
+
       if (!nick) return;
 
-      localStorage.setItem('guest_user', JSON.stringify({
-        username: nick,
-        doctrine_affinity: doctrine,
-        role: 'guest'
-      }));
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Validando alias...";
 
-      window.location.replace('chat.html');
+      try {
+        // Verificar contra la base de datos si el nick ya está reservado por un usuario registrado
+        const { data: isTaken, error } = await client.rpc('is_nick_registered', { target_nick: nick });
+        if (error) {
+          // Si la función RPC no existe aún, hacemos fallback por email lookup
+          const { data: userEmail } = await client.rpc('get_user_email_by_nick', { target_nick: nick });
+          if (userEmail) {
+            alert(`El alias "${nick}" pertenece a una cuenta registrada. Debes iniciar sesión con tu contraseña.`);
+            tabLogin.click();
+            document.getElementById('loginNick').value = nick;
+            document.getElementById('loginPassword').focus();
+            return;
+          }
+        } else if (isTaken) {
+          alert(`El alias "${nick}" pertenece a un miembro registrado. Por favor, inicia sesión con tu contraseña o elige otro alias.`);
+          tabLogin.click();
+          document.getElementById('loginNick').value = nick;
+          document.getElementById('loginPassword').focus();
+          return;
+        }
+
+        // Si el nick está libre, se permite el acceso como invitado
+        localStorage.setItem('guest_user', JSON.stringify({
+          username: nick,
+          doctrine_affinity: doctrine,
+          role: 'guest'
+        }));
+
+        window.location.replace('chat.html');
+      } catch (err) {
+        alert("Error al comprobar disponibilidad: " + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Acceder como Invitado";
+      }
     });
   </script>
 </body>
