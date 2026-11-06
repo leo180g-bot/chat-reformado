@@ -377,7 +377,7 @@
       border-color: var(--accent);
     }
 
-    /* Grupo de Herramientas (Entre el campo de texto y el botón Enviar) */
+    /* Grupo de Herramientas: [Input] [😀 | GIF | 🖼️ | 🎨] [Enviar] */
     .tools-inline-group {
       display: flex;
       align-items: center;
@@ -409,6 +409,10 @@
       border-color: var(--accent);
       color: var(--accent);
       background: rgba(56, 189, 248, 0.15);
+    }
+    .btn-tool-action.locked {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
     .btn-tool-action.btn-gif-label {
       font-size: 0.75rem;
@@ -1094,7 +1098,7 @@
               <option value="default" selected>Estándar (Sans-serif)</option>
               <option value="Georgia, serif">Georgia (Clásica / Serif)</option>
               <option value="Courier New, monospace">Courier New (Monospace)</option>
-              <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+              <option value="Trebuchet MS, sans-serif">Trebuchet Modern</option>
               <option value="Times New Roman, serif">Times New Roman</option>
               <option value="Segoe Script, cursive, sans-serif">Manuscrita / Cursiva</option>
             </select>
@@ -1127,14 +1131,16 @@
         </div>
       </div>
 
-      <!-- Barra de Envío: [Input] [😀 | GIF | 🎨] [Enviar] -->
+      <!-- Barra de Envío: [Input] [😀 | GIF | 🖼️ | 🎨] [Enviar] -->
       <form class="chat-input-bar" id="chatForm">
         <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea..." autocomplete="off" required maxlength="1000">
 
         <div class="tools-inline-group">
           <button type="button" class="btn-tool-action" id="btnToggleEmojis" title="Emojis">😀</button>
           <button type="button" class="btn-tool-action btn-gif-label" id="btnToggleGifs" title="Enviar GIF">GIF</button>
+          <button type="button" class="btn-tool-action" id="btnUploadImage" title="Enviar imagen">🖼️</button>
           <button type="button" class="btn-tool-action" id="btnToggleFonts" title="Fuente y Color">🎨</button>
+          <input type="file" id="imageFileInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
         </div>
 
         <button type="submit" class="btn-send">Enviar</button>
@@ -1272,6 +1278,10 @@
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
+    const IMAGE_BUCKET = "chat-images";
+    const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+    const MAX_ORIGINAL_BYTES = 15 * 1024 * 1024;
+    const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     const GIPHY_API_KEY = "b4WtjSwJeeaO5vY2rl5P2CwDbmy3aBoc";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1442,6 +1452,7 @@
       userRolesCache[currentUser.username.toLowerCase()] = currentUser.role;
 
       updateUserUI();
+      applyMediaRestrictions();
       setupPresence();
       loadRecentMessages();
       subscribeToMessages();
@@ -1462,6 +1473,53 @@
     }
 
     // ==========================================
+    // VALIDACIÓN PARA RESTRINGIR IMÁGENES A REGISTRADOS
+    // ==========================================
+    function isRegisteredUser() {
+      return !!currentUser && currentUser.role !== 'guest';
+    }
+
+    function requireRegistered(what) {
+      if (!currentUser) {
+        appendSystemNotice('⏳ Espera un momento a que termine de cargar tu sesión.');
+        return false;
+      }
+      if (!isRegisteredUser()) {
+        appendSystemNotice(`🔒 ${what} solo está disponible para usuarios registrados. Crea una cuenta para usarlo.`);
+        return false;
+      }
+      return true;
+    }
+
+    function applyMediaRestrictions() {
+      const locked = !isRegisteredUser();
+      const btnUploadImg = document.getElementById('btnUploadImage');
+      if (btnUploadImg) {
+        btnUploadImg.classList.toggle('locked', locked);
+        btnUploadImg.title = locked ? '🔒 Imágenes: solo usuarios registrados' : 'Enviar imagen';
+      }
+    }
+
+    function looksLikeMediaPayload(text) {
+      const t = String(text).trim();
+      return /^\[(?:gif|img):/i.test(t) || /^https?:\/\/\S+\.(?:gif|webp)(?:\?\S*)?$/i.test(t);
+    }
+
+    function isAllowedMediaUrl(rawUrl) {
+      try {
+        const u = new URL(rawUrl);
+        if (u.protocol !== 'https:') return false;
+        const isGiphy = u.hostname === 'giphy.com' || u.hostname.endsWith('.giphy.com');
+        const supaHost = new URL(SUPABASE_URL).hostname;
+        const isOwnStorage = u.hostname === supaHost &&
+          u.pathname.startsWith(`/storage/v1/object/public/${IMAGE_BUCKET}/`);
+        return isGiphy || isOwnStorage;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // ==========================================
     // HERRAMIENTAS: EMOJIS, GIPHY GIFS Y FUENTES
     // ==========================================
     let activeStyleState = { font: 'default', color: 'default', size: 'default' };
@@ -1476,6 +1534,8 @@
     const btnToggleEmojis = document.getElementById('btnToggleEmojis');
     const btnToggleGifs = document.getElementById('btnToggleGifs');
     const btnToggleFonts = document.getElementById('btnToggleFonts');
+    const btnUploadImage = document.getElementById('btnUploadImage');
+    const imageFileInput = document.getElementById('imageFileInput');
     const msgInput = document.getElementById('msgInput');
     const giphySearchInput = document.getElementById('giphySearchInput');
     const gifResultsGrid = document.getElementById('gifResultsGrid');
@@ -1506,6 +1566,20 @@
         if (popupGifs.classList.contains('open')) searchGiphyGifs('amen');
       };
       btnToggleFonts.onclick = (e) => { e.stopPropagation(); toggleToolPopup(popupFonts, btnToggleFonts); };
+
+      // Subir imagen local: solo usuarios registrados
+      btnUploadImage.onclick = (e) => {
+        e.stopPropagation();
+        closeAllToolPopups();
+        if (!requireRegistered('Compartir imágenes locales')) return;
+        imageFileInput.click();
+      };
+
+      imageFileInput.onchange = async () => {
+        const file = imageFileInput.files && imageFileInput.files[0];
+        imageFileInput.value = '';
+        if (file) await uploadAndSendImage(file);
+      };
 
       document.addEventListener('click', (e) => {
         if (!e.target.closest('.chat-popup-card') && !e.target.closest('.tools-inline-group')) {
@@ -1641,11 +1715,15 @@
     function parseIncomingPayload(raw) {
       if (!raw) return { isGif: false, text: '', styleAttr: '' };
 
-      const gifMatch = String(raw).match(/^\[gif:(https?:\/\/[^\]]+)\]$/i);
-      if (gifMatch) return { isGif: true, gifUrl: gifMatch[1] };
+      const mediaMatch = String(raw).match(/^\[(?:gif|img):(https?:\/\/[^\]\s]+)\]$/i);
+      if (mediaMatch) {
+        if (isAllowedMediaUrl(mediaMatch[1])) return { isGif: true, gifUrl: mediaMatch[1] };
+        return { isGif: false, text: raw, styleAttr: '' };
+      }
 
-      if (/^https?:\/\/\S+\.(?:gif|webp)(?:\?\S*)?$/i.test(String(raw).trim())) {
-        return { isGif: true, gifUrl: String(raw).trim() };
+      const bareUrl = String(raw).trim();
+      if (/^https?:\/\/\S+\.(?:gif|webp)(?:\?\S*)?$/i.test(bareUrl) && isAllowedMediaUrl(bareUrl)) {
+        return { isGif: true, gifUrl: bareUrl };
       }
 
       const styleMatch = String(raw).match(/^\[style:([^;]*);([^;]*);([^\]]*)\]([\s\S]*?)\[\/style\]$/);
@@ -1664,6 +1742,104 @@
       }
 
       return { isGif: false, text: raw, styleAttr: '' };
+    }
+
+    // ==========================================
+    // SUBIDA Y ENVÍO DE IMÁGENES LOCALES (Solo Registrados)
+    // ==========================================
+    let isUploadingImage = false;
+
+    function prepareImageBlob(file, maxSide = 1600, quality = 0.85) {
+      return new Promise((resolve, reject) => {
+        if (file.type === 'image/gif') { resolve(file); return; }
+        const objUrl = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          URL.revokeObjectURL(objUrl);
+          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const outType = file.type === 'image/png' ? 'image/webp' : 'image/jpeg';
+          canvas.toBlob(
+            (blob) => blob ? resolve(blob) : reject(new Error('No se pudo procesar la imagen.')),
+            outType,
+            quality
+          );
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(objUrl);
+          reject(new Error('El archivo no es una imagen válida.'));
+        };
+        img.src = objUrl;
+      });
+    }
+
+    async function uploadAndSendImage(file) {
+      if (!requireRegistered('Compartir imágenes locales')) return;
+      if (isUploadingImage) return;
+
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        appendSystemNotice('⚠️ Formato no permitido. Usa JPG, PNG, WEBP o GIF.');
+        return;
+      }
+      if (file.size > MAX_ORIGINAL_BYTES) {
+        appendSystemNotice('⚠️ La imagen es demasiado grande (máximo 15 MB).');
+        return;
+      }
+
+      isUploadingImage = true;
+      const prevLabel = btnUploadImage.textContent;
+      btnUploadImage.textContent = '⏳';
+      btnUploadImage.disabled = true;
+
+      try {
+        const blob = await prepareImageBlob(file);
+        if (blob.size > MAX_IMAGE_BYTES) {
+          appendSystemNotice('⚠️ La imagen supera el límite de 5 MB.');
+          return;
+        }
+
+        const extByType = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+        const ext = extByType[blob.type] || 'jpg';
+        const path = `${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+        const { error: upErr } = await client.storage.from(IMAGE_BUCKET).upload(path, blob, {
+          contentType: blob.type,
+          cacheControl: '31536000',
+          upsert: false
+        });
+        if (upErr) throw upErr;
+
+        const { data: pub } = client.storage.from(IMAGE_BUCKET).getPublicUrl(path);
+        if (!pub || !pub.publicUrl) throw new Error('No se obtuvo la URL de la imagen.');
+
+        const newMsg = {
+          username: currentUser.username,
+          content: `[img:${pub.publicUrl}]`,
+          created_at: new Date().toISOString()
+        };
+        if (currentUser.id) newMsg.sender_id = currentUser.id;
+        if (currentUser.role) newMsg.role = currentUser.role;
+
+        appendMessage(newMsg);
+        playSound('outgoing');
+
+        const { error } = await client.from('messages').insert([newMsg]);
+        if (error) {
+          await client.from('messages').insert([{ username: newMsg.username, content: newMsg.content }]);
+        }
+      } catch (err) {
+        console.error('Error al subir imagen:', err);
+        appendSystemNotice('⚠️ No se pudo enviar la imagen. Comprueba que el bucket esté configurado.');
+      } finally {
+        isUploadingImage = false;
+        btnUploadImage.textContent = prevLabel;
+        btnUploadImage.disabled = false;
+      }
     }
 
     async function sendDirectGifMessage(gifUrl) {
@@ -2323,11 +2499,17 @@
         : (userRolesCache[senderNick.toLowerCase()] || normalizeRole(msg.role));
 
       const roleDisplay = getRoleDisplayName(effectiveRole);
-      const parsed = parseIncomingPayload(msg.content);
+      let parsed = parseIncomingPayload(msg.content);
+      if (msg.image_url && isAllowedMediaUrl(msg.image_url)) {
+        parsed = { isGif: true, gifUrl: msg.image_url };
+      }
 
       let bodyHtml = '';
-      if (parsed.isGif) {
-        bodyHtml = `<img src="${escapeHTML(parsed.gifUrl)}" alt="GIF" class="msg-gif-img" referrerpolicy="no-referrer" loading="lazy">`;
+      if (parsed.isGif && effectiveRole === 'guest') {
+        bodyHtml = `<em style="color:var(--text-muted);">🔒 Contenido multimedia no disponible para invitados.</em>`;
+      } else if (parsed.isGif) {
+        const safeUrl = escapeHTML(parsed.gifUrl);
+        bodyHtml = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer"><img src="${safeUrl}" alt="Imagen compartida" class="msg-gif-img" referrerpolicy="no-referrer" loading="lazy"></a>`;
       } else {
         bodyHtml = escapeHTML(parsed.text);
       }
@@ -2353,6 +2535,7 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
       if (!isSelf) playSound('incoming');
+      return div;
     }
 
     async function loadRecentMessages() {
@@ -2379,12 +2562,18 @@
         .subscribe();
     }
 
-    // ENVÍO DE MENSAJES (Blindado y Tolerante a Fallos)
+    // ENVÍO DE MENSAJES (Blindado, Flexible y con Respaldo de Columnas)
     document.getElementById('chatForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = document.getElementById('msgInput');
       const text = input.value.trim();
       if (!text) return;
+
+      // Validación para invitados contra inyección directa de imágenes/gifs
+      if (!isRegisteredUser() && looksLikeMediaPayload(text)) {
+        appendSystemNotice('🔒 Los GIFs e imágenes solo están disponibles para usuarios registrados.');
+        return;
+      }
 
       input.value = '';
       closeAllToolPopups();
@@ -2408,7 +2597,7 @@
       try {
         const { error } = await client.from('messages').insert([newMsg]);
         if (error) {
-          console.warn("Reintentando con columnas básicas (username, content):", error.message);
+          console.warn("Reintentando envío con esquema base (username, content):", error.message);
           await client.from('messages').insert([{
             username: newMsg.username,
             content: newMsg.content
