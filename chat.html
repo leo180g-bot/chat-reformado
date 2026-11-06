@@ -1087,18 +1087,34 @@
           return;
         }
 
-        const { data: profile } = await client
+        // Consultar el perfil en Supabase
+        const { data: profile, error: profileErr } = await client
           .from('profiles')
           .select('username, role, doctrine_affinity, bio')
           .eq('id', session.user.id)
-          .single();
+          .maybeSingle();
+
+        if (profileErr) {
+          console.error("Error al leer tabla profiles:", profileErr);
+        }
+
+        // Si se leyó correctamente el perfil, tomamos su rol; si no, verificamos user_metadata
+        const userRole = (profile && profile.role) 
+          ? profile.role 
+          : (session.user.user_metadata?.role || 'novice');
 
         currentUser = {
           id: session.user.id,
-          username: profile ? profile.username : (session.user.user_metadata.username || 'Hermano'),
-          role: profile ? profile.role : 'novice',
-          doctrine: profile ? profile.doctrine_affinity : 'Reformada',
-          bio: profile ? profile.bio : ''
+          username: (profile && profile.username) 
+            ? profile.username 
+            : (session.user.user_metadata?.username || 'Hermano'),
+          role: userRole,
+          doctrine: (profile && profile.doctrine_affinity) 
+            ? profile.doctrine_affinity 
+            : 'Reformada',
+          bio: (profile && profile.bio) 
+            ? profile.bio 
+            : ''
         };
       }
 
