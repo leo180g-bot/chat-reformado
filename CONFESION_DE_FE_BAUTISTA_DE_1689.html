@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Confesión de Fe Bautista de 1689 | Comunión Doctrinal</title>
+  <meta name="description" content="Segunda Confesión de Fe de Londres (1689) con referencias bíblicas interactivas (RVR1960 y RVSBT18) e índice temático. Comunión Doctrinal.">
+  <meta name="keywords" content="confesion de fe bautista 1689, segunda confesion de londres, teologia reformada, bautistas reformados, citas biblicas, comunion doctrinal">
+  <meta name="author" content="Comunión Doctrinal">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://chat-reformado.vercel.app/confesion-1689.html">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg-body: #0b1120;
+      --bg-panel: #131d31;
+      --bg-subpanel: #090d16;
+      --border-color: #24324d;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-btn: #0284c7;
+      --accent-btn-hover: #0369a1;
+      --accent-gold: #facc15;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.75;
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+    }
+
+    /* Barra Superior de Navegación */
+    .top-nav {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-link {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-nav {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-nav:hover {
+      background: var(--border-color);
+      color: var(--accent);
+    }
+
+    /* Contenedor Principal en Dos Columnas */
+    .doc-layout {
+      display: flex;
+      max-width: 1360px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+      position: relative;
+    }
+
+    /* Índice Lateral Fijo */
+    .toc-sidebar {
+      width: 320px;
+      background: var(--bg-subpanel);
+      border-right: 1px solid var(--border-color);
+      height: calc(100vh - 53px);
+      position: sticky;
+      top: 53px;
+      overflow-y: auto;
+      padding: 16px;
+      flex-shrink: 0;
+    }
+
+    .toc-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .toc-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      padding: 5px 8px;
+      border-radius: 4px;
+      display: block;
+      transition: all 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .toc-link:hover {
+      background: var(--bg-panel);
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    /* Área de Lectura del Documento */
+    .doc-content {
+      flex: 1;
+      padding: 30px 40px 80px;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    header.doc-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .prefacio {
+      background-color: var(--bg-panel);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+      scroll-margin-top: 70px;
+    }
+
+    .prefacio h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    article {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 70px;
+    }
+
+    h2.capitulo-titulo {
+      margin-top: 0;
+      margin-bottom: 0.3rem;
+      color: var(--accent-gold);
+      font-size: 1.35rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    h3.capitulo-tema {
+      color: var(--accent);
+      font-size: 1.15rem;
+      margin-top: 0;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    p {
+      margin: 0 0 1.2rem 0;
+      text-align: justify;
+      hyphens: auto;
+      color: var(--text-main);
+    }
+
+    .parrafo {
+      margin-bottom: 1.2rem;
+    }
+
+    .num-parrafo {
+      font-weight: bold;
+      color: var(--accent);
+      margin-right: 0.35rem;
+    }
+
+    .citas-biblicas {
+      display: block;
+      margin: 0.5rem 0 1.5rem 0;
+      padding: 0.6rem 0.9rem;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-left: 3px solid var(--accent-gold);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+    .citas-biblicas strong {
+      color: var(--accent-gold);
+    }
+
+    /* Enlaces Interactivos de Citas Bíblicas */
+    .verse-link {
+      color: var(--accent);
+      text-decoration: underline dotted;
+      cursor: pointer;
+      font-weight: 500;
+      transition: color 0.15s, background-color 0.15s;
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+    .verse-link:hover {
+      color: var(--accent-gold);
+      background-color: rgba(56, 189, 248, 0.12);
+    }
+
+    .canon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 0.4rem 0.8rem;
+      padding: 1rem;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin: 1rem 0 1.5rem 0;
+      font-size: 0.88rem;
+    }
+
+    .canon-grid-title {
+      grid-column: 1 / -1;
+      font-weight: bold;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 0.3rem;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 0.3rem;
+    }
+
+    .btn-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      transition: all 0.15s;
+    }
+    .btn-top:hover {
+      background: var(--border-color);
+      color: #fff;
+    }
+
+    /* Modal Flotante para Citas Bíblicas */
+    .verse-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .verse-modal-overlay.open {
+      display: flex;
+    }
+
+    .verse-modal-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      max-width: 540px;
+      width: 100%;
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .verse-modal-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-subpanel);
+    }
+
+    .verse-modal-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .verse-modal-title {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--accent-gold);
+    }
+
+    .verse-version-select {
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      outline: none;
+      cursor: pointer;
+      width: fit-content;
+    }
+
+    .btn-close-verse {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+    .btn-close-verse:hover {
+      color: #fff;
+    }
+
+    .verse-modal-body {
+      padding: 18px 20px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-main);
+    }
+    .verse-modal-body p {
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .verse-modal-body .v-num {
+      font-weight: bold;
+      color: var(--accent);
+      margin-right: 5px;
+    }
+
+    /* Modal / Menú Móvil */
+    .mobile-toc-toggle {
+      display: none;
+    }
+
+    @media (max-width: 880px) {
+      .toc-sidebar {
+        position: fixed;
+        left: -320px;
+        top: 0;
+        bottom: 0;
+        height: 100vh;
+        z-index: 100;
+        box-shadow: 4px 0 20px rgba(0,0,0,0.7);
+        transition: left 0.25s ease;
+      }
+      .toc-sidebar.open {
+        left: 0;
+      }
+      .mobile-toc-toggle {
+        display: inline-flex;
+      }
+      .doc-content {
+        padding: 20px 14px 60px;
+      }
+      h1 { font-size: 1.6rem; }
+      p { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Superior -->
+  <header class="top-nav">
+    <a href="index.html" class="brand-link">✝️ Comunión Doctrinal</a>
+    <div class="nav-actions">
+      <button type="button" class="btn-nav mobile-toc-toggle" id="btnToggleToc">📑 Capítulos</button>
+      <a href="biblia.html" class="btn-nav">📖 Biblia</a>
+      <a href="chat.html" class="btn-nav">💬 Chat</a>
+    </div>
+  </header>
+
+  <div class="doc-layout">
+    <!-- Índice Lateral -->
+    <aside class="toc-sidebar" id="tocSidebar">
+      <div class="toc-title">
+        <span>Capítulos (1689)</span>
+        <button type="button" class="btn-nav mobile-toc-toggle" id="btnCloseToc" style="padding:2px 6px;">✕</button>
+      </div>
+      <ul class="toc-list">
+        <li><a href="#prefacio" class="toc-link">Prefacio Histórico</a></li>
+        <li><a href="#cap1" class="toc-link">1. Las Santas Escrituras</a></li>
+        <li><a href="#cap2" class="toc-link">2. Dios y la Santa Trinidad</a></li>
+        <li><a href="#cap3" class="toc-link">3. El Decreto Eterno de Dios</a></li>
+        <li><a href="#cap4" class="toc-link">4. La Creación</a></li>
+        <li><a href="#cap5" class="toc-link">5. La Providencia</a></li>
+        <li><a href="#cap6" class="toc-link">6. La Caída del Hombre, el Pecado y su Castigo</a></li>
+        <li><a href="#cap7" class="toc-link">7. El Pacto de Dios</a></li>
+        <li><a href="#cap8" class="toc-link">8. Cristo el Mediador</a></li>
+        <li><a href="#cap9" class="toc-link">9. El Libre Albedrío</a></li>
+        <li><a href="#cap10" class="toc-link">10. El Llamamiento Eficaz</a></li>
+        <li><a href="#cap11" class="toc-link">11. De la Justificación</a></li>
+        <li><a href="#cap12" class="toc-link">12. De la Adopción</a></li>
+        <li><a href="#cap13" class="toc-link">13. De la Santificación</a></li>
+        <li><a href="#cap14" class="toc-link">14. De la Fe Salvadora</a></li>
+        <li><a href="#cap15" class="toc-link">15. Del Arrepentimiento para Vida y Salvación</a></li>
+        <li><a href="#cap16" class="toc-link">16. De las Buenas Obras</a></li>
+        <li><a href="#cap17" class="toc-link">17. De la Perseverancia de los Santos</a></li>
+        <li><a href="#cap18" class="toc-link">18. De la Seguridad de la Gracia y de la Salvación</a></li>
+        <li><a href="#cap19" class="toc-link">19. De la Ley de Dios</a></li>
+        <li><a href="#cap20" class="toc-link">20. Del Evangelio y del Alcance de su Gracia</a></li>
+        <li><a href="#cap21" class="toc-link">21. De la Libertad Cristiana y de la Libertad de Conciencia</a></li>
+        <li><a href="#cap22" class="toc-link">22. De la Adoración Religiosa y del Día de Reposo</a></li>
+        <li><a href="#cap23" class="toc-link">23. Juramentos Legales y Votos</a></li>
+        <li><a href="#cap24" class="toc-link">24. El Gobierno Civil</a></li>
+        <li><a href="#cap25" class="toc-link">25. Del Matrimonio</a></li>
+        <li><a href="#cap26" class="toc-link">26. De la Iglesia</a></li>
+        <li><a href="#cap27" class="toc-link">27. De la Comunión de los Santos</a></li>
+        <li><a href="#cap28" class="toc-link">28. Del Bautismo y la Cena del Señor</a></li>
+        <li><a href="#cap29" class="toc-link">29. Del Bautismo</a></li>
+        <li><a href="#cap30" class="toc-link">30. De la Cena del Señor</a></li>
+        <li><a href="#cap31" class="toc-link">31. Del Estado del Hombre Después de la Muerte y de la Resurrección de los Muertos</a></li>
+        <li><a href="#cap32" class="toc-link">32. Del Juicio Final</a></li>
+      </ul>
+    </aside>
+
+    <!-- Contenido Textual Completo -->
+    <main class="doc-content">
+      <header class="doc-header">
+        <h1>CONFESIÓN DE FE BAUTISTA DE 1689</h1>
+        <div class="subtitle">Segunda Confesión de Londres</div>
+      </header>
+
+      <section class="prefacio" id="prefacio">
+        <h2>Prefacio</h2>
+        <p>En el año 1855, C. H. Spurgeon, el conocido pastor de lo que más tarde fue llamado el «Tabernáculo Metropolitano» en Londres, Inglaterra, publicó de nuevo la confesión de fe que ahora presentamos a las iglesias bautistas del mundo hispano en este nuevo estilo, para celebrar el aniversario número 300 de esta declaración de la fe.</p>
+        <p>Entre aquellas cosas que creemos firmemente es que no hay nada semejante a la Biblia. Por eso no atribuimos autoridad alguna a esta confesión. De hecho, Ud. puede ver en el primer capítulo de esta publicación que todas las doctrinas de hombres deben decidirse por el veredicto bíblico (Cap. 1, par. 10).</p>
+        <p>A pesar de esto, hay quienes menosprecian los documentos llamados confesiones de fe. Otros dicen: «Cristo es nuestro credo». Sin embargo, todo el mundo sabe que en el momento en que decimos, «La Biblia dice tal o cual cosa, y yo <em>la creo</em>», ya hemos hecho una confesión de fe. Si algunos no creen en la utilidad de escribir y publicar su confesión, respetamos su posición, si bien diferimos. Por nuestra parte, convencidos de que los que quieren saber en qué creemos deben ser atendidos, estamos dispuestos a pasar el trabajo e incurrir en los gastos necesarios para cumplir con sus esperanzas.</p>
+        <blockquote style="margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--accent); font-style: italic; color: var(--text-muted);">
+          «Hace muchos años que vimos la necesidad de publicar una confesión de nuestra fe para informar y satisfacer a aquellos que no entendían nuestros principios, o que tenían prejuicios contra estos debido a una presentación defectuosa de los mismos. Esta primera confesión fue publicada cerca del año 1643 en el nombre de 7 congregaciones que se reunían en Londres. Desde aquel entonces varias ediciones han salido, cumpliendo con nuestro propósito básico...»
+        </blockquote>
+        <p>C. H. Spurgeon concluyó diciendo respecto a ella: <em>«Este documento antiguo es un excelente resumen de aquellas cosas creídas entre nosotros. Aceptamos el mismo no como una regla autoritativa, o como un código de fe, sino como una ayuda en la controversia, una confirmación en la fe y un medio de edificación en la justicia».</em></p>
+      </section>
+      <article id="cap1">
+        <h2 class="capitulo-titulo">Capítulo 1</h2>
+    <h3 class="capitulo-tema">Las Santas Escrituras</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Las Santas Escrituras son la única, toda suficiente, segura e infalible regla del conocimiento, fe y obediencia salvadoras. Aunque la luz de la naturaleza y las obras de creación y de providencia manifiestan la bondad, sabiduría y poder de Dios, de tal manera que los hombres quedan sin excusa, sin embargo, no son suficientes para dar aquel conocimiento de Dios y de su voluntad que es necesario para la salvación; por lo que le agradó al Señor, en varios tiempos y de diversas maneras, revelarse a sí mismo y declarar su voluntad a su Iglesia; y además para conservar y propagar mejor la verdad y para el mayor consuelo y establecimiento de la Iglesia contra la corrupción de la carne y la malicia de Satanás y del mundo, le agradó dejar esa revelación por escrito, por todo lo cual las Santas Escrituras son muy necesarias, y tanto más cuanto que han cesado ya los modos anteriores por los cuales Dios reveló su voluntad a su Iglesia.</p>
+    <div class="citas-biblicas"><strong>Referencias:</strong> (1) 2 Ti. 3:15-17; Is. 8:20; Lc. 16:29, 31; Ef. 2:20. (2) Ro. 1:19-21; Ro. 2:14, 15; Sal. 19:1-3. (3) He. 1:1. (4) Pr. 22:19-21; Ro. 15:4; 2 P. 1:19, 20.</div>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Bajo el título de las <em>Santas Escrituras o la Palabra de Dios escrita</em>, se contienen todos los libros del Antiguo y Nuevo Testamento, los cuales son como sigue:</p>
+
+    <div class="canon-grid">
+      <div class="canon-grid-title">Antiguo Testamento</div>
+      <div>Génesis</div><div>Éxodo</div><div>Levítico</div><div>Números</div><div>Deuteronomio</div>
+      <div>Josué</div><div>Jueces</div><div>Rut</div><div>1 Samuel</div><div>2 Samuel</div>
+      <div>1 Reyes</div><div>2 Reyes</div><div>1 Crónicas</div><div>2 Crónicas</div><div>Esdras</div>
+      <div>Nehemías</div><div>Ester</div><div>Job</div><div>Salmos</div><div>Proverbios</div>
+      <div>Eclesiastés</div><div>Cantares</div><div>Isaías</div><div>Jeremías</div><div>Lamentaciones</div>
+      <div>Ezequiel</div><div>Daniel</div><div>Oseas</div><div>Joel</div><div>Amós</div>
+      <div>Abdías</div><div>Jonás</div><div>Miqueas</div><div>Nahúm</div><div>Habacuc</div>
+      <div>Sofonías</div><div>Hageo</div><div>Zacarías</div><div>Malaquías</div>
+    </div>
+
+    <div class="canon-grid">
+      <div class="canon-grid-title">Nuevo Testamento</div>
+      <div>Mateo</div><div>Marcos</div><div>Lucas</div><div>Juan</div><div>Hechos</div>
+      <div>Romanos</div><div>1 Corintios</div><div>2 Corintios</div><div>Gálatas</div><div>Efesios</div>
+      <div>Filipenses</div><div>Colosenses</div><div>1 Tesalonicenses</div><div>2 Tesalonicenses</div><div>1 Timoteo</div>
+      <div>2 Timoteo</div><div>Tito</div><div>Filemón</div><div>Hebreos</div><div>Santiago</div>
+      <div>1 Pedro</div><div>2 Pedro</div><div>1 Juan</div><div>2 Juan</div><div>3 Juan</div>
+      <div>Judas</div><div>Apocalipsis</div>
+    </div>
+
+    <p>Todos estos fueron dados por inspiración de Dios para que sean la regla de fe y vida (2 Ti. 3:16).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Los libros comúnmente titulados Apócrifos, por no ser de inspiración divina, no deben formar parte del canon de las Santas Escrituras, y por lo tanto no son de autoridad para la Iglesia de Dios, ni deben aceptarse ni usarse sino de la misma manera que otros escritos humanos (Lc. 24:27, 44; Ro. 3:2).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> La autoridad de las Santas Escrituras, por la que ellas deben ser creídas y obedecidas, no depende del testimonio de ningún hombre o iglesia, sino enteramente del de Dios (quien en sí mismo es la verdad), el autor de ellas; y deben ser creídas porque son la palabra de Dios (2 P. 1:19-21; 2 Ti. 3:16; 1 Ts. 2:13; 1 Jn. 5:9).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> El testimonio de la Iglesia puede movernos e inducirnos a tener para las Santas Escrituras una estimación alta y reverencial; a la vez el carácter celestial del contenido de la Biblia, la eficacia de su doctrina, la majestad de su estilo, la armonía de todas sus partes, el fin que se propone alcanzar en todo el libro (que es el de dar toda gloria a Dios), el claro descubrimiento que hace del único modo por el cual puede alcanzar la salvación el hombre, la multitud incomparable de otras de sus excelencias y su entera perfección, son todos argumentos por los cuales la Biblia demuestra abundantemente que es la palabra de Dios. Sin embargo, nuestra persuasión y completa seguridad de que su verdad es infalible y su autoridad divina, provienen de la obra del Espíritu Santo, quien da testimonio a nuestro corazón con la palabra divina y por medio de ella (Jn. 16:13, 14; 1 Co. 2:10-12; 1 Jn. 2:20, 27).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> Todo el consejo de Dios tocante a todas las cosas necesarias para su propia gloria; y para la salvación, la fe y la vida del hombre, está expresamente expuesto o implícitamente revelado en las Escrituras y, a esta revelación de su voluntad, nada será añadido, ni por nuevas revelaciones del Espíritu, ni por las tradiciones de los hombres (2 Ti. 3:15-17; Gá. 1:8, 9). Sin embargo, confesamos que la iluminación interna del Espíritu de Dios es necesaria para que las cosas reveladas en la palabra se entiendan de una manera salvadora (Jn. 6:45; 1 Co. 2:9-12), y que hay algunas circunstancias tocante al culto de Dios y al gobierno de la iglesia, comunes a las acciones y sociedades humanas, que deben arreglarse conforme a la luz de la naturaleza y de la prudencia cristiana, pero guardándose siempre las reglas generales de la palabra (1 Co. 11:13, 14; 1 Co. 14:26, 40).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> Las cosas contenidas en las Escrituras no son todas igualmente claras ni se entienden con la misma facilidad por todos (2 P. 3:16); sin embargo, las cosas que necesariamente deben saberse, creerse y guardarse para conseguir la salvación, se proponen y se declaran en uno u otro lugar de las Escrituras, de tal manera que no sólo los eruditos, sino aun los que no lo son, pueden adquirir un conocimiento suficiente de tales cosas por el debido uso de los medios ordinarios (Sal. 19:7; Sal. 119:130).</p>
+
+    <p class="parrafo"><span class="num-parrafo">8.</span> El Antiguo Testamento se escribió en hebreo (que era el idioma común del pueblo de Dios antiguamente) y el Nuevo Testamento en griego (que en el tiempo en que fue escrito era el idioma más conocido entre las naciones), porque en aquellas lenguas fueron inspirados directamente por Dios, y guardados puros en todos los siglos por su cuidado y providencia especiales. Por esta razón debe apelarse finalmente a los originales en esos idiomas en toda controversia (Ro. 3:2; Is. 8:20). Como estos idiomas originales no se conocen por todo el pueblo de Dios, el cual tiene el derecho de poseer las Escrituras y tiene gran interés en ellas, a las que según el mandamiento debe leer y escudriñar en el temor de Dios, se sigue que la Biblia debe traducirse a la lengua vulgar de toda nación a donde sea llevada (Hch. 15:15; Jn. 5:39; 1 Co. 14:6, 9, 11, 12, 24, 28; Col. 3:16; Ro. 15:4).</p>
+
+    <p class="parrafo"><span class="num-parrafo">9.</span> La regla infalible para interpretar la Biblia es la Biblia misma, y por tanto, cuando hay dificultad respecto al sentido verdadero y pleno de un pasaje cualquiera (cuyo significado no es múltiple, sino uno solo), éste se puede buscar y establecer por otros pasajes que hablan con más claridad del asunto (2 P. 1:20, 21; Hch. 15:15, 16).</p>
+
+    <p class="parrafo"><span class="num-parrafo">10.</span> El Juez Supremo por el cual deben decidirse todas las controversias religiosas, todos los decretos de los concilios, las opiniones de los hombres antiguos, las doctrinas de hombres y de espíritus privados, y en cuya sentencia debemos descansar, no es ningún otro más que el veredicto bíblico dado por el Espíritu Santo. En tal veredicto descansa la fe (Mt. 22:29-32; Ef. 2:20; Hch. 28:23).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap2">
+        <h2 class="capitulo-titulo">Capítulo 2</h2>
+    <h3 class="capitulo-tema">Dios y la Santa Trinidad</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> No hay sino un solo Dios, el único viviente y verdadero. Existe por sí mismo y es infinito en su ser y perfecciones. Su esencia no puede ser comprendida. Él es espíritu purísimo, invisible, sin cuerpo, miembros o pasiones. Solo él posee inmortalidad y habita en luz inaccesible; quien es inmutable, inmenso, eterno, incomprensible, todopoderoso, e infinito. Es santo, sabio, libre, absoluto, que hace todas las cosas según el consejo de su propia voluntad (que es inmutable y justísima) y para su propia gloria. También Dios es amoroso, benigno y misericordioso, longánimo, abundante en bondad y verdad, perdonando toda iniquidad, transgresión y pecado, galardonador de todos los que le buscan con diligencia, y sobre todo muy justo y terrible en sus juicios, que odia todo pecado y que de ninguna manera dará por inocente al culpable.</p>
+    <div class="citas-biblicas"><strong>Referencias:</strong> 1 Co. 8:4-6; Dt. 6:4; Jer. 10:10; Is. 48:12; Éx. 3:14; Jn. 4:24; 1 Ti. 1:17; Dt. 4:15, 16; Mal. 3:6; 1 R. 8:27; Jer. 23:23, 24; Sal. 90:2; Gn. 17:1; Is. 6:3; Sal. 115:3; Is. 46:10; Pr. 16:4; Ro. 11:36; Éx. 34:6, 7; He. 11:6; Neh. 9:32, 33; Sal. 5:5, 6; Nah. 1:2, 3.</div>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Dios posee en sí mismo y por sí mismo toda vida, gloria, bondad y bienaventuranza; es suficiente en todo en sí mismo y respecto a sí mismo, no teniendo necesidad de ninguna de las criaturas que él ha hecho, ni derivando ninguna gloria de ellas, sino que solamente manifiesta su propia gloria en ellas, por ellas, hacia ellas y sobre ellas. Él es la única fuente de todo ser, de quien, por quien y para quien son todas las cosas, teniendo sobre ellas el más soberano dominio, y haciendo por ellas, para ellas y sobre ellas toda su voluntad. Todas las cosas están abiertas y manifiestas delante de su vista; su conocimiento es infinito, infalible e independiente de toda criatura, de modo que para él no hay ninguna cosa contingente o dudosa. Es santísimo en todos sus consejos, en todas sus obras y en todos sus mandatos. Siendo él el creador de los hombres y los ángeles, éstos le deben a él toda adoración, servicio y cualquier cosa que él pudiera demandar de ellos (He. 4:13; Ez. 11:5; Hch. 15:18; Sal. 145:17; Ap. 5:12-14).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> La Divinidad se compone de tres personas: Dios Padre, Dios Hijo (o Verbo) y Dios el Espíritu Santo. Son uno en sustancia, poder y eternidad. Cada uno es enteramente Dios, pero a la vez Dios es uno e indivisible. El Padre no es de nadie, ni es engendrado ni procedente de nadie; el Hijo es engendrado al eterno del Padre, y el Espíritu Santo procede del Padre y del Hijo. Estas tres personas divinas, siendo un solo Dios eterno, indivisible en su naturaleza y ser, son distinguidos en las Escrituras por sus relaciones personales dentro de la divinidad, y por la variedad de obras que efectúan. Su unidad triple (es decir, la Trinidad) es la base esencial de comunión con Dios y del consuelo que recibimos de nuestra confianza en él (1 Jn. 5:7; Mt. 28:19; 2 Co. 13:14; Éx. 3:14; Jn. 14:11; 1 Co. 8:6; Jn. 1:14, 18; Jn. 15:26; Gá. 4:6).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap3">
+        <h2 class="capitulo-titulo">Capítulo 3</h2>
+    <h3 class="capitulo-tema">El Decreto Eterno de Dios</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Dios desde la eternidad, por el sabio y santo consejo de su voluntad, ordenó libre e inalterablemente todo lo que sucede. Sin embargo, lo hizo de tal manera, que Dios ni es autor del pecado ni comparte con los pecadores la responsabilidad del pecado ni hace violencia a la voluntad de sus criaturas, ni quita la libertad ni contingencia de las causas secundarias sino más bien las establece. En todo esto se manifiesta la sabiduría divina al igual que su poder y fidelidad para efectuar aquello que se ha propuesto (Is. 46:10; Ef. 1:11; He. 6:17; Ro. 9:15, 18; Stg. 1:13; 1 Jn. 1:5; Hch. 4:27, 28; Jn. 19:11; Nm. 23:19; Ef. 1:3-5).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Aunque Dios sabe todo lo que puede suceder en toda clase de condición o contingencia que se puede suponer, sin embargo, nada decretó porque lo preveía como porvenir o como cosa que sucedería en circunstancias dadas (Hch. 15:18; Ro. 9:11, 13, 16, 18).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Por el decreto de Dios y para la manifestación de su propia gloria, algunos hombres y ángeles son predestinados (o pre-ordenados) a vida eterna por medio del Señor Jesucristo, para la alabanza y gloria de su gracia. A los demás, él ha dejado para que sean condenados en sus pecados, para la alabanza de su gloriosa justicia (1 Ti. 5:21; Mt. 25:34; Ef. 1:5, 6; Ro. 9:22, 23; Jud. 4).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Estos hombres y ángeles así predestinados y preordenados, están designados particular e inalterablemente, y su número es tan cierto y definido que ni se puede aumentar ni disminuir (Jn. 13:18; 2 Ti. 2:19).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> A aquellos que Dios ha predestinado para vida desde antes que fuesen puestos los fundamentos del mundo, conforme a su eterno e inmutable propósito y al consejo y beneplácito secreto de su propia voluntad, los ha escogido en Cristo para la gloria eterna; mas esto por su libre gracia y puro amor, sin cualquiera otra cosa en la criatura como condición o causa que le mueva a ello (Ef. 1:4, 9, 11; Ro. 8:30; 2 Ti. 1:9; 1 Ts. 5:9; Ro. 9:13, 16; Ef. 2:5, 12).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> Así como Dios ha designado a los elegidos para la gloria, de la misma manera, por el propósito libre y eterno de su voluntad, ha preordenado también los medios para ello. Por tanto, los que son elegidos, habiendo caído en Adán, son redimidos por Cristo, y en debido tiempo eficazmente llamados a la fe en Cristo por el Espíritu Santo; son justificados, adoptados, santificados, y guardados por su poder, por medio de la fe, para salvación. Nadie más será redimido por Cristo, eficazmente llamado, justificado, adoptado, santificado y salvado, sino solamente los elegidos (1 P. 1:2; 2 Ts. 2:13; 1 Ts. 5:9, 10; Ro. 8:30; 1 P. 1:5; Jn. 10:26; Jn. 17:9; Jn. 6:64).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> La doctrina de este alto misterio de la predestinación debe tratarse con especial prudencia y cuidado, para que los hombres, persuadidos de su vocación eficaz, se aseguren de su elección eterna, y atendiendo a la voluntad revelada en la palabra de Dios, cedan la obediencia a ella. De esta manera esta doctrina proporcionará motivos de alabanza, reverencia y admiración a Dios; y también de humildad, diligencia y abundante consuelo a todos los que sinceramente obedecen al evangelio (1 Ts. 1:4, 5; 2 P. 1:10; Ef. 1:6; Ro. 11:33; Ro. 11:5, 6, 20; Lc. 10:20).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap4">
+        <h2 class="capitulo-titulo">Capítulo 4</h2>
+    <h3 class="capitulo-tema">La Creación</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> En el principio agradó a Dios Padre, Hijo y Espíritu Santo, para la manifestación de la gloria de su poder, sabiduría y bondad eternas, crear o hacer el mundo y todas las cosas que en él están, ya sean visibles o invisibles, en el espacio de seis días y todas muy buenas (Jn. 1:2, 3; He. 1:2; Job 26:13; Ro. 1:20; Col. 1:16; Gn. 1:31).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Después que Dios hubo creado todas las demás criaturas, creó al hombre, varón y hembra, con alma racional e inmortal, y en toda manera posible les preparó para una vida en armonía con él. Fueron creados a su imagen, dotados de conocimiento, justicia y santidad verdadera, teniendo la ley de Dios escrita en su corazón, y dotados del poder de cumplirla; sin embargo, había la posibilidad de que la quebrantaran dejados a la libertad de su voluntad que era mudable (Gn. 1:27; Gn. 2:7; Ec. 7:29; Gn. 1:26; Ro. 2:14, 15; Gn. 3:6).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Además de esta ley escrita en su corazón, recibieron el mandato de no comer del árbol de la ciencia del bien y del mal, y mientras guardaron este mandamiento, fueron felices, gozando de comunión con Dios, y teniendo dominio sobre las criaturas (Gn. 2:17; Gn. 1:26, 28).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap5">
+        <h2 class="capitulo-titulo">Capítulo 5</h2>
+    <h3 class="capitulo-tema">La Providencia</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Dios, el buen creador de todo, en su poder y sabiduría infinita, sostiene, dirige, dispone y gobierna a todas las criaturas y cosas, desde la más grande hasta la más pequeña, por su sabia y santa providencia. Dios cumple con los propósitos para los cuales él creó estas cosas, conforme a su presciencia infalible, y al libre e inmutable consejo de su propia voluntad, para la alabanza de la gloria de su sabiduría, poder, justicia, bondad y misericordia (He. 1:3; Job 38:11; Is. 46:10, 11; Sal. 135:6; Mt. 10:29-31; Ef. 1:11).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Aunque con respecto a la presciencia y decreto de Dios, causa primera, todas las cosas sucederán inmutable e infaliblemente, de modo que nada ocurre por suerte o fuera de la esfera de su providencia; sin embargo, por la misma providencia las ha ordenado de tal manera, que sucederán conforme a la naturaleza de las causas secundarias, sea necesaria, libre o contingentemente (Hch. 2:23; Pr. 16:33; Gn. 8:22).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Dios en su providencia ordinaria hace uso de medios; a pesar de esto, él es libre para obrar sin ellos, sobre ellos, y contra ellos, según le plazca (Hch. 27:31, 44; Is. 55:10, 11; Os. 1:7; Ro. 4:19-21; Dn. 3:27).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> El poder todopoderoso, la sabiduría inescrutable y la bondad infinita de Dios se manifiestan en su providencia de tal manera que su propósito soberano se extiende aun hasta la primera caída y a todos los otros pecados de los ángeles y de los hombres, y esto no sólo por un mero permiso, sino que él sabia y poderosamente limita, ordena y gobierna, en varias formas, las acciones pecaminosas de tal manera que éstas llevan a cabo sus designios santos, pero de tal modo, que lo pecaminoso procede sólo de la criatura, y no de Dios, quien es justísimo y santísimo, y por eso, no es, ni puede ser el autor o aprobador del pecado (Ro. 11:32-34; 2 S. 24:1; 1 Cr. 21:1; 2 R. 19:28; Sal. 76:10; Gn. 50:20; Is. 10:6, 7, 12; Sal. 50:21; 1 Jn. 2:16).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> El todo sabio, justo y benigno Dios, a menudo deja por algún tiempo a sus hijos en las tentaciones multiformes y en la corrupción de sus propios corazones, a fin de corregirles de sus pecados anteriores o para descubrirles la fuerza oculta de la corrupción, para humillarlos, y para infundir en ellos el sentimiento de una dependencia más íntima y constante de él para su apoyo, y para hacerles más vigilantes contra todas las ocasiones futuras del pecado, y para otros muchos fines santos y justos. Su santo y justo propósito es obrado de tal forma que todo lo que ocurre a sus elegidos es según su designio, para su gloria y para el bien de ellos (2 Cr. 32:25, 26, 31; 2 Co. 12:7-9; Ro. 8:28).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> En cuanto a aquellos hombres malvados e impíos a quienes Dios como juez justo ha cegado y endurecido a causa de sus pecados anteriores, no sólo les retira su gracia por la cual podrían haber alumbrado sus entendimientos y ejercitado sus corazones, sino también algunas veces les retira los dones que ya tenían, y los deja expuestos a objetos que son causa de pecado debido a la corrupción humana, y a la vez les entrega a sus propias concupiscencias, a las tentaciones del mundo y al poder de Satanás, de donde sucede que se endurecen bajo los mismos medios que Dios emplea para ablandar a los demás (Ro. 1:24-26, 28; Ro. 11:7, 8; Dt. 29:4; Mt. 13:12; Dt. 2:30; 2 R. 8:12, 13; 2 Ts. 2:10-12; Éx. 8:15, 32; Is. 6:9, 10; 1 P. 2:7, 8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> Así como la providencia de Dios alcanza, en general a todas las criaturas, así también de un modo especial cuida a su Iglesia y dispone todas las cosas para el bien de ella (1 Ti. 4:10; Am. 9:8, 9; Is. 43:3-5).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap6">
+        <h2 class="capitulo-titulo">Capítulo 6</h2>
+    <h3 class="capitulo-tema">La Caída del Hombre, el Pecado y su Castigo</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> El hombre, según vino de la mano de Dios, su creador, era perfecto y limpio. La ley justa que Dios le dio hablaba de vida condicionada a su obediencia y amenazaba con muerte la desobediencia. La obediencia de Adán fue muy corta. Satanás usó la sutil serpiente para traer a Eva al pecado y entonces ella sedujo a Adán, quien sin ninguna fuerza de afuera, libremente violó la ley bajo la cual habían sido creados y también el mandamiento de Dios de no comer del fruto prohibido. Plugo a Dios, conforme a su sabio y santo propósito, permitir este pecado proponiéndose ordenarlo para su propia gloria (Gn. 2:16, 17; Gn. 3:12, 13; 2 Co. 11:3).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Por este pecado, nuestros primeros padres cayeron de su justicia original y perdieron la comunión con Dios. El pecado de ellos nos envolvió a todos y a través de este pecado la muerte pasó a todos. Todos los hombres vinieron a ser muertos en pecado, y totalmente corrompidos en todas las facultades y partes del alma y del cuerpo (Ro. 3:23; Ro. 5:12-21; Tit. 1:15; Gn. 6:5; Jer. 17:9; Ro. 3:10-19).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Siendo ellos la raíz de la raza humana, y por la ordenanza de Dios estando Adán en el lugar de toda la humanidad, la culpa de este pecado fue imputada a su posteridad, y la naturaleza corrompida se transmitió a aquella que desciende de ellos según la generación ordinaria. Todos los hombres, siendo concebidos en pecado, y por naturaleza hijos sujetos a la ira de Dios, siervos del pecado y sujetos a la muerte, son dados a inexplicables miserias espirituales, temporales y eternas, a no ser que el Señor Jesucristo los libere (Ro. 5:12-19; 1 Co. 15:21, 22, 45, 49; Sal. 51:5; Job 14:4; Ef. 2:3; Ro. 6:20; 5:12; He. 2:14, 15; 1 Ti. 1:10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> De esta corrupción original, por la cual carecemos de disposición y aptitud para todo bien y estamos opuestos a este bien, así como enteramente inclinados a todo mal, dimanan todas nuestras transgresiones actuales (Ro. 8:7; Col. 1:21; Stg. 1:14; Mt. 15:19).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> Esta corrupción de naturaleza dura toda esta vida aun en aquellos que son regenerados; y, aun cuando sea perdonada y amortiguada por medio de la fe en Cristo, sin embargo, ella, y todos los efectos de ella son verdadera y propiamente pecado (Ro. 7:18, 23; Ec. 7:20; 1 Jn. 1:8; Ro. 7:23-25; Gá. 5:17).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap7">
+        <h2 class="capitulo-titulo">Capítulo 7</h2>
+    <h3 class="capitulo-tema">El Pacto de Dios</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> La distancia que media entre Dios y la criatura es tan grande, que aun cuando las criaturas racionales le deben obediencia como a su creador, sin embargo, ellas no podrán nunca llegar a vida espiritual, si no es por alguna condescendencia voluntaria de parte de Dios, habiéndole placido a éste expresarla por medio de un pacto (Lc. 17:10; Job 35:7, 8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Además, ya que el hombre, por razón de su caída en el pecado, se colocó a sí mismo bajo la maldición de la ley de Dios, le plació al Señor hacer un pacto de gracia, según el cual Dios ofrece libremente a los pecadores vida y salvación por Jesucristo, exigiéndoles la fe en éste para que puedan ser salvos, y prometiendo dar su Espíritu Santo a todos aquellos que ha ordenado para vida eterna, dándoles así voluntad y capacidad para creer (Gn. 2:17; Gá. 3:10; Ro. 8:3; Mr. 16:15, 16; Jn. 3:16; Ez. 36:26, 27; Jn. 6:44, 45; Sal. 110:3).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> El pacto de Dios es revelado en el evangelio; en primer lugar a Adán en la promesa de salvación a través de la simiente de la mujer, y luego, paso a paso hasta la entera revelación de salvación en el Nuevo Testamento. La salvación de los elegidos está basada en un pacto de redención que fue trazado en la eternidad entre Dios Padre e Hijo, y es únicamente a través de la gracia dada en este pacto que todos los descendientes del Adán caído, quienes han sido salvados, han obtenido vida e inmortalidad bendita, pues los términos de bendición que aplicaban a Adán en su estado de inocencia no son aplicables a su posteridad para hacerles aceptables ante Dios (Gn. 3:15; He. 1:1; 2 Ti. 1:9; Tit. 1:2; He. 11:6, 13; Ro. 4:1, 2; Hch. 4:12; Jn. 8:56).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap8">
+        <h2 class="capitulo-titulo">Capítulo 8</h2>
+    <h3 class="capitulo-tema">Cristo el Mediador</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Agradó a Dios en su propósito eterno, escoger y ordenar al Señor Jesucristo, su unigénito Hijo, de acuerdo al pacto en el cual habían entrado, para que fuese el mediador entre Dios y el hombre, como tal, él es profeta, sacerdote y rey, el salvador y cabeza de su Iglesia, el heredero de todas las cosas, y juez de todo el mundo; desde la eternidad le dio Dios un pueblo para que fuese su simiente y para que a su debido tiempo lo redimiera, llamara, justificara, santificara y glorificara (Is. 42:1; 1 P. 1:19, 20; Hch. 3:22; He. 5:5, 6; Sal. 2:6; Ef. 1:22, 23; He. 1:2; Hch. 17:31; Is. 53:10; Jn. 17:6; Ro. 8:30).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> El Hijo de Dios, la segunda persona de la Santa Trinidad, siendo verdadero y eterno Dios, la brillantez de la gloria de su Padre, igual y de una sustancia con Él, quien hizo el mundo y mantiene y gobierna todas las cosas que ha hecho, habiendo llegado la plenitud del tiempo, tomó sobre sí la naturaleza del hombre con todas sus propiedades esenciales y con sus debilidades comunes, mas sin pecado. Fue concebido por el Espíritu Santo en el vientre de la Virgen María, una mujer perteneciente a la tribu de Judá. El Espíritu Santo vino sobre ella y el poder de Dios la cubrió. Y así, según las Escrituras, fue hecho él de una mujer, descendiente de Abraham y David. Así que, dos naturalezas perfectas y distintas, se unieron inseparablemente en una persona, pero sin conversión, composición o confusión alguna. Esta persona es verdadero Dios y verdadero hombre, un Cristo, el único mediador entre Dios y el hombre (Jn. 1:14; Gá. 4:4; Ro. 8:3; He. 2:14, 16, 17; He. 4:15; Mt. 1:22, 23; Lc. 1:27, 31, 35; Ro. 9:5; 1 Ti. 2:5).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> El Señor Jesús, en su naturaleza humana unida así a la divina, en la persona del Hijo, fue ungido y santificado con el Espíritu Santo sobre toda medida, y posee todos los tesoros de la sabiduría y del conocimiento, pues agradó al Padre que en él habitase toda plenitud, a fin de que siendo santo, inocente, inmaculado, lleno de gracia y de verdad, fuese del todo apto para desempeñar los oficios de mediador y fiador. Cristo no tomó por sí mismo estos oficios, sino que fue llamado para ello por su Padre, quien puso en él todo juicio y poder, y le autorizó para que desempeñara tales oficios (Sal. 45:7; Hch. 10:38; Jn. 3:34; Col. 2:3; Col. 1:19; He. 7:26; Jn. 1:14; He. 7:22; He. 5:5; Jn. 5:22, 27; Mt. 28:18; Hch. 2:36).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> El Señor Jesús, con la mejor voluntad tomó para sí estos oficios, y para desempeñarlos, se puso bajo la ley, la que cumplió perfectamente. También sufrió el castigo que nos tocaba a nosotros y que debíamos haber sufrido, pues él llevó nuestros pecados y fue acusado en nuestro lugar. Padeció dolores en su alma más allá de nuestro entendimiento y los más grandes sufrimientos en su cuerpo: fue crucificado y murió, y permaneció bajo el poder de la muerte, aun cuando no vio corrupción. Al tercer día se levantó de entre los muertos con el mismo cuerpo que tenía cuando sufrió, con el cual también ascendió al cielo donde se sentó a la diestra del Padre. Allí intercede por su pueblo, y cuando sea el fin del mundo, volverá para juzgar a los hombres y a los ángeles (Sal. 40:7, 8; He. 10:5-10; Jn. 5:18; Gá. 4:4; Mt. 3:15; Gá. 3:13; Is. 53:6; 1 P. 3:18; 2 Co. 5:21; Mt. 26:37, 38; Lc. 22:44; Mt. 27:46; Hch. 13:37; 1 Co. 15:3, 4; Jn. 20:25, 27; Mr. 16:19; Hch. 1:9-11; Ro. 8:34; He. 9:24; Hch. 10:42; Ro. 14:9, 10; 2 P. 2:4).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> El Señor Jesucristo, por su perfecta obediencia y por el sacrificio de sí mismo que ofreció una sola vez por el Espíritu eterno de Dios, ha satisfecho plenamente a la justicia de Dios. Él ha efectuado la reconciliación y ha comprado una herencia eterna en el reino de los cielos para todos aquellos dados a él por el Padre (He. 9:14; He. 10:14; Ro. 3:25, 26; Jn. 17:2; He. 9:15).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> Aun cuando el precio de la redención no fue actualmente pagado sino hasta la encarnación, sin embargo, la virtud, la eficacia y los beneficios de ella, se comunicaban a los escogidos en todas las épocas transcurridas desde el principio, en las promesas, tipos y sacrificios, y por medio de estas cosas, por las cuales Cristo fue revelado y designado como la simiente que quebrantaría la cabeza de la serpiente, y como el cordero inmolado desde la fundación del mundo; siendo él, el mismo ayer, hoy y por siempre (1 Co. 10:4; He. 4:2; 1 P. 1:10, 11; Ap. 13:8; He. 13:8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> Cristo en su oficio de mediador, obra conforme a sus dos naturalezas, haciendo por cada una de éstas lo que es propio de cada una de ellas; mas por razón de la unidad de la persona, lo que es propio de una naturaleza, se le atribuye algunas veces en la Escritura a la persona denominada por la otra naturaleza (Jn. 3:13; Hch. 20:28).</p>
+
+    <p class="parrafo"><span class="num-parrafo">8.</span> A todos aquellos para quienes Cristo ha obtenido eterna redención, cierta y eficazmente les aplica y comunica la misma, haciendo intercesión por ellos, uniéndoles a él por su Espíritu, revelándoles en la palabra y por medio de ella el misterio de la salvación, persuadiéndoles eficazmente a creer y a obedecer, gobernando el corazón de ellos por su palabra y Espíritu, y venciendo a todos sus enemigos por su gran poder y sabiduría, y de la manera y por los caminos que están más en conformidad con su maravillosa e inescrutable dispensación. Todas estas cosas son hechas en su libre y soberana gracia e incondicionalmente, ya que nada de mérito es previsto por él en sus elegidos (Jn. 6:37; Jn. 10:15, 16; Jn. 17:9; Ro. 5:10; Jn. 17:6; Ef. 1:9; 1 Jn. 5:20; Ro. 8:9, 14; Sal. 110:1; 1 Co. 15:25, 26; Jn. 3:8; Ef. 1:8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">9.</span> Cristo, y solo Cristo puede ser mediador entre Dios y los hombres. Él es el profeta, sacerdote y rey de la Iglesia de Dios. Su oficio de mediador no puede ser transferido a ningún otro.</p>
+
+    <p class="parrafo"><span class="num-parrafo">10.</span> El triple oficio de Cristo es necesario para nosotros. Por nuestra ignorancia estamos en necesidad de su oficio profético; por nuestra separación de Dios y la imperfección de nuestros servicios, aun cuando sean lo mejor, necesitamos su oficio sacerdotal para reconciliarnos con Dios y hacernos aceptables a él; y debido a que nosotros hemos dado la espalda a Dios y estamos completamente incapacitados para volver a él y también porque necesitamos ser rescatados y asegurados de nuestros adversarios espirituales, necesitamos su oficio como rey para convencer, controlar, atraer, sostener, librar y preservarnos hasta que finalmente entremos en su reino celestial (Jn. 1:18; Col. 1:21; Gá. 5:17; Jn. 16:8; Sal. 110:3; Lc. 1:74, 75).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap9">
+        <h2 class="capitulo-titulo">Capítulo 9</h2>
+    <h3 class="capitulo-tema">El Libre Albedrío</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Dios ha dotado la voluntad del hombre de una libertad natural y un poder para actuar a base de decisión propia, que no es forzada ni obligada a hacer bien o mal, por ninguna necesidad de la naturaleza (Mt. 17:12; Stg. 1:14; Dt. 30:19).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> El hombre en su estado de inocencia, tenía libertad y poder para querer y hacer lo que era bueno y agradable a Dios, pero era mutable y podía caer de dicho estado (Ec. 7:29; Gn. 3:6).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> El hombre, por su caída a un estado de pecado, perdió completamente toda capacidad para querer algún bien espiritual que acompañe a la salvación. Así es que como hombre natural que está enteramente opuesto a ese bien y muerto en el pecado no puede por su propia fuerza convertirse a sí mismo o prepararse para ello (Ro. 5:6; 8:7; Ef. 2:1, 5; Tit. 3:3-5; Jn. 6:44).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Cuando Dios convierte a un pecador y le pone en el estado de gracia, le libra de su estado de servidumbre natural bajo el pecado, y por su gracia solamente lo capacita para querer y obrar libremente lo que es bueno en lo espiritual; sin embargo, por razón de la corrupción que aún queda, el converso no quiere ni perfecta ni únicamente lo que es bueno, sino también lo que es malo (Col. 1:13; Jn. 8:36; Fil. 2:13; Ro. 7:15, 18, 19, 21, 23).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> El libre albedrío del hombre será perfecto e inmutablemente libre para querer tan sólo lo que es bueno, únicamente en el estado de la gloria (Ef. 4:13).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap10">
+        <h2 class="capitulo-titulo">Capítulo 10</h2>
+    <h3 class="capitulo-tema">El Llamamiento Eficaz</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> A aquellos a quienes Dios ha predestinado para vida, le agrada en su tiempo señalado y aceptado, llamar eficazmente por su palabra y Espíritu, sacándolos del estado de pecado y muerte en que se hallaban por naturaleza para darles vida y salvación por Jesucristo. Esto lo hace iluminando espiritualmente su entendimiento, a fin de que comprendan las cosas de Dios; quitándoles el corazón de piedra y dándoles uno de carne, renovando sus voluntades y por su poder soberano determinándoles a hacer aquello que es bueno, y llevándoles eficazmente a Jesucristo; de tal manera que ellos vienen con absoluta libertad, habiendo recibido por la gracia de Dios la voluntad de hacerlo (Ro. 8:30; 11:7; Ef. 1:10, 11; 2 Ts. 2:13, 14; Ef. 2:1-6; Hch. 26:18; Ef. 1:17, 18; Ez. 36:26; Dt. 30:6; Ez. 36:27; Ef. 1:19; Sal. 110:3; Cnt. 1:4).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Este llamamiento eficaz depende de la libre y especial gracia de Dios y de ninguna manera de alguna cosa prevista en el hombre, el cual es en esto enteramente pasivo, hasta que siendo vivificado y renovado por el Espíritu Santo, adquiere la capacidad de responder a este llamamiento y de recibir la gracia ofrecida y trasmitida en él. Esto sucede por el mismo poder que obró la resurrección de Cristo de los muertos (2 Ti. 1:9; Ef. 2:8; 1 Co. 2:14; Ef. 2:5; Jn. 5:25; Ef. 1:19, 20).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Los niños elegidos que mueren en la infancia, son regenerados y salvados en Cristo por medio del Espíritu, quien obra cuándo, dónde y cómo quiere. Lo mismo sucederá con todas las personas elegidas que sean incapaces de ser llamadas externamente por el ministerio de la palabra (Jn. 3:3, 5, 6, 8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Otras personas no elegidas, aun cuando sean llamadas por el ministerio de la palabra y tengan algunas de las operaciones comunes del Espíritu, como no son efectivamente traídos por el Padre, no pueden ni quieren venir verdaderamente a Cristo, y por lo mismo no pueden ser salvas; mucho menos pueden los que no reciben la religión cristiana, salvarse de alguna otra manera, aun cuando sean diligentes en ajustar sus vidas a la luz de la naturaleza y a la ley de la religión que profesan (Mt. 22:14; Mt. 13:20, 21; He. 6:4, 5; Jn. 6:44, 45, 65; Hch. 4:12; Jn. 4:22; 17:3).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap11">
+        <h2 class="capitulo-titulo">Capítulo 11</h2>
+    <h3 class="capitulo-tema">De la Justificación</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> A quienes Dios llama eficazmente, también justifica gratuitamente, no infundiendo justicia en ellos sino perdonándoles sus pecados, y contando y aceptando sus personas como justas; no por nada obrado en ellos o hecho por ellos, sino solamente por causa de Cristo; no imputándoles la fe misma, ni la acción de creer, ni ninguna otra obediencia evangélica como justicia; sino imputándoles la obediencia activa de Cristo a toda la ley y su obediencia pasiva en su muerte para la completa y única justicia de ellos por la fe, la cual tienen no de sí mismos; es don de Dios (Ro. 3:24; 8:30; Ro. 4:5-8; Ef. 1:7; 1 Co. 1:30, 31; Ro. 5:17-19; Fil. 3:9; Ef. 2:7, 8; 2 Co. 5:19-21; Tit. 3:5, 7; Ro. 3:22-28; Jer. 23:6; Hch. 13:38, 39).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> La fe que así recibe a Cristo y descansa en Él y en su justicia es el único instrumento de la justificación; sin embargo, no está sola en la persona justificada, sino que siempre va acompañada por todas las demás virtudes salvadoras, y no es una fe muerta sino que obra por el amor (Ro. 1:17; 3:27-31; Fil. 3:9; Gá. 3:5; Gá. 5:6; Stg. 2:17, 22, 26).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Cristo, por su obediencia y muerte, saldó totalmente la deuda de todos aquellos que son justificados; y por el sacrificio de sí mismo en la sangre de su cruz, sufriendo en el lugar de ellos el castigo que merecían, hizo una satisfacción adecuada, real y completa a la justicia de Dios en favor de ellos; sin embargo, por cuanto Cristo fue dado por el Padre para ellos, y su obediencia y satisfacción fueron aceptadas en lugar de las de ellos, y ambas gratuitamente y no por nada en ellos, su justificación es solamente de pura gracia, a fin de que tanto la precisa justicia como la rica gracia de Dios fueran glorificadas en la justificación de los pecadores (Ro. 5:8-10, 19; 1 Ti. 2:5, 6; He. 10:10, 14; Is. 53:4-6, 10-12; Ro. 8:32; 2 Co. 5:21; Mt. 3:17; Ef. 5:2; Ro. 3:24, 26; Ef. 1:7; 2:7).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Desde la eternidad, Dios decretó justificar a todos los elegidos; y en el cumplimiento del tiempo, Cristo murió por los pecados de ellos, y resucitó para su justificación; sin embargo, no son justificados personalmente hasta que, a su debido tiempo, Cristo les es realmente aplicado por el Espíritu Santo (1 P. 1:2, 19, 20; Gá. 3:8; Ro. 8:30; Ro. 4:25; Gá. 4:4; 1 Ti. 2:6; Col. 1:21, 22; Tit. 3:4-7; Gá. 2:16; Ef. 2:1-3).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> Dios continúa perdonando los pecados de aquellos que son justificados, y aunque ellos nunca pueden caer del estado de justificación, sin embargo pueden, por sus pecados, caer en el desagrado paternal de Dios; y, en esa condición, no suelen tener la luz de su rostro restaurada sobre ellos, hasta que se humillen, confiesen sus pecados, pidan perdón y renueven su fe y arrepentimiento (Mt. 6:12; 1 Jn. 1:7-2:2; Jn. 13:3-11; Lc. 22:32; Jn. 10:28; He. 10:14; Sal. 32:5; 51:7-12; Mt. 26:75).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> La justificación de los creyentes bajo el Antiguo Testamento fue, en todos estos sentidos, una y la misma que la justificación de los creyentes bajo el Nuevo Testamento (Gá. 3:9; Ro. 4:22-24).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap12">
+        <h2 class="capitulo-titulo">Capítulo 12</h2>
+    <h3 class="capitulo-tema">De la Adopción</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> A todos aquellos que son justificados, Dios se dignó, en su único Hijo Jesucristo y por amor de éste, hacerles partícipes de la gracia de la adopción, por la cual son incluidos en el número de los hijos de Dios y gozan de sus libertades y privilegios, tienen su nombre escrito sobre ellos, reciben el espíritu de adopción, tienen acceso al trono de la gracia con confianza, se les capacita para clamar: "Abba, Padre", se les compadece, protege, provee y corrige como por un Padre, pero nunca se les desecha, sino que son sellados para el día de la redención, y heredan las promesas como herederos de la salvación eterna (Gá. 3:24-26; 1 Jn. 3:1-3; Ef. 1:5; Gá. 4:4, 5; Ro. 8:17, 29; Jn. 1:12; 2 Co. 6:18; Ap. 3:12; Ro. 8:15; Ef. 3:12; Ro. 5:2; Gá. 4:6; Ef. 2:18; Sal. 103:13; Pr. 14:26; Mt. 6:30, 32; 1 P. 5:7; He. 12:6; Is. 54:8, 9; Lm. 3:31; Ef. 4:30; He. 1:14; 9:15).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap13">
+        <h2 class="capitulo-titulo">Capítulo 13</h2>
+    <h3 class="capitulo-tema">De la Santificación</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Aquellos que son unidos a Cristo, llamados eficazmente y regenerados, teniendo un nuevo corazón y un nuevo espíritu creados en ellos en virtud de la muerte y la resurrección de Cristo, son aún más santificados de un modo real y personal, mediante la misma virtud, por su Palabra y Espíritu que moran en ellos; el dominio del cuerpo entero del pecado es destruido, y las diversas concupiscencias del mismo son debilitadas y mortificadas más y más, y ellos son más y más vivificados y fortalecidos en todas las virtudes salvadoras, para la práctica de toda verdadera santidad, sin la cual nadie verá al Señor (Jn. 3:3-8; 1 Jn. 2:29; 3:9, 10; Ro. 1:7; 2 Co. 1:1; Ef. 1:1; Fil. 1:1; Col. 3:12; Hch. 20:32; 26:18; Ro. 15:16; 1 Co. 1:2; 6:11; Ro. 6:1-11; 1 Ts. 5:23; Ro. 6:19, 22; Fil. 3:10; Jn. 17:17; Ef. 5:26; Ro. 8:13; Gá. 5:24; Col. 1:11; 2 Co. 7:1; Ef. 4:22-25; He. 12:14).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Esta santificación se efectúa en todo el hombre, aunque es incompleta en esta vida; todavía quedan algunos remanentes de corrupción en todas partes, de donde surge una continua e irreconciliable guerra: la carne lucha contra el Espíritu, y el Espíritu contra la carne (1 Ts. 5:23; 1 Jn. 1:8, 10; Ro. 7:18, 23; Fil. 3:12; 1 Co. 9:24-27; 1 Ti. 1:18; 6:12; 2 Ti. 4:7; Gá. 5:17; 1 P. 2:11).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> En dicha guerra, aunque la corrupción que aún queda prevalezca mucho por algún tiempo, la parte regenerada triunfa a través de la continua provisión de fuerzas por parte del Espíritu santificador de Cristo; y así los santos crecen en la gracia, perfeccionando la santidad en el temor de Dios, prosiguiendo una vida celestial, en obediencia evangélica a todos los mandatos que Cristo, como Cabeza y Rey, les ha prescrito en su Palabra (Ro. 7:23; Ro. 6:14; 1 Jn. 5:4; Ef. 4:15, 16; 2 P. 3:18; 2 Co. 7:1; 3:18; Mt. 28:20).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap14">
+        <h2 class="capitulo-titulo">Capítulo 14</h2>
+    <h3 class="capitulo-tema">De la Fe Salvadora</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> La gracia de la fe, por la cual se capacita a los elegidos para creer para la salvación de sus almas, es la obra del Espíritu de Cristo en sus corazones, y ordinariamente se realiza por el ministerio de la Palabra; por la cual, y por la administración del bautismo y la Cena del Señor, la oración y otros medios designados por Dios, esa fe aumenta y se fortalece (Jn. 6:37, 44; Hch. 11:21, 24; 13:48; 14:27; 15:9; 2 Co. 4:13; Ef. 2:8; Fil. 1:29; 2 Ts. 2:13; 1 P. 1:2; Ro. 10:14, 17; Lc. 17:5; Hch. 20:32; Ro. 4:11; 1 P. 2:2).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Por esta fe, el cristiano cree que es verdadero todo lo revelado en la Palabra por la autoridad de Dios mismo, y también percibe en ella una excelencia superior a todos los demás escritos y todas las cosas en el mundo, pues muestra la gloria de Dios en sus atributos, la excelencia de Cristo en su naturaleza y oficios, y el poder y la plenitud del Espíritu Santo en sus obras y operaciones; y de esta forma, el cristiano es capacitado para confiar su alma a la verdad así creída; y también actúa de manera diferente según sea el contenido de cada pasaje en particular: produciendo obediencia a los mandatos, temblando ante las amenazas, y abrazando las promesas de Dios para esta vida y para la venidera; pero las principales acciones de la fe salvadora tienen que ver directamente con Cristo: aceptarle, recibirle y descansar sólo en Él para la justificación, santificación y vida eterna, en virtud del pacto de gracia (Hch. 24:14; 1 Ts. 2:13; Sal. 19:7-10; 119:72; Jn. 15:14; Ro. 16:26; Is. 66:2; 1 Ti. 4:8; He. 11:13; Jn. 1:12; Hch. 15:11; 16:31; Gá. 2:20).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Esta fe, aunque sea diferente en grados y pueda ser débil o fuerte, es, sin embargo, aun en su grado mínimo, diferente en su clase y naturaleza (como lo es toda otra gracia salvadora) de la fe y la gracia común de aquellos creyentes que sólo lo son por un tiempo; y consecuentemente, aunque muchas veces sea atacada y debilitada, resulta, sin embargo, victoriosa, creciendo en muchos hasta obtener la completa seguridad a través de Cristo, quien es tanto el autor como el consumador de nuestra fe (Mt. 6:30; 8:10, 26; 14:31; 16:8; 17:20; He. 5:13, 14; Ro. 4:19, 20; Stg. 2:14; 2 P. 1:1; 1 Jn. 5:4, 5; Lc. 22:31, 32; Ef. 6:16; Sal. 119:114; He. 6:11, 12; 10:22, 23; He. 12:2).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap15">
+        <h2 class="capitulo-titulo">Capítulo 15</h2>
+    <h3 class="capitulo-tema">Del Arrepentimiento para Vida y Salvación</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> A aquellos de los elegidos que se convierten en la madurez, habiendo vivido por algún tiempo en el estado natural, y habiendo servido en el mismo a diversas concupiscencias y placeres, Dios, al llamarlos eficazmente, les da arrepentimiento para vida (Tit. 3:2-5; 2 Cr. 33:10-20; Hch. 9:1-19; 16:29, 30).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Si bien no hay nadie que haga el bien y no peque, y los mejores hombres, mediante el poder y el engaño de la corrupción que habita en ellos, junto con el predominio de la tentación, pueden caer en grandes pecados y provocaciones, Dios, en el pacto de gracia, ha provisto misericordiosamente que los creyentes que pequen y caigan de esta manera sean renovados mediante el arrepentimiento para salvación (Sal. 130:3; 143:2; Pr. 20:9; Ec. 7:20; 2 S. 11:1-27; Lc. 22:54-62; Jer. 32:40; Lc. 22:31, 32; 1 Jn. 1:9).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Este arrepentimiento para salvación es una gracia evangélica por la cual una persona a quien el Espíritu hace consciente de las múltiples maldades de su pecado, mediante la fe en Cristo se humilla por él con una tristeza que es según Dios, abominación de él y aborrecimiento de sí mismo, orando por el perdón y las fuerzas que proceden de la gracia, con el propósito y empeño, mediante la provisión del Espíritu, de andar delante de Dios para agradarle en todo (Hch. 5:31; 11:18; 2 Ti. 2:25; Sal. 51:1-6; 130:1-4; Lc. 15:17-20; Hch. 2:37, 38; Mr. 1:15; Ez. 16:60-63; 36:31, 32; Zc. 12:10; 2 Co. 7:10, 11; 1 Ts. 1:9; Pr. 28:13; Sal. 119:59, 104, 128).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Puesto que el arrepentimiento ha de continuar a lo largo de toda nuestra vida, debido al cuerpo de muerte y sus inclinaciones, es por tanto el deber de cada hombre arrepentirse específicamente de los pecados concretos que conozca (Ez. 16:60; Mt. 5:4; 1 Jn. 1:9; Lc. 19:8; 1 Ti. 1:13, 15).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> Tal es la provisión que Dios ha hecho a través de Cristo en el pacto de gracia para la preservación de los creyentes para salvación que, si bien no hay pecado tan pequeño que no merezca la condenación, no hay, sin embargo, pecado tan grande que acarree condenación a aquellos que se arrepienten, lo cual hace necesaria la predicación constante del arrepentimiento (Sal. 130:3; 143:2; Ro. 6:23; Is. 1:16-18; 55:7; Hch. 2:36-38).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap16">
+        <h2 class="capitulo-titulo">Capítulo 16</h2>
+    <h3 class="capitulo-tema">De las Buenas Obras</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Las buenas obras son solamente aquellas que Dios ha ordenado en su santa Palabra y no las que, sin la autoridad de ésta, han inventado los hombres por un fervor ciego o con cualquier pretexto de buenas intenciones (Mi. 6:8; Ro. 12:2; He. 13:21; Col. 2:3; 2 Ti. 3:16, 17; Mt. 15:9; Is. 29:13; 1 P. 1:18; Ro. 10:2; Jn. 16:2; 1 S. 15:21-23; 1 Co. 7:23; Gá. 5:1; Col. 2:8, 18-23).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Estas buenas obras, hechas en obediencia a los mandamientos de Dios, son los frutos y evidencias de una fe verdadera y viva; y por ellas los creyentes manifiestan su gratitud, fortalecen su seguridad, edifican a sus hermanos, adornan la profesión del evangelio, tapan la boca de los adversarios, y glorifican a Dios, cuya hechura son, creados en Cristo Jesús para ello, para que teniendo por fruto la santificación, tengan como fin la vida eterna (Stg. 2:18, 22; Gá. 5:6; 1 Ti. 1:5; Sal. 116:12-14; 1 P. 2:9, 12; Lc. 7:36-50; Mt. 26:1-11; 1 Jn. 2:3, 5; 3:18, 19; 2 P. 1:5-11; 2 Co. 9:2; Mt. 5:16; Tit. 2:5, 9-12; 1 Ti. 6:1; Ef. 2:10; Fil. 1:11; Ro. 6:22; Mt. 7:13, 14, 21-23).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> La capacidad que tienen los creyentes para hacer buenas obras no es de ellos mismos en ninguna manera, sino completamente del Espíritu de Cristo. Y para que ellos puedan tener esta capacidad, además de las virtudes que ya han recibido, se necesita una influencia efectiva del mismo Espíritu Santo para obrar en ellos tanto el querer como el hacer por su buena voluntad; sin embargo, no deben volverse negligentes por ello, como si no estuviesen obligados a cumplir deber alguno aparte de un impulso especial del Espíritu, sino que deben ser diligentes en avivar la gracia de Dios que está en ellos (Ez. 36:26, 27; Jn. 15:4-6; 2 Co. 3:5; Fil. 2:12, 13; Ef. 2:10; Ro. 8:14; Jn. 3:8; 2 P. 1:10; He. 6:12; 2 Ti. 1:6; Jud. 20, 21).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Quienes alcancen el mayor grado de obediencia posible en esta vida quedan tan lejos de llegar a un grado supererogatorio, y de hacer más de lo que Dios requiere, que les falta mucho de lo que por deber están obligados a hacer (1 R. 8:46; 2 Cr. 6:36; Sal. 130:3; 143:2; Pr. 20:9; Ec. 7:20; Ro. 3:9, 23; 7:14ss; Gá. 5:17; 1 Jn. 1:6-10; Lc. 17:10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> Nosotros no podemos, por nuestras mejores obras, merecer el perdón del pecado o la vida eterna de la mano de Dios, a causa de la gran desproporción que existe entre nuestras obras y la gloria que ha de venir, y por la distancia infinita que hay entre nosotros y Dios, a quien no podemos beneficiar por dichas obras, ni satisfacer la deuda de nuestros pecados anteriores; pero cuando hemos hecho todo lo que podemos, no hemos sino cumplido con nuestro deber y somos siervos inútiles; y tanto en cuanto son buenas proceden de su Espíritu; y en cuanto son hechas por nosotros, son impuras y están mezcladas con tanta debilidad e imperfección que no pueden soportar la severidad del castigo de Dios (Ro. 8:18; Job 22:3; 35:7; Lc. 17:10; Ro. 4:3; 11:3; Gá. 5:22, 23; 1 R. 8:46; Sal. 130:3; Ro. 3:9, 23; Gá. 5:17; 1 Jn. 1:6-10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> No obstante, por ser aceptadas las personas de los creyentes por medio de Cristo, sus buenas obras también son aceptadas en Él; no como si fueran en esta vida enteramente irreprochables e irreprensibles a los ojos de Dios; sino que a Él, mirándolas en su Hijo, le place aceptar y recompensar aquello que es sincero aun cuando esté acompañado de muchas debilidades e imperfecciones (Éx. 28:38; Ef. 1:6, 7; 1 P. 2:5; He. 6:10; Mt. 25:21, 23).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> Las obras hechas por hombres no regenerados, aunque en sí mismas sean cosas que Dios ordena, y de utilidad tanto para ellos como para otros, sin embargo, por no proceder de un corazón purificado por la fe y no ser hechas de una manera correcta de acuerdo con la Palabra, ni para un fin correcto (la gloria de Dios), son, por tanto, pecaminosas, y no pueden agradar a Dios ni hacer a un hombre digno de recibir gracia por parte de Dios. Y a pesar de esto, el hecho de que descuiden las buenas obras es más pecaminoso y desagradable a Dios (1 R. 21:27-29; 2 R. 10:30, 31; Ro. 2:14; Fil. 1:15-18; He. 11:6; 1 Ti. 1:5; Ro. 14:23; Gá. 5:6; 1 Co. 13:3; Is. 1:12; Mt. 6:2, 5, 6; 1 Co. 10:31; Ro. 9:16; Tit. 1:15; 3:5; Sal. 14:4; 36:3).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap17">
+        <h2 class="capitulo-titulo">Capítulo 17</h2>
+    <h3 class="capitulo-tema">De la Perseverancia de los Santos</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Aquellos a quienes Dios ha aceptado en el Amado, y ha llamado eficazmente y santificado por su Espíritu, y a quienes ha dado la preciosa fe de sus elegidos, no pueden caer ni total ni definitivamente del estado de gracia, sino que ciertamente perseverarán en él hasta el fin, y serán salvos por toda la eternidad, puesto que los dones y el llamamiento de Dios son irrevocables, por lo que Él continúa engendrando y nutriendo en ellos la <em>fe</em>, el arrepentimiento, el amor, el gozo, la esperanza y todas las virtudes del Espíritu para inmortalidad; y aunque surjan y les azoten muchas tormentas e inundaciones, nunca podrán, sin embargo, arrancarles del fundamento y la roca a que por la fe están aferrados; a pesar de que, por medio de la incredulidad y las tentaciones de Satanás, la visión perceptible de la luz y el amor de Dios puede nublárseles y oscurecérseles por un tiempo, Él, sin embargo, es aún el mismo, y ellos serán guardados, sin duda alguna, por el poder de Dios para salvación, en la que gozarán de su posesión adquirida, al estar ellos esculpidos en las palmas de sus manos y sus nombres escritos en el libro de la vida desde toda la eternidad (Jn. 10:28, 29; Fil. 1:6; 2 Ti. 2:19; 2 P. 1:5-10; 1 Jn. 2:19; Sal. 89:31, 32; 1 Co. 11:32; 2 Ti. 4:7; Sal. 102:27; Mal. 3:6; Ef. 1:14; 1 P. 1:5; Ap. 13:8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Esta perseverancia de los santos depende no de su propio libre albedrío, sino de la inmutabilidad del decreto de elección, que fluye del amor libre e inmutable de Dios el Padre, sobre la base de la eficacia de los méritos y la intercesión de Jesucristo y la unión con Él, del juramento de Dios, de la morada de su Espíritu, de la simiente de Dios que está en los santos, y de la naturaleza del pacto de gracia, de todo lo cual surgen también la certeza y la infalibilidad de la perseverancia (Fil. 2:12, 13; Ro. 9:16; Jn. 6:37, 44; Mt. 24:22, 24, 31; Ro. 8:30; 9:11, 16; 11:2, 29; Ef. 1:4-11; Ro. 5:9, 10; 8:31-38; 2 Co. 5:14; 1 Co. 1:8, 9; Jn. 14:19; 10:28, 29; He. 6:1-20; 1 Jn. 2:19, 20, 27; 3:9; 5:4, 18; Ef. 1:13; 4:30; 2 Co. 1:22; 5:5; Jer. 31:33, 34; 32:40; He. 10:11-18; 13:20, 21).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Y aunque los santos (mediante la tentación de Satanás y del mundo, el predominio de la corrupción que queda en ellos y el descuido de los medios para su preservación) caigan en pecados graves y por algún tiempo permanezcan en ellos (por lo que incurren en el desagrado de Dios y entristecen a su Espíritu Santo, se les dañan sus virtudes y consuelos, se les endurece el corazón y se les hiere la conciencia, lastiman y escandalizan a otros y se acarrean juicios temporales), sin embargo, renovarán su arrepentimiento y serán preservados hasta el fin mediante la fe en Cristo Jesús (Mt. 26:70, 72, 74; Sal. 38:1-8; Is. 64:5-9; Ef. 4:30; 1 Ts. 5:14; Sal. 51:1-12; 32:3, 4; 73:21, 22; 2 S. 12:14; 1 Co. 8:9-13; Ro. 14:13-18; 1 Ti. 6:1, 2; Tit. 2:5; 1 Co. 11:27-32; Lc. 22:32, 61, 62; 1 Jn. 3:9; 5:18).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap18">
+        <h2 class="capitulo-titulo">Capítulo 18</h2>
+    <h3 class="capitulo-tema">De la Seguridad de la Gracia y de la Salvación</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Aunque los creyentes que lo son por un tiempo y otras personas no regeneradas vanamente se engañen a sí mismos con esperanzas falsas y presunciones carnales de hallarse en el favor de Dios y en estado de salvación (pero la esperanza de ellos perecerá), sin embargo, los que creen verdaderamente en el Señor Jesús y le aman con sinceridad, esforzándose por andar con toda buena conciencia delante de Él, pueden en esta vida estar absolutamente seguros de hallarse en el estado de gracia, y pueden regocijarse en la esperanza de la gloria de Dios; y tal esperanza nunca les avergonzará (Jer. 17:9; Mt. 7:21-23; Lc. 18:10-14; Jn. 8:41; Ef. 5:6, 7; Gá. 6:3, 7-9; Ro. 5:2, 5; 8:16; 1 Jn. 2:3; 3:14, 18, 19, 24; 5:13; 2 P. 1:10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Esta certeza no es una mera persuasión conjetural y probable, fundada en una esperanza falible, sino que es una seguridad infalible de fe basada en la sangre y la justicia de Cristo reveladas en el evangelio; y también en la evidencia interna de aquellas virtudes del Espíritu a las cuales se les hacen promesas, y en el testimonio del Espíritu de adopción testificando con nuestro espíritu que somos hijos de Dios; y, como fruto suyo, mantiene el corazón humilde y santo (Ro. 5:2, 5; He. 6:11, 19, 20; 1 Jn. 3:2, 14; 4:16; 5:13, 19, 20; He. 6:17, 18; 7:22; 10:14, 19; Mt. 3:7-10; Mr. 1:15; 2 P. 1:4-11; 1 Jn. 2:3; Ro. 8:15, 16; 1 Co. 2:12; Gá. 4:6, 7; 1 Jn. 3:1-3).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Esta seguridad infalible no pertenece a la esencia de la fe hasta tal punto que un verdadero creyente no pueda esperar mucho tiempo y luchar con muchas dificultades antes de ser partícipe de tal seguridad; sin embargo, siendo capacitado por el Espíritu para conocer las cosas que le son dadas gratuitamente por Dios, puede alcanzarla, sin una revelación extraordinaria, por el uso adecuado de los medios; y por eso es el deber de cada uno ser diligente para hacer firme su llamamiento y elección; para que así su corazón se ensanche en la paz y en el gozo en el Espíritu Santo, en amor y gratitud a Dios, y en fuerza y alegría en los deberes de la obediencia, que son los frutos propios de esta seguridad: así está de lejos esta seguridad de inducir a los hombres a la disolución (Hch. 16:30-34; 1 Jn. 5:13; Ro. 8:15, 16; 1 Co. 2:12; Gá. 4:4-6; 1 Jn. 4:13; Ef. 3:17-19; He. 6:11, 12; 2 P. 1:5-11; Sal. 119:32; Ro. 15:13; Neh. 8:10; 1 Jn. 4:16, 19; Ro. 6:1, 2, 11-13; 14:17; Tit. 2:11-14; Ef. 5:18).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> La seguridad de la salvación de los verdaderos creyentes puede ser, de diversas maneras, zarandeada, disminuida e interrumpida; como por la negligencia en conservarla, por caer en algún pecado especial que hiera la conciencia y contriste al Espíritu, por alguna tentación repentina o vehemente, por retirarles Dios la luz de su rostro, permitiendo, aun a los que le temen, que caminen en tinieblas, y no tengan luz; sin embargo, nunca quedan destituidos de la simiente de Dios, y de la vida de fe, de aquel amor de Cristo y de los hermanos, de aquella sinceridad de corazón y conciencia del deber, por los cuales, mediante la operación del Espíritu, esta seguridad puede ser revivida con el tiempo; y por los cuales, mientras tanto, los verdaderos creyentes son preservados de caer en total desesperación (He. 6:11, 12; 2 P. 1:5-11; Sal. 51:8, 12, 14; Ef. 4:30; Sal. 30:7; 31:22; 77:7, 8; 116:11; Is. 50:10; 1 Jn. 3:9; Lc. 22:32; Ro. 8:15, 16; Gá. 4:5; Sal. 42:5, 11).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap19">
+        <h2 class="capitulo-titulo">Capítulo 19</h2>
+    <h3 class="capitulo-tema">De la Ley de Dios</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Dios dio a Adán una ley de obediencia universal escrita en su corazón, y un precepto en particular de no comer del fruto del árbol del conocimiento del bien y del mal; por lo cual le obligó a él y a toda su posteridad a una obediencia personal completa, exacta y perpetua; prometió la vida por su cumplimiento de la ley, y amenazó con la muerte su infracción; y le dotó también del poder y la capacidad para guardarla (Gn. 1:27; Ec. 7:29; Ro. 2:12, 14, 15; Gn. 2:16, 17; Ro. 10:5; Gá. 3:10, 12).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> La misma ley que primeramente fue escrita en el corazón del hombre continuó siendo una regla perfecta de justicia después de la Caída; y fue dada por Dios en el monte Sinaí, en diez mandamientos, y escrita en dos tablas; los cuatro primeros mandamientos contienen nuestros deberes para con Dios, y los otros seis, nuestros deberes para con los hombres (Ro. 2:12, 14, 15; Éx. 32:15, 16; 34:4, 28; Dt. 10:4; Gn. 2:3; 4:3-15; 37:10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Además de esta ley, comúnmente llamada ley moral, agradó a Dios dar al pueblo de Israel leyes ceremoniales que contenían varias ordenanzas típicas; en parte de adoración, prefigurando a Cristo, sus virtudes, acciones, sufrimientos y beneficios; y en parte proponiendo diversas instrucciones sobre los deberes morales. Todas aquellas leyes ceremoniales, habiendo sido prescritas solamente hasta el tiempo de reformar las cosas, han sido abrogadas y quitadas por Jesucristo, el verdadero Mesías y único legislador, quien fue investido con poder por parte del Padre para ese fin (He. 10:1; Col. 2:16, 17; 1 Co. 5:7; 2 Co. 6:17; Jud. 23; Col. 2:14; Ef. 2:14-16).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Dios también les dio a los israelitas diversas leyes civiles, que expiraron juntamente con el Estado de aquel pueblo, no obligando ahora a ningún otro en virtud de aquella institución; solamente sus principios de equidad son utilizables en la actualidad (Lc. 21:20-24; Hch. 6:13, 14; He. 9:18, 19; 1 Co. 5:1; 9:8-10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> La ley moral obliga para siempre a todos, tanto a los justificados como a los demás, a que se la obedezca; y esto no sólo en consideración a su contenido, sino también con respecto a la autoridad de Dios, el Creador, quien la dio. Tampoco Cristo, en el evangelio, en ninguna manera cancela esta obligación sino que la refuerza considerablemente (Mt. 19:16-22; Ro. 2:14, 15; 3:19, 20; 6:14; 7:6; 8:3; 1 Ti. 1:8-11; Ro. 13:8-10; 1 Co. 7:19; Gá. 5:6; Ef. 4:25-6:4; Stg. 2:8, 10-12; Mt. 5:17-19; Ro. 3:31; 1 Co. 9:21).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> Aunque los verdaderos creyentes no están bajo la ley como pacto de obras para ser por ella justificados o condenados, sin embargo ésta es de gran utilidad tanto para ellos como para otros, en que como regla de vida les informa de la voluntad de Dios y de sus deberes, les dirige y obliga a andar en conformidad con ella, les revela también la pecaminosa contaminación de sus naturalezas, corazones y vidas; de tal manera que, al examinarse a la luz de ella, puedan llegar a una convicción más profunda de su pecado, a sentir humillación por él y odio contra él; junto con una visión más clara de la necesidad que tienen de Cristo, y de la perfección de su obediencia. También la ley moral es útil para los regenerados a fin de restringir su corrupción, en cuanto que prohíbe el pecado; y sus amenazas sirven para mostrar lo que aun sus pecados merecen, y qué aflicciones pueden esperar por ellos en esta vida, aun cuando estén libres de la maldición y el puro rigor de la ley. Asimismo sus promesas manifiestan a los regenerados que Dios aprueba la obediencia y cuáles son las bendiciones que pueden esperar por el cumplimiento de la misma, aunque no como si la ley se lo debiera como pacto de obras; de manera que si alguien hace lo bueno y se abstiene de hacer lo malo porque la ley le manda lo uno y le prohíbe lo otro, no por ello se demuestra que esté bajo la ley y no bajo la gracia.</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap20">
+        <h2 class="capitulo-titulo">Capítulo 20</h2>
+    <h3 class="capitulo-tema">Del Evangelio y del Alcance de su Gracia</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Habiendo sido quebrantado el pacto de obras por el pecado y habiéndose vuelto inútil para dar vida, agradó a Dios dar la promesa de Cristo, la simiente de la mujer, como el medio para llamar a los elegidos, y engendrar en ellos la fe y el arrepentimiento. En esta promesa, el evangelio, en cuanto a su sustancia, fue revelado, y es en ella eficaz para la conversión y salvación de los pecadores (Gn. 3:15; Ef. 2:12; Gá. 4:4; He. 11:13; Lc. 2:25, 38; 23:51; Ro. 4:13-16; Gá. 3:15-22).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Esta promesa de Cristo, y la salvación por medio de Él, es revelada solamente por la Palabra de Dios. Tampoco las obras de la creación o la providencia, con la luz de la naturaleza, revelan a Cristo, o la gracia que es por medio de Él, ni siquiera en forma general u oscura; mucho menos hacen que los hombres destituidos de la revelación de Él por la promesa, o evangelio, sean capacitados así para alcanzar la fe salvadora o el arrepentimiento (Hch. 4:12; Ro. 10:13-15; Sal. 19; Ro. 1:18-23; Ro. 2:12; Mt. 28:18-20; Lc. 24:46, 47; Hch. 17:29, 30; Ro. 3:9-20).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> La revelación del evangelio a los pecadores (hecha en diversos tiempos y distintas partes, con la adición de promesas y preceptos para la obediencia requerida en aquél, en cuanto a las naciones y personas a quienes es concedido), es meramente por la voluntad soberana y el beneplácito de Dios; no apropiándosela en virtud de promesa alguna referida al buen uso de las capacidades naturales de los hombres, ni en virtud de la luz común recibida aparte de él, lo cual nadie hizo jamás ni puede hacer. Por tanto, en todas las épocas, la predicación del evangelio ha sido concedida a personas y naciones, en cuanto a su extensión o restricción, con gran variedad, según el consejo de la voluntad de Dios (Mt. 11:20; Ro. 3:10-12; 8:7, 8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Aunque el evangelio es el único medio externo para revelar a Cristo y la gracia salvadora, y es, como tal, completamente suficiente para este fin; sin embargo, para que los hombres que están muertos en sus delitos puedan nacer de nuevo, ser vivificados o regenerados, es además necesaria una obra eficaz e invencible del Espíritu Santo en toda el alma, con el fin de producir en ellos una nueva vida espiritual; sin ésta, ningún otro medio puede efectuar su conversión a Dios (Ro. 1:16, 17; Jn. 6:44; 1 Co. 1:22-24; 2:14; 2 Co. 4:4, 6).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap21">
+        <h2 class="capitulo-titulo">Capítulo 21</h2>
+    <h3 class="capitulo-tema">De la Libertad Cristiana y de la Libertad de Conciencia</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> La libertad que Cristo ha comprado para los creyentes bajo el evangelio consiste en su libertad de la culpa del pecado, de la ira condenatoria de Dios y de la severidad y maldición de la ley; y en ser librados de este presente siglo malo, de la servidumbre de Satanás y del dominio del pecado, del mal de las aflicciones, del temor y aguijón de la muerte, de la victoria del sepulcro y de la condenación eterna; y también consiste en su libre acceso a Dios, y en rendirle obediencia a Él, no por temor servil, sino con un amor filial y una mente dispuesta. Todo esto era sustancialmente común también a los creyentes bajo la ley; pero bajo el Nuevo Testamento la libertad de los cristianos se ensancha mucho más porque están libres del yugo de la ley ceremonial a que estaba sujeta la Iglesia judaica, y tienen ahora mayor confianza para acercarse al trono de gracia, y experiencias más plenas del libre Espíritu de Dios que aquellas de las que participaron generalmente los creyentes bajo la ley (Jn. 3:36; Ro. 8:33; Gá. 3:13; Gá. 1:4; Ef. 2:1-3; Col. 1:13; Hch. 26:18; Ro. 6:14-18; 8:3, 28; 1 Co. 15:54-57; 1 Ts. 1:10; He. 2:14, 15; Ef. 2:18; 3:12; Ro. 8:15; 1 Jn. 4:18; Jn. 8:32; Sal. 19:7-9; Ro. 4:5-11; Gá. 3:9; He. 11:27, 33, 34; Jn. 1:17; He. 1:1, 2; 7:19, 22; 8:6; 9:23; 10:19-21; 11:40; Gá. 2:11ss; 4:1-3; Col. 2:16, 17; Jn. 7:38, 39).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Sólo Dios es el Señor de la conciencia, y la ha hecho libre de las doctrinas y los mandamientos de los hombres que sean en alguna manera contrarios a su Palabra o que no estén contenidos en ésta. Así que, creer tales doctrinas u obedecer tales mandamientos por causa de la conciencia es traicionar la verdadera libertad de conciencia, y el requerir una fe implícita y una obediencia ciega y absoluta es destruir la libertad de conciencia y también la razón (Stg. 4:12; Ro. 14:4; Gá. 5:1; Hch. 4:19; 5:29; 1 Co. 7:23; Mt. 15:9; Col. 2:20, 22, 23; Gá. 1:10; 2:3-5; Ro. 10:17; 14:23; Hch. 17:11; Jn. 4:22; 1 Co. 3:5; 2 Co. 1:24).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Aquellos que bajo el pretexto de la libertad cristiana practican cualquier pecado o abrigan cualquier concupiscencia, al pervertir así el propósito principal de la gracia del evangelio para su propia destrucción, destruyen completamente, por tanto, el propósito de la libertad cristiana, que consiste en que, siendo librados de las manos de todos nuestros enemigos, sirvamos al Señor sin temor, en santidad y justicia delante de Él, todos los días de nuestra vida (Ro. 6:1, 2; Lc. 1:74, 75; Ro. 14:9; Gá. 5:13; 2 P. 2:18, 21).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap22">
+        <h2 class="capitulo-titulo">Capítulo 22</h2>
+    <h3 class="capitulo-tema">De la Adoración Religiosa y del Día de Reposo</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> La luz de la naturaleza muestra que hay un Dios, que tiene señorío y soberanía sobre todo; es justo, bueno y hace bien a todos; y que, por tanto, debe ser temido, amado, alabado, invocado, creído, y servido con toda el alma, con todo el corazón y con todas las fuerzas. Pero el modo aceptable de adorar al verdadero Dios está instituido por él mismo, y está de tal manera limitado por su propia voluntad revelada que no se debe adorar a Dios conforme a las imaginaciones e invenciones de los hombres o a las sugerencias de Satanás, ni bajo ninguna representación visible o en ningún otro modo no prescrito en las Santas Escrituras (Jer. 10:7; Mr. 12:33; Gn. 4:1-5; Éx. 20:4-6; Mt. 15:3, 8, 9; 2 R. 16:10-18; Lv. 10:1-3; Dt. 17:3; 4:2; 12:29-32; Jos. 1:7; Col. 2:20-23; 2 Ti. 3:15-17).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> La adoración religiosa ha de tributarse a Dios Padre, Hijo y Espíritu Santo, y a Él solamente; no a los ángeles, ni a los santos, ni a ninguna otra criatura; y desde la Caída, no sin un mediador; ni por la mediación de ningún otro, sino solamente de Cristo (Mt. 4:9, 10; Jn. 5:23; 2 Co. 13:14; Ro. 1:25; Col. 2:18; Ap. 19:10; Jn. 14:6; Ef. 2:18; Col. 3:17; 1 Ti. 2:5).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Siendo la oración, con acción de gracias, una parte de la adoración natural, la exige Dios de todos los hombres. Pero para que pueda ser aceptada, debe hacerse en el nombre del Hijo, con la ayuda del Espíritu, conforme a su voluntad, con entendimiento, reverencia, humildad, fervor, fe, amor y perseverancia; y cuando se hace con otros, en una lengua conocida (Sal. 95:1-7; 100:1-5; Jn. 14:13, 14; Ro. 8:26; 1 Jn. 5:14; Sal. 47:7; Ec. 5:1, 2; He. 12:28; Gn. 18:27; Stg. 5:16; 1:6, 7; Mr. 11:24; Mt. 6:12, 14, 15; Col. 4:2; Ef. 6:18; 1 Co. 14:13-19, 27, 28).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> La oración ha de hacerse por cosas lícitas, y a favor de toda clase de personas vivas, o que vivirán más adelante; pero no a favor de los muertos ni de aquellos de quienes se pueda saber que han cometido el pecado de muerte (1 Jn. 5:14, 16; 1 Ti. 2:1, 2; Jn. 17:20; 2 S. 12:21-23; Lc. 16:25, 26; Ap. 14:13).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> La lectura de las Escrituras, la predicación y la audición de la Palabra de Dios, la instrucción y la amonestación los unos a los otros por medio de salmos, himnos y cantos espirituales, el cantar con gracia en el corazón al Señor, como también la administración del bautismo y la Cena del Señor: todas estas cosas son parte de la adoración religiosa a Dios que ha de realizarse en obediencia con entendimiento, fe, reverencia y temor piadoso; además, la humillación solemne, con ayunos, y las acciones de gracia en ocasiones especiales, han de usarse de una manera santa y piadosa (Hch. 15:21; 1 Ti. 4:13; Ap. 1:3; 2 Ti. 4:2; Lc. 8:18; Col. 3:16; Ef. 5:19; Mt. 28:19, 20; 1 Co. 11:26; Est. 4:16; Jl. 2:12; Mt. 9:15; Hch. 13:2, 3; 1 Co. 7:5; Éx. 15:1-19; Sal. 107).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> Ahora, bajo el evangelio, ni la oración ni ninguna otra parte de la adoración religiosa están limitadas a un lugar, ni son más aceptables por el lugar en que se realizan, o hacia el cual se dirigen; sino que Dios ha de ser adorado en todas partes en espíritu y en verdad; tanto en cada familia en particular diariamente, como cada uno en secreto por sí solo; así como de una manera más solemne en las reuniones públicas, las cuales no han de descuidarse ni abandonarse voluntariamente o por negligencia, cuando Dios por su Palabra o providencia nos llama a ellas (Jn. 4:21, 23, 24; Mal. 1:11; 1 Ti. 2:8; Dt. 6:6, 7; Job 1:5; 1 P. 3:7; Mt. 6:6, 11; Sal. 84:1, 2, 10; Mt. 18:20; 1 Co. 3:16; 14:25; Ef. 2:21, 22; Hch. 2:42; He. 10:25).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> Así como es la ley de la naturaleza que, en general, una proporción de tiempo, por designio de Dios se dedique a la adoración de Dios, así en su Palabra, por un mandamiento positivo, moral y perpetuo que obliga a todos los hombres en todas las épocas, Dios ha señalado particularmente un día de cada siete como día de reposo, para que sea guardado santo para Él; el cual desde el principio del mundo hasta la resurrección de Cristo fue el último día de la semana y desde la resurrección de Cristo fue cambiado al primer día de la semana, que es llamado el Día del Señor y debe ser perpetuado hasta el fin del mundo como el día de reposo cristiano, siendo abolida la observancia del último día de la semana (Gn. 2:3; Éx. 20:8-11; Mr. 2:27, 28; Ap. 1:10; Jn. 20:1; Hch. 2:1; 20:7; 1 Co. 16:1; Col. 2:16, 17).</p>
+
+    <p class="parrafo"><span class="num-parrafo">8.</span> El día de reposo se guarda santo para el Señor cuando los hombres, después de la debida preparación de su corazón y arreglados de antemano todos sus asuntos cotidianos, no solamente observan un santo descanso durante todo el día de sus propias labores, palabras y pensamientos acerca de sus ocupaciones y diversiones seculares; sino que también se dedican todo el tiempo al ejercicio público y privado de la adoración de Dios, y a los deberes de necesidad y de misericordia (Éx. 20:8-11; Neh. 13:15-22; Is. 58:13, 14; Ap. 1:10; Mt. 12:1-13; Mr. 2:27, 28).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap23">
+        <h2 class="capitulo-titulo">Capítulo 23</h2>
+    <h3 class="capitulo-tema">Juramentos Legales y Votos</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Un juramento lícito es una parte de la adoración religiosa por el cual el jurador, teniendo en vista la verdad, la justicia y el juicio, solemnemente pone a Dios como testigo de lo que jura, y para que le juzgue conforme a la verdad o la falsedad de sus palabras (Éx. 20:7; Dt. 10:20; Jer. 4:2; 2 Cr. 6:22, 23).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Sólo en el nombre de Dios deben jurar los hombres, y este nombre ha de usarse con todo temor santo y con reverencia. Por lo tanto, jurar vana o temerariamente en ese nombre glorioso y terrible, o definitivamente jurar por cualquiera otra cosa, es pecaminoso y debe aborrecerse. Sin embargo, en asuntos de peso y de importancia, cuando la verdad requiere una confirmación y para poner fin a la contienda, un juramento está justificado por la palabra de Dios; por eso, cuando una autoridad legítima exija un juramento legal para tales asuntos, este juramento debe hacerse (Mt. 5:34, 37; Stg. 5:12; He. 6:16; 2 Co. 1:23; Neh. 13:25).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Todo aquel que hace un juramento de acuerdo a la palabra de Dios debe considerar seriamente la gravedad de un acto tan solemne, y por lo tanto no afirmar nada que no sepa sea verdad, porque por medio de juramentos falsos y vacíos el Señor es provocado y por razón de ello la tierra es traída a miserias (Lv. 19:12; Jer. 23:10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> Un juramento debe hacerse en el sentido claro y común de las palabras, sin equivocación o reservas mentales (Sal. 24:4; Sal. 76:11; Gn. 28:20-22).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> Los votos han de ser hechos a Dios solamente y no a una criatura. Una vez hechos han de ser llevados a cabo escrupulosa y fielmente. Pero votos monásticos de vida soltera perpetua, pobreza profesada y obediencia regular que pertenecen a la iglesia de Roma, en lugar de representar santidad superior son meramente supersticiones y trampas pecaminosas en las cuales ningún cristiano debería enredarse (1 Co. 7:2, 9; Ef. 4:28; Mt. 19:11).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap24">
+        <h2 class="capitulo-titulo">Capítulo 24</h2>
+    <h3 class="capitulo-tema">El Gobierno Civil</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Dios, el supremo Señor y Rey de todo el mundo, ha instituido a los magistrados civiles para estar sujetos a él, gobernando al pueblo para la gloria de Dios y el bien público; y con este fin les ha armado con el poder de la espada, para la defensa y aliento de los que hacen lo bueno, y para el castigo de los malhechores (Ro. 13:1-4; 1 P. 2:13, 14).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Es lícito para los cristianos aceptar y desempeñar el cargo de magistrado cuando sean llamados para ello; en el desempeño de su cargo deben mantener especialmente la justicia y la paz, según las leyes sanas de cada reino y estado; así con este fin, bajo el Nuevo Testamento, pueden legalmente ahora hacer la guerra en ocasiones justas y necesarias (2 S. 23:3; Sal. 82:3, 4; Lc. 3:14).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Como los gobernantes civiles son puestos por Dios con los propósitos ya mencionados, los cristianos están sujetos a ellos en los requisitos legales, y esto por causa del Señor y de la conciencia y no meramente para evitar castigo. Debemos ofrecer suplicaciones y oraciones a favor de los reyes y de los que están en autoridad, para que bajo su gobierno podamos vivir quieta y reposadamente en santidad y honestidad (Ro. 13:5-7; 1 P. 2:17; 1 Ti. 2:1, 2).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap25">
+        <h2 class="capitulo-titulo">Capítulo 25</h2>
+    <h3 class="capitulo-tema">Del Matrimonio</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> El matrimonio ha de ser entre un hombre y una mujer; no es lícito para ningún hombre tener más de una esposa, ni para ninguna mujer tener más de un marido (Gn. 2:24; Mt. 19:5, 6; 1 Ti. 3:2; Tit. 1:6).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> El matrimonio fue instituido para la mutua ayuda de esposo y esposa; para multiplicar el género humano por medio de una descendencia legítima y para evitar la impureza (Gn. 2:18; Pr. 2:17; Mal. 2:14; Gn. 1:28; Sal. 127:3-5; 128:3, 4; 1 Co. 7:2, 9).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Pueden casarse lícitamente toda clase de personas capaces de dar su consentimiento en su sano juicio; sin embargo, es deber de los cristianos casarse en el Señor. Y, por tanto, los que profesan la verdadera fe no deben casarse con incrédulos o idólatras; ni deben los que son piadosos unirse en yugo desigual, casándose con los que sean malvados en sus vidas o que sostengan herejías condenables (1 Co. 7:39; 2 Co. 6:14; He. 13:4; 1 Ti. 4:3).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> El matrimonio no debe contraerse dentro de los grados de consanguinidad o afinidad prohibidos en la Palabra, ni pueden tales matrimonios incestuosos legalizarse jamás por ninguna ley humana, ni por el consentimiento de las partes, de tal manera que esas personas puedan vivir juntas como marido y mujer (Lv. 18:6-18; Am. 2:7; Mr. 6:18; 1 Co. 5:1).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap26">
+        <h2 class="capitulo-titulo">Capítulo 26</h2>
+    <h3 class="capitulo-tema">De la Iglesia</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> La Iglesia católica o universal, que (con respecto a la obra interna del Espíritu y la verdad de la gracia) puede llamarse invisible, se compone del número completo de los elegidos que han sido, son o serán reunidos en uno bajo Cristo, su cabeza; y es la esposa, el cuerpo, la plenitud de Aquel que llena todo en todos (Mt. 16:18; 1 Co. 12:28; Ef. 1:22; 4:11-15; 5:23-25, 27, 29, 32; Col. 1:18, 24; He. 12:23; Ap. 21:9-14).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Todas las personas en todo el mundo que profesan la fe del evangelio y obediencia a Dios por Cristo conforme al mismo, que no destruyan su propia profesión mediante errores fundamentales o conductas impías, son y pueden ser llamados santos visibles; y de tales personas todas las congregaciones locales deben estar compuestas (1 Co. 1:2; Ro. 1:7, 8; Hch. 11:26; Mt. 16:18; 28:15-20; 1 Co. 5:1-9; Mt. 18:15-20; Hch. 2:37-42; 4:4).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Las iglesias más puras bajo el cielo están sujetas a la impureza y al error, y algunas han degenerado tanto que han llegado a ser no iglesias de Cristo sino sinagogas de Satanás. Sin embargo, Cristo siempre ha tenido y siempre tendrá un reino en este mundo, hasta el fin del mismo, compuesto de aquellos que creen en Él y profesan su nombre (1 Co. 1:11; 5:1; 6:6; 11:17-19; 3 Jn. 9, 10; Ap. 2 y 3; 18:2; 1 Ti. 3:14, 15; Mt. 16:18; 24:14; 28:20; Sal. 72:1-18; 102:28; Is. 9:6, 7; Ap. 12:17).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> La Cabeza de la Iglesia es el Señor Jesucristo, en quien, por el designio del Padre, todo el poder requerido para el llamamiento, el establecimiento, el orden o el gobierno de la Iglesia, está suprema y soberanamente investido. No puede el papa de Roma ser cabeza de ella en ningún sentido, sino que él es aquel Anticristo, aquel hombre de pecado e hijo de perdición, que se ensalza en la Iglesia contra Cristo y contra todo lo que se llama Dios, a quien el Señor destruirá con el resplandor de su venida (Col. 1:18; Ef. 4:11-16; 1:22, 23; 5:23-32; 1 Co. 12:27, 28; Jn. 17:1-3; Mt. 28:18-20; Hch. 5:31; Jn. 10:1-16; 2 Ts. 2:2-9).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> En el ejercicio de este poder que le ha sido confiado, el Señor Jesús, a través del ministerio de su Palabra y por su Espíritu, llama a sí mismo del mundo a aquellos que le han sido dados por su Padre para que anden delante de Él en todos los caminos de la obediencia que Él les prescribe en su Palabra. A los así llamados, Él les ordena andar juntos en congregaciones concretas, o iglesias, para su edificación mutua y la debida observancia del culto público, que Él requiere de ellos en el mundo (Jn. 10:16, 23; 12:32; 17:2; Hch. 5:31, 32; Mt. 28:20; 18:15-20; Hch. 14:21-23; Tit. 1:5; 1 Ti. 1:3; 3:1-16; 5:17-22).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> Los miembros de estas iglesias son santos por su llamamiento, y en una forma visible manifiestan y evidencian (por su profesión de fe y su conducta) su obediencia al llamamiento de Cristo; y voluntariamente acuerdan andar juntos, conforme al designio de Cristo, dándose a sí mismos al Señor y mutuamente, por la voluntad de Dios, profesando sujeción a los preceptos del evangelio (Mt. 28:18-20; Hch. 14:22, 23; Ro. 1:7; 1 Co. 1:2; 1 Ts. 1:1-10; Hch. 2:37-42; 4:4; 5:13, 14; 2 Co. 9:13).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> A cada una de estas iglesias así reunidas, el Señor, conforme a su mente declarada en su Palabra, ha dado todo el poder y autoridad en cualquier sentido necesarios para realizar se ordenen la adoración y en la disciplina que Él ha instituido para que lo guarden; juntamente con mandatos y reglas para el ejercicio propio y correcto y la ejecución del mencionado poder (Mt. 18:17-20; 1 Co. 5:4, 5, 13; 2 Co. 2:6-8).</p>
+
+    <p class="parrafo"><span class="num-parrafo">8.</span> Una iglesia local, reunida y completamente organizada de acuerdo a la mente de Cristo, está compuesta por oficiales y miembros; y los oficiales designados por Cristo para ser escogidos y apartados por la iglesia (así llamada y reunida), para la particular administración de las ordenanzas y el ejercicio del poder o el deber, que Él les confía o al que les llama, para que continúen hasta el fin del mundo, son los obispos o ancianos, y los diáconos (Fil. 1:1; 1 Ti. 3:1-13; Hch. 20:17, 28; Tit. 1:5-7; 1 P. 5:2).</p>
+
+    <p class="parrafo"><span class="num-parrafo">9.</span> La manera designada por Cristo para el llamamiento de cualquier persona que ha sido cualificada y dotada por el Espíritu Santo para el oficio de obispo o anciano en una iglesia, es que sea escogido para el mismo por común sufragio de la iglesia misma, y solemnemente apartado mediante ayuno y oración con la imposición de manos de los ancianos de la iglesia, si es que hay algunos constituidos anteriormente en ella; y para un diácono, que sea escogido por el mismo sufragio y apartado mediante oración y la misma imposición de manos (Ef. 4:11; 1 Ti. 3:1-13; Hch. 6:1-7; 14:23; 1 Co. 5:1-13; 1 Ti. 4:14; 5:22).</p>
+
+    <p class="parrafo"><span class="num-parrafo">10.</span> Siendo la obra de los pastores atender constantemente al servicio de Cristo, en sus iglesias, en el ministerio de la Palabra y la oración velando por sus almas, como aquellos que han de dar cuenta a Él, es la responsabilidad de las iglesias a las que ellos ministran darles no solamente todo el respeto debido, sino compartir también con ellos todas sus cosas buenas, según sus posibilidades, de manera que tengan una provisión adecuada, sin que tengan que enredarse en actividades seculares, y puedan también practicar la hospitalidad hacia los demás. Esto lo requiere la ley de la naturaleza y el mandato expreso de nuestro Señor Jesús, quien ha ordenado que los que predican el evangelio vivan del evangelio (Hch. 6:4; 1 Ti. 3:2; 5:17, 18; He. 13:17; 1 Co. 9:6-14; Gá. 6:6, 7; 2 Ti. 2:4).</p>
+
+    <p class="parrafo"><span class="num-parrafo">11.</span> Aunque sea la responsabilidad de los obispos o pastores de las iglesias, según su oficio, estar constantemente dedicados a la predicación de la Palabra, sin embargo la obra de predicar la Palabra no está tan particularmente limitada a ellos, sino que otros también dotados y cualificados por el Espíritu Santo para ello y aprobados y llamados por la iglesia, pueden y deben desempeñarla (Hch. 8:5; 11:19-21; 1 P. 4:10, 11).</p>
+
+    <p class="parrafo"><span class="num-parrafo">12.</span> Todos los creyentes están obligados a unirse a iglesias locales cuando y donde tengan la oportunidad de hacerlo. Asimismo todos aquellos que son admitidos a los privilegios de una iglesia también están sujetos a la disciplina y el gobierno de la misma iglesia, conforme a la norma de Cristo (1 Ts. 5:14; 2 Ts. 3:6, 14, 15; 1 Co. 5:9-13; He. 13:17).</p>
+
+    <p class="parrafo"><span class="num-parrafo">13.</span> Ningún miembro de iglesia, sobre la base de alguna ofensa recibida, habiendo cumplido el deber requerido de él hacia la persona que le ha ofendido, debe perturbar el orden de la iglesia, o ausentarse de las reuniones de la iglesia o de la administración de ninguna de las ordenanzas sobre la base de tal ofensa de cualquier otro miembro, sino que debe esperar en Cristo mientras prosigan las actuaciones de la iglesia (Mt. 18:15-17; Ef. 4:2, 3; Col. 3:12-15; 1 Jn. 2:7-11, 18, 19; Mt. 28:20).</p>
+
+    <p class="parrafo"><span class="num-parrafo">14.</span> Puesto que cada iglesia, y todos sus miembros, están obligados a orar continuamente por el bien y la prosperidad de todas las iglesias de Cristo en todos los lugares, y en todas las ocasiones ayudar a cada una dentro de los límites de sus áreas y vocaciones, en el ejercicio de sus dones y virtudes, así las iglesias, cuando estén establecidas por la providencia de Dios de manera que puedan gozar de la oportunidad y el beneficio de ello, deben tener comunión entre sí, para su paz, crecimiento en amor y edificación mutua (Jn. 13:34, 35; 17:11, 21-23; Ef. 4:11-16; 6:18; Sal. 122:6; Ro. 16:1-3; 3 Jn. 8-10; 2 Co. 8:1-4, 16-24; 9:12-15; Col. 2:1; 4:7, 12; Gá. 1:2, 22; Col. 4:16; Ap. 1:4; Jos. 22).</p>
+
+    <p class="parrafo"><span class="num-parrafo">15.</span> En casos de dificultades o diferencias respecto a la doctrina o el gobierno de la iglesia, en que bien las iglesias en general o bien una sola iglesia están concernidas en su paz, unión y edificación; o uno o varios miembros de una iglesia son dañados por procedimientos disciplinarios que no sean de acuerdo a la verdad y al orden, es conforme a la mente de Cristo que muchas iglesias que tengan comunión entre sí, se reúnan a través de sus representantes para considerar y dar su consejo sobre los asuntos en disputa, para informar a todas las iglesias concernidas. Sin embargo, a los representantes congregados no se les entrega ningún poder eclesiástico propiamente dicho ni jurisdicción sobre las iglesias mismas para ejercer disciplina sobre cualquiera de ellas o sus miembros, o para imponer sus decisiones sobre ellas o sus oficiales (Gá. 2:2; Pr. 3:5-7; 12:15; 13:10; 1 Co. 7:25, 36, 40; 2 Co. 1:24; 1 Jn. 4:1).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap27">
+        <h2 class="capitulo-titulo">Capítulo 27</h2>
+    <h3 class="capitulo-tema">De la Comunión de los Santos</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Todos los santos que están unidos a Jesucristo, su cabeza, por su Espíritu y por la fe (aunque no por ello vengan a ser una persona con Él), participan en sus virtudes, padecimientos, muerte, resurrección y gloria; y, estando unidos unos a otros en amor, participan mutuamente de sus dones y virtudes, y están obligados al cumplimiento de tales deberes, públicos y privados, de manera ordenada, que conduzcan a su mutuo bien, tanto en el hombre interior como en el exterior (Ef. 1:4; Jn. 17:2, 6; 2 Co. 5:21; Ro. 6:8; 8:2, 17; 1 Co. 6:17; 2 P. 1:4; Ef. 3:16, 17; Gá. 2:20; 2 Co. 3:17, 18; 1 Co. 8:6; Col. 1:18, 19; 1 Ti. 6:15, 16; Is. 42:8; Sal. 45:7; He. 1:8, 9; 1 Jn. 1:3; Jn. 1:16; 15:1-6; Ef. 2:4-6; Ro. 4:25; 6:1-6; Fil. 3:10; Col. 3:3, 4; Jn. 13:34, 35; 14:15; Ef. 4:15; 1 P. 4:10; Ro. 14:7, 8; 1 Co. 3:21-23; 12:7, 25-27; Ro. 1:12; 12:10-13; 1 Ts. 5:11, 14; 1 P. 3:8; 1 Jn. 3:17, 18; Gá. 6:10).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Los santos, por su profesión, están obligados a mantener entre sí un compañerismo y comunión santos en la adoración a Dios y en el cumplimiento de los otros servicios espirituales que tiendan a su edificación mutua, así como a socorrerse los unos a los otros en las cosas externas según sus posibilidades y necesidades. Según la norma del evangelio, aunque esta comunión deba ejercerse especialmente en las relaciones en que se encuentren, ya sea en las familias o en las iglesias, no obstante, debe extenderse, según Dios dé la oportunidad, a toda la familia de la fe, es decir, a todos los que en todas partes invocan el nombre del Señor Jesús. Sin embargo, su comunión mutua como santos no quita ni infringe el derecho o la propiedad que cada hombre tiene sobre sus bienes y posesiones (He. 10:24, 25; 3:12, 13; Hch. 11:29, 30; 2 Co. 8 y 9; Gá. 2; Ro. 15; 1 Ti. 5:8, 16; Ef. 6:4; 1 Co. 12:27).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap28">
+        <h2 class="capitulo-titulo">Capítulo 28</h2>
+    <h3 class="capitulo-tema">Del Bautismo y la Cena del Señor</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> El bautismo y la Cena del Señor son ordenanzas que han sido positiva y soberanamente instituidas por el Señor Jesús, el único legislador, para que continúen en su Iglesia hasta el fin del mundo (Mt. 28:19, 20; 1 Co. 11:24-26; Ro. 6:3, 4; 1 Co. 1:13-17; Gá. 3:27; Ef. 4:5; Col. 2:12; 1 P. 3:21; Lc. 22:14-20).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Estas santas instituciones han de ser administradas solamente por aquellos que estén cualificados y llamados para ello, según la comisión de Cristo (Mt. 24:45-51; Lc. 12:41-44; 1 Co. 4:1; Tit. 1:5-7).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap29">
+        <h2 class="capitulo-titulo">Capítulo 29</h2>
+    <h3 class="capitulo-tema">Del Bautismo</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> El bautismo es una ordenanza del Nuevo Testamento instituida por Jesucristo, con el fin de ser para la persona bautizada una señal de su comunión con Él en su muerte y resurrección, de estar injertado en Él, de la remisión de pecados y de su entrega a Dios por medio de Jesucristo para vivir y andar en novedad de vida (Ro. 6:3-5; Col. 2:12; Gá. 3:27; Mr. 1:4; Hch. 22:16; Ro. 6:4).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Los que realmente profesan arrepentimiento para con Dios y fe en nuestro Señor Jesucristo y obediencia a Él son los únicos sujetos adecuados de esta ordenanza (Mt. 3:1-12; Mr. 1:4-6; Lc. 3:3-6; Mt. 28:19, 20; Mr. 16:15, 16; Jn. 4:1, 2; 1 Co. 1:13-17; Hch. 2:37-41; 8:12, 13, 36-38; 9:18; 10:47, 48; 11:16; 15:9; 16:14, 15, 31-34; 18:8; 19:3-5; 22:16; Ro. 6:3, 4; Gá. 3:27; Col. 2:12; 1 P. 3:21; Jer. 31:31-34; Fil. 3:3; Jn. 1:12, 13; Mt. 21:43).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> El elemento exterior que debe usarse en esta ordenanza es el agua, en la cual ha de ser bautizada la persona en el nombre del Padre, del Hijo y del Espíritu Santo (Mt. 3:11; Hch. 8:36, 38; 22:16; Mt. 28:18-20).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> La inmersión de la persona en el agua es necesaria para la correcta administración de esta ordenanza (2 R. 5:14; Sal. 69:2; Is. 21:4; Mr. 1:5, 8, 9; Jn. 3:23; Hch. 8:38; Ro. 6:4; Col. 2:12; Mr. 7:3, 4; 10:38, 39; Lc. 12:50; 1 Co. 10:1, 2; Mt. 3:11; Hch. 1:5, 8; 2:1-4, 17).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap30">
+        <h2 class="capitulo-titulo">Capítulo 30</h2>
+    <h3 class="capitulo-tema">De la Cena del Señor</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> La Cena del Señor Jesús fue instituida por Él la misma noche en que fue entregado, para que se observara en sus iglesias hasta el fin del mundo, para el recuerdo perpetuo y para la manifestación del sacrificio de sí mismo en su muerte, para confirmación de la fe de los creyentes en todos los beneficios de la misma, para su alimentación espiritual y crecimiento en Él, para un mayor compromiso en todas las obligaciones que le deben a Él, y para ser un vínculo y una prenda de su comunión con Él y entre ellos mutuamente (1 Co. 11:23-26; Mt. 26:20-26; Mr. 14:17-22; Lc. 22:19-23; Hch. 2:41, 42; 20:7; 1 Co. 11:17-22, 33, 34; Mr. 14:24, 25; Lc. 22:17-22; Mt. 26:27, 28; Ro. 4:11; Jn. 6:29, 35, 47-58; 1 Co. 10:16, 17).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> En esta ordenanza Cristo no es ofrecido a su Padre, ni se hace en absoluto ningún verdadero sacrificio para la remisión del pecado ni de los vivos ni de los muertos; sino que solamente es un memorial de aquel único ofrecimiento de sí mismo y por sí mismo en la cruz, una sola vez para siempre, y una ofrenda espiritual de toda la alabanza posible a Dios por el mismo. Así que el sacrificio papal de la misa, como ellos la llaman, es sumamente abominable e injurioso para con el sacrificio mismo de Cristo, la única propiciación por todos los pecados de los elegidos (Jn. 19:30; He. 9:25-28; 10:10-14; Lc. 22:19; 1 Co. 11:24, 25; Mt. 26:26, 27, 30; He. 13:10-16).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> El Señor Jesús, en esta ordenanza, ha designado a sus ministros para que oren y bendigan los elementos del pan y del vino, y que los aparten así del uso común para el uso sagrado; que tomen y partan el pan, y tomen la copa y (participando también ellos mismos) den ambos a los participantes (1 Co. 11:23-26; Mt. 26:26-28; Mr. 14:24, 25; Lc. 22:19-22).</p>
+
+    <p class="parrafo"><span class="num-parrafo">4.</span> El negar la copa al pueblo, el adorar los elementos, el elevarlos o llevarlos de un lugar a otro para adorarlos y el guardarlos para cualquier pretendido uso religioso, es contrario a la naturaleza de esta ordenanza y a la institución de Cristo (Mt. 26:27; Mr. 14:23; 1 Co. 11:25-28; Éx. 20:4, 5; Mt. 15:9).</p>
+
+    <p class="parrafo"><span class="num-parrafo">5.</span> Los elementos externos de esta ordenanza, debidamente separados para el uso ordenado por Cristo, tienen tal relación con Él crucificado que en un sentido verdadero, aunque en términos figurativos, se llaman a veces por el nombre de las cosas que representan, a saber: el cuerpo y la sangre de Cristo; no obstante, en sustancia y en naturaleza, esos elementos siguen siendo verdadera y solamente pan y vino, como eran antes (1 Co. 11:27; Mt. 26:26-29; 1 Co. 11:26-28).</p>
+
+    <p class="parrafo"><span class="num-parrafo">6.</span> Esa doctrina que sostiene un cambio de sustancia del pan y del vino en la sustancia del cuerpo y la sangre de Cristo (llamada comúnmente transustanciación), por la consagración de un sacerdote, o de algún otro modo, es repugnante no sólo a la Escritura sino también al sentido común y a la razón; echa abajo la naturaleza de la ordenanza; y ha sido y es la causa de muchísimas supersticiones y, además, de crasas idolatrías (Mt. 26:26-29; Lc. 24:36-43, 50, 51; Jn. 1:14; 20:26-29; Hch. 1:9-11; 3:21; 1 Co. 11:24-26; Lc. 12:1; Ap. 1:20; Gn. 17:10, 11; Ez. 37:11; Gn. 41:26, 27).</p>
+
+    <p class="parrafo"><span class="num-parrafo">7.</span> Los que reciben dignamente esta ordenanza, participando externamente de los elementos visibles, también participan interiormente, por la fe, de una manera real y verdadera, aunque no carnal ni corporal, sino alimentándose espiritualmente de Cristo crucificado y recibiendo todos los beneficios de su muerte. El cuerpo y la sangre de Cristo no están entonces ni carnal ni corporal sino espiritualmente presentes en aquella ordenanza a la fe de los creyentes, tanto como los elementos mismos lo están para sus sentidos corporales (1 Co. 11:28; Jn. 6:29, 35, 47-58; 1 Co. 10:16).</p>
+
+    <p class="parrafo"><span class="num-parrafo">8.</span> Todos los ignorantes e impíos, no siendo aptos para gozar de la comunión con Cristo, son por tanto indignos de la mesa del Señor y, mientras permanezcan como tales, no pueden, sin pecar grandemente contra Él, participar de estos sagrados misterios o ser admitidos a ellos; además, quienquiera que los reciba indignamente es culpable del cuerpo y la sangre del Señor, pues come y bebe juicio para sí (Mt. 7:6; Ef. 4:17-24; 5:3-9; Éx. 20:7, 16; 1 Co. 5:9-13; 2 Jn. 10; Hch. 2:41, 42; 20:7; 1 Co. 11:17-22, 27-34).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap31">
+        <h2 class="capitulo-titulo">Capítulo 31</h2>
+    <h3 class="capitulo-tema">Del Estado del Hombre Después de la Muerte y de la Resurrección de los Muertos</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Los cuerpos de los hombres vuelven al polvo después de la muerte y ven la corrupción, pero sus almas (que ni mueren ni duermen), teniendo una subsistencia inmortal, vuelven inmediatamente a Dios que las dio. Las almas de los justos, siendo entonces hechas perfectas en santidad, son recibidas en el Paraíso donde están con Cristo, y contemplan la faz de Dios en luz y gloria, esperando la plena redención de sus cuerpos. Las almas de los malvados son arrojadas al infierno, donde permanecen atormentadas y envueltas en densas tinieblas, reservadas para el juicio del gran día. Fuera de estos dos lugares para las almas separadas de sus cuerpos, la Escritura no reconoce ningún otro (Gn. 2:17; 3:19; Hch. 13:36; Ro. 5:12-21; 1 Co. 15:22; Gn. 2:7; Stg. 2:26; Mt. 10:28; Ec. 12:7; Sal. 23:6; 1 R. 8:27-49; Is. 63:15; 66:1; Lc. 23:43; Hch. 1:9-11; 3:21; 2 Co. 5:6-8; 12:2-4; Ef. 4:10; Fil. 1:21-23; He. 1:3; 4:14, 15; 6:20; 8:1; 9:24; 12:23; Ap. 6:9-11; 14:13; 20:4-6; Lc. 16:22-26; Hch. 1:25; 1 P. 3:19; 2 P. 2:9).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> Los santos que se encuentren vivos en el último día no dormirán, sino que serán transformados, y todos los muertos serán resucitados con sus mismos cuerpos, y no con otros, aunque con diferentes cualidades, y éstos serán unidos otra vez a sus almas para siempre (1 Co. 15:50-53; 2 Co. 5:1-4; 1 Ts. 4:17; Dn. 12:2; Jn. 5:28, 29; Hch. 24:15; Job 19:26, 27; 1 Co. 15:35-38, 42-44, 52-54; Mt. 25:46).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Los cuerpos de los injustos, por el poder de Cristo, serán resucitados para deshonra; los cuerpos de los justos, por su Espíritu, para honra, y serán hechos entonces semejantes al cuerpo glorioso de Cristo (Dn. 12:2; Jn. 5:28, 29).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+
+      <article id="cap32">
+        <h2 class="capitulo-titulo">Capítulo 32</h2>
+    <h3 class="capitulo-tema">Del Juicio Final</h3>
+
+    <p class="parrafo"><span class="num-parrafo">1.</span> Dios ha establecido un día en el cual juzgará al mundo con justicia por Jesucristo, a quien todo poder y juicio ha sido dado por el Padre. En aquel día, no sólo los ángeles apóstatas serán juzgados, sino que también todas las personas que han vivido sobre la tierra comparecerán delante del tribunal de Cristo para dar cuenta de sus pensamientos, palabras y acciones, y para recibir conforme a lo que hayan hecho mientras estaban en el cuerpo, sea bueno o malo (Hch. 17:31; Jn. 5:22, 27; 1 Co. 6:3; Jud. 6; Mt. 16:27; 25:31-46; Hch. 17:30, 31; Ro. 2:6-16; 2 Ts. 1:5-10; 2 P. 3:1-13; Ap. 20:11-15; 2 Co. 5:10; 1 Co. 4:5; Mt. 12:36).</p>
+
+    <p class="parrafo"><span class="num-parrafo">2.</span> El propósito de Dios al establecer este día es la manifestación de la gloria de su misericordia en la salvación eterna de los elegidos, y la de su justicia en la condenación eterna de los réprobos, que son malvados y desobedientes; pues entonces entrarán los justos a la vida eterna y recibirán la plenitud de gozo y gloria con recompensas eternas en la presencia del Señor; pero los malvados, que no conocen a Dios ni obedecen al evangelio de Jesucristo, serán arrojados al tormento eterno y castigados con eterna perdición, lejos de la presencia del Señor y de la gloria de su poder (Ro. 9:22, 23; Mt. 18:8; 25:41, 46; 2 Ts. 1:9; He. 6:2; Jud. 6; Ap. 14:10, 11; Lc. 3:17; Mr. 9:43, 48; Mt. 3:12; 5:26; 13:41, 42; 24:51; 25:30).</p>
+
+    <p class="parrafo"><span class="num-parrafo">3.</span> Así como Cristo quiere que estemos ciertamente persuadidos de que habrá un día de juicio, tanto para disuadir a todos los hombres de pecar, como para el mayor consuelo de los piadosos en su adversidad; así también quiere que ese día sea desconocido para los hombres, para que se desprendan de toda seguridad carnal y estén siempre velando porque no saben a qué hora vendrá el Señor; y estén siempre preparados para decir: <em>Ven, Señor Jesús; ven pronto. Amén.</em> (2 Co. 5:10, 11; 2 Ts. 1:5-7; Mr. 13:35-37; Lc. 12:35-40; Ap. 22:20).</p>
+        <div><a href="#prefacio" class="btn-top">↑ Subir al índice</a></div>
+      </article>
+    </main>
+  </div>
+
+  <!-- Modal Flotante para Citas Bíblicas -->
+  <div class="verse-modal-overlay" id="verseModal">
+    <div class="verse-modal-card">
+      <div class="verse-modal-header">
+        <div class="verse-modal-header-left">
+          <h4 id="verseModalTitle" class="verse-modal-title">Cita Bíblica</h4>
+          <select id="verseVersionSelector" class="verse-version-select">
+            <option value="RVR1960" selected>Reina-Valera 1960 (RVR1960)</option>
+            <option value="RVSBT18">Reina Valera SBT 2018 (RVSBT18)</option>
+          </select>
+        </div>
+        <button type="button" class="btn-close-verse" id="btnCloseVerseModal" title="Cerrar">&times;</button>
+      </div>
+      <div class="verse-modal-body" id="verseModalContent">
+        Cargando pasaje bíblico...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Control del Menú Lateral en Móviles
+    const btnToggleToc = document.getElementById('btnToggleToc');
+    const btnCloseToc = document.getElementById('btnCloseToc');
+    const tocSidebar = document.getElementById('tocSidebar');
+
+    if (btnToggleToc) btnToggleToc.onclick = () => tocSidebar.classList.toggle('open');
+    if (btnCloseToc) btnCloseToc.onclick = () => tocSidebar.classList.remove('open');
+
+    document.querySelectorAll('.toc-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 880) {
+          tocSidebar.classList.remove('open');
+        }
+      });
+    });
+
+    // 2. Caché y Archivos de Biblias Locales
+    const biblesCache = {};
+    const BIBLE_FILES = {
+      "RVR1960": "./RVR1960.json",
+      "RVSBT18": "./RVSBT18.json"
+    };
+
+    // Mapeo exhaustivo de abreviaturas al estándar USFM
+    const BOOK_MAP = {
+      "gn": "GEN", "gén": "GEN", "gen": "GEN", "génesis": "GEN", "genesis": "GEN",
+      "éx": "EXO", "ex": "EXO", "éxodo": "EXO", "exodo": "EXO",
+      "lv": "LEV", "lev": "LEV", "levítico": "LEV", "levitico": "LEV",
+      "nm": "NUM", "núm": "NUM", "num": "NUM", "números": "NUM", "numeros": "NUM",
+      "dt": "DEU", "deut": "DEU", "deuteronomio": "DEU",
+      "jos": "JOS", "josué": "JOS", "josue": "JOS",
+      "jue": "JDG", "jueces": "JDG",
+      "rt": "RUT", "rut": "RUT",
+      "1 s": "1SA", "1s": "1SA", "1 sam": "1SA", "1 samuel": "1SA",
+      "2 s": "2SA", "2s": "2SA", "2 sam": "2SA", "2 samuel": "2SA",
+      "1 r": "1KI", "1r": "1KI", "1 reyes": "1KI",
+      "2 r": "2KI", "2r": "2KI", "2 reyes": "2KI",
+      "1 cr": "1CH", "1cr": "1CH", "1 crónicas": "1CH", "1 cronicas": "1CH",
+      "2 cr": "2CH", "2cr": "2CH", "2 crónicas": "2CH", "2 cronicas": "2CH",
+      "esd": "EZR", "esdras": "EZR",
+      "neh": "NEH", "nehemías": "NEH", "nehemias": "NEH",
+      "est": "EST", "ester": "EST",
+      "job": "JOB",
+      "sal": "PSA", "salmos": "PSA",
+      "pr": "PRO", "prov": "PRO", "proverbios": "PRO",
+      "ec": "ECC", "ecl": "ECC", "eclesiastés": "ECC", "eclesiastes": "ECC",
+      "cnt": "SNG", "cant": "SNG", "cantares": "SNG",
+      "is": "ISA", "isaías": "ISA", "isaias": "ISA",
+      "jer": "JER", "jeremías": "JER", "jeremias": "JER",
+      "lm": "LAM", "lam": "LAM", "lamentaciones": "LAM",
+      "ez": "EZK", "ezequiel": "EZK",
+      "dn": "DAN", "dan": "DAN", "daniel": "DAN",
+      "os": "HOS", "oseas": "HOS",
+      "jl": "JOL", "joel": "JOL",
+      "am": "AMO", "amós": "AMO", "amos": "AMO",
+      "abd": "OBA", "abdías": "OBA", "abdias": "OBA",
+      "jon": "JON", "jonás": "JON", "jonas": "JON",
+      "mi": "MIC", "miqueas": "MIC",
+      "nah": "NAM", "nahúm": "NAM", "nahum": "NAM",
+      "hab": "HAB", "habacuc": "HAB",
+      "sof": "ZEP", "sofonías": "ZEP", "sofonias": "ZEP",
+      "hag": "HAG", "hageo": "HAG",
+      "zc": "ZEC", "zacarías": "ZEC", "zacarias": "ZEC",
+      "mal": "MAL", "malaquías": "MAL", "malaquias": "MAL",
+      "mt": "MAT", "mateo": "MAT",
+      "mr": "MRK", "marcos": "MRK",
+      "lc": "LUK", "lucas": "LUK",
+      "jn": "JHN", "juan": "JHN",
+      "hch": "ACT", "hechos": "ACT",
+      "ro": "ROM", "rom": "ROM", "romanos": "ROM",
+      "1 co": "1CO", "1co": "1CO", "1 corintios": "1CO",
+      "2 co": "2CO", "2co": "2CO", "2 corintios": "2CO",
+      "gá": "GAL", "ga": "GAL", "gálatas": "GAL", "galatas": "GAL",
+      "ef": "EPH", "efesios": "EPH",
+      "fil": "PHP", "filipenses": "PHP",
+      "col": "COL", "colosenses": "COL",
+      "1 ts": "1TH", "1ts": "1TH", "1 tesalonicenses": "1TH",
+      "2 ts": "2TH", "2ts": "2TH", "2 tesalonicenses": "2TH",
+      "1 ti": "1TI", "1ti": "1TI", "1 timoteo": "1TI",
+      "2 ti": "2TI", "2ti": "2TI", "2 timoteo": "2TI",
+      "tit": "TIT", "tito": "TIT",
+      "flm": "PHM", "filemón": "PHM", "filemon": "PHM",
+      "he": "HEB", "heb": "HEB", "hebreos": "HEB",
+      "stg": "JAS", "santiago": "JAS",
+      "1 p": "1PE", "1p": "1PE", "1 pedro": "1PE",
+      "2 p": "2PE", "2p": "2PE", "2 pedro": "2PE",
+      "1 jn": "1JN", "1jn": "1JN", "1 juan": "1JN",
+      "2 jn": "2JN", "2jn": "2JN", "2 juan": "2JN",
+      "3 jn": "3JN", "3jn": "3JN", "3 juan": "3JN",
+      "jud": "JUD", "judas": "JUD",
+      "ap": "REV", "apocalipsis": "REV"
+    };
+
+    async function getBibleData(versionKey) {
+      if (biblesCache[versionKey]) return biblesCache[versionKey];
+      const filePath = BIBLE_FILES[versionKey] || './RVR1960.json';
+      const res = await fetch(filePath);
+      if (!res.ok) throw new Error(`No se pudo cargar el archivo ${filePath}`);
+      const json = await res.json();
+      biblesCache[versionKey] = json;
+      return json;
+    }
+
+    function fetchVersesFromData(bibleData, usfmCode, chapter, startV, endV) {
+      const book = bibleData.books.find(b => b.usfm && b.usfm.toUpperCase() === usfmCode);
+      if (!book) throw new Error(`Libro no encontrado (${usfmCode}).`);
+
+      const targetUsfm = `${usfmCode}.${chapter}`;
+      const chap = book.chapters.find(c => c.usfm && c.usfm.toUpperCase() === targetUsfm) || book.chapters[chapter - 1];
+      if (!chap) throw new Error(`Capítulo ${chapter} no encontrado.`);
+
+      let verses = [];
+      chap.items.forEach(item => {
+        if (item.type === 'verse' && Array.isArray(item.verse_numbers)) {
+          const match = item.verse_numbers.some(n => n >= startV && n <= endV);
+          if (match) {
+            const text = Array.isArray(item.lines) ? item.lines.join(" ").replace(/<[^>]*>/g, '').trim() : "";
+            if (text) {
+              verses.push(`<p><span class="v-num">${item.verse_numbers[0]}.</span> ${text}</p>`);
+            }
+          }
+        }
+      });
+
+      return verses.length ? verses.join("") : "<p>Versículo no disponible en esta versión.</p>";
+    }
+
+    // Modal
+    const verseModal = document.getElementById('verseModal');
+    const verseModalTitle = document.getElementById('verseModalTitle');
+    const verseModalContent = document.getElementById('verseModalContent');
+    const verseVersionSelector = document.getElementById('verseVersionSelector');
+    const btnCloseVerseModal = document.getElementById('btnCloseVerseModal');
+
+    let currentActiveCitation = null;
+
+    const savedBiblePref = localStorage.getItem('confesion_bible_pref') || 'RVR1960';
+    verseVersionSelector.value = savedBiblePref;
+
+    verseVersionSelector.onchange = (e) => {
+      localStorage.setItem('confesion_bible_pref', e.target.value);
+      if (currentActiveCitation) {
+        loadAndShowVerse(currentActiveCitation);
+      }
+    };
+
+    btnCloseVerseModal.onclick = () => verseModal.classList.remove('open');
+    verseModal.onclick = (e) => {
+      if (e.target === verseModal) verseModal.classList.remove('open');
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && verseModal.classList.contains('open')) {
+        verseModal.classList.remove('open');
+      }
+    });
+
+    async function loadAndShowVerse(cit) {
+      const version = verseVersionSelector.value;
+      verseModalTitle.textContent = `${cit.raw} (${version})`;
+      verseModalContent.innerHTML = '<p style="color:var(--text-muted); font-style:italic;">Consultando las Escrituras...</p>';
+      verseModal.classList.add('open');
+
+      try {
+        const data = await getBibleData(version);
+        const html = fetchVersesFromData(data, cit.usfm, cit.chapter, cit.startV, cit.endV);
+        verseModalContent.innerHTML = html;
+      } catch (err) {
+        verseModalContent.innerHTML = `<p style="color:#fca5a5;">Error al cargar pasaje: ${err.message}</p>`;
+      }
+    }
+
+    function autoLinkBibleCitations() {
+      // Procesa tanto los bloques de citas como las referencias entre paréntesis en los párrafos
+      const containers = document.querySelectorAll('.citas-biblicas, .parrafo');
+      const citeRegex = /(?:[1-3]\s+)?[A-Za-záéíóúÁÉÍÓÚñÑ\.]+\s+\d+:\d+(?:-\d+)?/g;
+
+      containers.forEach(container => {
+        // Para no dañar etiquetas HTML internas ya existentes, procesamos textNodes
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+        const textNodes = [];
+        let node;
+        while (node = walker.nextNode()) {
+          // Ignorar si el padre es un script o ya es enlace
+          if (node.parentElement && (node.parentElement.classList.contains('verse-link') || node.parentElement.tagName === 'A')) {
+            continue;
+          }
+          if (citeRegex.test(node.nodeValue)) {
+            textNodes.push(node);
+          }
+        }
+
+        textNodes.forEach(tNode => {
+          const val = tNode.nodeValue;
+          citeRegex.lastIndex = 0;
+          let match;
+          let lastIndex = 0;
+          const fragment = document.createDocumentFragment();
+
+          while ((match = citeRegex.exec(val)) !== null) {
+            const matchedText = match[0];
+            const startIdx = match.index;
+
+            // Texto previo
+            if (startIdx > lastIndex) {
+              fragment.appendChild(document.createTextNode(val.substring(lastIndex, startIdx)));
+            }
+
+            // Normalización de libro y versículo
+            const clean = matchedText.trim().replace(/\.$/, '');
+            const parts = clean.match(/^((?:[1-3]\s+)?[A-Za-záéíóúÁÉÍÓÚñÑ\.]+)\s+(\d+):(\d+)(?:-(\d+))?$/);
+
+            let isRecognized = false;
+            if (parts) {
+              const rawBook = parts[1].toLowerCase().replace(/\./g, '').trim();
+              const usfm = BOOK_MAP[rawBook];
+              if (usfm) {
+                isRecognized = true;
+                const chapter = parseInt(parts[2], 10);
+                const startV = parseInt(parts[3], 10);
+                const endV = parts[4] ? parseInt(parts[4], 10) : startV;
+
+                const span = document.createElement('span');
+                span.className = 'verse-link';
+                span.dataset.usfm = usfm;
+                span.dataset.chap = chapter;
+                span.dataset.start = startV;
+                span.dataset.end = endV;
+                span.dataset.raw = matchedText;
+                span.textContent = matchedText;
+                span.title = "Clic para ver texto bíblico";
+
+                span.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  currentActiveCitation = {
+                    usfm: span.dataset.usfm,
+                    chapter: parseInt(span.dataset.chap, 10),
+                    startV: parseInt(span.dataset.start, 10),
+                    endV: parseInt(span.dataset.end, 10),
+                    raw: span.dataset.raw
+                  };
+                  loadAndShowVerse(currentActiveCitation);
+                });
+
+                fragment.appendChild(span);
+              }
+            }
+
+            if (!isRecognized) {
+              fragment.appendChild(document.createTextNode(matchedText));
+            }
+
+            lastIndex = startIdx + matchedText.length;
+          }
+
+          if (lastIndex < val.length) {
+            fragment.appendChild(document.createTextNode(val.substring(lastIndex)));
+          }
+
+          tNode.parentNode.replaceChild(fragment, tNode);
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', autoLinkBibleCitations);
+  </script>
+</body>
+</html>
