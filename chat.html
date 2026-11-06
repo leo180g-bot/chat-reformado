@@ -1049,6 +1049,33 @@
     };
 
     // 1. INICIALIZACIÓN DE SESIÓN Y SEGURIDAD DE NICKS
+    const userRolesCache = {};
+
+    function normalizeRole(role) {
+      if (!role) return 'novice';
+      const r = String(role).toLowerCase().trim();
+      if (r.includes('admin')) return 'admin';
+      if (r.includes('mod')) return 'moderator';
+      if (r.includes('miembro') || r.includes('member')) return 'member';
+      if (r.includes('nov') || r.includes('novato') || r.includes('novicio')) return 'novice';
+      if (r.includes('invitado') || r.includes('guest')) return 'guest';
+      if (r.includes('bot')) return 'bot';
+      return r;
+    }
+
+    function getRoleDisplayName(role) {
+      const norm = normalizeRole(role);
+      switch(norm) {
+        case 'admin': return 'Admin';
+        case 'moderator': return 'Moderador';
+        case 'member': return 'Miembro';
+        case 'novice': return 'Novicio';
+        case 'guest': return 'Invitado';
+        case 'bot': return 'Bot';
+        default: return norm;
+      }
+    }
+
     async function initSession() {
       const guestRaw = localStorage.getItem('guest_user');
 
@@ -1087,28 +1114,38 @@
           return;
         }
 
-        // Consultar el perfil en Supabase
-        const { data: profile, error: profileErr } = await client
+        // Consultar el perfil en Supabase (primero por id, y con fallback por username si por alguna razón no coincidió el id)
+        let { data: profile, error: profileErr } = await client
           .from('profiles')
-          .select('username, role, doctrine_affinity, bio')
+          .select('id, username, role, doctrine_affinity, bio')
           .eq('id', session.user.id)
           .maybeSingle();
 
         if (profileErr) {
-          console.error("Error al leer tabla profiles:", profileErr);
+          console.error("Error al consultar profiles por id:", profileErr);
         }
 
-        // Si se leyó correctamente el perfil, tomamos su rol; si no, verificamos user_metadata
-        const userRole = (profile && profile.role) 
+        if (!profile && session.user.user_metadata?.username) {
+          const { data: pByNick } = await client
+            .from('profiles')
+            .select('id, username, role, doctrine_affinity, bio')
+            .eq('username', session.user.user_metadata.username)
+            .maybeSingle();
+          if (pByNick) profile = pByNick;
+        }
+
+        const rawRole = (profile && profile.role) 
           ? profile.role 
           : (session.user.user_metadata?.role || 'novice');
+
+        const resolvedRole = normalizeRole(rawRole);
 
         currentUser = {
           id: session.user.id,
           username: (profile && profile.username) 
             ? profile.username 
             : (session.user.user_metadata?.username || 'Hermano'),
-          role: userRole,
+          role: resolvedRole,
           doctrine: (profile && profile.doctrine_affinity) 
             ? profile.doctrine_affinity 
             : 'Reformada',
@@ -1117,6 +1154,9 @@
             : ''
         };
       }
+
+      // Guardar el rol propio en la caché de la sala
+      userRolesCache[currentUser.username.toLowerCase()] = currentUser.role;
 
       updateUserUI();
       setupPresence();
@@ -1127,11 +1167,16 @@
     }
 
     function updateUserUI() {
-      document.getElementById('userPillName').textContent = currentUser.username;
-      document.getElementById('userPill').title = `${currentUser.username} (${currentUser.role}) - Clic para editar perfil`;
+      const pillEl = document.getElementById('userPill');
+      const roleDisplay = getRoleDisplayName(currentUser.role);
+      pillEl.innerHTML = `
+        <span class="online-status-dot"></span>
+        <strong id="userPillName">${escapeHTML(currentUser.username)}</strong>
+        <span class="msg-role-tag role-${currentUser.role}" style="margin-left:4px; font-size:0.62rem;">${roleDisplay}</span>
+      `;
+      pillEl.title = `${currentUser.username} (${roleDisplay}) - Clic para ver / editar mi perfil`;
     }
-
-    // 2. CONTROL DE PRESENCIA, DUPLICADOS Y ANUNCIO DE ENTRADA/SALIDA
+// 2. CONTROL DE PRESENCIA, DUPLICADOS Y ANUNCIO DE ENTRADA/SALIDA
     function setupPresence() {
       const myNickLower = currentUser.username.trim().toLowerCase();
 
@@ -1223,6 +1268,9 @@
 
       Object.keys(state).forEach(k => {
         const entry = state[k][0];
+          if (entry && entry.username && entry.role) {
+            userRolesCache[entry.username.toLowerCase()] = normalizeRole(entry.role);
+          }
         const isMe = entry.username.toLowerCase() === currentUser.username.toLowerCase();
 
         const liDesktop = createOnlineUserElement(entry, isMe, false);
@@ -1783,17 +1831,24 @@
     const messagesContainer = document.getElementById('messagesContainer');
 
     function appendMessage(msg) {
-      const isSelf = msg.username.toLowerCase() === currentUser.username.toLowerCase();
+      const senderNick = (msg.username || 'Anónimo').trim();
+      const isSelf = senderNick.toLowerCase() === currentUser.username.toLowerCase();
       const div = document.createElement('div');
       div.className = `message-item ${isSelf ? 'self' : 'other'}`;
 
       const timeStr = new Date(msg.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const role = msg.role || 'novice';
+      
+      // Resolver rol dinámico: si el mensaje es del usuario actual, forzar siempre su rol actual de la sesión
+      let effectiveRole = isSelf 
+        ? currentUser.role 
+        : (userRolesCache[senderNick.toLowerCase()] || normalizeRole(msg.role));
+
+      const roleDisplay = getRoleDisplayName(effectiveRole);
 
       div.innerHTML = `
         <div class="msg-header">
-          <span class="msg-sender" data-nick="${escapeHTML(msg.username)}" data-role="${role}">${escapeHTML(msg.username)}</span>
-          <span class="msg-role-tag role-${role}">${role}</span>
+          <span class="msg-sender" data-nick="${escapeHTML(senderNick)}" data-role="${effectiveRole}">${escapeHTML(senderNick)}</span>
+          <span class="msg-role-tag role-${effectiveRole}">${roleDisplay}</span>
           <span class="msg-time">${timeStr}</span>
         </div>
         <div class="msg-body">${escapeHTML(msg.content)}</div>
@@ -1801,8 +1856,8 @@
 
       div.querySelector('.msg-sender').onclick = () => {
         openUserActionModal({
-          username: msg.username,
-          role: role,
+          username: senderNick,
+          role: effectiveRole,
           doctrine: msg.doctrine || 'Reformada'
         });
       };
