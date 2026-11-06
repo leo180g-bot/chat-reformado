@@ -20,7 +20,7 @@
   <meta property="og:url" content="https://chat-reformado.vercel.app/">
   <meta property="og:title" content="Comunión Doctrinal | Chat Cristiano y Estudio Bíblico">
   <meta property="og:description" content="Únete a la comunidad de estudio teológico y diálogo bíblico reformado en tiempo real. Mansedumbre, fraternidad y sana doctrina.">
-  <meta property="og:image" content="https://chat-reformado.vercel.app/og-image.jpg">
+  <meta property="og:image" content="https://chat-reformado.vercel.app/logo.jpeg">
   <meta property="og:locale" content="es_ES">
 
   <!-- Twitter / X Cards -->
@@ -28,7 +28,7 @@
   <meta name="twitter:url" content="https://chat-reformado.vercel.app/">
   <meta name="twitter:title" content="Comunión Doctrinal | Chat y Comunidad Cristiana">
   <meta name="twitter:description" content="Espacio de comunión fraternal y teología reformada en tiempo real. Estudio bíblico, citas contextuales y debate sano.">
-  <meta name="twitter:image" content="https://chat-reformado.vercel.app/og-image.jpg">
+  <meta name="twitter:image" content="https://chat-reformado.vercel.app/logo.jpeg">
 
   <meta name="theme-color" content="#0f172a">
 
@@ -153,6 +153,18 @@
     .brand-header {
       text-align: center;
       margin-bottom: 18px;
+    }
+
+    /* Estilos del Logo Principal */
+    .app-main-logo {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
+      margin: 0 auto 10px auto;
+      display: block;
     }
 
     .brand-header h1 {
@@ -367,6 +379,8 @@
   <!-- Tarjeta Central de Ingreso -->
   <main class="main-card">
     <header class="brand-header">
+      <!-- Logo Principal: logo.jpeg con fallback a logo.jpg o texto -->
+      <img src="logo.jpeg" alt="Logo Comunión Doctrinal" class="app-main-logo" onerror="if (this.src.indexOf('logo.jpeg') !== -1) { this.src='logo.jpg'; } else { this.style.display='none'; }">
       <h1>Comunión Doctrinal</h1>
       <p>Plataforma de diálogo teológico y edificación reformada</p>
     </header>
