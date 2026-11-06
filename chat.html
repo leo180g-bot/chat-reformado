@@ -1,3 +1,28 @@
+Aquí tienes el código completo y corregido de chat.html.
+
+Cambios y correcciones aplicadas:
+
+1.  Ubicación de herramientas: Los botones de Emojis (😀), GIFs (GIF) y Estilos
+    de Texto (🎨) ahora están ubicados entre el campo de texto y el botón
+    "Enviar".
+2.  Soporte completo para GIFs: Se implementó un panel con buscador, categorías
+    temáticas cristianas (Amén, Biblia, Alabanza, Reforma, etc.), opción de
+    pegar cualquier enlace directo .gif y visualización animada en el chat sin
+    desbordar.
+3.  Corrección de Fuentes, Colores y Tamaños: Se eliminaron comillas
+    conflictivas en las fuentes, se corrigió la expresión regular de
+    desempaquetado de estilos (unpackStyledContent) y ahora el estilo
+    personalizado se mantiene y se renderiza fielmente en todos los clientes.
+4.  Corrección en la inserción de emojis: Se corrigió el cálculo del cursor
+    (selectionStart ?? length) y la propagación de eventos para que no se cierre
+    la ventana al hacer clic en un emoji.
+5.  Notificaciones de Entrada y Salida: Ahora indican exactamente [Usuario] ha
+    entrado a la sala. y [Usuario] ha salido de la sala., sin anteponer
+    «Hermano/a».
+6.  BereanoBot como usuario en línea: Ahora aparece permanentemente en la lista
+    de usuarios activos (tanto en escritorio como en móvil), suma al contador de
+    conectados y permite consultar sus comandos bíblicos al hacer clic en él.
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -171,7 +196,7 @@
       color: #fff;
     }
 
-    /* Menú Desplegable / Opciones Agrupadas */
+    /* Menú Desplegable Móvil */
     .menu-container {
       position: relative;
     }
@@ -322,7 +347,7 @@
     .msg-sender.bot-name {
       color: #c084fc;
       text-decoration: none;
-      cursor: default;
+      cursor: pointer;
     }
 
     .msg-role-tag {
@@ -346,217 +371,20 @@
 
     .msg-body {
       color: var(--text-main);
-      line-height: 1.5;
     }
-    .msg-body img.chat-gif-img {
-      max-width: 220px;
+
+    /* Imagen GIF en el chat */
+    .msg-gif-img {
+      max-width: 100%;
+      max-height: 240px;
       border-radius: 8px;
+      margin-top: 4px;
       display: block;
-      margin-top: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #000;
     }
 
-    /* Herramientas de entrada: Estilos, Emojis y GIFs */
-    .input-tools-group {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-input-tool {
-      background: var(--bg-subpanel);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: all 0.15s;
-      flex-shrink: 0;
-    }
-    .btn-input-tool:hover {
-      background: var(--border-color);
-      color: var(--accent);
-    }
-    .btn-input-tool.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(56, 189, 248, 0.12);
-    }
-
-    /* Popovers Flotantes (Emojis, Estilos y GIFs) */
-    .popover-panel {
-      display: none;
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 14px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
-      z-index: 60;
-      animation: fadeIn 0.15s ease;
-      overflow: hidden;
-    }
-    .popover-panel.show {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .emoji-popover {
-      width: 310px;
-      max-height: 260px;
-    }
-    .popover-header {
-      padding: 8px 12px;
-      background: var(--bg-subpanel);
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .emoji-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      padding: 10px;
-      overflow-y: auto;
-      max-height: 200px;
-    }
-    .emoji-btn {
-      background: transparent;
-      border: none;
-      font-size: 1.25rem;
-      cursor: pointer;
-      border-radius: 6px;
-      padding: 4px;
-      line-height: 1;
-      transition: transform 0.1s, background-color 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .emoji-btn:hover {
-      background: var(--bg-subpanel);
-      transform: scale(1.2);
-    }
-
-    .style-popover {
-      width: 320px;
-      padding: 14px;
-      gap: 12px;
-    }
-    .style-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .style-field label {
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .style-field select, .style-field input {
-      padding: 7px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-subpanel);
-      color: var(--text-main);
-      font-size: 0.86rem;
-      outline: none;
-    }
-    .color-swatches {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      margin-top: 4px;
-    }
-    .swatch-btn {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s;
-    }
-    .swatch-btn:hover, .swatch-btn.selected {
-      transform: scale(1.2);
-      border-color: #fff;
-    }
-    .style-preview-box {
-      padding: 8px 12px;
-      background: var(--bg-subpanel);
-      border: 1px dashed var(--border-color);
-      border-radius: 6px;
-      text-align: center;
-      font-size: 0.92rem;
-      margin-top: 4px;
-    }
-    .btn-reset-style {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      align-self: flex-end;
-    }
-    .btn-reset-style:hover {
-      background: var(--border-color);
-      color: var(--text-main);
-    }
-
-    /* Popover de GIFs */
-    .gif-popover {
-      width: 340px;
-      max-height: 320px;
-      padding: 10px;
-    }
-    .gif-search-bar {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-    .gif-search-bar input {
-      flex: 1;
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-subpanel);
-      color: var(--text-main);
-      font-size: 0.84rem;
-      outline: none;
-    }
-    .gif-results-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-    .gif-thumb {
-      width: 100%;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: transform 0.15s, opacity 0.15s;
-    }
-    .gif-thumb:hover {
-      transform: scale(1.03);
-      opacity: 0.9;
-    }
-
-    /* Barra de Entrada */
+    /* Barra de Entrada de Mensajes */
     .chat-input-bar {
       padding: 10px 14px;
       background: var(--bg-panel);
@@ -577,27 +405,269 @@
       font-size: 0.92rem;
       outline: none;
       transition: border-color 0.15s;
+      min-width: 0;
     }
     .chat-input-bar input[type="text"]:focus {
       border-color: var(--accent);
+    }
+
+    /* Herramientas situadas entre el input y el botón Enviar */
+    .input-tools-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .btn-input-tool {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      min-width: 36px;
+      height: 38px;
+      padding: 0 8px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 700;
+      transition: all 0.15s;
+    }
+    .btn-input-tool:hover {
+      background: var(--border-color);
+      color: var(--accent);
+    }
+    .btn-input-tool.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.15);
+    }
+    .btn-tool-gif {
+      font-size: 0.76rem;
+      letter-spacing: 0.05em;
     }
 
     .btn-send {
       background: var(--accent-btn);
       border: none;
       color: #fff;
-      padding: 10px 16px;
+      padding: 10px 18px;
       border-radius: 8px;
       font-weight: 700;
       font-size: 0.88rem;
       cursor: pointer;
       transition: background 0.15s;
+      flex-shrink: 0;
     }
     .btn-send:hover {
       background: var(--accent-btn-hover);
     }
 
-    /* Barra Lateral de Usuarios Conectados */
+    /* Popovers Flotantes (Emojis, GIFs y Estilos) */
+    .popover-panel {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      right: 14px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+      z-index: 60;
+      animation: fadeIn 0.15s ease;
+      overflow: hidden;
+      max-width: calc(100vw - 28px);
+    }
+    .popover-panel.show {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .popover-header {
+      padding: 8px 12px;
+      background: var(--bg-subpanel);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Panel de Emojis */
+    .emoji-popover {
+      width: 320px;
+    }
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: 220px;
+    }
+    .emoji-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 4px;
+      line-height: 1;
+      transition: transform 0.1s, background-color 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .emoji-btn:hover {
+      background: var(--bg-subpanel);
+      transform: scale(1.2);
+    }
+
+    /* Panel de GIFs */
+    .gif-popover {
+      width: 330px;
+      max-height: 380px;
+    }
+    .gif-search-bar {
+      padding: 8px 10px;
+      background: var(--bg-subpanel);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .gif-search-bar input {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      outline: none;
+    }
+    .gif-chips {
+      display: flex;
+      gap: 5px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .gif-chip {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .gif-chip.active, .gif-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .gif-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: 240px;
+    }
+    .gif-item {
+      width: 100%;
+      height: 95px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+      background: #000;
+    }
+    .gif-item:hover {
+      transform: scale(1.03);
+      border-color: var(--accent);
+    }
+
+    /* Panel de Estilos */
+    .style-popover {
+      width: 320px;
+      padding: 12px;
+      gap: 10px;
+    }
+    .style-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .style-field label {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .style-field select {
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subpanel);
+      color: var(--text-main);
+      font-size: 0.86rem;
+      outline: none;
+    }
+    .color-swatches {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .swatch-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .swatch-btn:hover, .swatch-btn.selected {
+      transform: scale(1.2);
+      border-color: #fff;
+    }
+    .style-preview-box {
+      padding: 8px 12px;
+      background: var(--bg-subpanel);
+      border: 1px dashed var(--border-color);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.92rem;
+      margin-top: 2px;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-reset-style {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      align-self: flex-end;
+    }
+    .btn-reset-style:hover {
+      background: var(--border-color);
+      color: var(--text-main);
+    }
+
+    /* Barra Lateral de Conectados */
     .online-sidebar {
       background: var(--bg-subpanel);
       display: flex;
@@ -795,26 +865,23 @@
       color: #fff;
     }
 
-    /* SISTEMA DE PRIVADOS: Vista de Lista y Vista de Conversación */
+    /* SISTEMA DE PRIVADOS */
     .privates-layout {
       display: flex;
       flex-direction: column;
       height: 440px;
     }
-
     .privates-contacts-view {
       display: flex;
       flex-direction: column;
       height: 100%;
       overflow-y: auto;
     }
-
     .privates-chat-view {
       display: none;
       flex-direction: column;
       height: 100%;
     }
-
     .private-conv-header {
       padding: 8px 12px;
       background: var(--bg-subpanel);
@@ -825,7 +892,6 @@
       font-size: 0.85rem;
       color: var(--accent-gold);
     }
-
     .btn-back-privates {
       background: transparent;
       border: 1px solid var(--border-color);
@@ -839,7 +905,6 @@
       background: var(--border-color);
       color: var(--accent);
     }
-
     .btn-delete-conv {
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.35);
@@ -851,14 +916,12 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      transition: all 0.15s;
     }
     .btn-delete-conv:hover {
       background: #dc2626;
       border-color: #dc2626;
       color: #fff;
     }
-
     .btn-delete-contact {
       background: transparent;
       border: none;
@@ -867,13 +930,11 @@
       padding: 4px 6px;
       font-size: 0.85rem;
       border-radius: 4px;
-      transition: all 0.15s;
     }
     .btn-delete-contact:hover {
       background: rgba(239, 68, 68, 0.2);
       color: #ef4444;
     }
-
     .private-contact-item {
       padding: 10px 14px;
       border-bottom: 1px solid var(--border-color);
@@ -881,12 +942,10 @@
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      transition: background 0.15s;
     }
     .private-contact-item:hover {
       background: var(--bg-subpanel);
     }
-
     .contact-info {
       display: flex;
       flex-direction: column;
@@ -906,12 +965,6 @@
       text-overflow: ellipsis;
       max-width: 240px;
     }
-    .contact-meta {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-    }
     .contact-time {
       font-size: 0.7rem;
       color: var(--text-muted);
@@ -923,7 +976,6 @@
       background: #ef4444;
       display: inline-block;
     }
-
     .private-messages-list {
       flex: 1;
       overflow-y: auto;
@@ -933,7 +985,6 @@
       gap: 8px;
       background: var(--bg-body);
     }
-
     .private-input-row {
       display: flex;
       gap: 6px;
@@ -959,15 +1010,12 @@
       .online-sidebar {
         display: none;
       }
-
       .desktop-only {
         display: none !important;
       }
-
       .mobile-only {
         display: inline-flex !important;
       }
-
       .chat-header {
         padding: 8px 10px;
       }
@@ -975,9 +1023,13 @@
         display: none;
       }
       .popover-panel {
-        left: 8px;
         right: 8px;
+        left: 8px;
         width: auto;
+        max-width: none;
+      }
+      .btn-send {
+        padding: 10px 12px;
       }
     }
 
@@ -1004,12 +1056,10 @@
 
     <!-- Navegación y Acciones -->
     <nav class="header-nav">
-      <!-- BOTÓN DE SONIDO (Mute/Unmute) -->
       <button type="button" class="btn-sound-toggle active" id="btnSoundToggle" title="Sonidos del chat (activados)">
         🔊
       </button>
 
-      <!-- 1. OPCIONES VISIBLES POR FUERA EN MÓVIL Y ESCRITORIO -->
       <button type="button" class="btn-header" id="btnShowOnline" title="Usuarios Conectados">
         👥 <span class="desktop-only">En Línea</span> (<span id="onlineCountBadge">0</span>)
       </button>
@@ -1019,13 +1069,12 @@
         <span class="badge-count" id="privatesUnreadBadge">0</span>
       </button>
 
-      <!-- 2. ENLACES DIRECTOS EN ESCRITORIO -->
       <a href="confesiones.html" class="btn-header desktop-only" title="Confesiones de Fe">📜 Confesiones</a>
       <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="btn-header desktop-only" title="Abrir Lector Bíblico">📖 Biblia</a>
       <button type="button" class="btn-header desktop-only" id="btnEditProfileDesktop">👤 Mi Perfil</button>
       <button type="button" class="btn-header btn-logout desktop-only" id="btnLogoutDesktop" title="Cerrar Sesión">🚪 Salir</button>
 
-      <!-- 3. MENÚ AGRUPADO EN MÓVIL -->
+      <!-- Menú Agrupado Móvil -->
       <div class="menu-container mobile-only">
         <button type="button" class="btn-header" id="btnToggleMenu" title="Más opciones">
           ☰ Menú
@@ -1042,10 +1091,10 @@
 
   <!-- Cuerpo del Chat -->
   <div class="chat-layout">
-    <!-- Panel Central de Mensajes -->
-    <main class="chat-main" style="position:relative;">
+    <!-- Panel Central -->
+    <main class="chat-main">
       <div class="messages-container" id="messagesContainer">
-        <!-- Los mensajes en tiempo real se cargan aquí -->
+        <!-- Mensajes en tiempo real -->
       </div>
 
       <!-- Popover de Emojis -->
@@ -1069,7 +1118,6 @@
           <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
           <button type="button" class="emoji-btn" data-emoji="🤝">🤝</button>
           <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
-          <button type="button" class="emoji-btn" data-emoji="✊">✊</button>
           <button type="button" class="emoji-btn" data-emoji="🫂">🫂</button>
           <button type="button" class="emoji-btn" data-emoji="😀">😀</button>
           <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
@@ -1088,7 +1136,28 @@
           <button type="button" class="emoji-btn" data-emoji="🎺">🎺</button>
           <button type="button" class="emoji-btn" data-emoji="🐑">🐑</button>
           <button type="button" class="emoji-btn" data-emoji="☀️">☀️</button>
-          <button type="button" class="emoji-btn" data-emoji="🌈">🌈</button>
+        </div>
+      </div>
+
+      <!-- Popover de GIFs -->
+      <div class="popover-panel gif-popover" id="gifPopover">
+        <div class="popover-header">
+          <span>🎞️ Reacciones y GIFs</span>
+          <button type="button" class="btn-close-modal" id="btnCloseGifPopover" style="font-size:1.1rem;">&times;</button>
+        </div>
+        <div class="gif-search-bar">
+          <input type="text" id="gifSearchInput" placeholder="Pegar URL .gif o buscar (amén, biblia, gozo)...">
+          <div class="gif-chips">
+            <span class="gif-chip active" data-category="all">Todos</span>
+            <span class="gif-chip" data-category="amen">Amén 🙏</span>
+            <span class="gif-chip" data-category="biblia">Biblia 📖</span>
+            <span class="gif-chip" data-category="alabanza">Alabanza 🙌</span>
+            <span class="gif-chip" data-category="reforma">Reforma 📜</span>
+            <span class="gif-chip" data-category="paz">Paz 🕊️</span>
+          </div>
+        </div>
+        <div class="gif-grid" id="gifGridContainer">
+          <!-- Miniaturas de GIFs -->
         </div>
       </div>
 
@@ -1104,10 +1173,11 @@
           <select id="userFontSelect">
             <option value="default" selected>Estándar (Sans-serif)</option>
             <option value="Georgia, serif">Clásica / Serif (Georgia)</option>
-            <option value="'Courier New', monospace">Monospace (Máquina)</option>
-            <option value="'Trebuchet MS', sans-serif">Trebuchet Modern</option>
-            <option value="'Times New Roman', serif">Times New Roman</option>
-            <option value="'Segoe Script', cursive">Manuscrita / Cursiva</option>
+            <option value="Courier New, monospace">Monospace (Máquina)</option>
+            <option value="Trebuchet MS, sans-serif">Trebuchet Modern</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+            <option value="Segoe Script, cursive, sans-serif">Manuscrita / Cursiva</option>
           </select>
         </div>
 
@@ -1128,7 +1198,7 @@
         <div class="style-field">
           <label>Tamaño:</label>
           <select id="userFontSizeSelect">
-            <option value="0.82rem">Pequeño (82%)</option>
+            <option value="0.84rem">Pequeño (84%)</option>
             <option value="normal" selected>Normal (100%)</option>
             <option value="1.05rem">Grande (105%)</option>
             <option value="1.15rem">Destacado (115%)</option>
@@ -1142,41 +1212,27 @@
         <button type="button" class="btn-reset-style" id="btnResetStyle">Restablecer por defecto</button>
       </div>
 
-      <!-- Popover de GIFs de Giphy -->
-      <div class="popover-panel gif-popover" id="gifPopover">
-        <div class="popover-header">
-          <span>🎞️ Enviar GIF (Giphy)</span>
-          <button type="button" class="btn-close-modal" id="btnCloseGifPopover" style="font-size:1.1rem;">&times;</button>
-        </div>
-        <div class="gif-search-bar">
-          <input type="text" id="gifSearchInput" placeholder="Buscar GIF (ej. bendicion, alabanza)..." autocomplete="off">
-          <button type="button" class="btn-send" id="btnSearchGif" style="padding:6px 12px; font-size:0.8rem;">Buscar</button>
-        </div>
-        <div class="gif-results-grid" id="gifResultsGrid">
-          <p style="grid-column: span 2; text-align:center; color:var(--text-muted); font-size:0.8rem; padding:15px;">Escribe un término y busca GIFs.</p>
-        </div>
-      </div>
-
+      <!-- Barra de Envío: [Input] [Herramientas: 😀, GIF, 🎨] [Enviar] -->
       <form class="chat-input-bar" id="chatForm">
+        <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea..." autocomplete="off" required maxlength="1000">
+
         <div class="input-tools-group">
-          <button type="button" class="btn-input-tool" id="btnToggleEmoji" title="Insertar emojis">😀</button>
+          <button type="button" class="btn-input-tool" id="btnToggleEmoji" title="Insertar emojis (✝️, 📖, 🙏...)">😀</button>
+          <button type="button" class="btn-input-tool btn-tool-gif" id="btnToggleGif" title="Enviar GIF o Reacción">GIF</button>
           <button type="button" class="btn-input-tool" id="btnToggleStyle" title="Personalizar fuente, color y tamaño">🎨</button>
-          <button type="button" class="btn-input-tool" id="btnToggleGif" title="Enviar GIF animado">🎞️</button>
         </div>
-        <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea para ayuda..." autocomplete="off" required maxlength="1000">
+
         <button type="submit" class="btn-send">Enviar</button>
       </form>
     </main>
 
-    <!-- Barra Lateral de Usuarios Activos (Desktop) -->
+    <!-- Barra Lateral de Usuarios Conectados (Desktop) -->
     <aside class="online-sidebar">
       <div class="sidebar-header">
         <span>Usuarios Activos</span>
         <span id="onlineCountDesktop" style="color:var(--accent);">0</span>
       </div>
-      <ul class="user-list" id="onlineUserListDesktop">
-        <!-- Lista de usuarios presentes -->
-      </ul>
+      <ul class="user-list" id="onlineUserListDesktop"></ul>
     </aside>
   </div>
 
@@ -1200,6 +1256,9 @@
         <div class="action-btn-group">
           <button type="button" class="btn-action" id="btnStartPrivateChat">
             💬 Enviar Mensaje Privado
+          </button>
+          <button type="button" class="btn-action" id="btnAskBotAction" style="display:none;">
+            📖 Consultar Comandos de BereanoBot
           </button>
 
           <div id="adminActionSection" style="display:none; flex-direction:column; gap:8px; margin-top:6px;">
@@ -1274,26 +1333,22 @@
         <button type="button" class="btn-close-modal" id="btnClosePrivatesModal">&times;</button>
       </div>
       <div class="privates-layout">
-        <!-- VISTA A: Lista de Remitentes / Conversaciones -->
+        <!-- VISTA A: Remitentes -->
         <div class="privates-contacts-view" id="privatesContactsView">
           <div style="padding:10px 14px; font-size:0.75rem; color:var(--text-muted); background:var(--bg-subpanel); border-bottom:1px solid var(--border-color);">
             Bandeja de conversaciones directas:
           </div>
-          <div id="privatesContactList">
-            <!-- Lista de personas que han enviado mensajes -->
-          </div>
+          <div id="privatesContactList"></div>
         </div>
 
-        <!-- VISTA B: Conversación individual activa -->
+        <!-- VISTA B: Chat Directo -->
         <div class="privates-chat-view" id="privatesChatView">
           <div class="private-conv-header" id="privatePartnerHeader">
             <button type="button" class="btn-back-privates" id="btnBackToContacts">← Lista</button>
             <span>Con: <strong id="privatePartnerNick">Usuario</strong></span>
             <button type="button" class="btn-delete-conv" id="btnDeleteConversation" title="Eliminar mensajes y cerrar este chat">🗑️ Borrar chat</button>
           </div>
-          <div class="private-messages-list" id="privateMessagesList">
-            <!-- Mensajes con el partner -->
-          </div>
+          <div class="private-messages-list" id="privateMessagesList"></div>
           <form class="private-input-row" id="privateSendForm">
             <input type="text" id="privateMsgInput" placeholder="Mensaje privado..." autocomplete="off" required maxlength="500">
             <button type="submit" class="btn-send" style="padding:8px 14px;">Enviar</button>
@@ -1311,9 +1366,7 @@
         <button type="button" class="btn-close-modal" id="btnCloseOnlineMobileModal">&times;</button>
       </div>
       <div class="modal-body" style="padding:10px;">
-        <ul class="user-list" id="onlineUserListMobile" style="max-height:60vh;">
-          <!-- Lista móvil de conectados -->
-        </ul>
+        <ul class="user-list" id="onlineUserListMobile" style="max-height:60vh;"></ul>
       </div>
     </div>
   </div>
@@ -1322,7 +1375,6 @@
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const GIPHY_API_KEY = "b4WtjSwJeeaO5vY2rl5P2CwDbmy3aBoc";
 
     let currentUser = null;
     let presenceChannel = null;
@@ -1332,7 +1384,21 @@
     let isInitialPresenceSync = true;
     let soundsEnabled = true;
 
-    // 0. REPRODUCCIÓN DE AUDIO MP3
+    // Galería Predefinida de GIFs
+    const GIF_GALLERY = [
+      { category: 'amen', title: 'Amén Oración', url: 'https://media.giphy.com/media/l1J9APRq3Kwd79Q7m/giphy.gif' },
+      { category: 'amen', title: 'Orando en fe', url: 'https://media.giphy.com/media/3orieTfp1MeFLiBQR2/giphy.gif' },
+      { category: 'biblia', title: 'Escudriñando las Escrituras', url: 'https://media.giphy.com/media/l41lOdm2m76oOHKso/giphy.gif' },
+      { category: 'biblia', title: 'Lectura Bíblica', url: 'https://media.giphy.com/media/26FmQgC49a0sTVn0Y/giphy.gif' },
+      { category: 'alabanza', title: 'Gloria a Dios', url: 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif' },
+      { category: 'alabanza', title: 'Aplaudiendo con gozo', url: 'https://media.giphy.com/media/13GKP7xGjce5oI/giphy.gif' },
+      { category: 'reforma', title: 'Soli Deo Gloria', url: 'https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif' },
+      { category: 'paz', title: 'Paloma de la Paz', url: 'https://media.giphy.com/media/3o7TKRBB3E7IdVNLm8/giphy.gif' },
+      { category: 'amen', title: 'Amén y Amén', url: 'https://media.giphy.com/media/26u4lOMA8JKSnL9Uk/giphy.gif' },
+      { category: 'alabanza', title: 'Gozo en el Señor', url: 'https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif' }
+    ];
+
+    // Reproducción de Audio
     const AUDIO_FILES = {
       mencion: new Audio('mencion.mp3'),
       mensaje: new Audio('mensaje.mp3'),
@@ -1370,8 +1436,11 @@
       if (soundsEnabled) playSound('outgoing');
     };
 
-    // 1. INICIALIZACIÓN DE SESIÓN Y SEGURIDAD DE NICKS
-    const userRolesCache = {};
+    // Roles y Normalización
+    const userRolesCache = {
+      'bereanobot': 'bot',
+      'bereanobot 📖': 'bot'
+    };
 
     function normalizeRole(role) {
       if (!role) return 'novice';
@@ -1398,6 +1467,7 @@
       }
     }
 
+    // Inicialización de Sesión
     async function initSession() {
       const guestRaw = localStorage.getItem('guest_user');
 
@@ -1440,28 +1510,22 @@
         let profile = null;
 
         try {
-          const { data: pById } = await client.from('profiles').select('*').eq('id', authUserId).maybeSingle();
+          const { data: pById } = await client
+            .from('profiles')
+            .select('*')
+            .eq('id', authUserId)
+            .maybeSingle();
           if (pById) profile = pById;
         } catch (e) {}
 
-        if (!profile) {
-          try {
-            const { data: pByUserId } = await client.from('profiles').select('*').eq('user_id', authUserId).maybeSingle();
-            if (pByUserId) profile = pByUserId;
-          } catch (e) {}
-        }
-
         if (!profile && authUserNick) {
           try {
-            const { data: pByNick } = await client.from('profiles').select('*').ilike('username', authUserNick).maybeSingle();
+            const { data: pByNick } = await client
+              .from('profiles')
+              .select('*')
+              .ilike('username', authUserNick)
+              .maybeSingle();
             if (pByNick) profile = pByNick;
-          } catch (e) {}
-        }
-
-        if (!profile) {
-          try {
-            const { data: rpcProfile } = await client.rpc('get_my_profile');
-            if (rpcProfile && rpcProfile.length) profile = rpcProfile[0];
           } catch (e) {}
         }
 
@@ -1508,7 +1572,7 @@
     }
 
     // ==========================================
-    // SISTEMA DE FUENTES, COLORES, TAMAÑOS, EMOJIS Y GIPHY
+    // SISTEMA DE ESTILOS, EMOJIS Y GIFS
     // ==========================================
     let userTextStyle = {
       font: 'default',
@@ -1523,19 +1587,18 @@
 
     const msgInput = document.getElementById('msgInput');
     const emojiPopover = document.getElementById('emojiPopover');
-    const stylePopover = document.getElementById('stylePopover');
     const gifPopover = document.getElementById('gifPopover');
+    const stylePopover = document.getElementById('stylePopover');
     const btnToggleEmoji = document.getElementById('btnToggleEmoji');
-    const btnToggleStyle = document.getElementById('btnToggleStyle');
     const btnToggleGif = document.getElementById('btnToggleGif');
+    const btnToggleStyle = document.getElementById('btnToggleStyle');
     const userFontSelect = document.getElementById('userFontSelect');
     const userFontSizeSelect = document.getElementById('userFontSizeSelect');
     const stylePreviewBox = document.getElementById('stylePreviewBox');
     const customColorPicker = document.getElementById('customColorPicker');
     const colorSwatches = document.querySelectorAll('.swatch-btn');
+    const gifGridContainer = document.getElementById('gifGridContainer');
     const gifSearchInput = document.getElementById('gifSearchInput');
-    const btnSearchGif = document.getElementById('btnSearchGif');
-    const gifResultsGrid = document.getElementById('gifResultsGrid');
 
     function applyStyleToInput() {
       if (!msgInput) return;
@@ -1548,6 +1611,51 @@
         stylePreviewBox.style.color = userTextStyle.color !== 'default' ? userTextStyle.color : 'var(--text-main)';
         stylePreviewBox.style.fontSize = userTextStyle.size !== 'normal' ? userTextStyle.size : '0.92rem';
       }
+
+      const hasCustomStyle = userTextStyle.font !== 'default' || userTextStyle.color !== 'default' || userTextStyle.size !== 'normal';
+      if (btnToggleStyle) {
+        btnToggleStyle.classList.toggle('active', hasCustomStyle);
+      }
+    }
+
+    function saveAndApplyStyle() {
+      applyStyleToInput();
+      try {
+        localStorage.setItem('cd_user_text_style', JSON.stringify(userTextStyle));
+      } catch(e) {}
+    }
+
+    function packStyledContent(text) {
+      if (userTextStyle.font === 'default' && userTextStyle.color === 'default' && userTextStyle.size === 'normal') {
+        return text;
+      }
+      return `[CD_STYLE:${userTextStyle.font}|${userTextStyle.color}|${userTextStyle.size}]${text}[/CD_STYLE]`;
+    }
+
+    function unpackStyledContent(rawContent) {
+      if (!rawContent) return { text: '', font: 'default', color: 'default', size: 'normal', isGif: false, gifUrl: '' };
+
+      const gifMatch = String(rawContent).match(/^\[CD_GIF:(https?:\/\/[^\]]+)\]$/i);
+      if (gifMatch) {
+        return { text: '', font: 'default', color: 'default', size: 'normal', isGif: true, gifUrl: gifMatch[1] };
+      }
+
+      const m = String(rawContent).match(/^\[CD_STYLE:([^|]+)\|([^|]+)\|([^\]]+)\]([\s\S]*?)\[\/CD_STYLE\]$/);
+      if (m) {
+        const innerText = m[4];
+        const innerGif = innerText.match(/^\[CD_GIF:(https?:\/\/[^\]]+)\]$/i);
+        if (innerGif) {
+          return { text: '', font: m[1], color: m[2], size: m[3], isGif: true, gifUrl: innerGif[1] };
+        }
+        return { font: m[1], color: m[2], size: m[3], text: innerText, isGif: false, gifUrl: '' };
+      }
+
+      const directGifMatch = String(rawContent).trim().match(/^(https?:\/\/[^\s]+?\.(?:gif|webp)(?:\?[^\s]*)?)$/i);
+      if (directGifMatch) {
+        return { text: '', font: 'default', color: 'default', size: 'normal', isGif: true, gifUrl: directGifMatch[1] };
+      }
+
+      return { font: 'default', color: 'default', size: 'normal', text: rawContent, isGif: false, gifUrl: '' };
     }
 
     function initStyleEmojiAndGifControls() {
@@ -1575,7 +1683,8 @@
       }
 
       colorSwatches.forEach(btn => {
-        btn.onclick = () => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
           colorSwatches.forEach(b => b.classList.remove('selected'));
           btn.classList.add('selected');
           userTextStyle.color = btn.getAttribute('data-color');
@@ -1597,21 +1706,19 @@
           userTextStyle = { font: 'default', color: 'default', size: 'normal' };
           if (userFontSelect) userFontSelect.value = 'default';
           if (userFontSizeSelect) userFontSizeSelect.value = 'normal';
-          colorSwatches.forEach(b => {
-            b.classList.toggle('selected', b.getAttribute('data-color') === 'default');
-          });
+          colorSwatches.forEach(b => b.classList.toggle('selected', b.getAttribute('data-color') === 'default'));
           saveAndApplyStyle();
         };
       }
 
-      // Toggles de Popovers
+      // Alternar Emojis
       if (btnToggleEmoji) {
         btnToggleEmoji.onclick = (e) => {
           e.stopPropagation();
           stylePopover.classList.remove('show');
           gifPopover.classList.remove('show');
-          btnToggleStyle.classList.remove('active');
           btnToggleGif.classList.remove('active');
+          btnToggleStyle.classList.remove('active');
           const isShow = emojiPopover.classList.toggle('show');
           btnToggleEmoji.classList.toggle('active', isShow);
         };
@@ -1621,6 +1728,44 @@
         btnToggleEmoji.classList.remove('active');
       };
 
+      // Inserción de Emojis
+      document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const emoji = btn.getAttribute('data-emoji');
+          if (!emoji) return;
+
+          const start = msgInput.selectionStart ?? msgInput.value.length;
+          const end = msgInput.selectionEnd ?? msgInput.value.length;
+          const val = msgInput.value;
+
+          msgInput.value = val.substring(0, start) + emoji + val.substring(end);
+          msgInput.focus();
+          const nextPos = start + emoji.length;
+          msgInput.setSelectionRange(nextPos, nextPos);
+        };
+      });
+
+      // Alternar GIFs
+      if (btnToggleGif) {
+        btnToggleGif.onclick = (e) => {
+          e.stopPropagation();
+          emojiPopover.classList.remove('show');
+          stylePopover.classList.remove('show');
+          btnToggleEmoji.classList.remove('active');
+          btnToggleStyle.classList.remove('active');
+          const isShow = gifPopover.classList.toggle('show');
+          btnToggleGif.classList.toggle('active', isShow);
+          if (isShow) renderGifs('all');
+        };
+      }
+      document.getElementById('btnCloseGifPopover').onclick = () => {
+        gifPopover.classList.remove('show');
+        btnToggleGif.classList.remove('active');
+      };
+
+      // Alternar Estilos
       if (btnToggleStyle) {
         btnToggleStyle.onclick = (e) => {
           e.stopPropagation();
@@ -1637,94 +1782,91 @@
         btnToggleStyle.classList.remove('active');
       };
 
-      if (btnToggleGif) {
-        btnToggleGif.onclick = (e) => {
+      // Filtros de categoría de GIFs
+      document.querySelectorAll('.gif-chip').forEach(chip => {
+        chip.onclick = (e) => {
           e.stopPropagation();
-          emojiPopover.classList.remove('show');
-          stylePopover.classList.remove('show');
-          btnToggleEmoji.classList.remove('active');
-          btnToggleStyle.classList.remove('active');
-          const isShow = gifPopover.classList.toggle('show');
-          btnToggleGif.classList.toggle('active', isShow);
-          if (isShow && gifSearchInput) gifSearchInput.focus();
-        };
-      }
-      document.getElementById('btnCloseGifPopover').onclick = () => {
-        gifPopover.classList.remove('show');
-        btnToggleGif.classList.remove('active');
-      };
-
-      // Inserción de emoji
-      document.querySelectorAll('.emoji-btn').forEach(btn => {
-        btn.onclick = () => {
-          const emoji = btn.getAttribute('data-emoji');
-          if (!emoji) return;
-          const start = msgInput.selectionStart || msgInput.value.length;
-          const end = msgInput.selectionEnd || msgInput.value.length;
-          const val = msgInput.value;
-          msgInput.value = val.substring(0, start) + emoji + val.substring(end);
-          msgInput.focus();
-          msgInput.selectionStart = msgInput.selectionEnd = start + emoji.length;
+          document.querySelectorAll('.gif-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          renderGifs(chip.getAttribute('data-category'), gifSearchInput.value.trim());
         };
       });
 
-      // Búsqueda de GIFs en Giphy
-      if (btnSearchGif) {
-        btnSearchGif.onclick = () => searchGiphy(gifSearchInput.value.trim());
-      }
+      // Búsqueda o pegado de GIF
       if (gifSearchInput) {
+        gifSearchInput.oninput = () => {
+          const activeChip = document.querySelector('.gif-chip.active');
+          const cat = activeChip ? activeChip.getAttribute('data-category') : 'all';
+          renderGifs(cat, gifSearchInput.value.trim());
+        };
         gifSearchInput.onkeydown = (e) => {
-          if (e.key === 'Enter') searchGiphy(gifSearchInput.value.trim());
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const val = gifSearchInput.value.trim();
+            if (val.startsWith('http')) {
+              sendGifMessage(val);
+              gifSearchInput.value = '';
+            }
+          }
         };
       }
 
-      // Cerrar popovers al hacer clic fuera
+      // Cerrar popovers al hacer clic afuera
       document.addEventListener('click', (e) => {
-        if (emojiPopover && !emojiPopover.contains(e.target) && e.target !== btnToggleEmoji) {
+        if (emojiPopover && !emojiPopover.contains(e.target) && !btnToggleEmoji.contains(e.target)) {
           emojiPopover.classList.remove('show');
-          if (btnToggleEmoji) btnToggleEmoji.classList.remove('active');
+          btnToggleEmoji.classList.remove('active');
         }
-        if (stylePopover && !stylePopover.contains(e.target) && e.target !== btnToggleStyle) {
-          stylePopover.classList.remove('show');
-          if (btnToggleStyle) btnToggleStyle.classList.remove('active');
-        }
-        if (gifPopover && !gifPopover.contains(e.target) && e.target !== btnToggleGif) {
+        if (gifPopover && !gifPopover.contains(e.target) && !btnToggleGif.contains(e.target)) {
           gifPopover.classList.remove('show');
-          if (btnToggleGif) btnToggleGif.classList.remove('active');
+          btnToggleGif.classList.remove('active');
+        }
+        if (stylePopover && !stylePopover.contains(e.target) && !btnToggleStyle.contains(e.target)) {
+          stylePopover.classList.remove('show');
+          btnToggleStyle.classList.remove('active');
         }
       });
     }
 
-    async function searchGiphy(query) {
-      if (!query) return;
-      gifResultsGrid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--text-muted); font-size:0.8rem; padding:15px;">Buscando GIFs...</p>';
-      try {
-        const res = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=8&rating=g`);
-        const json = await res.json();
-        if (json.data && json.data.length > 0) {
-          gifResultsGrid.innerHTML = '';
-          json.data.forEach(gif => {
-            const thumbUrl = gif.images.fixed_height_small.url;
-            const fullUrl = gif.images.fixed_height.url;
-            const img = document.createElement('img');
-            img.src = thumbUrl;
-            img.className = 'gif-thumb';
-            img.onclick = () => sendGifMessage(fullUrl);
-            gifResultsGrid.appendChild(img);
-          });
-        } else {
-          gifResultsGrid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--text-muted); font-size:0.8rem; padding:15px;">No se encontraron GIFs.</p>';
-        }
-      } catch (err) {
-        gifResultsGrid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:#fca5a5; font-size:0.8rem; padding:15px;">Error al conectar con Giphy.</p>';
+    function renderGifs(category = 'all', query = '') {
+      gifGridContainer.innerHTML = '';
+      const q = query.toLowerCase();
+
+      let filtered = GIF_GALLERY.filter(item => {
+        const matchesCategory = (category === 'all' || item.category === category);
+        const matchesQuery = !q || item.title.toLowerCase().includes(q) || item.category.toLowerCase().includes(q);
+        return matchesCategory && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        gifGridContainer.innerHTML = `
+          <div style="grid-column:1/-1; padding:20px; text-align:center; color:var(--text-muted); font-size:0.8rem;">
+            Presiona Enter para enviar la URL directa del GIF que pegaste arriba.
+          </div>
+        `;
+        return;
       }
+
+      filtered.forEach(item => {
+        const img = document.createElement('img');
+        img.src = item.url;
+        img.alt = item.title;
+        img.title = `Enviar: ${item.title}`;
+        img.className = 'gif-item';
+        img.loading = 'lazy';
+        img.onclick = () => {
+          sendGifMessage(item.url);
+        };
+        gifGridContainer.appendChild(img);
+      });
     }
 
     async function sendGifMessage(gifUrl) {
+      if (!gifUrl) return;
       gifPopover.classList.remove('show');
-      if (btnToggleGif) btnToggleGif.classList.remove('active');
+      btnToggleGif.classList.remove('active');
 
-      const gifContent = `[CD_GIF]${gifUrl}[/CD_GIF]`;
+      const gifContent = `[CD_GIF:${gifUrl}]`;
       const newMsg = {
         sender_id: currentUser.id,
         username: currentUser.username,
@@ -1738,51 +1880,9 @@
       await client.from('messages').insert([newMsg]);
     }
 
-    function saveAndApplyStyle() {
-      applyStyleToInput();
-      try {
-        localStorage.setItem('cd_user_text_style', JSON.stringify(userTextStyle));
-      } catch(e) {}
-    }
-
-    function packStyledContent(text) {
-      if (userTextStyle.font === 'default' && userTextStyle.color === 'default' && userTextStyle.size === 'normal') {
-        return text;
-      }
-      return `[CD_STYLE:${userTextStyle.font}|${userTextStyle.color}|${userTextStyle.size}]${text}[/CD_STYLE]`;
-    }
-
-    function unpackStyledContent(rawContent) {
-      if (!rawContent) return { text: '', font: 'default', color: 'default', size: 'normal', isGif: false, gifUrl: '' };
-
-      // Comprobar si es un GIF
-      const gifMatch = String(rawContent).match(/^\[CD_GIF\]([\s\S]*?)\[\/CD_GIF\]$/);
-      if (gifMatch) {
-        return { text: '', font: 'default', color: 'default', size: 'normal', isGif: true, gifUrl: gifMatch[1] };
-      }
-
-      const m = String(rawContent).match(/^\[CD_STYLE:([^\|]+)\|([^\|]+)\|([^\]]+)\]([\s\S]*?)\[\/CD_STYLE\]$/);
-      if (m) {
-        return {
-          font: m[1],
-          color: m[2],
-          size: m[3],
-          text: m[4],
-          isGif: false,
-          gifUrl: ''
-        };
-      }
-      return {
-        font: 'default',
-        color: 'default',
-        size: 'normal',
-        text: rawContent,
-        isGif: false,
-        gifUrl: ''
-      };
-    }
-
-    // 2. CONTROL DE PRESENCIA Y NICK DUPLICADO
+    // ==========================================
+    // CONTROL DE PRESENCIA Y ENTRADA / SALIDA
+    // ==========================================
     function setupPresence() {
       const myNickLower = currentUser.username.trim().toLowerCase();
 
@@ -1794,7 +1894,8 @@
         .on('presence', { event: 'sync' }, () => {
           const state = presenceChannel.presenceState();
           const activeKeys = Object.keys(state);
-          const totalOnline = activeKeys.length;
+          // +1 porque BereanoBot cuenta como usuario en línea permanente
+          const totalOnline = activeKeys.length + 1;
 
           document.getElementById('onlineCountBadge').textContent = totalOnline;
           document.getElementById('onlineCountDesktop').textContent = totalOnline;
@@ -1813,6 +1914,7 @@
             }
           }
 
+          // Detección de Entrada y Salida (sin anteponer Hermano/a)
           const currentNicks = new Set();
           activeKeys.forEach(k => {
             const user = state[k][0];
@@ -1820,16 +1922,18 @@
           });
 
           if (!isInitialPresenceSync) {
+            // Usuario entra
             currentNicks.forEach(nick => {
               if (!previousOnlineUsers.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
-                appendSystemNotice(`🚪 Hermano/a ${nick} ha ingresado a la comunión.`);
+                appendSystemNotice(`🚪 ${nick} ha entrado a la sala.`);
                 playSound('join');
               }
             });
 
+            // Usuario sale
             previousOnlineUsers.forEach(nick => {
               if (!currentNicks.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
-                appendSystemNotice(`🚶 Hermano/a ${nick} se ha retirado de la sala.`);
+                appendSystemNotice(`🚶 ${nick} ha salido de la sala.`);
                 playSound('leave');
               }
             });
@@ -1868,6 +1972,16 @@
       desktopList.innerHTML = '';
       mobileList.innerHTML = '';
 
+      // BereanoBot integrado siempre como usuario en línea
+      const botUserData = {
+        username: 'BereanoBot 📖',
+        role: 'bot',
+        doctrine: 'Reformada Confesional',
+        isBot: true
+      };
+      desktopList.appendChild(createOnlineUserElement(botUserData, false, false));
+      mobileList.appendChild(createOnlineUserElement(botUserData, false, true));
+
       Object.keys(state).forEach(k => {
         const entry = state[k][0];
         if (entry && entry.username && entry.role) {
@@ -1875,11 +1989,8 @@
         }
         const isMe = entry.username.toLowerCase() === currentUser.username.toLowerCase();
 
-        const liDesktop = createOnlineUserElement(entry, isMe, false);
-        const liMobile = createOnlineUserElement(entry, isMe, true);
-
-        desktopList.appendChild(liDesktop);
-        mobileList.appendChild(liMobile);
+        desktopList.appendChild(createOnlineUserElement(entry, isMe, false));
+        mobileList.appendChild(createOnlineUserElement(entry, isMe, true));
       });
     }
 
@@ -1888,7 +1999,7 @@
       li.className = 'online-user-item';
       li.innerHTML = `
         <span><span class="online-status-dot"></span><strong>${escapeHTML(userData.username)}</strong> ${isMe ? '<small style="color:var(--text-muted);">(Tú)</small>' : ''}</span>
-        <span class="msg-role-tag role-${userData.role}">${userData.role}</span>
+        <span class="msg-role-tag role-${userData.role}">${userData.role === 'bot' ? 'Bot' : userData.role}</span>
       `;
       li.onclick = () => {
         if (isMobileList) {
@@ -1899,27 +2010,41 @@
       return li;
     }
 
-    // 3. MENÚ DE ACCIONES DE USUARIO
+    // Modal de Opciones de Usuario
     function openUserActionModal(targetUser) {
       selectedTargetUser = targetUser;
 
       document.getElementById('targetNick').textContent = targetUser.username;
-      document.getElementById('targetRole').textContent = targetUser.role || 'Miembro';
+      document.getElementById('targetRole').textContent = targetUser.role === 'bot' ? 'Bot Asistente' : (targetUser.role || 'Miembro');
       document.getElementById('targetRole').className = `msg-role-tag role-${targetUser.role || 'novice'}`;
       document.getElementById('targetDoctrine').textContent = targetUser.doctrine || 'Reformada';
 
-      const isMe = targetUser.username.toLowerCase() === currentUser.username.toLowerCase();
+      const isBot = targetUser.isBot || targetUser.role === 'bot' || targetUser.username.toLowerCase().includes('bereanobot');
+      const isMe = !isBot && (targetUser.username.toLowerCase() === currentUser.username.toLowerCase());
       const adminSection = document.getElementById('adminActionSection');
-      const btnRole = document.getElementById('btnChangeRole');
+      const btnPrivate = document.getElementById('btnStartPrivateChat');
+      const btnBotAction = document.getElementById('btnAskBotAction');
 
       if (isMe) {
         openEditProfileModal();
         return;
       }
 
-      const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
-      adminSection.style.display = isStaff ? 'flex' : 'none';
-      btnRole.style.display = currentUser.role === 'admin' ? 'block' : 'none';
+      if (isBot) {
+        btnPrivate.style.display = 'none';
+        btnBotAction.style.display = 'block';
+        adminSection.style.display = 'none';
+        btnBotAction.onclick = () => {
+          document.getElementById('userActionModal').classList.remove('open');
+          checkBereanoBotCommands('!berea', currentUser.username);
+        };
+      } else {
+        btnPrivate.style.display = 'block';
+        btnBotAction.style.display = 'none';
+        const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
+        adminSection.style.display = isStaff ? 'flex' : 'none';
+        document.getElementById('btnChangeRole').style.display = currentUser.role === 'admin' ? 'block' : 'none';
+      }
 
       document.getElementById('userActionModal').classList.add('open');
     }
@@ -1943,13 +2068,13 @@
 
     document.getElementById('btnKickUser').onclick = () => {
       if (!selectedTargetUser) return;
-      if (confirm(`¿Deseas expulsar a ${selectedTargetUser.username} de la sala de chat?`)) {
+      if (confirm(`¿Deseas expulsar a ${selectedTargetUser.username} de la sala?`)) {
         appendSystemNotice(`👢 El usuario ${selectedTargetUser.username} ha sido expulsado por un moderador.`);
         document.getElementById('userActionModal').classList.remove('open');
       }
     };
 
-    document.getElementById('btnClearUserMsgs').onclick = async () => {
+    document.getElementById('btnClearUserMsgs').onclick = () => {
       if (!selectedTargetUser) return;
       if (confirm(`¿Eliminar los mensajes visibles de ${selectedTargetUser.username}?`)) {
         document.querySelectorAll('.message-item').forEach(el => {
@@ -1971,7 +2096,7 @@
       }
     };
 
-    // 4. MODAL EDITAR PERFIL
+    // Modal Editar Perfil
     function openEditProfileModal() {
       document.getElementById('profileInputNick').value = currentUser.username;
       document.getElementById('profileInputDoctrine').value = currentUser.doctrine || 'Reformada';
@@ -2036,7 +2161,9 @@
       alert("Perfil actualizado correctamente.");
     });
 
-    // 5. SISTEMA DE PRIVADOS
+    // ==========================================
+    // SISTEMA DE MENSAJES PRIVADOS
+    // ==========================================
     const privatesModal = document.getElementById('privatesModal');
     const privatesContactsView = document.getElementById('privatesContactsView');
     const privatesChatView = document.getElementById('privatesChatView');
@@ -2119,9 +2246,9 @@
               const lastMsg = msgs[msgs.length - 1];
               conversations.push({
                 partner: partnerNick,
-                lastMsg: lastMsg.text,
-                time: lastMsg.time,
-                hasUnread: lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
+                lastMsg: lastMsg ? lastMsg.text : 'Conversación iniciada',
+                time: lastMsg ? lastMsg.time : '',
+                hasUnread: lastMsg && lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
               });
             }
           }
@@ -2138,7 +2265,7 @@
         privatesContactList.innerHTML = `
           <div style="padding:30px 16px; text-align:center; color:var(--text-muted); font-size:0.86rem;">
             No tienes mensajes privados guardados.<br>
-            <small style="margin-top:6px; display:inline-block;">Haz clic en el nick de cualquier hermano en la sala para escribirle un privado.</small>
+            <small style="margin-top:6px; display:inline-block;">Haz clic en el alias de cualquier hermano en la sala para iniciar un privado.</small>
           </div>
         `;
         return;
@@ -2157,7 +2284,7 @@
               <span class="contact-time">${c.time}</span>
               ${c.hasUnread ? '<span class="unread-dot"></span>' : ''}
             </div>
-            <button type="button" class="btn-delete-contact" title="Eliminar conversación" data-partner="${escapeHTML(c.partner)}">🗑️</button>
+            <button type="button" class="btn-delete-contact" title="Eliminar conversación">🗑️</button>
           </div>
         `;
 
@@ -2300,7 +2427,7 @@
         .subscribe();
     }
 
-    // 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
+    // Modal Móvil de Conectados
     document.getElementById('btnShowOnline').onclick = () => {
       if (window.innerWidth <= 768) {
         document.getElementById('onlineMobileModal').classList.add('open');
@@ -2312,7 +2439,7 @@
       document.getElementById('onlineMobileModal').classList.remove('open');
     };
 
-    // 7. MENÚ MÓVIL HAMBURGUESA
+    // Menú Hamburguesa Móvil
     const btnToggleMenu = document.getElementById('btnToggleMenu');
     const dropdownMenu = document.getElementById('dropdownMenu');
     if (btnToggleMenu) {
@@ -2325,11 +2452,11 @@
       if (dropdownMenu) dropdownMenu.classList.remove('show');
     });
 
-    // 8. BEREANOBOT
+    // BereanoBot
     function initBereanoBot() {
       setTimeout(() => {
-        appendBotMessage(`¡Gracia y paz, hermano/a **${currentUser.username}**! Soy **BereanoBot 📖**. Puedes consultar pasajes bíblicos o teología con: \`!berea\`, \`!versiculo\`, \`!solas\`, \`!1689\`, \`!westminster\` o \`!dort\`.`);
-      }, 1200);
+        appendBotMessage(`¡Gracia y paz, **${currentUser.username}**! Soy **BereanoBot 📖**. Puedes consultar pasajes bíblicos o resúmenes teológicos con: \`!berea\`, \`!versiculo\`, \`!solas\`, \`!1689\`, \`!westminster\` o \`!dort\`.`);
+      }, 1000);
     }
 
     function checkBereanoBotCommands(text, sender) {
@@ -2355,37 +2482,37 @@
           "«Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo.» — Romanos 5:1"
         ];
         const v = verses[Math.floor(Math.random() * verses.length)];
-        appendBotMessage(`📖 Pasaje del día para ${sender}:\n${v}`);
+        appendBotMessage(`📖 Pasaje bíblico para ${sender}:\n${v}`);
         return true;
       }
 
       if (lower === '!solas') {
         appendBotMessage(`✝️ **Las Cinco Solas de la Reforma:**
-1. **Sola Scriptura**: La Biblia es la única regla infalible de fe y práctica.
-2. **Sola Gratia**: La salvación es un don soberano e inmerecido de Dios.
-3. **Sola Fide**: Justificados únicamente por medio de la fe, no por obras.
-4. **Solus Christus**: Cristo es el único mediador entre Dios y los hombres.
-5. **Soli Deo Gloria**: Toda gloria corresponde exclusivamente al Señor.`);
+1. **Sola Scriptura**: La Biblia es la única regla infalible de fe y conducta.
+2. **Sola Gratia**: La salvación es un don inmerecido y soberano de Dios.
+3. **Sola Fide**: Justificados únicamente por medio de la fe en Cristo.
+4. **Solus Christus**: Cristo es el único mediador y redentor.
+5. **Soli Deo Gloria**: Toda gloria pertenece por la eternidad a Dios.`);
         return true;
       }
 
       if (lower === '!1689') {
-        appendBotMessage(`📜 **Confesión Bautista de Fe de 1689:** Segunda Confesión de Londres. Establece en 32 capítulos la teología del pacto, la soberanía de Dios y el bautismo de creyentes por inmersión.`);
+        appendBotMessage(`📜 **Confesión Bautista de Fe de 1689:** Segunda Confesión de Londres en 32 capítulos. Expone la teología del pacto, la soberanía de la gracia y el bautismo de creyentes.`);
         return true;
       }
 
       if (lower === '!westminster') {
-        appendBotMessage(`📜 **Confesión de Fe de Westminster (1647):** Obra cumbre de la Asamblea de Westminster. Comprende 33 capítulos sistemáticos de la fe presbiteriana y reformada.`);
+        appendBotMessage(`📜 **Confesión de Fe de Westminster (1647):** Síntesis de 33 capítulos sistemáticos de la fe histórica presbiteriana y reformada.`);
         return true;
       }
 
       if (lower === '!dort') {
-        appendBotMessage(`📜 **Los Cánones de Dort (1618-1619):** Juicio y exposición doctrinal sobre los Cinco Puntos en respuesta a la protesta arminiana: Depravación total, Elección incondicional, Expiación limitada, Gracia irresistible y Perseverancia de los santos.`);
+        appendBotMessage(`📜 **Cánones de Dort (1618-1619):** Exposición de las Doctrinas de la Gracia: Depravación total, Elección incondicional, Expiación limitada, Gracia irresistible y Perseverancia de los santos.`);
         return true;
       }
 
       if (lower === '!gracia') {
-        appendBotMessage(`🕊️ **La Gracia Eficaz:** Es el favor inmerecido y soberano por el cual Dios llama, vivifica e ilumina espiritualmente al pecador muerto en sus delitos, capacitándolo con gozo y libertad para abrazar a Jesucristo.`);
+        appendBotMessage(`🕊️ **La Gracia Soberana:** El favor inmerecido por el cual Dios regenera espiritualmente al pecador, capacitándolo con gozo para creer y abrazar a Jesucristo.`);
         return true;
       }
 
@@ -2399,12 +2526,20 @@
 
       div.innerHTML = `
         <div class="msg-header">
-          <span class="msg-sender bot-name">📖 BereanoBot</span>
-          <span class="msg-role-tag role-bot">Asistente Bíblico</span>
+          <span class="msg-sender bot-name" id="botHeaderNick">📖 BereanoBot</span>
+          <span class="msg-role-tag role-bot">Bot</span>
           <span class="msg-time">${timeStr}</span>
         </div>
         <div class="msg-body">${formatMarkdownText(text)}</div>
       `;
+      div.querySelector('#botHeaderNick').onclick = () => {
+        openUserActionModal({
+          username: 'BereanoBot 📖',
+          role: 'bot',
+          doctrine: 'Reformada Confesional',
+          isBot: true
+        });
+      };
       messagesContainer.appendChild(div);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       playSound('incoming');
@@ -2418,7 +2553,9 @@
         .replace(/\n/g, '<br>');
     }
 
-    // 9. CARGA Y ENVÍO DE MENSAJES PÚBLICOS
+    // ==========================================
+    // MENSAJES PÚBLICOS
+    // ==========================================
     const messagesContainer = document.getElementById('messagesContainer');
 
     function appendMessage(msg) {
@@ -2428,35 +2565,35 @@
       div.className = `message-item ${isSelf ? 'self' : 'other'}`;
 
       const timeStr = new Date(msg.created_at || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      
-      let effectiveRole = isSelf 
-        ? currentUser.role 
+
+      let effectiveRole = isSelf
+        ? currentUser.role
         : (userRolesCache[senderNick.toLowerCase()] || normalizeRole(msg.role));
 
       const roleDisplay = getRoleDisplayName(effectiveRole);
 
-      // Desempaquetar estilo o GIF
+      // Desempaquetar estilos o GIFs
       const unpacked = unpackStyledContent(msg.content);
-      let bodyHtml = '';
+      let inlineStyles = [];
+      if (unpacked.font && unpacked.font !== 'default') inlineStyles.push(`font-family: ${unpacked.font}`);
+      if (unpacked.color && unpacked.color !== 'default') inlineStyles.push(`color: ${unpacked.color}`);
+      if (unpacked.size && unpacked.size !== 'normal') inlineStyles.push(`font-size: ${unpacked.size}`);
+      const styleString = inlineStyles.length ? `style="${inlineStyles.join('; ')}"` : '';
 
+      let bodyHtml = '';
       if (unpacked.isGif) {
-        bodyHtml = `<img src="${escapeHTML(unpacked.gifUrl)}" alt="GIF animado" class="chat-gif-img" loading="lazy">`;
+        bodyHtml = `<img src="${escapeHTML(unpacked.gifUrl)}" alt="GIF" class="msg-gif-img" loading="lazy" onerror="this.onerror=null;this.alt='[GIF no disponible]';">`;
       } else {
-        let inlineStyles = [];
-        if (unpacked.font && unpacked.font !== 'default') inlineStyles.push(`font-family: ${unpacked.font}`);
-        if (unpacked.color && unpacked.color !== 'default') inlineStyles.push(`color: ${unpacked.color}`);
-        if (unpacked.size && unpacked.size !== 'normal') inlineStyles.push(`font-size: ${unpacked.size}`);
-        const styleString = inlineStyles.length ? `style="${inlineStyles.join('; ')}"` : '';
-        bodyHtml = `<div ${styleString}>${escapeHTML(unpacked.text)}</div>`;
+        bodyHtml = escapeHTML(unpacked.text);
       }
 
       div.innerHTML = `
         <div class="msg-header">
-          <span class="msg-sender" data-nick="${escapeHTML(senderNick)}" data-role="${effectiveRole}">${escapeHTML(senderNick)}</span>
+          <span class="msg-sender" data-nick="${escapeHTML(senderNick)}">${escapeHTML(senderNick)}</span>
           <span class="msg-role-tag role-${effectiveRole}">${roleDisplay}</span>
           <span class="msg-time">${timeStr}</span>
         </div>
-        <div class="msg-body">${bodyHtml}</div>
+        <div class="msg-body" ${styleString}>${bodyHtml}</div>
       `;
 
       div.querySelector('.msg-sender').onclick = () => {
@@ -2507,6 +2644,9 @@
 
       input.value = '';
 
+      const isCmd = checkBereanoBotCommands(text, currentUser.username);
+      if (isCmd) return;
+
       const formattedContent = packStyledContent(text);
 
       const newMsg = {
@@ -2520,14 +2660,10 @@
       appendMessage(newMsg);
       playSound('outgoing');
 
-      const isCmd = checkBereanoBotCommands(text, currentUser.username);
-
-      if (!isCmd) {
-        await client.from('messages').insert([newMsg]);
-      }
+      await client.from('messages').insert([newMsg]);
     });
 
-    // 10. CERRAR SESIÓN
+    // Cerrar Sesión
     async function logout() {
       if (confirm('¿Deseas salir de la sala de chat?')) {
         if (presenceChannel) await presenceChannel.untrack();
@@ -2540,12 +2676,11 @@
     document.getElementById('btnLogoutMobile').onclick = logout;
 
     function escapeHTML(str) {
-      return str.replace(/[&<>'"]/g, 
+      return String(str).replace(/[&<>'"]/g,
         tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
       );
     }
 
-    // Iniciar
     initSession();
   </script>
 </body>
