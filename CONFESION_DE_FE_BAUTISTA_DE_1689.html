@@ -452,8 +452,9 @@
     <a href="index.html" class="brand-link">✝️ Comunión Doctrinal</a>
     <div class="nav-actions">
       <button type="button" class="btn-nav mobile-toc-toggle" id="btnToggleToc">📑 Capítulos</button>
-      <a href="biblia.html" class="btn-nav">📖 Biblia</a>
-      <a href="chat.html" class="btn-nav">💬 Chat</a>
+      <a href="confesiones.html" class="btn-nav">📜 Confesiones</a>
+      <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="btn-nav">📖 Biblia</a>
+      <a href="chat.html" target="_blank" rel="noopener noreferrer" class="btn-nav">💬 Chat</a>
     </div>
   </header>
 
@@ -1171,12 +1172,34 @@
 
     async function getBibleData(versionKey) {
       if (biblesCache[versionKey]) return biblesCache[versionKey];
-      const filePath = BIBLE_FILES[versionKey] || './RVR1960.json';
-      const res = await fetch(filePath);
-      if (!res.ok) throw new Error(`No se pudo cargar el archivo ${filePath}`);
-      const json = await res.json();
-      biblesCache[versionKey] = json;
-      return json;
+
+      if (window.location.protocol === 'file:') {
+        throw new Error(
+          "Estás abriendo el archivo localmente (file://). Los navegadores bloquean la lectura de JSON locales por seguridad (CORS). Súbelo a Vercel o pruébalo con 'Live Server'."
+        );
+      }
+
+      const candidatePaths = [
+        `./${versionKey}.json`,
+        `/${versionKey}.json`,
+        `./${versionKey.toLowerCase()}.json`,
+        `/${versionKey.toLowerCase()}.json`
+      ];
+
+      for (const path of candidatePaths) {
+        try {
+          const res = await fetch(path);
+          if (res.ok) {
+            const json = await res.json();
+            biblesCache[versionKey] = json;
+            return json;
+          }
+        } catch (e) {
+          // continuar al siguiente intento
+        }
+      }
+
+      throw new Error(`No se encontró el archivo ${versionKey}.json en el servidor.`);
     }
 
     function fetchVersesFromData(bibleData, usfmCode, chapter, startV, endV) {
