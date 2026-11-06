@@ -1181,7 +1181,8 @@
 
           <div id="adminActionSection" style="display:none; flex-direction:column; gap:8px; margin-top:6px;">
             <div style="font-size:0.75rem; color:var(--accent-ruby); font-weight:700; text-transform:uppercase;">Herramientas de Moderación</div>
-            <button type="button" class="btn-action action-admin" id="btnMuteUser">🔇 Silenciar en la Sala</button>
+            <button type="button" class="btn-action action-admin" id="btnMuteUser">🔇 Silenciar 1 hora</button>
+            <button type="button" class="btn-action action-admin" id="btnUnmuteUser" style="display:none;">🔊 Quitar silencio</button>
             <button type="button" class="btn-action action-admin" id="btnKickUser">👢 Expulsar de la Sala (Kick)</button>
             <button type="button" class="btn-action action-admin" id="btnClearUserMsgs">🗑️ Borrar Mensajes Recientes</button>
             <button type="button" class="btn-action action-admin" id="btnChangeRole" style="display:none;">👑 Cambiar Rango / Rol</button>
@@ -1455,7 +1456,8 @@
       updateUserUI();
       applyMediaRestrictions();
       setupPresence();
-      loadRecentMessages();
+      loadRecentMessages().finally(announceMuteIfAny);
+      setupModerationChannel();
       subscribeToMessages();
       setupPrivateMessaging();
       initBereanoBot();
@@ -1702,6 +1704,91 @@
     }
 
     // ==========================================
+    // SILENCIO DE USUARIOS (1 hora, lo aplica el servidor)
+    // ==========================================
+    const MUTE_MINUTES = 60;
+    let muteUntilMs = 0;
+    let moderationChannel = null;
+
+    function formatClock(msOrIso) {
+      return new Date(msOrIso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function muteMessage() {
+      return `🔇 Estás silenciado hasta las ${formatClock(muteUntilMs)}. Podrás volver a escribir entonces.`;
+    }
+
+    async function refreshMuteStatus() {
+      if (!currentUser) return 0;
+      try {
+        const { data, error } = await client.rpc('mute_status', { p_username: currentUser.username });
+        if (!error) muteUntilMs = data ? new Date(data).getTime() : 0;
+      } catch (e) {}
+      return muteUntilMs;
+    }
+
+    // ¿Sigue silenciado este usuario? (consulta al servidor por si un moderador ya le quitó el silencio)
+    async function checkMuted() {
+      if (!currentUser) return false;
+      if (muteUntilMs && Date.now() >= muteUntilMs) muteUntilMs = 0;
+      if (!muteUntilMs) return false;
+      await refreshMuteStatus();
+      return muteUntilMs > Date.now();
+    }
+
+    async function announceMuteIfAny() {
+      await refreshMuteStatus();
+      if (muteUntilMs > Date.now()) appendSystemNotice(muteMessage());
+    }
+
+    // Si el servidor rechaza un mensaje: se quita de la pantalla y se explica el motivo
+    async function handleSendError(error, msgDiv) {
+      console.error('Error al enviar mensaje:', error);
+      if (msgDiv) msgDiv.remove();
+      await refreshMuteStatus();
+      if (muteUntilMs > Date.now()) appendSystemNotice(muteMessage());
+      else appendSystemNotice('⚠️ No se pudo enviar el mensaje. Inténtalo de nuevo.');
+    }
+
+    // Aviso en vivo al usuario afectado (el estado real siempre se confirma con el servidor)
+    function setupModerationChannel() {
+      moderationChannel = client.channel('moderation_events');
+      moderationChannel
+        .on('broadcast', { event: 'mute_changed' }, async ({ payload }) => {
+          if (!payload || !payload.target || !currentUser) return;
+          if (String(payload.target).trim().toLowerCase() !== currentUser.username.trim().toLowerCase()) return;
+          const wasMuted = muteUntilMs > Date.now();
+          await refreshMuteStatus();
+          const isMuted = muteUntilMs > Date.now();
+          if (isMuted && !wasMuted) appendSystemNotice('🔇 Un moderador te ha silenciado por 1 hora. ' + muteMessage());
+          else if (!isMuted && wasMuted) appendSystemNotice('🔊 Un moderador te quitó el silencio. Ya puedes escribir de nuevo.');
+        })
+        .subscribe();
+    }
+
+    function notifyMuteChange(targetNick) {
+      if (moderationChannel) {
+        moderationChannel.send({ type: 'broadcast', event: 'mute_changed', payload: { target: targetNick } });
+      }
+    }
+
+    async function updateMuteButtons(targetUser, isBot) {
+      const btnMute = document.getElementById('btnMuteUser');
+      const btnUnmute = document.getElementById('btnUnmuteUser');
+      btnMute.style.display = 'block';
+      btnUnmute.style.display = 'none';
+      const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
+      if (isBot || !isStaff) return;
+      try {
+        const { data } = await client.rpc('mute_status', { p_username: targetUser.username });
+        if (selectedTargetUser !== targetUser) return; // el modal cambió mientras se consultaba
+        const muted = data && new Date(data).getTime() > Date.now();
+        btnMute.style.display = muted ? 'none' : 'block';
+        btnUnmute.style.display = muted ? 'block' : 'none';
+      } catch (e) {}
+    }
+
+    // ==========================================
     // GIFS E IMÁGENES: SOLO USUARIOS REGISTRADOS
     // ==========================================
     function isRegisteredUser() {
@@ -1783,6 +1870,7 @@
     async function uploadAndSendImage(file) {
       if (!requireRegistered('Compartir imágenes')) return;
       if (isUploadingImage) return;
+      if (await checkMuted()) { appendSystemNotice(muteMessage()); return; }
 
       if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
         appendSystemNotice('⚠️ Formato no permitido. Usa JPG, PNG, WEBP o GIF.');
@@ -1840,13 +1928,11 @@
         created_at: new Date().toISOString()
       };
 
-      appendMessage(newMsg);
+      if (await checkMuted()) { appendSystemNotice(muteMessage()); return; }
+      const msgDiv = appendMessage(newMsg);
       playSound('outgoing');
       const { error } = await client.from('messages').insert([newMsg]);
-      if (error) {
-        console.error('Error al guardar mensaje:', error);
-        appendSystemNotice('⚠️ El mensaje no se pudo guardar; puede que otros no lo vean.');
-      }
+      if (error) await handleSendError(error, msgDiv);
     }
 
     async function sendDirectGifMessage(gifUrl) {
@@ -2001,6 +2087,7 @@
       }
 
       document.getElementById('userActionModal').classList.add('open');
+      updateMuteButtons(targetUser, isBot);
     }
 
     document.getElementById('btnCloseActionModal').onclick = () => document.getElementById('userActionModal').classList.remove('open');
@@ -2009,10 +2096,30 @@
       if (selectedTargetUser) startPrivateChatWith(selectedTargetUser.username);
     };
 
-    document.getElementById('btnMuteUser').onclick = () => {
+    document.getElementById('btnMuteUser').onclick = async () => {
       if (!selectedTargetUser) return;
-      alert(`Se ha silenciado temporalmente a ${selectedTargetUser.username}.`);
+      const nick = selectedTargetUser.username;
       document.getElementById('userActionModal').classList.remove('open');
+      const { data, error } = await client.rpc('mute_user', { target_nick: nick, p_minutes: MUTE_MINUTES });
+      if (error) {
+        alert('No se pudo silenciar: ' + error.message);
+        return;
+      }
+      appendSystemNotice(`🔇 ${nick} fue silenciado por 1 hora (hasta las ${formatClock(data)}).`);
+      notifyMuteChange(nick);
+    };
+
+    document.getElementById('btnUnmuteUser').onclick = async () => {
+      if (!selectedTargetUser) return;
+      const nick = selectedTargetUser.username;
+      document.getElementById('userActionModal').classList.remove('open');
+      const { error } = await client.rpc('unmute_user', { target_nick: nick });
+      if (error) {
+        alert('No se pudo quitar el silencio: ' + error.message);
+        return;
+      }
+      appendSystemNotice(`🔊 Se quitó el silencio a ${nick}.`);
+      notifyMuteChange(nick);
     };
 
     document.getElementById('btnKickUser').onclick = () => {
@@ -2290,6 +2397,7 @@
       const input = document.getElementById('privateMsgInput');
       const text = input.value.trim();
       if (!text || !activePrivatePartner) return;
+      if (await checkMuted()) { alert(muteMessage()); return; }
 
       input.value = '';
       const key = getPrivateStorageKey(activePrivatePartner);
@@ -2528,6 +2636,7 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
       if (!isSelf) playSound('incoming');
+      return div;
     }
 
     async function loadRecentMessages() {
@@ -2565,6 +2674,11 @@
         return;
       }
 
+      if (!text.startsWith('!') && await checkMuted()) {
+        appendSystemNotice(muteMessage());
+        return;
+      }
+
       input.value = '';
       closeAllToolPopups();
 
@@ -2581,10 +2695,11 @@
         created_at: new Date().toISOString()
       };
 
-      appendMessage(newMsg);
+      const msgDiv = appendMessage(newMsg);
       playSound('outgoing');
 
-      await client.from('messages').insert([newMsg]);
+      const { error } = await client.from('messages').insert([newMsg]);
+      if (error) await handleSendError(error, msgDiv);
     });
 
     // Cerrar Sesión
