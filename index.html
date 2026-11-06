@@ -8,8 +8,8 @@
   <title>Comunión Doctrinal | Chat Cristiano y Estudio Bíblico Reformado</title>
 
   <!-- Metadatos Básicos para Buscadores (Google SEO) -->
-  <meta name="description" content="Comunidad cristiana y chat en vivo para el estudio bíblico, diálogo doctrinal y teología reformada. Comparte textos bíblicos, notas de voz y comunión fraternal.">
-  <meta name="keywords" content="chat cristiano, teología reformada, estudio bíblico, comunión doctrinal, cinco solas, biblia reina valera, foro cristiano">
+  <meta name="description" content="Comunidad cristiana y chat en vivo para el estudio bíblico, confesiones de fe, diálogo doctrinal y teología reformada.">
+  <meta name="keywords" content="chat cristiano, teología reformada, confesiones de fe, 1689, estudio bíblico, comunión doctrinal, cinco solas, biblia reina valera">
   <meta name="author" content="Comunión Doctrinal">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://chat-reformado.vercel.app/">
@@ -19,7 +19,7 @@
   <meta property="og:site_name" content="Comunión Doctrinal">
   <meta property="og:url" content="https://chat-reformado.vercel.app/">
   <meta property="og:title" content="Comunión Doctrinal | Chat Cristiano y Estudio Bíblico">
-  <meta property="og:description" content="Únete a la comunidad de estudio teológico y diálogo bíblico reformado en tiempo real. Mansedumbre, fraternidad y sana doctrina.">
+  <meta property="og:description" content="Únete a la comunidad de estudio teológico, confesiones históricas y diálogo bíblico reformado en tiempo real.">
   <meta property="og:image" content="https://chat-reformado.vercel.app/logo.jpeg">
   <meta property="og:locale" content="es_ES">
 
@@ -27,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://chat-reformado.vercel.app/">
   <meta name="twitter:title" content="Comunión Doctrinal | Chat y Comunidad Cristiana">
-  <meta name="twitter:description" content="Espacio de comunión fraternal y teología reformada en tiempo real. Estudio bíblico, citas contextuales y debate sano.">
+  <meta name="twitter:description" content="Espacio de comunión fraternal, confesiones de fe y teología reformada en tiempo real.">
   <meta name="twitter:image" content="https://chat-reformado.vercel.app/logo.jpeg">
 
   <meta name="theme-color" content="#0f172a">
@@ -39,7 +39,7 @@
     "@type": "WebSite",
     "name": "Comunión Doctrinal",
     "url": "https://chat-reformado.vercel.app/",
-    "description": "Comunidad cristiana y chat en vivo para el estudio bíblico y teología reformada.",
+    "description": "Comunidad cristiana y chat en vivo para el estudio bíblico, confesiones de fe y teología reformada.",
     "inLanguage": "es"
   }
   </script>
@@ -74,7 +74,7 @@
       overflow-x: hidden;
     }
 
-    /* Versículo Superior de Pantalla Completa (Web) */
+    /* Versículo Superior (Web) */
     .top-verse-banner {
       width: 100%;
       background: rgba(15, 23, 42, 0.75);
@@ -141,46 +141,44 @@
       color: var(--accent);
     }
 
-    /* BARRA DE MENÚ MÓVIL (Solo se muestra en pantallas pequeñas) */
+    /* BARRA DE MENÚ MÓVIL SUPERIOR (Visible sólo en móviles) */
     .mobile-top-bar {
       display: none;
       width: 100%;
       background: var(--bg-panel);
       border-bottom: 1px solid var(--border-color);
-      padding: 8px 14px;
+      padding: 8px 12px;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       position: sticky;
       top: 0;
       z-index: 50;
+      overflow-x: auto;
     }
 
     .mobile-nav-title {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      display: flex;
-      align-items: center;
-      gap: 5px;
       white-space: nowrap;
     }
 
     .mobile-links-container {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .mobile-quick-btn {
       background: var(--bg-subpanel);
       color: var(--text-main);
       border: 1px solid var(--border-color);
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 600;
       text-decoration: none;
       display: inline-flex;
@@ -195,7 +193,7 @@
       border-color: var(--accent);
     }
 
-    /* Contenedor Principal de Pantalla Completa (Full Screen Web) */
+    /* Contenedor Principal Panorámico (Web) */
     .app-viewport-wrapper {
       flex: 1;
       display: grid;
@@ -208,11 +206,11 @@
       align-items: center;
     }
 
-    /* Columna Izquierda: Banner y Enlaces */
+    /* Columna Izquierda: Banner y Recursos */
     .showcase-column {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
     }
 
     .brand-banner-container {
@@ -234,15 +232,15 @@
 
     .resources-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
     }
 
     .resource-card {
       background: var(--bg-panel);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 14px;
+      padding: 12px 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -256,30 +254,39 @@
     }
 
     .chapel-logo {
-      max-width: 160px;
+      max-width: 130px;
       width: 100%;
       height: auto;
       border-radius: 4px;
     }
 
-    .bible-btn {
+    .resource-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       color: var(--accent);
       text-decoration: none;
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: 600;
       width: 100%;
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-radius: 6px;
       background: var(--bg-subpanel);
       border: 1px solid var(--border-color);
+      transition: all 0.15s;
     }
-    .bible-btn:hover {
+    .resource-btn:hover {
       background: var(--accent-btn);
       color: #fff;
+      border-color: var(--accent);
+    }
+
+    .resource-desc {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.3;
     }
 
     /* Columna Derecha: Tarjeta de Acceso */
@@ -392,14 +399,13 @@
       flex-shrink: 0;
     }
 
-    /* VERSIÓN MÓVIL MINIMALISTA */
+    /* VERSIÓN MÓVIL */
     @media (max-width: 860px) {
       body {
         padding: 0;
         justify-content: flex-start;
       }
 
-      /* Activar barra de menú móvil superior */
       .mobile-top-bar {
         display: flex;
       }
@@ -433,7 +439,6 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
       }
 
-      /* Ocultar las tarjetas grandes inferiores en móviles para dar paso al menú superior */
       .resources-row {
         display: none;
       }
@@ -470,15 +475,18 @@
 </head>
 <body>
 
-  <!-- Barra de Acceso Rápido Superior (Visible exclusivamente en Móvil) -->
+  <!-- Barra de Acceso Rápido Superior (Visible en Móvil) -->
   <nav class="mobile-top-bar" aria-label="Menú móvil">
     <span class="mobile-nav-title">✝️ Recursos</span>
     <div class="mobile-links-container">
-      <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="mobile-quick-btn" title="Ir a Chapel Library">
-        📚 Chapel Library
+      <a href="confesiones.html" class="mobile-quick-btn" title="Confesiones de Fe y Credos">
+        📜 Confesiones
       </a>
       <a href="biblia.html" class="mobile-quick-btn" title="Abrir Lector de la Biblia">
-        📖 Leer Biblia
+        📖 Biblia
+      </a>
+      <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="mobile-quick-btn" title="Ir a Chapel Library">
+        📚 Chapel
       </a>
     </div>
   </nav>
@@ -493,7 +501,7 @@
     <button type="button" class="btn-refresh-verse" id="btnNextVerse" title="Cargar otro pasaje">🔄 Cambiar</button>
   </header>
 
-  <!-- Contenedor de Pantalla Completa -->
+  <!-- Contenedor Principal Panorámico -->
   <main class="app-viewport-wrapper">
     <!-- Columna Izquierda: Banner y Recursos (Web) -->
     <section class="showcase-column">
@@ -502,246 +510,22 @@
       </div>
 
       <div class="resources-row">
+        <!-- Tarjeta 1: Confesiones de Fe -->
+        <div class="resource-card">
+          <a href="confesiones.html" class="resource-btn" title="Ver Confesiones de Fe y Credos">
+            📜 Confesiones
+          </a>
+          <span class="resource-desc">1689, credos y documentos históricos</span>
+        </div>
+
+        <!-- Tarjeta 2: Lector Bíblico -->
+        <div class="resource-card">
+          <a href="biblia.html" class="resource-btn" title="Abrir Lector Bíblico RVR1960">
+            📖 Leer Biblia
+          </a>
+          <span class="resource-desc">Texto sagrado RVR1960 en línea</span>
+        </div>
+
+        <!-- Tarjeta 3: Chapel Library -->
         <div class="resource-card">
           <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" style="line-height: 0;" title="Visitar Chapel Library">
-            <img src="logo_chapel.png" alt="Chapel Library" class="chapel-logo" onerror="this.style.display='none';">
-          </a>
-          <span style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">Literatura y tratados confesionales</span>
-        </div>
-
-        <div class="resource-card">
-          <a href="biblia.html" class="bible-btn" title="Abrir Lector Bíblico RVR1960">
-            📖 Abrir Lector RVR1960
-          </a>
-          <span style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">Consulta el texto sagrado en línea</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Columna Derecha: Tarjeta de Acceso -->
-    <section class="auth-column">
-      <div class="auth-card">
-        <div class="auth-header">
-          <h1>Comunión Doctrinal</h1>
-          <p>Estudio de las Escrituras y comunión en la gracia</p>
-        </div>
-
-        <div class="auth-tabs">
-          <button type="button" class="auth-tab active" id="tabLogin">Iniciar Sesión</button>
-          <button type="button" class="auth-tab" id="tabRegister">Registrarse</button>
-          <button type="button" class="auth-tab" id="tabGuest">Invitado</button>
-        </div>
-
-        <!-- Formulario 1: Iniciar Sesión -->
-        <form id="loginForm">
-          <div class="auth-field">
-            <label for="loginNick">Nick o usuario:</label>
-            <input type="text" id="loginNick" placeholder="Tu nick registrado" required autocomplete="username">
-          </div>
-          <div class="auth-field">
-            <label for="loginPassword">Contraseña:</label>
-            <input type="password" id="loginPassword" placeholder="Tu contraseña" required autocomplete="current-password">
-          </div>
-          <button type="submit" class="btn-primary" id="btnLoginSubmit">Entrar a la Sala</button>
-        </form>
-
-        <!-- Formulario 2: Registro de Nueva Cuenta -->
-        <form id="registerForm" style="display: none;">
-          <div class="auth-field">
-            <label for="regUsername">Nick público:</label>
-            <input type="text" id="regUsername" placeholder="Ej. Calvino_1536" required maxlength="30">
-          </div>
-          <div class="auth-field">
-            <label for="regEmail">Correo electrónico:</label>
-            <input type="email" id="regEmail" placeholder="correo@ejemplo.com" required autocomplete="email">
-          </div>
-          <div class="auth-field">
-            <label for="regPassword">Contraseña:</label>
-            <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
-          </div>
-          <div class="auth-field">
-            <label for="regPasswordConfirm">Confirmar contraseña:</label>
-            <input type="password" id="regPasswordConfirm" placeholder="Repite la contraseña" required minlength="6" autocomplete="new-password">
-          </div>
-          <button type="submit" class="btn-primary" id="btnRegisterSubmit">Crear Cuenta (Novicio)</button>
-        </form>
-
-        <!-- Formulario 3: Ingreso como Invitado -->
-        <form id="guestForm" style="display: none;">
-          <div class="auth-field">
-            <label for="guestNick">Alias para esta sesión:</label>
-            <input type="text" id="guestNick" placeholder="Ej. Oyente_Berea" required maxlength="25">
-          </div>
-          <div class="auth-field">
-            <label for="guestDoctrine">Trasfondo doctrinal:</label>
-            <select id="guestDoctrine">
-              <option value="Reformada">Reformado(a)</option>
-              <option value="Presbiteriano">Presbiteriano(a)</option>
-              <option value="Bautista Reformado">Bautista Reformado(a)</option>
-              <option value="Bautista General">Bautista General</option>
-              <option value="Metodista / Trad. Wesleyana">Metodista / Trad. Wesleyana</option>
-              <option value="Pentecostal">Pentecostal</option>
-              <option value="Otro trasfondo">Otro trasfondo</option>
-            </select>
-          </div>
-          <button type="submit" class="btn-primary">Acceder como Invitado</button>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer-bar">
-    Soli Deo Gloria &bull; <span>Comunión Doctrinal</span>
-  </footer>
-
-  <script>
-    const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const VERSES = [
-      { text: "«Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.»", ref: "Efesios 2:8-9" },
-      { text: "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.»", ref: "2 Timoteo 3:16" },
-      { text: "«Porque de él, y por él, y para él, son todas las cosas. A él sea la gloria por los siglos. Amén.»", ref: "Romanos 11:36" },
-      { text: "«Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo.»", ref: "Romanos 5:1" },
-      { text: "«Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre.»", ref: "1 Timoteo 2:5" },
-      { text: "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí.»", ref: "Juan 5:39" },
-      { text: "«Sécase la hierba, marchítase la flor; mas la palabra del Dios nuestro permanece para siempre.»", ref: "Isaías 40:8" },
-      { text: "«Porque ¿quién te distingue? ¿o qué tienes que no hayas recibido? Y si lo recibiste, ¿por qué te glorías como si no hubieras recibido?»", ref: "1 Corintios 4:7" },
-      { text: "«Y estos eran más nobles que los que estaban en Tesalónica, pues recibieron la palabra con toda solicitud, escudriñando cada día las Escrituras...»", ref: "Hechos 17:11" },
-      { text: "«A Jehová he puesto siempre delante de mí; porque está a mi diestra, no seré conmovido.»", ref: "Salmos 16:8" }
-    ];
-
-    const verseTextEl = document.getElementById('verseText');
-    const verseRefEl = document.getElementById('verseRef');
-    const btnNextVerse = document.getElementById('btnNextVerse');
-    let lastVerseIndex = -1;
-
-    function displayRandomVerse() {
-      let index;
-      do {
-        index = Math.floor(Math.random() * VERSES.length);
-      } while (index === lastVerseIndex && VERSES.length > 1);
-
-      lastVerseIndex = index;
-      const v = VERSES[index];
-      verseTextEl.textContent = v.text;
-      verseRefEl.textContent = v.ref;
-    }
-
-    displayRandomVerse();
-    btnNextVerse.onclick = () => displayRandomVerse();
-
-    async function checkExistingSession() {
-      const savedGuest = localStorage.getItem('guest_user');
-      if (savedGuest) {
-        window.location.replace('chat.html');
-        return;
-      }
-      const { data: { session } } = await client.auth.getSession();
-      if (session) {
-        window.location.replace('chat.html');
-      }
-    }
-    checkExistingSession();
-
-    const tabLogin = document.getElementById('tabLogin');
-    const tabRegister = document.getElementById('tabRegister');
-    const tabGuest = document.getElementById('tabGuest');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const guestForm = document.getElementById('guestForm');
-
-    function switchTab(activeBtn, activeForm) {
-      [tabLogin, tabRegister, tabGuest].forEach(t => t.classList.remove('active'));
-      [loginForm, registerForm, guestForm].forEach(f => f.style.display = 'none');
-      activeBtn.classList.add('active');
-      activeForm.style.display = 'block';
-    }
-
-    tabLogin.onclick = () => switchTab(tabLogin, loginForm);
-    tabRegister.onclick = () => switchTab(tabRegister, registerForm);
-    tabGuest.onclick = () => switchTab(tabGuest, guestForm);
-
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nick = document.getElementById('loginNick').value.trim();
-      const pass = document.getElementById('loginPassword').value;
-      const submitBtn = document.getElementById('btnLoginSubmit');
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Verificando...";
-
-      try {
-        const { data: userEmail, error: rpcError } = await client.rpc('get_user_email_by_nick', { target_nick: nick });
-        if (rpcError || !userEmail) {
-          throw new Error("El nick ingresado no existe. Revisa la ortografía o regístrate.");
-        }
-
-        const { error: authError } = await client.auth.signInWithPassword({ email: userEmail, password: pass });
-        if (authError) {
-          throw new Error("Contraseña incorrecta: " + authError.message);
-        }
-
-        localStorage.removeItem('guest_user');
-        window.location.replace('chat.html');
-      } catch (err) {
-        alert(err.message);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Entrar a la Sala";
-      }
-    });
-
-    registerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('regUsername').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const pass = document.getElementById('regPassword').value;
-      const passConfirm = document.getElementById('regPasswordConfirm').value;
-      const submitBtn = document.getElementById('btnRegisterSubmit');
-
-      if (pass !== passConfirm) {
-        return alert("Las contraseñas no coinciden.");
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Creando cuenta...";
-
-      try {
-        const { error } = await client.auth.signUp({
-          email: email,
-          password: pass,
-          options: { data: { username: username } }
-        });
-
-        if (error) throw error;
-
-        localStorage.removeItem('guest_user');
-        alert("¡Cuenta registrada con éxito! Ingresando como Novicio...");
-        window.location.replace('chat.html');
-      } catch (err) {
-        alert("Error al registrar: " + err.message);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Crear Cuenta (Novicio)";
-      }
-    });
-
-    guestForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nick = document.getElementById('guestNick').value.trim();
-      const doctrine = document.getElementById('guestDoctrine').value;
-      if (!nick) return;
-
-      localStorage.setItem('guest_user', JSON.stringify({
-        username: nick,
-        doctrine_affinity: doctrine,
-        role: 'guest'
-      }));
-
-      window.location.replace('chat.html');
-    });
-  </script>
-</body>
-</html>
