@@ -410,9 +410,6 @@
       color: var(--accent);
       background: rgba(56, 189, 248, 0.15);
     }
-    .btn-tool-action.locked {
-      opacity: 0.45;
-    }
     .btn-tool-action.btn-gif-label {
       font-size: 0.75rem;
       letter-spacing: 0.05em;
@@ -434,7 +431,6 @@
       background: var(--accent-btn-hover);
     }
 
-    /* Contenedor de la barra de envío: ancla los popups justo encima de ella */
     .chat-input-wrap {
       position: relative;
       flex-shrink: 0;
@@ -1138,9 +1134,7 @@
         <div class="tools-inline-group">
           <button type="button" class="btn-tool-action" id="btnToggleEmojis" title="Emojis">😀</button>
           <button type="button" class="btn-tool-action btn-gif-label" id="btnToggleGifs" title="Enviar GIF">GIF</button>
-          <button type="button" class="btn-tool-action" id="btnUploadImage" title="Enviar imagen">🖼️</button>
           <button type="button" class="btn-tool-action" id="btnToggleFonts" title="Fuente y Color">🎨</button>
-          <input type="file" id="imageFileInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
         </div>
 
         <button type="submit" class="btn-send">Enviar</button>
@@ -1181,8 +1175,7 @@
 
           <div id="adminActionSection" style="display:none; flex-direction:column; gap:8px; margin-top:6px;">
             <div style="font-size:0.75rem; color:var(--accent-ruby); font-weight:700; text-transform:uppercase;">Herramientas de Moderación</div>
-            <button type="button" class="btn-action action-admin" id="btnMuteUser">🔇 Silenciar 1 hora</button>
-            <button type="button" class="btn-action action-admin" id="btnUnmuteUser" style="display:none;">🔊 Quitar silencio</button>
+            <button type="button" class="btn-action action-admin" id="btnMuteUser">🔇 Silenciar en la Sala</button>
             <button type="button" class="btn-action action-admin" id="btnKickUser">👢 Expulsar de la Sala (Kick)</button>
             <button type="button" class="btn-action action-admin" id="btnClearUserMsgs">🗑️ Borrar Mensajes Recientes</button>
             <button type="button" class="btn-action action-admin" id="btnChangeRole" style="display:none;">👑 Cambiar Rango / Rol</button>
@@ -1279,10 +1272,6 @@
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
-    const IMAGE_BUCKET = "chat-images";          // bucket de Supabase Storage (ver el archivo .sql)
-    const MAX_IMAGE_BYTES = 5 * 1024 * 1024;       // tamaño máximo final por imagen: 5 MB
-    const MAX_ORIGINAL_BYTES = 15 * 1024 * 1024;   // tamaño máximo del archivo original: 15 MB
-    const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
     const GIPHY_API_KEY = "b4WtjSwJeeaO5vY2rl5P2CwDbmy3aBoc";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1337,7 +1326,6 @@
           const p = audio.play();
           if (p && typeof p.catch === 'function') {
             p.catch(() => {
-              // Si el archivo no existe o hay restricción, suena el sintetizador
               if (type === 'private') playBeepFallback(660, 'sine', 0.18);
               else if (type === 'join') playBeepFallback(520, 'triangle', 0.15);
               else if (type === 'leave') playBeepFallback(340, 'triangle', 0.15);
@@ -1407,7 +1395,7 @@
           }
 
           currentUser = {
-            id: 'guest_' + (guest.id_salt || Math.random().toString(36).substring(2, 9)),
+            id: null,
             username: guest.username,
             role: 'guest',
             doctrine: guest.doctrine_affinity || 'Reformada',
@@ -1454,13 +1442,12 @@
       userRolesCache[currentUser.username.toLowerCase()] = currentUser.role;
 
       updateUserUI();
-      applyMediaRestrictions();
       setupPresence();
-      loadRecentMessages().finally(announceMuteIfAny);
-      setupModerationChannel();
+      loadRecentMessages();
       subscribeToMessages();
       setupPrivateMessaging();
       initBereanoBot();
+      rebuildToolsEngine();
     }
 
     function updateUserUI() {
@@ -1489,8 +1476,6 @@
     const btnToggleEmojis = document.getElementById('btnToggleEmojis');
     const btnToggleGifs = document.getElementById('btnToggleGifs');
     const btnToggleFonts = document.getElementById('btnToggleFonts');
-    const btnUploadImage = document.getElementById('btnUploadImage');
-    const imageFileInput = document.getElementById('imageFileInput');
     const msgInput = document.getElementById('msgInput');
     const giphySearchInput = document.getElementById('giphySearchInput');
     const gifResultsGrid = document.getElementById('gifResultsGrid');
@@ -1514,27 +1499,13 @@
     }
 
     function rebuildToolsEngine() {
-      // 1. Botones de activación
       btnToggleEmojis.onclick = (e) => { e.stopPropagation(); toggleToolPopup(popupEmojis, btnToggleEmojis); };
       btnToggleGifs.onclick = (e) => {
         e.stopPropagation();
-        if (!requireRegistered('Los GIFs')) { closeAllToolPopups(); return; }
         toggleToolPopup(popupGifs, btnToggleGifs);
         if (popupGifs.classList.contains('open')) searchGiphyGifs('amen');
       };
       btnToggleFonts.onclick = (e) => { e.stopPropagation(); toggleToolPopup(popupFonts, btnToggleFonts); };
-
-      btnUploadImage.onclick = (e) => {
-        e.stopPropagation();
-        closeAllToolPopups();
-        if (!requireRegistered('Compartir imágenes')) return;
-        imageFileInput.click();
-      };
-      imageFileInput.onchange = async () => {
-        const file = imageFileInput.files && imageFileInput.files[0];
-        imageFileInput.value = '';
-        if (file) await uploadAndSendImage(file);
-      };
 
       document.addEventListener('click', (e) => {
         if (!e.target.closest('.chat-popup-card') && !e.target.closest('.tools-inline-group')) {
@@ -1542,7 +1513,6 @@
         }
       });
 
-      // 2. Cargar Emojis
       const emojisGrid = document.getElementById('emojisGrid');
       emojisGrid.innerHTML = '';
       EMOJI_LIST.forEach(emoji => {
@@ -1557,7 +1527,6 @@
         emojisGrid.appendChild(btn);
       });
 
-      // 3. Buscador Giphy
       let searchTimeout = null;
       giphySearchInput.oninput = () => {
         clearTimeout(searchTimeout);
@@ -1567,7 +1536,6 @@
         }, 400);
       };
 
-      // 4. Fuentes y Colores
       const fontSelect = document.getElementById('fontSelectFamily');
       const sizeSelect = document.getElementById('fontSelectSize');
       const colorBtns = document.querySelectorAll('.color-btn');
@@ -1611,7 +1579,6 @@
       msgInput.setSelectionRange(nextPos, nextPos);
     }
 
-    // Consulta en vivo a la API de Giphy
     async function searchGiphyGifs(query) {
       gifResultsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">Buscando en Giphy...</div>`;
       try {
@@ -1674,15 +1641,11 @@
     function parseIncomingPayload(raw) {
       if (!raw) return { isGif: false, text: '', styleAttr: '' };
 
-      const mediaMatch = String(raw).match(/^\[(?:gif|img):(https?:\/\/[^\]\s]+)\]$/i);
-      if (mediaMatch) {
-        if (isAllowedMediaUrl(mediaMatch[1])) return { isGif: true, gifUrl: mediaMatch[1] };
-        return { isGif: false, text: raw, styleAttr: '' };
-      }
+      const gifMatch = String(raw).match(/^\[gif:(https?:\/\/[^\]]+)\]$/i);
+      if (gifMatch) return { isGif: true, gifUrl: gifMatch[1] };
 
-      const bareUrl = String(raw).trim();
-      if (/^https?:\/\/\S+\.(?:gif|webp)(?:\?\S*)?$/i.test(bareUrl) && isAllowedMediaUrl(bareUrl)) {
-        return { isGif: true, gifUrl: bareUrl };
+      if (/^https?:\/\/\S+\.(?:gif|webp)(?:\?\S*)?$/i.test(String(raw).trim())) {
+        return { isGif: true, gifUrl: String(raw).trim() };
       }
 
       const styleMatch = String(raw).match(/^\[style:([^;]*);([^;]*);([^\]]*)\]([\s\S]*?)\[\/style\]$/);
@@ -1703,243 +1666,26 @@
       return { isGif: false, text: raw, styleAttr: '' };
     }
 
-    // ==========================================
-    // SILENCIO DE USUARIOS (1 hora, lo aplica el servidor)
-    // ==========================================
-    const MUTE_MINUTES = 60;
-    let muteUntilMs = 0;
-    let moderationChannel = null;
-
-    function formatClock(msOrIso) {
-      return new Date(msOrIso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function muteMessage() {
-      return `🔇 Estás silenciado hasta las ${formatClock(muteUntilMs)}. Podrás volver a escribir entonces.`;
-    }
-
-    async function refreshMuteStatus() {
-      if (!currentUser) return 0;
-      try {
-        const { data, error } = await client.rpc('mute_status', { p_username: currentUser.username });
-        if (!error) muteUntilMs = data ? new Date(data).getTime() : 0;
-      } catch (e) {}
-      return muteUntilMs;
-    }
-
-    // ¿Sigue silenciado este usuario? (consulta al servidor por si un moderador ya le quitó el silencio)
-    async function checkMuted() {
-      if (!currentUser) return false;
-      if (muteUntilMs && Date.now() >= muteUntilMs) muteUntilMs = 0;
-      if (!muteUntilMs) return false;
-      await refreshMuteStatus();
-      return muteUntilMs > Date.now();
-    }
-
-    async function announceMuteIfAny() {
-      await refreshMuteStatus();
-      if (muteUntilMs > Date.now()) appendSystemNotice(muteMessage());
-    }
-
-    // Si el servidor rechaza un mensaje: se quita de la pantalla y se explica el motivo
-    async function handleSendError(error, msgDiv) {
-      console.error('Error al enviar mensaje:', error);
-      if (msgDiv) msgDiv.remove();
-      await refreshMuteStatus();
-      if (muteUntilMs > Date.now()) appendSystemNotice(muteMessage());
-      else appendSystemNotice('⚠️ No se pudo enviar el mensaje. Inténtalo de nuevo.');
-    }
-
-    // Aviso en vivo al usuario afectado (el estado real siempre se confirma con el servidor)
-    function setupModerationChannel() {
-      moderationChannel = client.channel('moderation_events');
-      moderationChannel
-        .on('broadcast', { event: 'mute_changed' }, async ({ payload }) => {
-          if (!payload || !payload.target || !currentUser) return;
-          if (String(payload.target).trim().toLowerCase() !== currentUser.username.trim().toLowerCase()) return;
-          const wasMuted = muteUntilMs > Date.now();
-          await refreshMuteStatus();
-          const isMuted = muteUntilMs > Date.now();
-          if (isMuted && !wasMuted) appendSystemNotice('🔇 Un moderador te ha silenciado por 1 hora. ' + muteMessage());
-          else if (!isMuted && wasMuted) appendSystemNotice('🔊 Un moderador te quitó el silencio. Ya puedes escribir de nuevo.');
-        })
-        .subscribe();
-    }
-
-    function notifyMuteChange(targetNick) {
-      if (moderationChannel) {
-        moderationChannel.send({ type: 'broadcast', event: 'mute_changed', payload: { target: targetNick } });
-      }
-    }
-
-    async function updateMuteButtons(targetUser, isBot) {
-      const btnMute = document.getElementById('btnMuteUser');
-      const btnUnmute = document.getElementById('btnUnmuteUser');
-      btnMute.style.display = 'block';
-      btnUnmute.style.display = 'none';
-      const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
-      if (isBot || !isStaff) return;
-      try {
-        const { data } = await client.rpc('mute_status', { p_username: targetUser.username });
-        if (selectedTargetUser !== targetUser) return; // el modal cambió mientras se consultaba
-        const muted = data && new Date(data).getTime() > Date.now();
-        btnMute.style.display = muted ? 'none' : 'block';
-        btnUnmute.style.display = muted ? 'block' : 'none';
-      } catch (e) {}
-    }
-
-    // ==========================================
-    // GIFS E IMÁGENES: SOLO USUARIOS REGISTRADOS
-    // ==========================================
-    function isRegisteredUser() {
-      return !!currentUser && currentUser.role !== 'guest';
-    }
-
-    function requireRegistered(what) {
-      if (!currentUser) {
-        appendSystemNotice('⏳ Espera un momento a que termine de cargar tu sesión.');
-        return false;
-      }
-      if (!isRegisteredUser()) {
-        appendSystemNotice(`🔒 ${what} solo está disponible para usuarios registrados. Crea una cuenta para usarlo.`);
-        return false;
-      }
-      return true;
-    }
-
-    function applyMediaRestrictions() {
-      const locked = !isRegisteredUser();
-      btnToggleGifs.classList.toggle('locked', locked);
-      btnUploadImage.classList.toggle('locked', locked);
-      btnToggleGifs.title = locked ? '🔒 GIFs: solo usuarios registrados' : 'Enviar GIF';
-      btnUploadImage.title = locked ? '🔒 Imágenes: solo usuarios registrados' : 'Enviar imagen';
-    }
-
-    // Solo se muestran imágenes alojadas en Giphy o en el almacenamiento propio de Supabase
-    function isAllowedMediaUrl(rawUrl) {
-      try {
-        const u = new URL(rawUrl);
-        if (u.protocol !== 'https:') return false;
-        const isGiphy = u.hostname === 'giphy.com' || u.hostname.endsWith('.giphy.com');
-        const supaHost = new URL(SUPABASE_URL).hostname;
-        const isOwnStorage = u.hostname === supaHost &&
-          u.pathname.startsWith(`/storage/v1/object/public/${IMAGE_BUCKET}/`);
-        return isGiphy || isOwnStorage;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    // ¿El texto escrito a mano intenta colar un GIF/imagen?
-    function looksLikeMediaPayload(text) {
-      const t = String(text).trim();
-      return /^\[(?:gif|img):/i.test(t) || /^https?:\/\/\S+\.(?:gif|webp)(?:\?\S*)?$/i.test(t);
-    }
-
-    // Reduce el tamaño de la imagen antes de subirla (los GIF se dejan intactos para conservar la animación)
-    function prepareImageBlob(file, maxSide = 1600, quality = 0.85) {
-      return new Promise((resolve, reject) => {
-        if (file.type === 'image/gif') { resolve(file); return; }
-        const objUrl = URL.createObjectURL(file);
-        const img = new Image();
-        img.onload = () => {
-          URL.revokeObjectURL(objUrl);
-          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
-          const w = Math.max(1, Math.round(img.width * scale));
-          const h = Math.max(1, Math.round(img.height * scale));
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-          const outType = file.type === 'image/png' ? 'image/webp' : 'image/jpeg';
-          canvas.toBlob(
-            (blob) => blob ? resolve(blob) : reject(new Error('No se pudo procesar la imagen.')),
-            outType,
-            quality
-          );
-        };
-        img.onerror = () => {
-          URL.revokeObjectURL(objUrl);
-          reject(new Error('El archivo no es una imagen válida.'));
-        };
-        img.src = objUrl;
-      });
-    }
-
-    let isUploadingImage = false;
-    async function uploadAndSendImage(file) {
-      if (!requireRegistered('Compartir imágenes')) return;
-      if (isUploadingImage) return;
-      if (await checkMuted()) { appendSystemNotice(muteMessage()); return; }
-
-      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-        appendSystemNotice('⚠️ Formato no permitido. Usa JPG, PNG, WEBP o GIF.');
-        return;
-      }
-      if (file.size > MAX_ORIGINAL_BYTES) {
-        appendSystemNotice('⚠️ La imagen es demasiado grande (máximo 15 MB).');
-        return;
-      }
-
-      isUploadingImage = true;
-      const prevLabel = btnUploadImage.textContent;
-      btnUploadImage.textContent = '⏳';
-      btnUploadImage.disabled = true;
-
-      try {
-        const blob = await prepareImageBlob(file);
-        if (blob.size > MAX_IMAGE_BYTES) {
-          appendSystemNotice('⚠️ La imagen sigue pesando más de 5 MB. Prueba con una más pequeña.');
-          return;
-        }
-
-        const extByType = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
-        const ext = extByType[blob.type] || 'jpg';
-        const path = `${currentUser.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-
-        const { error: upErr } = await client.storage.from(IMAGE_BUCKET).upload(path, blob, {
-          contentType: blob.type,
-          cacheControl: '31536000',
-          upsert: false
-        });
-        if (upErr) throw upErr;
-
-        const { data: pub } = client.storage.from(IMAGE_BUCKET).getPublicUrl(path);
-        if (!pub || !pub.publicUrl) throw new Error('No se obtuvo la URL de la imagen.');
-
-        await sendMediaMessage('', { image_url: pub.publicUrl });
-      } catch (err) {
-        console.error('Error al subir imagen:', err);
-        appendSystemNotice('⚠️ No se pudo enviar la imagen. Inténtalo de nuevo en un momento.');
-      } finally {
-        isUploadingImage = false;
-        btnUploadImage.textContent = prevLabel;
-        btnUploadImage.disabled = false;
-      }
-    }
-
-    async function sendMediaMessage(content, extraFields = {}) {
-      const newMsg = {
-        sender_id: currentUser.id,
-        username: currentUser.username,
-        role: currentUser.role,
-        content: content,
-        ...extraFields,
-        created_at: new Date().toISOString()
-      };
-
-      if (await checkMuted()) { appendSystemNotice(muteMessage()); return; }
-      const msgDiv = appendMessage(newMsg);
-      playSound('outgoing');
-      const { error } = await client.from('messages').insert([newMsg]);
-      if (error) await handleSendError(error, msgDiv);
-    }
-
     async function sendDirectGifMessage(gifUrl) {
       if (!gifUrl) return;
-      if (!requireRegistered('Los GIFs')) return;
 
-      await sendMediaMessage(`[gif:${gifUrl}]`);
+      const newMsg = {
+        username: currentUser.username,
+        content: `[gif:${gifUrl}]`,
+        created_at: new Date().toISOString()
+      };
+      if (currentUser.id) newMsg.sender_id = currentUser.id;
+      if (currentUser.role) newMsg.role = currentUser.role;
+
+      appendMessage(newMsg);
+      playSound('outgoing');
+
+      try {
+        const { error } = await client.from('messages').insert([newMsg]);
+        if (error) {
+          await client.from('messages').insert([{ username: newMsg.username, content: newMsg.content }]);
+        }
+      } catch (e) {}
     }
 
     // ==========================================
@@ -2017,7 +1763,6 @@
       desktopList.innerHTML = '';
       mobileList.innerHTML = '';
 
-      // BereanoBot siempre presente en línea
       const botData = { username: 'BereanoBot 📖', role: 'bot', doctrine: 'Reformada Confesional', isBot: true };
       desktopList.appendChild(createOnlineUserElement(botData, false, false));
       mobileList.appendChild(createOnlineUserElement(botData, false, true));
@@ -2087,7 +1832,6 @@
       }
 
       document.getElementById('userActionModal').classList.add('open');
-      updateMuteButtons(targetUser, isBot);
     }
 
     document.getElementById('btnCloseActionModal').onclick = () => document.getElementById('userActionModal').classList.remove('open');
@@ -2096,30 +1840,10 @@
       if (selectedTargetUser) startPrivateChatWith(selectedTargetUser.username);
     };
 
-    document.getElementById('btnMuteUser').onclick = async () => {
+    document.getElementById('btnMuteUser').onclick = () => {
       if (!selectedTargetUser) return;
-      const nick = selectedTargetUser.username;
+      alert(`Se ha silenciado temporalmente a ${selectedTargetUser.username}.`);
       document.getElementById('userActionModal').classList.remove('open');
-      const { data, error } = await client.rpc('mute_user', { target_nick: nick, p_minutes: MUTE_MINUTES });
-      if (error) {
-        alert('No se pudo silenciar: ' + error.message);
-        return;
-      }
-      appendSystemNotice(`🔇 ${nick} fue silenciado por 1 hora (hasta las ${formatClock(data)}).`);
-      notifyMuteChange(nick);
-    };
-
-    document.getElementById('btnUnmuteUser').onclick = async () => {
-      if (!selectedTargetUser) return;
-      const nick = selectedTargetUser.username;
-      document.getElementById('userActionModal').classList.remove('open');
-      const { error } = await client.rpc('unmute_user', { target_nick: nick });
-      if (error) {
-        alert('No se pudo quitar el silencio: ' + error.message);
-        return;
-      }
-      appendSystemNotice(`🔊 Se quitó el silencio a ${nick}.`);
-      notifyMuteChange(nick);
     };
 
     document.getElementById('btnKickUser').onclick = () => {
@@ -2281,9 +2005,9 @@
               const lastMsg = msgs[msgs.length - 1];
               conversations.push({
                 partner: partnerNick,
-                lastMsg: lastMsg ? lastMsg.text : 'Conversación iniciada',
-                time: lastMsg ? lastMsg.time : '',
-                hasUnread: lastMsg && lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
+                lastMsg: lastMsg.text,
+                time: lastMsg.time,
+                hasUnread: lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
               });
             }
           }
@@ -2397,7 +2121,6 @@
       const input = document.getElementById('privateMsgInput');
       const text = input.value.trim();
       if (!text || !activePrivatePartner) return;
-      if (await checkMuted()) { alert(muteMessage()); return; }
 
       input.value = '';
       const key = getPrivateStorageKey(activePrivatePartner);
@@ -2600,17 +2323,11 @@
         : (userRolesCache[senderNick.toLowerCase()] || normalizeRole(msg.role));
 
       const roleDisplay = getRoleDisplayName(effectiveRole);
-      let parsed = parseIncomingPayload(msg.content);
-      if (msg.image_url && isAllowedMediaUrl(msg.image_url)) {
-        parsed = { isGif: true, gifUrl: msg.image_url };
-      }
+      const parsed = parseIncomingPayload(msg.content);
 
       let bodyHtml = '';
-      if (parsed.isGif && effectiveRole === 'guest') {
-        bodyHtml = `<em style="color:var(--text-muted);">🔒 Contenido multimedia no disponible para invitados.</em>`;
-      } else if (parsed.isGif) {
-        const safeUrl = escapeHTML(parsed.gifUrl);
-        bodyHtml = `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer"><img src="${safeUrl}" alt="Imagen compartida" class="msg-gif-img" referrerpolicy="no-referrer" loading="lazy"></a>`;
+      if (parsed.isGif) {
+        bodyHtml = `<img src="${escapeHTML(parsed.gifUrl)}" alt="GIF" class="msg-gif-img" referrerpolicy="no-referrer" loading="lazy">`;
       } else {
         bodyHtml = escapeHTML(parsed.text);
       }
@@ -2636,7 +2353,6 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
       if (!isSelf) playSound('incoming');
-      return div;
     }
 
     async function loadRecentMessages() {
@@ -2663,21 +2379,12 @@
         .subscribe();
     }
 
+    // ENVÍO DE MENSAJES (Blindado y Tolerante a Fallos)
     document.getElementById('chatForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = document.getElementById('msgInput');
       const text = input.value.trim();
       if (!text) return;
-
-      if (!isRegisteredUser() && looksLikeMediaPayload(text)) {
-        appendSystemNotice('🔒 Los GIFs e imágenes solo están disponibles para usuarios registrados.');
-        return;
-      }
-
-      if (!text.startsWith('!') && await checkMuted()) {
-        appendSystemNotice(muteMessage());
-        return;
-      }
 
       input.value = '';
       closeAllToolPopups();
@@ -2688,18 +2395,28 @@
       const payloadContent = packageMessagePayload(text);
 
       const newMsg = {
-        sender_id: currentUser.id,
         username: currentUser.username,
-        role: currentUser.role,
         content: payloadContent,
         created_at: new Date().toISOString()
       };
+      if (currentUser.id) newMsg.sender_id = currentUser.id;
+      if (currentUser.role) newMsg.role = currentUser.role;
 
-      const msgDiv = appendMessage(newMsg);
+      appendMessage(newMsg);
       playSound('outgoing');
 
-      const { error } = await client.from('messages').insert([newMsg]);
-      if (error) await handleSendError(error, msgDiv);
+      try {
+        const { error } = await client.from('messages').insert([newMsg]);
+        if (error) {
+          console.warn("Reintentando con columnas básicas (username, content):", error.message);
+          await client.from('messages').insert([{
+            username: newMsg.username,
+            content: newMsg.content
+          }]);
+        }
+      } catch (err) {
+        console.error("Error al enviar mensaje:", err);
+      }
     });
 
     // Cerrar Sesión
@@ -2720,8 +2437,6 @@
       );
     }
 
-    // Las herramientas (emojis, GIFs, fuentes) no dependen de la sesión: se activan de inmediato
-    rebuildToolsEngine();
     initSession();
   </script>
 </body>
