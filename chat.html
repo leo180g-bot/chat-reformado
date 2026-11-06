@@ -242,6 +242,7 @@
       border-right: 1px solid var(--border-color);
       overflow: hidden;
       background: var(--bg-body);
+      position: relative;
     }
 
     .messages-container {
@@ -345,6 +346,214 @@
 
     .msg-body {
       color: var(--text-main);
+      line-height: 1.5;
+    }
+    .msg-body img.chat-gif-img {
+      max-width: 220px;
+      border-radius: 8px;
+      display: block;
+      margin-top: 6px;
+    }
+
+    /* Herramientas de entrada: Estilos, Emojis y GIFs */
+    .input-tools-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-input-tool {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-input-tool:hover {
+      background: var(--border-color);
+      color: var(--accent);
+    }
+    .btn-input-tool.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    /* Popovers Flotantes (Emojis, Estilos y GIFs) */
+    .popover-panel {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 14px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+      z-index: 60;
+      animation: fadeIn 0.15s ease;
+      overflow: hidden;
+    }
+    .popover-panel.show {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .emoji-popover {
+      width: 310px;
+      max-height: 260px;
+    }
+    .popover-header {
+      padding: 8px 12px;
+      background: var(--bg-subpanel);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      padding: 10px;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+    .emoji-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 4px;
+      line-height: 1;
+      transition: transform 0.1s, background-color 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .emoji-btn:hover {
+      background: var(--bg-subpanel);
+      transform: scale(1.2);
+    }
+
+    .style-popover {
+      width: 320px;
+      padding: 14px;
+      gap: 12px;
+    }
+    .style-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .style-field label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .style-field select, .style-field input {
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subpanel);
+      color: var(--text-main);
+      font-size: 0.86rem;
+      outline: none;
+    }
+    .color-swatches {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .swatch-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .swatch-btn:hover, .swatch-btn.selected {
+      transform: scale(1.2);
+      border-color: #fff;
+    }
+    .style-preview-box {
+      padding: 8px 12px;
+      background: var(--bg-subpanel);
+      border: 1px dashed var(--border-color);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.92rem;
+      margin-top: 4px;
+    }
+    .btn-reset-style {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      align-self: flex-end;
+    }
+    .btn-reset-style:hover {
+      background: var(--border-color);
+      color: var(--text-main);
+    }
+
+    /* Popover de GIFs */
+    .gif-popover {
+      width: 340px;
+      max-height: 320px;
+      padding: 10px;
+    }
+    .gif-search-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .gif-search-bar input {
+      flex: 1;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subpanel);
+      color: var(--text-main);
+      font-size: 0.84rem;
+      outline: none;
+    }
+    .gif-results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .gif-thumb {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .gif-thumb:hover {
+      transform: scale(1.03);
+      opacity: 0.9;
     }
 
     /* Barra de Entrada */
@@ -765,6 +974,11 @@
       .brand-link span {
         display: none;
       }
+      .popover-panel {
+        left: 8px;
+        right: 8px;
+        width: auto;
+      }
     }
 
     @media (min-width: 769px) {
@@ -772,167 +986,6 @@
         display: none !important;
       }
     }
-  
-    /* Herramientas de entrada: Estilos y Emojis */
-    .input-tools-group {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-input-tool {
-      background: var(--bg-subpanel);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: all 0.15s;
-      flex-shrink: 0;
-    }
-    .btn-input-tool:hover {
-      background: var(--border-color);
-      color: var(--accent);
-    }
-    .btn-input-tool.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(56, 189, 248, 0.12);
-    }
-
-    /* Popovers Flotantes (Emojis y Estilos) */
-    .popover-panel {
-      display: none;
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 14px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
-      z-index: 60;
-      animation: fadeIn 0.15s ease;
-      overflow: hidden;
-    }
-    .popover-panel.show {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .emoji-popover {
-      width: 310px;
-      max-height: 260px;
-    }
-    .popover-header {
-      padding: 8px 12px;
-      background: var(--bg-subpanel);
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .emoji-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      padding: 10px;
-      overflow-y: auto;
-      max-height: 200px;
-    }
-    .emoji-btn {
-      background: transparent;
-      border: none;
-      font-size: 1.25rem;
-      cursor: pointer;
-      border-radius: 6px;
-      padding: 4px;
-      line-height: 1;
-      transition: transform 0.1s, background-color 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .emoji-btn:hover {
-      background: var(--bg-subpanel);
-      transform: scale(1.2);
-    }
-
-    .style-popover {
-      width: 320px;
-      padding: 14px;
-      gap: 12px;
-    }
-    .style-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .style-field label {
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .style-field select, .style-field input {
-      padding: 7px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-subpanel);
-      color: var(--text-main);
-      font-size: 0.86rem;
-      outline: none;
-    }
-    .color-swatches {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      margin-top: 4px;
-    }
-    .swatch-btn {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: transform 0.15s, border-color 0.15s;
-    }
-    .swatch-btn:hover, .swatch-btn.selected {
-      transform: scale(1.2);
-      border-color: #fff;
-    }
-    .style-preview-box {
-      padding: 8px 12px;
-      background: var(--bg-subpanel);
-      border: 1px dashed var(--border-color);
-      border-radius: 6px;
-      text-align: center;
-      font-size: 0.92rem;
-      margin-top: 4px;
-    }
-    .btn-reset-style {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      align-self: flex-end;
-    }
-    .btn-reset-style:hover {
-      background: var(--border-color);
-      color: var(--text-main);
-    }
-
   </style>
 </head>
 <body>
@@ -990,7 +1043,6 @@
   <!-- Cuerpo del Chat -->
   <div class="chat-layout">
     <!-- Panel Central de Mensajes -->
-        <!-- Panel Central de Mensajes -->
     <main class="chat-main" style="position:relative;">
       <div class="messages-container" id="messagesContainer">
         <!-- Los mensajes en tiempo real se cargan aquí -->
@@ -1003,7 +1055,40 @@
           <button type="button" class="btn-close-modal" id="btnCloseEmojiPopover" style="font-size:1.1rem;">&times;</button>
         </div>
         <div class="emoji-grid" id="emojiGridContainer">
-          <button type="button" class="emoji-btn" data-emoji="✝️">✝️</button><button type="button" class="emoji-btn" data-emoji="📖">📖</button><button type="button" class="emoji-btn" data-emoji="🙏">🙏</button><button type="button" class="emoji-btn" data-emoji="🕊️">🕊️</button><button type="button" class="emoji-btn" data-emoji="🕯️">🕯️</button><button type="button" class="emoji-btn" data-emoji="⛪">⛪</button><button type="button" class="emoji-btn" data-emoji="❤️">❤️</button><button type="button" class="emoji-btn" data-emoji="👑">👑</button><button type="button" class="emoji-btn" data-emoji="🛡️">🛡️</button><button type="button" class="emoji-btn" data-emoji="📜">📜</button><button type="button" class="emoji-btn" data-emoji="🙌">🙌</button><button type="button" class="emoji-btn" data-emoji="👏">👏</button><button type="button" class="emoji-btn" data-emoji="🤝">🤝</button><button type="button" class="emoji-btn" data-emoji="👍">👍</button><button type="button" class="emoji-btn" data-emoji="✊">✊</button><button type="button" class="emoji-btn" data-emoji="🫂">🫂</button><button type="button" class="emoji-btn" data-emoji="😀">😀</button><button type="button" class="emoji-btn" data-emoji="😊">😊</button><button type="button" class="emoji-btn" data-emoji="😇">😇</button><button type="button" class="emoji-btn" data-emoji="😌">😌</button><button type="button" class="emoji-btn" data-emoji="🤔">🤔</button><button type="button" class="emoji-btn" data-emoji="🧐">🧐</button><button type="button" class="emoji-btn" data-emoji="😢">😢</button><button type="button" class="emoji-btn" data-emoji="🔥">🔥</button><button type="button" class="emoji-btn" data-emoji="✨">✨</button><button type="button" class="emoji-btn" data-emoji="🌟">🌟</button><button type="button" class="emoji-btn" data-emoji="🍞">🍞</button><button type="button" class="emoji-btn" data-emoji="🍷">🍷</button><button type="button" class="emoji-btn" data-emoji="🌿">🌿</button><button type="button" class="emoji-btn" data-emoji="⚓">⚓</button><button type="button" class="emoji-btn" data-emoji="🎺">🎺</button><button type="button" class="emoji-btn" data-emoji="🐑">🐑</button><button type="button" class="emoji-btn" data-emoji="☀️">☀️</button><button type="button" class="emoji-btn" data-emoji="🌈">🌈</button>
+          <button type="button" class="emoji-btn" data-emoji="✝️">✝️</button>
+          <button type="button" class="emoji-btn" data-emoji="📖">📖</button>
+          <button type="button" class="emoji-btn" data-emoji="🙏">🙏</button>
+          <button type="button" class="emoji-btn" data-emoji="🕊️">🕊️</button>
+          <button type="button" class="emoji-btn" data-emoji="🕯️">🕯️</button>
+          <button type="button" class="emoji-btn" data-emoji="⛪">⛪</button>
+          <button type="button" class="emoji-btn" data-emoji="❤️">❤️</button>
+          <button type="button" class="emoji-btn" data-emoji="👑">👑</button>
+          <button type="button" class="emoji-btn" data-emoji="🛡️">🛡️</button>
+          <button type="button" class="emoji-btn" data-emoji="📜">📜</button>
+          <button type="button" class="emoji-btn" data-emoji="🙌">🙌</button>
+          <button type="button" class="emoji-btn" data-emoji="👏">👏</button>
+          <button type="button" class="emoji-btn" data-emoji="🤝">🤝</button>
+          <button type="button" class="emoji-btn" data-emoji="👍">👍</button>
+          <button type="button" class="emoji-btn" data-emoji="✊">✊</button>
+          <button type="button" class="emoji-btn" data-emoji="🫂">🫂</button>
+          <button type="button" class="emoji-btn" data-emoji="😀">😀</button>
+          <button type="button" class="emoji-btn" data-emoji="😊">😊</button>
+          <button type="button" class="emoji-btn" data-emoji="😇">😇</button>
+          <button type="button" class="emoji-btn" data-emoji="😌">😌</button>
+          <button type="button" class="emoji-btn" data-emoji="🤔">🤔</button>
+          <button type="button" class="emoji-btn" data-emoji="🧐">🧐</button>
+          <button type="button" class="emoji-btn" data-emoji="😢">😢</button>
+          <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+          <button type="button" class="emoji-btn" data-emoji="✨">✨</button>
+          <button type="button" class="emoji-btn" data-emoji="🌟">🌟</button>
+          <button type="button" class="emoji-btn" data-emoji="🍞">🍞</button>
+          <button type="button" class="emoji-btn" data-emoji="🍷">🍷</button>
+          <button type="button" class="emoji-btn" data-emoji="🌿">🌿</button>
+          <button type="button" class="emoji-btn" data-emoji="⚓">⚓</button>
+          <button type="button" class="emoji-btn" data-emoji="🎺">🎺</button>
+          <button type="button" class="emoji-btn" data-emoji="🐑">🐑</button>
+          <button type="button" class="emoji-btn" data-emoji="☀️">☀️</button>
+          <button type="button" class="emoji-btn" data-emoji="🌈">🌈</button>
         </div>
       </div>
 
@@ -1057,10 +1142,26 @@
         <button type="button" class="btn-reset-style" id="btnResetStyle">Restablecer por defecto</button>
       </div>
 
+      <!-- Popover de GIFs de Giphy -->
+      <div class="popover-panel gif-popover" id="gifPopover">
+        <div class="popover-header">
+          <span>🎞️ Enviar GIF (Giphy)</span>
+          <button type="button" class="btn-close-modal" id="btnCloseGifPopover" style="font-size:1.1rem;">&times;</button>
+        </div>
+        <div class="gif-search-bar">
+          <input type="text" id="gifSearchInput" placeholder="Buscar GIF (ej. bendicion, alabanza)..." autocomplete="off">
+          <button type="button" class="btn-send" id="btnSearchGif" style="padding:6px 12px; font-size:0.8rem;">Buscar</button>
+        </div>
+        <div class="gif-results-grid" id="gifResultsGrid">
+          <p style="grid-column: span 2; text-align:center; color:var(--text-muted); font-size:0.8rem; padding:15px;">Escribe un término y busca GIFs.</p>
+        </div>
+      </div>
+
       <form class="chat-input-bar" id="chatForm">
         <div class="input-tools-group">
-          <button type="button" class="btn-input-tool" id="btnToggleEmoji" title="Insertar emojis (✝️, 📖, 🙏...)">😀</button>
+          <button type="button" class="btn-input-tool" id="btnToggleEmoji" title="Insertar emojis">😀</button>
           <button type="button" class="btn-input-tool" id="btnToggleStyle" title="Personalizar fuente, color y tamaño">🎨</button>
+          <button type="button" class="btn-input-tool" id="btnToggleGif" title="Enviar GIF animado">🎞️</button>
         </div>
         <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea para ayuda..." autocomplete="off" required maxlength="1000">
         <button type="submit" class="btn-send">Enviar</button>
@@ -1079,7 +1180,7 @@
     </aside>
   </div>
 
-  <!-- MODAL 1: ACCIONES DE USUARIO (Al hacer clic en cualquier Nick) -->
+  <!-- MODAL 1: ACCIONES DE USUARIO -->
   <div class="modal-overlay" id="userActionModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1097,12 +1198,10 @@
         </div>
 
         <div class="action-btn-group">
-          <!-- Acción Privado -->
           <button type="button" class="btn-action" id="btnStartPrivateChat">
             💬 Enviar Mensaje Privado
           </button>
 
-          <!-- Acciones de Moderador / Admin -->
           <div id="adminActionSection" style="display:none; flex-direction:column; gap:8px; margin-top:6px;">
             <div style="font-size:0.75rem; color:var(--accent-ruby); font-weight:700; text-transform:uppercase;">
               Herramientas de Moderación
@@ -1165,7 +1264,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: MENSAJES PRIVADOS (Con vista de quién envió y clic para abrir) -->
+  <!-- MODAL 3: MENSAJES PRIVADOS -->
   <div class="modal-overlay" id="privatesModal">
     <div class="modal-card" style="max-width:500px;">
       <div class="modal-header">
@@ -1223,6 +1322,7 @@
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const GIPHY_API_KEY = "b4WtjSwJeeaO5vY2rl5P2CwDbmy3aBoc";
 
     let currentUser = null;
     let presenceChannel = null;
@@ -1232,7 +1332,7 @@
     let isInitialPresenceSync = true;
     let soundsEnabled = true;
 
-    // 0. REPRODUCCIÓN DE AUDIO MP3 (GitHub / Proyecto local)
+    // 0. REPRODUCCIÓN DE AUDIO MP3
     const AUDIO_FILES = {
       mencion: new Audio('mencion.mp3'),
       mensaje: new Audio('mensaje.mp3'),
@@ -1255,17 +1355,12 @@
           audio.currentTime = 0;
           const playPromise = audio.play();
           if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {
-              // Silencio seguro si el navegador bloquea autoplay antes de interacción
-            });
+            playPromise.catch(() => {});
           }
         }
-      } catch (err) {
-        // Manejo silencioso de audio
-      }
+      } catch (err) {}
     }
 
-    // Botón de alternar sonido
     const btnSoundToggle = document.getElementById('btnSoundToggle');
     btnSoundToggle.onclick = () => {
       soundsEnabled = !soundsEnabled;
@@ -1310,7 +1405,6 @@
         try {
           const guest = JSON.parse(guestRaw);
 
-          // Verificar si el nick pertenece a una cuenta registrada
           let isReg = false;
           const { data: isTaken } = await client.rpc('is_nick_registered', { target_nick: guest.username });
           if (isTaken) isReg = true;
@@ -1345,48 +1439,25 @@
         const authUserNick = session.user.user_metadata?.username || '';
         let profile = null;
 
-        // Intento 1: Consultar profiles por id = authUserId
         try {
-          const { data: pById, error: err1 } = await client
-            .from('profiles')
-            .select('*')
-            .eq('id', authUserId)
-            .maybeSingle();
+          const { data: pById } = await client.from('profiles').select('*').eq('id', authUserId).maybeSingle();
+          if (pById) profile = pById;
+        } catch (e) {}
 
-          if (pById) {
-            profile = pById;
-          } else if (err1) {
-            console.warn("Aviso al consultar profiles por id:", err1.message);
-          }
-        } catch (e) {
-          console.warn("Fallo intento 1 por id:", e);
-        }
-
-        // Intento 2: Consultar profiles por user_id = authUserId (por si la columna foránea se llama user_id)
         if (!profile) {
           try {
-            const { data: pByUserId } = await client
-              .from('profiles')
-              .select('*')
-              .eq('user_id', authUserId)
-              .maybeSingle();
+            const { data: pByUserId } = await client.from('profiles').select('*').eq('user_id', authUserId).maybeSingle();
             if (pByUserId) profile = pByUserId;
           } catch (e) {}
         }
 
-        // Intento 3: Consultar profiles por username (insensible a mayúsculas/minúsculas)
         if (!profile && authUserNick) {
           try {
-            const { data: pByNick } = await client
-              .from('profiles')
-              .select('*')
-              .ilike('username', authUserNick)
-              .maybeSingle();
+            const { data: pByNick } = await client.from('profiles').select('*').ilike('username', authUserNick).maybeSingle();
             if (pByNick) profile = pByNick;
           } catch (e) {}
         }
 
-        // Intento 4: Llamar RPC get_my_profile si estuviera disponible
         if (!profile) {
           try {
             const { data: rpcProfile } = await client.rpc('get_my_profile');
@@ -1394,13 +1465,6 @@
           } catch (e) {}
         }
 
-        console.log("Datos de sesión y perfil obtenidos:", {
-          authId: authUserId,
-          authUserNick: authUserNick,
-          profileEncontrado: profile
-        });
-
-        // Extraer rol con soporte para 'role' o 'rol'
         const rawRole = (profile && (profile.role || profile.rol))
           ? (profile.role || profile.rol)
           : (session.user.user_metadata?.role || 'novice');
@@ -1421,7 +1485,6 @@
         };
       }
 
-      // Guardar el rol propio en la caché de la sala
       userRolesCache[currentUser.username.toLowerCase()] = currentUser.role;
 
       updateUserUI();
@@ -1430,7 +1493,7 @@
       subscribeToMessages();
       setupPrivateMessaging();
       initBereanoBot();
-      initStyleAndEmojiControls();
+      initStyleEmojiAndGifControls();
     }
 
     function updateUserUI() {
@@ -1444,9 +1507,8 @@
       pillEl.title = `${currentUser.username} (${roleDisplay}) - Clic para ver / editar mi perfil`;
     }
 
-    
     // ==========================================
-    // SISTEMA DE FUENTES, COLORES, TAMAÑOS Y EMOJIS
+    // SISTEMA DE FUENTES, COLORES, TAMAÑOS, EMOJIS Y GIPHY
     // ==========================================
     let userTextStyle = {
       font: 'default',
@@ -1462,13 +1524,18 @@
     const msgInput = document.getElementById('msgInput');
     const emojiPopover = document.getElementById('emojiPopover');
     const stylePopover = document.getElementById('stylePopover');
+    const gifPopover = document.getElementById('gifPopover');
     const btnToggleEmoji = document.getElementById('btnToggleEmoji');
     const btnToggleStyle = document.getElementById('btnToggleStyle');
+    const btnToggleGif = document.getElementById('btnToggleGif');
     const userFontSelect = document.getElementById('userFontSelect');
     const userFontSizeSelect = document.getElementById('userFontSizeSelect');
     const stylePreviewBox = document.getElementById('stylePreviewBox');
     const customColorPicker = document.getElementById('customColorPicker');
     const colorSwatches = document.querySelectorAll('.swatch-btn');
+    const gifSearchInput = document.getElementById('gifSearchInput');
+    const btnSearchGif = document.getElementById('btnSearchGif');
+    const gifResultsGrid = document.getElementById('gifResultsGrid');
 
     function applyStyleToInput() {
       if (!msgInput) return;
@@ -1483,7 +1550,7 @@
       }
     }
 
-    function initStyleAndEmojiControls() {
+    function initStyleEmojiAndGifControls() {
       if (userFontSelect) userFontSelect.value = userTextStyle.font;
       if (userFontSizeSelect) userFontSizeSelect.value = userTextStyle.size;
 
@@ -1537,43 +1604,57 @@
         };
       }
 
-      // Emojis
+      // Toggles de Popovers
       if (btnToggleEmoji) {
         btnToggleEmoji.onclick = (e) => {
           e.stopPropagation();
           stylePopover.classList.remove('show');
+          gifPopover.classList.remove('show');
           btnToggleStyle.classList.remove('active');
+          btnToggleGif.classList.remove('active');
           const isShow = emojiPopover.classList.toggle('show');
           btnToggleEmoji.classList.toggle('active', isShow);
         };
       }
-      const btnCloseEmojiPopover = document.getElementById('btnCloseEmojiPopover');
-      if (btnCloseEmojiPopover) {
-        btnCloseEmojiPopover.onclick = () => {
-          emojiPopover.classList.remove('show');
-          btnToggleEmoji.classList.remove('active');
-        };
-      }
+      document.getElementById('btnCloseEmojiPopover').onclick = () => {
+        emojiPopover.classList.remove('show');
+        btnToggleEmoji.classList.remove('active');
+      };
 
-      // Estilos
       if (btnToggleStyle) {
         btnToggleStyle.onclick = (e) => {
           e.stopPropagation();
           emojiPopover.classList.remove('show');
+          gifPopover.classList.remove('show');
           btnToggleEmoji.classList.remove('active');
+          btnToggleGif.classList.remove('active');
           const isShow = stylePopover.classList.toggle('show');
           btnToggleStyle.classList.toggle('active', isShow);
         };
       }
-      const btnCloseStylePopover = document.getElementById('btnCloseStylePopover');
-      if (btnCloseStylePopover) {
-        btnCloseStylePopover.onclick = () => {
+      document.getElementById('btnCloseStylePopover').onclick = () => {
+        stylePopover.classList.remove('show');
+        btnToggleStyle.classList.remove('active');
+      };
+
+      if (btnToggleGif) {
+        btnToggleGif.onclick = (e) => {
+          e.stopPropagation();
+          emojiPopover.classList.remove('show');
           stylePopover.classList.remove('show');
+          btnToggleEmoji.classList.remove('active');
           btnToggleStyle.classList.remove('active');
+          const isShow = gifPopover.classList.toggle('show');
+          btnToggleGif.classList.toggle('active', isShow);
+          if (isShow && gifSearchInput) gifSearchInput.focus();
         };
       }
+      document.getElementById('btnCloseGifPopover').onclick = () => {
+        gifPopover.classList.remove('show');
+        btnToggleGif.classList.remove('active');
+      };
 
-      // Inserción de emoji en el cursor
+      // Inserción de emoji
       document.querySelectorAll('.emoji-btn').forEach(btn => {
         btn.onclick = () => {
           const emoji = btn.getAttribute('data-emoji');
@@ -1587,6 +1668,17 @@
         };
       });
 
+      // Búsqueda de GIFs en Giphy
+      if (btnSearchGif) {
+        btnSearchGif.onclick = () => searchGiphy(gifSearchInput.value.trim());
+      }
+      if (gifSearchInput) {
+        gifSearchInput.onkeydown = (e) => {
+          if (e.key === 'Enter') searchGiphy(gifSearchInput.value.trim());
+        };
+      }
+
+      // Cerrar popovers al hacer clic fuera
       document.addEventListener('click', (e) => {
         if (emojiPopover && !emojiPopover.contains(e.target) && e.target !== btnToggleEmoji) {
           emojiPopover.classList.remove('show');
@@ -1596,7 +1688,54 @@
           stylePopover.classList.remove('show');
           if (btnToggleStyle) btnToggleStyle.classList.remove('active');
         }
+        if (gifPopover && !gifPopover.contains(e.target) && e.target !== btnToggleGif) {
+          gifPopover.classList.remove('show');
+          if (btnToggleGif) btnToggleGif.classList.remove('active');
+        }
       });
+    }
+
+    async function searchGiphy(query) {
+      if (!query) return;
+      gifResultsGrid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--text-muted); font-size:0.8rem; padding:15px;">Buscando GIFs...</p>';
+      try {
+        const res = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=8&rating=g`);
+        const json = await res.json();
+        if (json.data && json.data.length > 0) {
+          gifResultsGrid.innerHTML = '';
+          json.data.forEach(gif => {
+            const thumbUrl = gif.images.fixed_height_small.url;
+            const fullUrl = gif.images.fixed_height.url;
+            const img = document.createElement('img');
+            img.src = thumbUrl;
+            img.className = 'gif-thumb';
+            img.onclick = () => sendGifMessage(fullUrl);
+            gifResultsGrid.appendChild(img);
+          });
+        } else {
+          gifResultsGrid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:var(--text-muted); font-size:0.8rem; padding:15px;">No se encontraron GIFs.</p>';
+        }
+      } catch (err) {
+        gifResultsGrid.innerHTML = '<p style="grid-column: span 2; text-align:center; color:#fca5a5; font-size:0.8rem; padding:15px;">Error al conectar con Giphy.</p>';
+      }
+    }
+
+    async function sendGifMessage(gifUrl) {
+      gifPopover.classList.remove('show');
+      if (btnToggleGif) btnToggleGif.classList.remove('active');
+
+      const gifContent = `[CD_GIF]${gifUrl}[/CD_GIF]`;
+      const newMsg = {
+        sender_id: currentUser.id,
+        username: currentUser.username,
+        role: currentUser.role,
+        content: gifContent,
+        created_at: new Date().toISOString()
+      };
+
+      appendMessage(newMsg);
+      playSound('outgoing');
+      await client.from('messages').insert([newMsg]);
     }
 
     function saveAndApplyStyle() {
@@ -1614,25 +1753,36 @@
     }
 
     function unpackStyledContent(rawContent) {
-      if (!rawContent) return { text: '', font: 'default', color: 'default', size: 'normal' };
+      if (!rawContent) return { text: '', font: 'default', color: 'default', size: 'normal', isGif: false, gifUrl: '' };
+
+      // Comprobar si es un GIF
+      const gifMatch = String(rawContent).match(/^\[CD_GIF\]([\s\S]*?)\[\/CD_GIF\]$/);
+      if (gifMatch) {
+        return { text: '', font: 'default', color: 'default', size: 'normal', isGif: true, gifUrl: gifMatch[1] };
+      }
+
       const m = String(rawContent).match(/^\[CD_STYLE:([^\|]+)\|([^\|]+)\|([^\]]+)\]([\s\S]*?)\[\/CD_STYLE\]$/);
       if (m) {
         return {
           font: m[1],
           color: m[2],
           size: m[3],
-          text: m[4]
+          text: m[4],
+          isGif: false,
+          gifUrl: ''
         };
       }
       return {
         font: 'default',
         color: 'default',
         size: 'normal',
-        text: rawContent
+        text: rawContent,
+        isGif: false,
+        gifUrl: ''
       };
     }
 
-    // 2. CONTROL DE PRESENCIA, DUPLICADOS Y ANUNCIO DE ENTRADA/SALIDA
+    // 2. CONTROL DE PRESENCIA Y NICK DUPLICADO
     function setupPresence() {
       const myNickLower = currentUser.username.trim().toLowerCase();
 
@@ -1650,7 +1800,6 @@
           document.getElementById('onlineCountDesktop').textContent = totalOnline;
           document.getElementById('onlineCountMobileTitle').textContent = totalOnline;
 
-          // Prevención de duplicados para invitados
           if (currentUser.role === 'guest') {
             const entries = state[myNickLower] || [];
             if (entries.length > 1) {
@@ -1664,7 +1813,6 @@
             }
           }
 
-          // Detección de Entrada y Salida con Sonidos
           const currentNicks = new Set();
           activeKeys.forEach(k => {
             const user = state[k][0];
@@ -1672,7 +1820,6 @@
           });
 
           if (!isInitialPresenceSync) {
-            // Usuarios que acaban de entrar
             currentNicks.forEach(nick => {
               if (!previousOnlineUsers.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
                 appendSystemNotice(`🚪 Hermano/a ${nick} ha ingresado a la comunión.`);
@@ -1680,7 +1827,6 @@
               }
             });
 
-            // Usuarios que acaban de salir
             previousOnlineUsers.forEach(nick => {
               if (!currentNicks.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
                 appendSystemNotice(`🚶 Hermano/a ${nick} se ha retirado de la sala.`);
@@ -1737,7 +1883,6 @@
       });
     }
 
-    // En versión móvil, al hacer clic en un usuario: CERRAMOS Usuarios en línea y ABRIMOS Opciones de usuario
     function createOnlineUserElement(userData, isMe, isMobileList) {
       const li = document.createElement('li');
       li.className = 'online-user-item';
@@ -1747,7 +1892,6 @@
       `;
       li.onclick = () => {
         if (isMobileList) {
-          // Requerimiento: Cerrar 'Usuarios en línea' en versión móvil
           document.getElementById('onlineMobileModal').classList.remove('open');
         }
         openUserActionModal(userData);
@@ -1755,7 +1899,7 @@
       return li;
     }
 
-    // 3. MENÚ DE ACCIONES DE USUARIO (Clic en Nick)
+    // 3. MENÚ DE ACCIONES DE USUARIO
     function openUserActionModal(targetUser) {
       selectedTargetUser = targetUser;
 
@@ -1768,13 +1912,11 @@
       const adminSection = document.getElementById('adminActionSection');
       const btnRole = document.getElementById('btnChangeRole');
 
-      // Si soy yo mismo, abrimos editar perfil
       if (isMe) {
         openEditProfileModal();
         return;
       }
 
-      // Herramientas de Admin / Moderador
       const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
       adminSection.style.display = isStaff ? 'flex' : 'none';
       btnRole.style.display = currentUser.role === 'admin' ? 'block' : 'none';
@@ -1786,7 +1928,6 @@
       document.getElementById('userActionModal').classList.remove('open');
     };
 
-    // Iniciar Privado desde el Modal de Usuario
     document.getElementById('btnStartPrivateChat').onclick = () => {
       document.getElementById('userActionModal').classList.remove('open');
       if (selectedTargetUser) {
@@ -1794,7 +1935,6 @@
       }
     };
 
-    // Herramientas de Moderador / Admin
     document.getElementById('btnMuteUser').onclick = () => {
       if (!selectedTargetUser) return;
       alert(`Se ha aplicado silencio temporal a ${selectedTargetUser.username}.`);
@@ -1896,7 +2036,7 @@
       alert("Perfil actualizado correctamente.");
     });
 
-    // 5. SISTEMA DE PRIVADOS: VER REMITENTES, CLIC PARA ABRIR Y OPCIÓN DE BORRAR/CERRAR
+    // 5. SISTEMA DE PRIVADOS
     const privatesModal = document.getElementById('privatesModal');
     const privatesContactsView = document.getElementById('privatesContactsView');
     const privatesChatView = document.getElementById('privatesChatView');
@@ -1922,7 +2062,6 @@
       showPrivatesContactsView();
     };
 
-    // Requerimiento: Cerrar un privado desde "Mensajes privados" y que se borren los mensajes
     btnDeleteConversation.onclick = () => {
       if (!activePrivatePartner) return;
       deletePrivateConversation(activePrivatePartner);
@@ -1930,7 +2069,7 @@
 
     function deletePrivateConversation(partnerNick) {
       if (!partnerNick) return;
-      if (confirm(`¿Deseas cerrar y eliminar todos los mensajes privados con "${partnerNick}"? Esta acción no se puede deshacer.`)) {
+      if (confirm(`¿Deseas cerrar y eliminar todos los mensajes privados con "${partnerNick}"?`)) {
         const key = getPrivateStorageKey(partnerNick);
         localStorage.removeItem(key);
         activePrivatePartner = null;
@@ -1965,7 +2104,6 @@
       return `priv_msgs_${pair}`;
     }
 
-    // Listar quiénes enviaron mensajes o conversaciones abiertas
     function getPrivateConversationsIndex() {
       const conversations = [];
       const myNick = currentUser.username.toLowerCase();
@@ -1981,9 +2119,9 @@
               const lastMsg = msgs[msgs.length - 1];
               conversations.push({
                 partner: partnerNick,
-                lastMsg: lastMsg ? lastMsg.text : 'Conversación iniciada',
-                time: lastMsg ? lastMsg.time : '',
-                hasUnread: lastMsg && lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
+                lastMsg: lastMsg.text,
+                time: lastMsg.time,
+                hasUnread: lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
               });
             }
           }
@@ -2023,13 +2161,11 @@
           </div>
         `;
 
-        // Al hacer clic en la fila (excepto el botón de borrar), abre el chat
         div.onclick = (e) => {
           if (e.target.closest('.btn-delete-contact')) return;
           startPrivateChatWith(c.partner);
         };
 
-        // Botón directo para borrar y cerrar desde la lista
         div.querySelector('.btn-delete-contact').onclick = (e) => {
           e.stopPropagation();
           deletePrivateConversation(c.partner);
@@ -2115,7 +2251,6 @@
       renderPrivateHistory();
       playSound('outgoing');
 
-      // Transmisión Realtime Broadcast al destinatario
       if (privateBroadcastChannel) {
         await privateBroadcastChannel.send({
           type: 'broadcast',
@@ -2190,7 +2325,7 @@
       if (dropdownMenu) dropdownMenu.classList.remove('show');
     });
 
-    // 8. BEREANOBOT: ASISTENTE BÍBLICO Y CONFESIONAL
+    // 8. BEREANOBOT
     function initBereanoBot() {
       setTimeout(() => {
         appendBotMessage(`¡Gracia y paz, hermano/a **${currentUser.username}**! Soy **BereanoBot 📖**. Puedes consultar pasajes bíblicos o teología con: \`!berea\`, \`!versiculo\`, \`!solas\`, \`!1689\`, \`!westminster\` o \`!dort\`.`);
@@ -2300,13 +2435,20 @@
 
       const roleDisplay = getRoleDisplayName(effectiveRole);
 
-      // Desempaquetar estilo (fuente, color, tamaño)
+      // Desempaquetar estilo o GIF
       const unpacked = unpackStyledContent(msg.content);
-      let inlineStyles = [];
-      if (unpacked.font && unpacked.font !== 'default') inlineStyles.push(`font-family: ${unpacked.font}`);
-      if (unpacked.color && unpacked.color !== 'default') inlineStyles.push(`color: ${unpacked.color}`);
-      if (unpacked.size && unpacked.size !== 'normal') inlineStyles.push(`font-size: ${unpacked.size}`);
-      const styleString = inlineStyles.length ? `style="${inlineStyles.join('; ')}"` : '';
+      let bodyHtml = '';
+
+      if (unpacked.isGif) {
+        bodyHtml = `<img src="${escapeHTML(unpacked.gifUrl)}" alt="GIF animado" class="chat-gif-img" loading="lazy">`;
+      } else {
+        let inlineStyles = [];
+        if (unpacked.font && unpacked.font !== 'default') inlineStyles.push(`font-family: ${unpacked.font}`);
+        if (unpacked.color && unpacked.color !== 'default') inlineStyles.push(`color: ${unpacked.color}`);
+        if (unpacked.size && unpacked.size !== 'normal') inlineStyles.push(`font-size: ${unpacked.size}`);
+        const styleString = inlineStyles.length ? `style="${inlineStyles.join('; ')}"` : '';
+        bodyHtml = `<div ${styleString}>${escapeHTML(unpacked.text)}</div>`;
+      }
 
       div.innerHTML = `
         <div class="msg-header">
@@ -2314,7 +2456,7 @@
           <span class="msg-role-tag role-${effectiveRole}">${roleDisplay}</span>
           <span class="msg-time">${timeStr}</span>
         </div>
-        <div class="msg-body" ${styleString}>${escapeHTML(unpacked.text)}</div>
+        <div class="msg-body">${bodyHtml}</div>
       `;
 
       div.querySelector('.msg-sender').onclick = () => {
