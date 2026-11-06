@@ -1107,51 +1107,90 @@
           window.location.replace('index.html');
           return;
         }
-      } else {
-        const { data: { session } } = await client.auth.getSession();
-        if (!session) {
+      } } else {
+        const { data: { session }, error: sessionErr } = await client.auth.getSession();
+        if (sessionErr || !session) {
           window.location.replace('index.html');
           return;
         }
 
-        // Consultar el perfil en Supabase (primero por id, y con fallback por username si por alguna razón no coincidió el id)
-        let { data: profile, error: profileErr } = await client
-          .from('profiles')
-          .select('id, username, role, doctrine_affinity, bio')
-          .eq('id', session.user.id)
-          .maybeSingle();
+        const authUserId = session.user.id;
+        const authUserNick = session.user.user_metadata?.username || '';
+        let profile = null;
 
-        if (profileErr) {
-          console.error("Error al consultar profiles por id:", profileErr);
-        }
-
-        if (!profile && session.user.user_metadata?.username) {
-          const { data: pByNick } = await client
+        // Intento 1: Consultar profiles por id = authUserId
+        try {
+          const { data: pById, error: err1 } = await client
             .from('profiles')
-            .select('id, username, role, doctrine_affinity, bio')
-            .eq('username', session.user.user_metadata.username)
+            .select('*')
+            .eq('id', authUserId)
             .maybeSingle();
-          if (pByNick) profile = pByNick;
+
+          if (pById) {
+            profile = pById;
+          } else if (err1) {
+            console.warn("Aviso al consultar profiles por id:", err1.message);
+          }
+        } catch (e) {
+          console.warn("Fallo intento 1 por id:", e);
         }
 
-        const rawRole = (profile && profile.role) 
-          ? profile.role 
+        // Intento 2: Consultar profiles por user_id = authUserId (por si la columna foránea se llama user_id)
+        if (!profile) {
+          try {
+            const { data: pByUserId } = await client
+              .from('profiles')
+              .select('*')
+              .eq('user_id', authUserId)
+              .maybeSingle();
+            if (pByUserId) profile = pByUserId;
+          } catch (e) {}
+        }
+
+        // Intento 3: Consultar profiles por username (insensible a mayúsculas/minúsculas)
+        if (!profile && authUserNick) {
+          try {
+            const { data: pByNick } = await client
+              .from('profiles')
+              .select('*')
+              .ilike('username', authUserNick)
+              .maybeSingle();
+            if (pByNick) profile = pByNick;
+          } catch (e) {}
+        }
+
+        // Intento 4: Llamar RPC get_my_profile si estuviera disponible
+        if (!profile) {
+          try {
+            const { data: rpcProfile } = await client.rpc('get_my_profile');
+            if (rpcProfile && rpcProfile.length) profile = rpcProfile[0];
+          } catch (e) {}
+        }
+
+        console.log("Datos de sesión y perfil obtenidos:", {
+          authId: authUserId,
+          authUserNick: authUserNick,
+          profileEncontrado: profile
+        });
+
+        // Extraer rol con soporte para 'role' o 'rol'
+        const rawRole = (profile && (profile.role || profile.rol))
+          ? (profile.role || profile.rol)
           : (session.user.user_metadata?.role || 'novice');
 
         const resolvedRole = normalizeRole(rawRole);
+        const resolvedNick = (profile && profile.username)
+          ? profile.username
+          : (authUserNick || 'Hermano');
 
         currentUser = {
-          id: session.user.id,
-          username: (profile && profile.username) 
-            ? profile.username 
-            : (session.user.user_metadata?.username || 'Hermano'),
+          id: authUserId,
+          username: resolvedNick,
           role: resolvedRole,
-          doctrine: (profile && profile.doctrine_affinity) 
-            ? profile.doctrine_affinity 
+          doctrine: (profile && (profile.doctrine_affinity || profile.doctrina))
+            ? (profile.doctrine_affinity || profile.doctrina)
             : 'Reformada',
-          bio: (profile && profile.bio) 
-            ? profile.bio 
-            : ''
+          bio: (profile && profile.bio) ? profile.bio : ''
         };
       }
 
