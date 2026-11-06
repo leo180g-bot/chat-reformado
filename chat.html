@@ -631,6 +631,40 @@
       color: var(--accent);
     }
 
+    .btn-delete-conv {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.15s;
+    }
+    .btn-delete-conv:hover {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: #fff;
+    }
+
+    .btn-delete-contact {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px 6px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+    .btn-delete-contact:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
     .private-contact-item {
       padding: 10px 14px;
       border-bottom: 1px solid var(--border-color);
@@ -927,8 +961,9 @@
         <!-- VISTA B: Conversación individual activa -->
         <div class="privates-chat-view" id="privatesChatView">
           <div class="private-conv-header" id="privatePartnerHeader">
-            <button type="button" class="btn-back-privates" id="btnBackToContacts">← Ver lista</button>
+            <button type="button" class="btn-back-privates" id="btnBackToContacts">← Lista</button>
             <span>Con: <strong id="privatePartnerNick">Usuario</strong></span>
+            <button type="button" class="btn-delete-conv" id="btnDeleteConversation" title="Eliminar mensajes y cerrar este chat">🗑️ Borrar chat</button>
           </div>
           <div class="private-messages-list" id="privateMessagesList">
             <!-- Mensajes con el partner -->
@@ -970,82 +1005,36 @@
     let isInitialPresenceSync = true;
     let soundsEnabled = true;
 
-    // 0. SINTETIZADOR DE SONIDOS CON WEB AUDIO API
-    let audioCtx = null;
-
-    function getAudioContext() {
-      if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) audioCtx = new AudioContext();
-      }
-      if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      return audioCtx;
-    }
+    // 0. REPRODUCCIÓN DE AUDIO MP3 (GitHub / Proyecto local)
+    const AUDIO_FILES = {
+      mencion: new Audio('mencion.mp3'),
+      mensaje: new Audio('mensaje.mp3'),
+      privado: new Audio('privado.mp3')
+    };
 
     function playSound(type) {
       if (!soundsEnabled) return;
       try {
-        const ctx = getAudioContext();
-        if (!ctx) return;
-
-        const now = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        if (type === 'incoming') {
-          // Tono cálido doble (recibir mensaje)
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(587.33, now); // D5
-          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
-          gain.gain.setValueAtTime(0.08, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-          osc.start(now);
-          osc.stop(now + 0.25);
-        } else if (type === 'outgoing') {
-          // Pop sutil de envío
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
-          gain.gain.setValueAtTime(0.06, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-          osc.start(now);
-          osc.stop(now + 0.12);
-        } else if (type === 'join') {
-          // Melodía ascendente (alguien entra)
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(523.25, now); // C5
-          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
-          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
-          gain.gain.setValueAtTime(0.07, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-          osc.start(now);
-          osc.stop(now + 0.3);
-        } else if (type === 'leave') {
-          // Melodía descendente (alguien sale)
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(783.99, now); // G5
-          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
-          osc.frequency.setValueAtTime(523.25, now + 0.16); // C5
-          gain.gain.setValueAtTime(0.06, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-          osc.start(now);
-          osc.stop(now + 0.28);
+        let audio = null;
+        if (type === 'incoming' || type === 'outgoing') {
+          audio = AUDIO_FILES.mensaje;
         } else if (type === 'private') {
-          // Campana suave para privado
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(698.46, now); // F5
-          osc.frequency.setValueAtTime(1046.50, now + 0.1); // C6
-          gain.gain.setValueAtTime(0.1, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-          osc.start(now);
-          osc.stop(now + 0.35);
+          audio = AUDIO_FILES.privado;
+        } else if (type === 'join' || type === 'leave' || type === 'mencion') {
+          audio = AUDIO_FILES.mencion;
+        }
+
+        if (audio) {
+          audio.currentTime = 0;
+          const playPromise = audio.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {
+              // Silencio seguro si el navegador bloquea autoplay antes de interacción
+            });
+          }
         }
       } catch (err) {
-        // Silencio seguro si el navegador no permite audio antes de interacción
+        // Manejo silencioso de audio
       }
     }
 
@@ -1387,13 +1376,14 @@
       alert("Perfil actualizado correctamente.");
     });
 
-    // 5. SISTEMA DE PRIVADOS: VER REMITENTES + CLIC EN NOMBRE PARA ABRIR
+    // 5. SISTEMA DE PRIVADOS: VER REMITENTES, CLIC PARA ABRIR Y OPCIÓN DE BORRAR/CERRAR
     const privatesModal = document.getElementById('privatesModal');
     const privatesContactsView = document.getElementById('privatesContactsView');
     const privatesChatView = document.getElementById('privatesChatView');
     const privatesContactList = document.getElementById('privatesContactList');
     const privateMessagesList = document.getElementById('privateMessagesList');
     const btnBackToContacts = document.getElementById('btnBackToContacts');
+    const btnDeleteConversation = document.getElementById('btnDeleteConversation');
     let privateBroadcastChannel = null;
     let unreadPrivatesCount = 0;
 
@@ -1411,6 +1401,37 @@
     btnBackToContacts.onclick = () => {
       showPrivatesContactsView();
     };
+
+    // Requerimiento: Cerrar un privado desde "Mensajes privados" y que se borren los mensajes
+    btnDeleteConversation.onclick = () => {
+      if (!activePrivatePartner) return;
+      deletePrivateConversation(activePrivatePartner);
+    };
+
+    function deletePrivateConversation(partnerNick) {
+      if (!partnerNick) return;
+      if (confirm(`¿Deseas cerrar y eliminar todos los mensajes privados con "${partnerNick}"? Esta acción no se puede deshacer.`)) {
+        const key = getPrivateStorageKey(partnerNick);
+        localStorage.removeItem(key);
+        activePrivatePartner = null;
+        showPrivatesContactsView();
+        checkUnreadPrivatesTotal();
+      }
+    }
+
+    function checkUnreadPrivatesTotal() {
+      const convs = getPrivateConversationsIndex();
+      let unread = 0;
+      convs.forEach(c => { if (c.hasUnread) unread++; });
+      unreadPrivatesCount = unread;
+      const badge = document.getElementById('privatesUnreadBadge');
+      if (unread > 0) {
+        badge.textContent = unread;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
 
     function showPrivatesContactsView() {
       activePrivatePartner = null;
@@ -1436,13 +1457,15 @@
           if (parts.includes(myNick)) {
             const partnerNick = parts[0] === myNick ? parts[1] : parts[0];
             const msgs = JSON.parse(localStorage.getItem(key) || '[]');
-            const lastMsg = msgs.length ? msgs[msgs.length - 1] : null;
-            conversations.push({
-              partner: partnerNick,
-              lastMsg: lastMsg ? lastMsg.text : 'Conversación iniciada',
-              time: lastMsg ? lastMsg.time : '',
-              hasUnread: lastMsg && lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
-            });
+            if (msgs.length > 0) {
+              const lastMsg = msgs[msgs.length - 1];
+              conversations.push({
+                partner: partnerNick,
+                lastMsg: lastMsg ? lastMsg.text : 'Conversación iniciada',
+                time: lastMsg ? lastMsg.time : '',
+                hasUnread: lastMsg && lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
+              });
+            }
           }
         }
       }
@@ -1456,7 +1479,7 @@
       if (convs.length === 0) {
         privatesContactList.innerHTML = `
           <div style="padding:30px 16px; text-align:center; color:var(--text-muted); font-size:0.86rem;">
-            No tienes mensajes privados aún.<br>
+            No tienes mensajes privados guardados.<br>
             <small style="margin-top:6px; display:inline-block;">Haz clic en el nick de cualquier hermano en la sala para escribirle un privado.</small>
           </div>
         `;
@@ -1467,17 +1490,31 @@
         const div = document.createElement('div');
         div.className = 'private-contact-item';
         div.innerHTML = `
-          <div class="contact-info">
+          <div class="contact-info" style="flex:1;">
             <span class="contact-nick">${escapeHTML(c.partner)}</span>
             <span class="contact-last-msg">${escapeHTML(c.lastMsg)}</span>
           </div>
-          <div class="contact-meta">
-            <span class="contact-time">${c.time}</span>
-            ${c.hasUnread ? '<span class="unread-dot"></span>' : ''}
+          <div class="contact-meta" style="flex-direction:row; align-items:center; gap:8px;">
+            <div style="display:flex; flex-direction:column; align-items:flex-end;">
+              <span class="contact-time">${c.time}</span>
+              ${c.hasUnread ? '<span class="unread-dot"></span>' : ''}
+            </div>
+            <button type="button" class="btn-delete-contact" title="Eliminar conversación" data-partner="${escapeHTML(c.partner)}">🗑️</button>
           </div>
         `;
-        // Requerimiento: Dar clic sobre el nombre de usuario para que abra la conversación
-        div.onclick = () => startPrivateChatWith(c.partner);
+
+        // Al hacer clic en la fila (excepto el botón de borrar), abre el chat
+        div.onclick = (e) => {
+          if (e.target.closest('.btn-delete-contact')) return;
+          startPrivateChatWith(c.partner);
+        };
+
+        // Botón directo para borrar y cerrar desde la lista
+        div.querySelector('.btn-delete-contact').onclick = (e) => {
+          e.stopPropagation();
+          deletePrivateConversation(c.partner);
+        };
+
         privatesContactList.appendChild(div);
       });
     }
@@ -1489,9 +1526,9 @@
       privatesChatView.style.display = 'flex';
       privatesModal.classList.add('open');
 
-      // Marcar leídos
       markConversationAsRead(partnerNick);
       renderPrivateHistory();
+      checkUnreadPrivatesTotal();
     }
 
     function markConversationAsRead(partner) {
@@ -1607,8 +1644,7 @@
         })
         .subscribe();
     }
-
-    // 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
+// 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
     document.getElementById('btnShowOnline').onclick = () => {
       if (window.innerWidth <= 768) {
         document.getElementById('onlineMobileModal').classList.add('open');
