@@ -27,11 +27,14 @@
       --accent-ruby: #fb7185;
       --msg-self: #1e3a8a;
       --msg-other: #1e293b;
+      --msg-system: rgba(30, 41, 59, 0.7);
+      --msg-bot: #142a42;
       --badge-admin: #ef4444;
       --badge-mod: #3b82f6;
       --badge-member: #10b981;
       --badge-novice: #94a3b8;
       --badge-guest: #64748b;
+      --badge-bot: #a855f7;
     }
 
     body {
@@ -91,6 +94,7 @@
       text-overflow: ellipsis;
       overflow: hidden;
       max-width: 170px;
+      transition: border-color 0.15s;
     }
     .user-pill:hover {
       border-color: var(--accent);
@@ -141,6 +145,21 @@
       display: none;
     }
 
+    .btn-sound-toggle {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+    .btn-sound-toggle.active {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
     .btn-logout {
       background: rgba(239, 68, 68, 0.12);
       border-color: rgba(239, 68, 68, 0.3);
@@ -165,7 +184,7 @@
       background: var(--bg-panel);
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      min-width: 180px;
+      min-width: 185px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
       z-index: 50;
       overflow: hidden;
@@ -235,7 +254,7 @@
     }
 
     .message-item {
-      max-width: 82%;
+      max-width: 84%;
       padding: 8px 12px;
       border-radius: 10px;
       font-size: 0.9rem;
@@ -256,6 +275,26 @@
       background: var(--msg-other);
       border: 1px solid var(--border-color);
       border-bottom-left-radius: 2px;
+    }
+
+    .message-item.bot {
+      align-self: flex-start;
+      background: var(--msg-bot);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-left: 3px solid #a855f7;
+      border-bottom-left-radius: 2px;
+    }
+
+    .message-item.system {
+      align-self: center;
+      background: var(--msg-system);
+      border: 1px dashed var(--border-color);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      max-width: 90%;
+      text-align: center;
     }
 
     .msg-header {
@@ -279,6 +318,11 @@
     .msg-sender:hover {
       color: var(--accent-gold);
     }
+    .msg-sender.bot-name {
+      color: #c084fc;
+      text-decoration: none;
+      cursor: default;
+    }
 
     .msg-role-tag {
       font-size: 0.65rem;
@@ -292,6 +336,7 @@
     .role-member { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
     .role-novice { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.4); }
     .role-guest { background: rgba(100, 116, 139, 0.2); color: #94a3b8; border: 1px solid rgba(100, 116, 139, 0.4); }
+    .role-bot { background: rgba(168, 85, 247, 0.25); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.5); }
 
     .msg-time {
       color: var(--text-muted);
@@ -401,7 +446,7 @@
       margin-right: 6px;
     }
 
-    /* MODALES: Acciones de Usuario, Perfil, Privados, Online Móvil */
+    /* MODALES */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -450,6 +495,9 @@
       font-size: 1rem;
       color: var(--accent);
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .btn-close-modal {
@@ -469,7 +517,7 @@
       font-size: 0.9rem;
     }
 
-    /* Estilos Modal Acciones de Usuario */
+    /* Acciones de Usuario Modal */
     .user-profile-preview {
       text-align: center;
       margin-bottom: 16px;
@@ -538,12 +586,26 @@
       color: #fff;
     }
 
-    /* Modal de Privados */
+    /* SISTEMA DE PRIVADOS: Vista de Lista y Vista de Conversación */
     .privates-layout {
       display: flex;
       flex-direction: column;
-      height: 420px;
+      height: 440px;
     }
+
+    .privates-contacts-view {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .privates-chat-view {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+    }
+
     .private-conv-header {
       padding: 8px 12px;
       background: var(--bg-subpanel);
@@ -554,6 +616,71 @@
       font-size: 0.85rem;
       color: var(--accent-gold);
     }
+
+    .btn-back-privates {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .btn-back-privates:hover {
+      background: var(--border-color);
+      color: var(--accent);
+    }
+
+    .private-contact-item {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .private-contact-item:hover {
+      background: var(--bg-subpanel);
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .contact-nick {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+    .contact-last-msg {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+    .contact-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .contact-time {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .unread-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: inline-block;
+    }
+
     .private-messages-list {
       flex: 1;
       overflow-y: auto;
@@ -561,7 +688,9 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      background: var(--bg-body);
     }
+
     .private-input-row {
       display: flex;
       gap: 6px;
@@ -579,7 +708,7 @@
       outline: none;
     }
 
-    /* ADAPTACIÓN MÓVIL SOLICITADA */
+    /* ADAPTACIÓN MÓVIL */
     @media (max-width: 768px) {
       .chat-layout {
         grid-template-columns: 1fr;
@@ -588,7 +717,6 @@
         display: none;
       }
 
-      /* En móvil se ocultan los botones sueltos de escritorio y se activa el menú agrupado */
       .desktop-only {
         display: none !important;
       }
@@ -601,7 +729,7 @@
         padding: 8px 10px;
       }
       .brand-link span {
-        display: none; /* Dejar solo el icono para ahorrar espacio */
+        display: none;
       }
     }
 
@@ -628,25 +756,28 @@
 
     <!-- Navegación y Acciones -->
     <nav class="header-nav">
-      <!-- 1. OPCIONES SIEMPRE VISIBLES POR FUERA EN MÓVIL Y ESCRITORIO -->
-      <!-- Botón Usuarios en Línea -->
+      <!-- BOTÓN DE SONIDO (Mute/Unmute) -->
+      <button type="button" class="btn-sound-toggle active" id="btnSoundToggle" title="Sonidos del chat (activados)">
+        🔊
+      </button>
+
+      <!-- 1. OPCIONES VISIBLES POR FUERA EN MÓVIL Y ESCRITORIO -->
       <button type="button" class="btn-header" id="btnShowOnline" title="Usuarios Conectados">
         👥 <span class="desktop-only">En Línea</span> (<span id="onlineCountBadge">0</span>)
       </button>
 
-      <!-- Botón Mensajes Privados -->
       <button type="button" class="btn-header" id="btnOpenPrivates" title="Mensajes Privados">
         💬 <span class="desktop-only">Privados</span>
         <span class="badge-count" id="privatesUnreadBadge">0</span>
       </button>
 
-      <!-- 2. ENLACES DIRECTOS (VISIBLES SÓLO EN ESCRITORIO) -->
+      <!-- 2. ENLACES DIRECTOS EN ESCRITORIO -->
       <a href="confesiones.html" class="btn-header desktop-only" title="Confesiones de Fe">📜 Confesiones</a>
       <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="btn-header desktop-only" title="Abrir Lector Bíblico">📖 Biblia</a>
       <button type="button" class="btn-header desktop-only" id="btnEditProfileDesktop">👤 Mi Perfil</button>
       <button type="button" class="btn-header btn-logout desktop-only" id="btnLogoutDesktop" title="Cerrar Sesión">🚪 Salir</button>
 
-      <!-- 3. MENÚ AGRUPADO HAMBURGUESA (EN MÓVIL) -->
+      <!-- 3. MENÚ AGRUPADO EN MÓVIL -->
       <div class="menu-container mobile-only">
         <button type="button" class="btn-header" id="btnToggleMenu" title="Más opciones">
           ☰ Menú
@@ -670,7 +801,7 @@
       </div>
 
       <form class="chat-input-bar" id="chatForm">
-        <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o teológico..." autocomplete="off" required maxlength="1000">
+        <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea para ayuda..." autocomplete="off" required maxlength="1000">
         <button type="submit" class="btn-send">Enviar</button>
       </form>
     </main>
@@ -773,24 +904,40 @@
     </div>
   </div>
 
-  <!-- MODAL 3: MENSAJES PRIVADOS -->
+  <!-- MODAL 3: MENSAJES PRIVADOS (Con vista de quién envió y clic para abrir) -->
   <div class="modal-overlay" id="privatesModal">
     <div class="modal-card" style="max-width:500px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="privateModalTitle">Mensajes Privados</h3>
+        <h3 class="modal-title" id="privateModalTitle">
+          <span>💬 Mensajes Privados</span>
+        </h3>
         <button type="button" class="btn-close-modal" id="btnClosePrivatesModal">&times;</button>
       </div>
       <div class="privates-layout">
-        <div class="private-conv-header" id="privatePartnerHeader">
-          <span>Conversación con: <strong id="privatePartnerNick">Selecciona un usuario</strong></span>
+        <!-- VISTA A: Lista de Remitentes / Conversaciones -->
+        <div class="privates-contacts-view" id="privatesContactsView">
+          <div style="padding:10px 14px; font-size:0.75rem; color:var(--text-muted); background:var(--bg-subpanel); border-bottom:1px solid var(--border-color);">
+            Bandeja de conversaciones directas:
+          </div>
+          <div id="privatesContactList">
+            <!-- Lista de personas que han enviado mensajes -->
+          </div>
         </div>
-        <div class="private-messages-list" id="privateMessagesList">
-          <!-- Mensajes privados -->
+
+        <!-- VISTA B: Conversación individual activa -->
+        <div class="privates-chat-view" id="privatesChatView">
+          <div class="private-conv-header" id="privatePartnerHeader">
+            <button type="button" class="btn-back-privates" id="btnBackToContacts">← Ver lista</button>
+            <span>Con: <strong id="privatePartnerNick">Usuario</strong></span>
+          </div>
+          <div class="private-messages-list" id="privateMessagesList">
+            <!-- Mensajes con el partner -->
+          </div>
+          <form class="private-input-row" id="privateSendForm">
+            <input type="text" id="privateMsgInput" placeholder="Mensaje privado..." autocomplete="off" required maxlength="500">
+            <button type="submit" class="btn-send" style="padding:8px 14px;">Enviar</button>
+          </form>
         </div>
-        <form class="private-input-row" id="privateSendForm">
-          <input type="text" id="privateMsgInput" placeholder="Mensaje privado directo..." autocomplete="off" required maxlength="500">
-          <button type="submit" class="btn-send" style="padding:8px 14px;">Enviar</button>
-        </form>
       </div>
     </div>
   </div>
@@ -817,10 +964,102 @@
 
     let currentUser = null;
     let presenceChannel = null;
-    let selectedTargetUser = null; // Para acciones de usuario
-    let activePrivatePartner = null; // Para chat privado activo
+    let selectedTargetUser = null;
+    let activePrivatePartner = null;
+    let previousOnlineUsers = new Set();
+    let isInitialPresenceSync = true;
+    let soundsEnabled = true;
 
-    // 1. INICIALIZACIÓN DE SESIÓN Y SEGURIDAD
+    // 0. SINTETIZADOR DE SONIDOS CON WEB AUDIO API
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!soundsEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'incoming') {
+          // Tono cálido doble (recibir mensaje)
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === 'outgoing') {
+          // Pop sutil de envío
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === 'join') {
+          // Melodía ascendente (alguien entra)
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          gain.gain.setValueAtTime(0.07, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'leave') {
+          // Melodía descendente (alguien sale)
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(783.99, now); // G5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(523.25, now + 0.16); // C5
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } else if (type === 'private') {
+          // Campana suave para privado
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(698.46, now); // F5
+          osc.frequency.setValueAtTime(1046.50, now + 0.1); // C6
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        }
+      } catch (err) {
+        // Silencio seguro si el navegador no permite audio antes de interacción
+      }
+    }
+
+    // Botón de alternar sonido
+    const btnSoundToggle = document.getElementById('btnSoundToggle');
+    btnSoundToggle.onclick = () => {
+      soundsEnabled = !soundsEnabled;
+      btnSoundToggle.textContent = soundsEnabled ? '🔊' : '🔇';
+      btnSoundToggle.title = soundsEnabled ? 'Sonidos del chat (activados)' : 'Sonidos del chat (silenciados)';
+      btnSoundToggle.classList.toggle('active', soundsEnabled);
+      if (soundsEnabled) playSound('outgoing');
+    };
+
+    // 1. INICIALIZACIÓN DE SESIÓN Y SEGURIDAD DE NICKS
     async function initSession() {
       const guestRaw = localStorage.getItem('guest_user');
 
@@ -879,6 +1118,7 @@
       loadRecentMessages();
       subscribeToMessages();
       setupPrivateMessaging();
+      initBereanoBot();
     }
 
     function updateUserUI() {
@@ -886,7 +1126,7 @@
       document.getElementById('userPill').title = `${currentUser.username} (${currentUser.role}) - Clic para editar perfil`;
     }
 
-    // 2. CONTROL DE PRESENCIA Y NICK DUPLICADO
+    // 2. CONTROL DE PRESENCIA, DUPLICADOS Y ANUNCIO DE ENTRADA/SALIDA
     function setupPresence() {
       const myNickLower = currentUser.username.trim().toLowerCase();
 
@@ -918,6 +1158,34 @@
             }
           }
 
+          // Detección de Entrada y Salida con Sonidos
+          const currentNicks = new Set();
+          activeKeys.forEach(k => {
+            const user = state[k][0];
+            if (user && user.username) currentNicks.add(user.username);
+          });
+
+          if (!isInitialPresenceSync) {
+            // Usuarios que acaban de entrar
+            currentNicks.forEach(nick => {
+              if (!previousOnlineUsers.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
+                appendSystemNotice(`🚪 Hermano/a ${nick} ha ingresado a la comunión.`);
+                playSound('join');
+              }
+            });
+
+            // Usuarios que acaban de salir
+            previousOnlineUsers.forEach(nick => {
+              if (!currentNicks.has(nick) && nick.toLowerCase() !== currentUser.username.toLowerCase()) {
+                appendSystemNotice(`🚶 Hermano/a ${nick} se ha retirado de la sala.`);
+                playSound('leave');
+              }
+            });
+          } else {
+            isInitialPresenceSync = false;
+          }
+
+          previousOnlineUsers = currentNicks;
           renderOnlineUsers(state);
         })
         .subscribe(async (status) => {
@@ -933,6 +1201,14 @@
         });
     }
 
+    function appendSystemNotice(text) {
+      const div = document.createElement('div');
+      div.className = 'message-item system';
+      div.textContent = text;
+      messagesContainer.appendChild(div);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
     function renderOnlineUsers(state) {
       const desktopList = document.getElementById('onlineUserListDesktop');
       const mobileList = document.getElementById('onlineUserListMobile');
@@ -944,26 +1220,33 @@
         const entry = state[k][0];
         const isMe = entry.username.toLowerCase() === currentUser.username.toLowerCase();
 
-        const liDesktop = createOnlineUserElement(entry, isMe);
-        const liMobile = createOnlineUserElement(entry, isMe);
+        const liDesktop = createOnlineUserElement(entry, isMe, false);
+        const liMobile = createOnlineUserElement(entry, isMe, true);
 
         desktopList.appendChild(liDesktop);
         mobileList.appendChild(liMobile);
       });
     }
 
-    function createOnlineUserElement(userData, isMe) {
+    // En versión móvil, al hacer clic en un usuario: CERRAMOS Usuarios en línea y ABRIMOS Opciones de usuario
+    function createOnlineUserElement(userData, isMe, isMobileList) {
       const li = document.createElement('li');
       li.className = 'online-user-item';
       li.innerHTML = `
-        <span><span class="online-status-dot"></span><strong>${userData.username}</strong> ${isMe ? '<small style="color:var(--text-muted);">(Tú)</small>' : ''}</span>
+        <span><span class="online-status-dot"></span><strong>${escapeHTML(userData.username)}</strong> ${isMe ? '<small style="color:var(--text-muted);">(Tú)</small>' : ''}</span>
         <span class="msg-role-tag role-${userData.role}">${userData.role}</span>
       `;
-      li.onclick = () => openUserActionModal(userData);
+      li.onclick = () => {
+        if (isMobileList) {
+          // Requerimiento: Cerrar 'Usuarios en línea' en versión móvil
+          document.getElementById('onlineMobileModal').classList.remove('open');
+        }
+        openUserActionModal(userData);
+      };
       return li;
     }
 
-    // 3. MENÚ DE ACCIONES DE USUARIO (Al hacer clic en cualquier Nick)
+    // 3. MENÚ DE ACCIONES DE USUARIO (Clic en Nick)
     function openUserActionModal(targetUser) {
       selectedTargetUser = targetUser;
 
@@ -976,13 +1259,13 @@
       const adminSection = document.getElementById('adminActionSection');
       const btnRole = document.getElementById('btnChangeRole');
 
-      // Si soy yo mismo, abrimos directamente editar perfil
+      // Si soy yo mismo, abrimos editar perfil
       if (isMe) {
         openEditProfileModal();
         return;
       }
 
-      // Mostrar herramientas de Admin / Moderador
+      // Herramientas de Admin / Moderador
       const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
       adminSection.style.display = isStaff ? 'flex' : 'none';
       btnRole.style.display = currentUser.role === 'admin' ? 'block' : 'none';
@@ -994,7 +1277,7 @@
       document.getElementById('userActionModal').classList.remove('open');
     };
 
-    // Iniciar Chat Privado desde el Modal de Usuario
+    // Iniciar Privado desde el Modal de Usuario
     document.getElementById('btnStartPrivateChat').onclick = () => {
       document.getElementById('userActionModal').classList.remove('open');
       if (selectedTargetUser) {
@@ -1002,17 +1285,17 @@
       }
     };
 
-    // Acciones de Moderación
+    // Herramientas de Moderador / Admin
     document.getElementById('btnMuteUser').onclick = () => {
       if (!selectedTargetUser) return;
-      alert(`Se ha aplicado silencio temporal a ${selectedTargetUser.username} en la sala.`);
+      alert(`Se ha aplicado silencio temporal a ${selectedTargetUser.username}.`);
       document.getElementById('userActionModal').classList.remove('open');
     };
 
     document.getElementById('btnKickUser').onclick = () => {
       if (!selectedTargetUser) return;
       if (confirm(`¿Deseas expulsar a ${selectedTargetUser.username} de la sala de chat?`)) {
-        alert(`El usuario ${selectedTargetUser.username} ha sido expulsado.`);
+        appendSystemNotice(`👢 El usuario ${selectedTargetUser.username} ha sido expulsado por un moderador.`);
         document.getElementById('userActionModal').classList.remove('open');
       }
     };
@@ -1064,7 +1347,6 @@
 
       if (!newNick) return;
 
-      // Si el nick cambió y es invitado, verificar que no esté tomado
       if (newNick.toLowerCase() !== currentUser.username.toLowerCase()) {
         const { data: isTaken } = await client.rpc('is_nick_registered', { target_nick: newNick });
         if (isTaken) {
@@ -1094,7 +1376,6 @@
       updateUserUI();
       document.getElementById('editProfileModal').classList.remove('open');
 
-      // Actualizar presencia
       if (presenceChannel) {
         await presenceChannel.track({
           user_id: currentUser.id,
@@ -1106,9 +1387,13 @@
       alert("Perfil actualizado correctamente.");
     });
 
-    // 5. SISTEMA DE PRIVADOS EN TIEMPO REAL (BROADCAST + LOCALSTORAGE)
+    // 5. SISTEMA DE PRIVADOS: VER REMITENTES + CLIC EN NOMBRE PARA ABRIR
     const privatesModal = document.getElementById('privatesModal');
+    const privatesContactsView = document.getElementById('privatesContactsView');
+    const privatesChatView = document.getElementById('privatesChatView');
+    const privatesContactList = document.getElementById('privatesContactList');
     const privateMessagesList = document.getElementById('privateMessagesList');
+    const btnBackToContacts = document.getElementById('btnBackToContacts');
     let privateBroadcastChannel = null;
     let unreadPrivatesCount = 0;
 
@@ -1116,29 +1401,110 @@
       privatesModal.classList.add('open');
       unreadPrivatesCount = 0;
       document.getElementById('privatesUnreadBadge').style.display = 'none';
-      if (!activePrivatePartner) {
-        privateMessagesList.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:20px;">Haz clic en el nick de cualquier usuario para iniciar una conversación privada.</p>';
-      } else {
-        renderPrivateHistory();
-      }
+      showPrivatesContactsView();
     };
 
     document.getElementById('btnClosePrivatesModal').onclick = () => {
       privatesModal.classList.remove('open');
     };
 
-    function startPrivateChatWith(partnerNick) {
-      activePrivatePartner = partnerNick;
-      document.getElementById('privatePartnerNick').textContent = partnerNick;
-      privatesModal.classList.add('open');
-      unreadPrivatesCount = 0;
-      document.getElementById('privatesUnreadBadge').style.display = 'none';
-      renderPrivateHistory();
+    btnBackToContacts.onclick = () => {
+      showPrivatesContactsView();
+    };
+
+    function showPrivatesContactsView() {
+      activePrivatePartner = null;
+      privatesContactsView.style.display = 'flex';
+      privatesChatView.style.display = 'none';
+      renderPrivateContactsList();
     }
 
     function getPrivateStorageKey(partner) {
       const pair = [currentUser.username.toLowerCase(), partner.toLowerCase()].sort().join('__');
       return `priv_msgs_${pair}`;
+    }
+
+    // Listar quiénes enviaron mensajes o conversaciones abiertas
+    function getPrivateConversationsIndex() {
+      const conversations = [];
+      const myNick = currentUser.username.toLowerCase();
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('priv_msgs_')) {
+          const parts = key.replace('priv_msgs_', '').split('__');
+          if (parts.includes(myNick)) {
+            const partnerNick = parts[0] === myNick ? parts[1] : parts[0];
+            const msgs = JSON.parse(localStorage.getItem(key) || '[]');
+            const lastMsg = msgs.length ? msgs[msgs.length - 1] : null;
+            conversations.push({
+              partner: partnerNick,
+              lastMsg: lastMsg ? lastMsg.text : 'Conversación iniciada',
+              time: lastMsg ? lastMsg.time : '',
+              hasUnread: lastMsg && lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
+            });
+          }
+        }
+      }
+      return conversations;
+    }
+
+    function renderPrivateContactsList() {
+      const convs = getPrivateConversationsIndex();
+      privatesContactList.innerHTML = '';
+
+      if (convs.length === 0) {
+        privatesContactList.innerHTML = `
+          <div style="padding:30px 16px; text-align:center; color:var(--text-muted); font-size:0.86rem;">
+            No tienes mensajes privados aún.<br>
+            <small style="margin-top:6px; display:inline-block;">Haz clic en el nick de cualquier hermano en la sala para escribirle un privado.</small>
+          </div>
+        `;
+        return;
+      }
+
+      convs.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'private-contact-item';
+        div.innerHTML = `
+          <div class="contact-info">
+            <span class="contact-nick">${escapeHTML(c.partner)}</span>
+            <span class="contact-last-msg">${escapeHTML(c.lastMsg)}</span>
+          </div>
+          <div class="contact-meta">
+            <span class="contact-time">${c.time}</span>
+            ${c.hasUnread ? '<span class="unread-dot"></span>' : ''}
+          </div>
+        `;
+        // Requerimiento: Dar clic sobre el nombre de usuario para que abra la conversación
+        div.onclick = () => startPrivateChatWith(c.partner);
+        privatesContactList.appendChild(div);
+      });
+    }
+
+    function startPrivateChatWith(partnerNick) {
+      activePrivatePartner = partnerNick;
+      document.getElementById('privatePartnerNick').textContent = partnerNick;
+      privatesContactsView.style.display = 'none';
+      privatesChatView.style.display = 'flex';
+      privatesModal.classList.add('open');
+
+      // Marcar leídos
+      markConversationAsRead(partnerNick);
+      renderPrivateHistory();
+    }
+
+    function markConversationAsRead(partner) {
+      const key = getPrivateStorageKey(partner);
+      const raw = localStorage.getItem(key);
+      if (!raw) return;
+      const msgs = JSON.parse(raw);
+      msgs.forEach(m => {
+        if (m.receiver && m.receiver.toLowerCase() === currentUser.username.toLowerCase()) {
+          m.read = true;
+        }
+      });
+      localStorage.setItem(key, JSON.stringify(msgs));
     }
 
     function renderPrivateHistory() {
@@ -1149,7 +1515,7 @@
 
       privateMessagesList.innerHTML = '';
       if (msgs.length === 0) {
-        privateMessagesList.innerHTML = `<p style="color:var(--text-muted); text-align:center; font-size:0.8rem; margin-top:20px;">Inicio de la conversación con ${escapeHTML(activePrivatePartner)}. Los mensajes se transmiten en directo y se guardan de forma privada en tu navegador.</p>`;
+        privateMessagesList.innerHTML = `<p style="color:var(--text-muted); text-align:center; font-size:0.8rem; margin-top:20px;">Inicio de conversación con ${escapeHTML(activePrivatePartner)}.</p>`;
       } else {
         msgs.forEach(m => {
           const isMe = m.sender.toLowerCase() === currentUser.username.toLowerCase();
@@ -1183,60 +1549,66 @@
         sender: currentUser.username,
         receiver: activePrivatePartner,
         text: text,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        read: true
       };
 
-      // 1. Guardar en el historial local del emisor
       msgs.push(newMsg);
       localStorage.setItem(key, JSON.stringify(msgs));
       renderPrivateHistory();
+      playSound('outgoing');
 
-      // 2. Transmitir en tiempo real al destinatario vía Broadcast de Supabase
+      // Transmisión Realtime Broadcast al destinatario
       if (privateBroadcastChannel) {
         await privateBroadcastChannel.send({
           type: 'broadcast',
           event: 'direct_message',
-          payload: newMsg
+          payload: { ...newMsg, read: false }
         });
       }
     });
 
     function setupPrivateMessaging() {
-      // Canal global de mensajería privada directa en tiempo real
       privateBroadcastChannel = client.channel('direct_messages_broadcast');
 
       privateBroadcastChannel
         .on('broadcast', { event: 'direct_message' }, ({ payload }) => {
           if (!payload || !payload.receiver || !payload.sender) return;
 
-          // Verificar si el mensaje está dirigido a este usuario
           const myNick = currentUser.username.trim().toLowerCase();
           const targetNick = payload.receiver.trim().toLowerCase();
 
           if (targetNick === myNick) {
-            // Guardar en el historial local del receptor
             const key = getPrivateStorageKey(payload.sender);
             const raw = localStorage.getItem(key);
             const msgs = raw ? JSON.parse(raw) : [];
             msgs.push(payload);
             localStorage.setItem(key, JSON.stringify(msgs));
 
-            // Si el modal está abierto y conversando con ese usuario, renderizarlo al instante
+            playSound('private');
+
             const isModalOpen = privatesModal.classList.contains('open');
-            if (isModalOpen && activePrivatePartner && activePrivatePartner.toLowerCase() === payload.sender.toLowerCase()) {
+            const isChattingWithSender = activePrivatePartner && activePrivatePartner.toLowerCase() === payload.sender.toLowerCase();
+
+            if (isModalOpen && isChattingWithSender) {
+              markConversationAsRead(payload.sender);
               renderPrivateHistory();
             } else {
-              // Notificar con el contador en el botón de Privados
               unreadPrivatesCount++;
               const badge = document.getElementById('privatesUnreadBadge');
               badge.textContent = unreadPrivatesCount;
               badge.style.display = 'inline-block';
+
+              if (isModalOpen) {
+                renderPrivateContactsList();
+              }
             }
           }
         })
         .subscribe();
     }
-// 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
+
+    // 6. MODAL USUARIOS EN LÍNEA EN MÓVIL
     document.getElementById('btnShowOnline').onclick = () => {
       if (window.innerWidth <= 768) {
         document.getElementById('onlineMobileModal').classList.add('open');
@@ -1261,7 +1633,101 @@
       if (dropdownMenu) dropdownMenu.classList.remove('show');
     });
 
-    // 8. CARGA Y ENVÍO DE MENSAJES PÚBLICOS
+    // 8. BEREANOBOT: ASISTENTE BÍBLICO Y CONFESIONAL
+    function initBereanoBot() {
+      // Saludo inicial de Bereanobot al usuario recién conectado
+      setTimeout(() => {
+        appendBotMessage(`¡Gracia y paz, hermano/a **${currentUser.username}**! Soy **BereanoBot 📖**. Puedes consultar pasajes bíblicos o teología con: \`!berea\`, \`!versiculo\`, \`!solas\`, \`!1689\`, \`!westminster\` o \`!dort\`.`);
+      }, 1200);
+    }
+
+    function checkBereanoBotCommands(text, sender) {
+      const lower = text.trim().toLowerCase();
+
+      if (lower === '!berea' || lower === '!ayuda') {
+        appendBotMessage(`**Comandos de BereanoBot 📖:**
+• \`!versiculo\` : Entrega un pasaje de edificación.
+• \`!solas\` : Explica las Cinco Solas de la Reforma.
+• \`!1689\` : Resumen de la Confesión Bautista de 1689.
+• \`!westminster\` : Resumen de la Confesión de Westminster.
+• \`!dort\` : Resumen de los Cánones del Sínodo de Dort.
+• \`!gracia\` : Definición bíblica de la gracia soberana.`);
+        return true;
+      }
+
+      if (lower === '!versiculo') {
+        const verses = [
+          "«Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.» — Efesios 2:8-9",
+          "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.» — 2 Timoteo 3:16",
+          "«Porque de él, y por él, y para él, son todas las cosas. A él sea la gloria por los siglos. Amén.» — Romanos 11:36",
+          "«Y estos eran más nobles que los que estaban en Tesalónica, pues recibieron la palabra con toda solicitud, escudriñando cada día las Escrituras...» — Hechos 17:11",
+          "«Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo.» — Romanos 5:1"
+        ];
+        const v = verses[Math.floor(Math.random() * verses.length)];
+        appendBotMessage(`📖 Pasaje del día para ${sender}:\n${v}`);
+        return true;
+      }
+
+      if (lower === '!solas') {
+        appendBotMessage(`✝️ **Las Cinco Solas de la Reforma:**
+1. **Sola Scriptura**: La Biblia es la única regla infalible de fe y práctica.
+2. **Sola Gratia**: La salvación es un don soberano e inmerecido de Dios.
+3. **Sola Fide**: Justificados únicamente por medio de la fe, no por obras.
+4. **Solus Christus**: Cristo es el único mediador entre Dios y los hombres.
+5. **Soli Deo Gloria**: Toda gloria corresponde exclusivamente al Señor.`);
+        return true;
+      }
+
+      if (lower === '!1689') {
+        appendBotMessage(`📜 **Confesión Bautista de Fe de 1689:** Segunda Confesión de Londres. Establece en 32 capítulos la teología del pacto, la soberanía de Dios y el bautismo de creyentes por inmersión.`);
+        return true;
+      }
+
+      if (lower === '!westminster') {
+        appendBotMessage(`📜 **Confesión de Fe de Westminster (1647):** Obra cumbre de la Asamblea de Westminster. Comprende 33 capítulos sistemáticos de la fe presbiteriana y reformada.`);
+        return true;
+      }
+
+      if (lower === '!dort') {
+        appendBotMessage(`📜 **Los Cánones de Dort (1618-1619):** Juicio y exposición doctrinal sobre los Cinco Puntos en respuesta a la protesta arminiana: Depravación total, Elección incondicional, Expiación limitada, Gracia irresistible y Perseverancia de los santos.`);
+        return true;
+      }
+
+      if (lower === '!gracia') {
+        appendBotMessage(`🕊️ **La Gracia Eficaz:** Es el favor inmerecido y soberano por el cual Dios llama, vivifica e ilumina espiritualmente al pecador muerto en sus delitos, capacitándolo con gozo y libertad para abrazar a Jesucristo.`);
+        return true;
+      }
+
+      return false;
+    }
+
+    function appendBotMessage(text) {
+      const div = document.createElement('div');
+      div.className = 'message-item bot';
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      div.innerHTML = `
+        <div class="msg-header">
+          <span class="msg-sender bot-name">📖 BereanoBot</span>
+          <span class="msg-role-tag role-bot">Asistente Bíblico</span>
+          <span class="msg-time">${timeStr}</span>
+        </div>
+        <div class="msg-body">${formatMarkdownText(text)}</div>
+      `;
+      messagesContainer.appendChild(div);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      playSound('incoming');
+    }
+
+    function formatMarkdownText(t) {
+      return escapeHTML(t)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`(.*?)`/g, '<code style="background:rgba(0,0,0,0.3); padding:2px 4px; border-radius:3px;">$1</code>')
+        .replace(/\n/g, '<br>');
+    }
+
+    // 9. CARGA Y ENVÍO DE MENSAJES PÚBLICOS
     const messagesContainer = document.getElementById('messagesContainer');
 
     function appendMessage(msg) {
@@ -1281,7 +1747,6 @@
         <div class="msg-body">${escapeHTML(msg.content)}</div>
       `;
 
-      // Clic en el nick dentro del mensaje
       div.querySelector('.msg-sender').onclick = () => {
         openUserActionModal({
           username: msg.username,
@@ -1292,6 +1757,11 @@
 
       messagesContainer.appendChild(div);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Sonido de mensaje entrante si no es propio
+      if (!isSelf) {
+        playSound('incoming');
+      }
     }
 
     async function loadRecentMessages() {
@@ -1311,7 +1781,9 @@
       client
         .channel('public_chat_messages')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
-          appendMessage(payload.new);
+          if (payload.new.username.toLowerCase() !== currentUser.username.toLowerCase()) {
+            appendMessage(payload.new);
+          }
         })
         .subscribe();
     }
@@ -1332,13 +1804,18 @@
         created_at: new Date().toISOString()
       };
 
-      const { error } = await client.from('messages').insert([newMsg]);
-      if (error) {
-        appendMessage(newMsg);
+      appendMessage(newMsg);
+      playSound('outgoing');
+
+      // Comprobar comandos de Bereanobot
+      const isCmd = checkBereanoBotCommands(text, currentUser.username);
+
+      if (!isCmd) {
+        await client.from('messages').insert([newMsg]);
       }
     });
 
-    // 9. CERRAR SESIÓN
+    // 10. CERRAR SESIÓN
     async function logout() {
       if (confirm('¿Deseas salir de la sala de chat?')) {
         if (presenceChannel) await presenceChannel.untrack();
@@ -1356,7 +1833,7 @@
       );
     }
 
-    // Inicializar
+    // Iniciar
     initSession();
   </script>
 </body>
