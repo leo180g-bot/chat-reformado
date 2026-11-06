@@ -431,6 +431,12 @@
       background: var(--accent-btn-hover);
     }
 
+    /* Contenedor de la barra de envío: ancla los popups justo encima de ella */
+    .chat-input-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
     /* Popups Flotantes */
     .chat-popup-card {
       display: none;
@@ -1040,6 +1046,7 @@
     <main class="chat-main">
       <div class="messages-container" id="messagesContainer"></div>
 
+      <div class="chat-input-wrap">
       <!-- POPUP EMOJIS -->
       <div class="chat-popup-card" id="popupEmojis">
         <div class="popup-card-header">
@@ -1133,6 +1140,7 @@
 
         <button type="submit" class="btn-send">Enviar</button>
       </form>
+      </div><!-- /chat-input-wrap -->
     </main>
 
     <!-- Barra Lateral de Conectados -->
@@ -1441,7 +1449,6 @@
       subscribeToMessages();
       setupPrivateMessaging();
       initBereanoBot();
-      rebuildToolsEngine();
     }
 
     function updateUserUI() {
@@ -1666,7 +1673,7 @@
     }
 
     async function sendDirectGifMessage(gifUrl) {
-      if (!gifUrl) return;
+      if (!gifUrl || !currentUser) return;
 
       const newMsg = {
         sender_id: currentUser.id,
@@ -2419,6 +2426,8 @@
       );
     }
 
+    // Las herramientas (emojis, GIFs, fuentes) no dependen de la sesión: se activan de inmediato
+    rebuildToolsEngine();
     initSession();
   </script>
 </body>
