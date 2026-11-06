@@ -1,24 +1,79 @@
+Aquí tienes el código completo para **`index.html`**, diseñado como la puerta de acceso oficial para **Comunión Doctrinal**.
+
+Incluye:
+
+1. Todos los **metadatos SEO**, etiquetas de redes sociales (Open Graph, Twitter Cards) y el esquema estructurado JSON-LD.
+2. La misma paleta visual y tipográfica que `chat.html` para mantener coherencia estética.
+3. Formulario integrado con las tres modalidades de entrada (**Iniciar Sesión**, **Crear Cuenta** e **Ingresar como Invitado**) conectadas directamente con tu instancia de Supabase.
+4. Redirección automática si el usuario ya cuenta con una sesión activa o perfil de invitado en el navegador.
+
+---
+
+### Código completo de `index.html`
+
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Comunión Doctrinal - Inicio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Título SEO -->
+  <title>Comunión Doctrinal | Chat Cristiano y Estudio Bíblico Reformado</title>
+
+  <!-- Metadatos de Búsqueda (SEO) -->
+  <meta name="description" content="Comunidad cristiana y chat en vivo para el estudio bíblico, diálogo doctrinal y teología reformada. Comparte textos bíblicos, notas de voz y comunión fraternal.">
+  <meta name="keywords" content="chat cristiano, teología reformada, estudio bíblico, comunión doctrinal, cinco solas, biblia reina valera, foro cristiano">
+  <meta name="author" content="Comunión Doctrinal">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://chat-reformado.vercel.app/">
+
+  <!-- Open Graph / Redes Sociales -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Comunión Doctrinal">
+  <meta property="og:url" content="https://chat-reformado.vercel.app/">
+  <meta property="og:title" content="Comunión Doctrinal | Chat Cristiano y Estudio Bíblico">
+  <meta property="og:description" content="Únete a la comunidad de estudio teológico y diálogo bíblico reformado en tiempo real. Mansedumbre, fraternidad y sana doctrina.">
+  <meta property="og:image" content="https://chat-reformado.vercel.app/og-image.jpg">
+  <meta property="og:locale" content="es_ES">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://chat-reformado.vercel.app/">
+  <meta name="twitter:title" content="Comunión Doctrinal | Chat y Comunidad Cristiana">
+  <meta name="twitter:description" content="Espacio de comunión fraternal y teología reformada en tiempo real. Estudio bíblico, citas contextuales y debate sano.">
+  <meta name="twitter:image" content="https://chat-reformado.vercel.app/og-image.jpg">
+
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Esquema Estructurado JSON-LD (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Comunión Doctrinal",
+    "url": "https://chat-reformado.vercel.app/",
+    "description": "Comunidad cristiana y chat en vivo para el estudio bíblico y teología reformada.",
+    "inLanguage": "es"
+  }
+  </script>
+
   <style>
     * { box-sizing: border-box; }
 
     :root {
       --bg-body: #0f172a;
       --bg-panel: #1e293b;
-      --bg-subpanel: #111827;
       --border-color: #334155;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --accent: #38bdf8;
       --accent-btn: #0284c7;
       --accent-btn-hover: #0369a1;
-      --accent-gold: #facc15;
+      --bg-input: #0b1120;
     }
 
     body {
@@ -26,153 +81,50 @@
       background: var(--bg-body);
       color: var(--text-main);
       margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0 16px 30px;
-    }
-
-    /* Banner Superior de Versículo Aleatorio */
-    .top-verse-banner {
-      width: 100%;
-      max-width: 680px;
-      margin: 16px 0 12px 0;
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.9));
-      border: 1px solid var(--border-color);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 12px 16px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
-      position: relative;
-    }
-
-    .verse-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .verse-badge {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .btn-refresh-verse {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 0.78rem;
-      padding: 2px 7px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-refresh-verse:hover {
-      background: var(--bg-subpanel);
-      color: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .verse-quote {
-      margin: 0;
-      font-size: 0.88rem;
-      font-style: italic;
-      color: #e2e8f0;
-      line-height: 1.45;
-    }
-
-    .verse-reference {
-      margin: 4px 0 0 0;
-      text-align: right;
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: var(--accent-gold);
-    }
-
-    /* Contenedor Principal */
-    .main-card {
-      width: 100%;
-      max-width: 460px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 22px 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .brand-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    .brand-header h1 {
-      margin: 0;
-      font-size: 1.55rem;
-      color: var(--accent);
-      letter-spacing: -0.02em;
-    }
-
-    .brand-header p {
-      margin: 6px 0 0;
-      font-size: 0.84rem;
-      color: var(--text-muted);
-    }
-
-    /* Banner Chapel Library */
-    .chapel-banner-container {
+      padding: 20px 14px;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: var(--bg-subpanel);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 18px;
-      text-align: center;
     }
 
-    .chapel-link {
-      display: inline-block;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-      line-height: 0;
-    }
-
-    .chapel-link:hover {
-      transform: scale(1.03);
-      opacity: 0.95;
-    }
-
-    .chapel-logo {
-      max-width: 190px;
+    .main-wrapper {
+      max-width: 440px;
       width: 100%;
-      height: auto;
-      object-fit: contain;
-      border-radius: 4px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      padding: 24px;
     }
 
-    .chapel-caption {
-      margin: 8px 0 0 0;
-      font-size: 0.74rem;
+    header.app-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header.app-header h1 {
+      margin: 0 0 6px;
+      font-size: 1.4rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    header.app-header p {
+      margin: 0;
+      font-size: 0.84rem;
       color: var(--text-muted);
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
-    /* Pestañas de Acceso */
     .auth-tabs {
       display: flex;
       border-bottom: 1px solid var(--border-color);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .auth-tab {
@@ -180,12 +132,12 @@
       background: none;
       border: none;
       color: var(--text-muted);
-      padding: 9px 4px;
-      font-weight: 700;
+      padding: 10px 4px;
+      font-weight: 600;
       cursor: pointer;
+      font-size: 0.88rem;
       border-bottom: 2px solid transparent;
-      font-size: 0.85rem;
-      transition: color 0.15s, border-color 0.15s;
+      transition: all 0.15s;
     }
 
     .auth-tab.active {
@@ -197,23 +149,22 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
-      margin-bottom: 12px;
-      text-align: left;
+      margin-bottom: 14px;
     }
 
     .auth-field label {
-      font-size: 0.78rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .auth-field input, .auth-field select {
-      padding: 9px 12px;
+      padding: 10px 12px;
       border-radius: 6px;
       border: 1px solid var(--border-color);
-      background: var(--bg-subpanel);
+      background: var(--bg-input);
       color: var(--text-main);
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       outline: none;
       transition: border-color 0.15s;
     }
@@ -222,149 +173,79 @@
       border-color: var(--accent);
     }
 
-    .btn-primary {
+    .btn-submit {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       background: var(--accent-btn);
       border: none;
       border-radius: 6px;
-      color: white;
+      color: #ffffff;
       font-weight: 700;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.15s;
       margin-top: 6px;
     }
 
-    .btn-primary:hover {
+    .btn-submit:hover {
       background: var(--accent-btn-hover);
     }
 
-    /* Tarjeta inferior para Lector Bíblico */
-    .bible-reader-link-card {
-      margin-top: 22px;
-      padding-top: 18px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    footer.site-footer {
+      margin-top: 24px;
       text-align: center;
-    }
-
-    .bible-cover-link {
-      display: block;
-      width: 100%;
-      max-width: 320px;
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s ease, border-color 0.2s ease;
-      line-height: 0;
-    }
-
-    .bible-cover-link:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-    }
-
-    .bible-cover-img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .bible-reader-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      margin-top: 12px;
-      background: var(--bg-subpanel);
-      color: var(--accent);
-      border: 1px solid var(--border-color);
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .bible-reader-btn:hover {
-      background: var(--accent-btn);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    .footer-note {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
     }
-    .footer-note span {
+
+    footer.site-footer a {
       color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer.site-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .soli-deo {
+      margin-top: 4px;
       font-style: italic;
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
 
-  <!-- Banner Superior: Versículo Bíblico Aleatorio -->
-  <section class="top-verse-banner" aria-label="Versículo del día">
-    <div class="verse-header-row">
-      <span class="verse-badge">📖 Palabra de Gracia</span>
-      <button type="button" class="btn-refresh-verse" id="btnNextVerse" title="Cargar otro pasaje">🔄 Cambiar</button>
-    </div>
-    <p class="verse-quote" id="verseText">Cargando pasaje...</p>
-    <div class="verse-reference" id="verseRef">—</div>
-  </section>
-
-  <!-- Tarjeta Central de Ingreso -->
-  <main class="main-card">
-    <header class="brand-header">
-      <h1>Comunión Doctrinal</h1>
-      <p>Plataforma de diálogo teológico y edificación reformada</p>
+  <div class="main-wrapper">
+    <header class="app-header">
+      <h1>✝️ Comunión Doctrinal</h1>
+      <p>Espacio de comunión, estudio de las Escrituras y diálogo teológico reformado.</p>
     </header>
 
-    <!-- Enlace a Biblioteca Externa con logo_chapel.png -->
-    <div class="chapel-banner-container">
-      <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="chapel-link" title="Visitar Chapel Library">
-        <img src="logo_chapel.png" alt="Chapel Library" class="chapel-logo" onerror="this.style.display='none'; document.getElementById('chapelFallbackText').style.display='block';">
-      </a>
-      <span id="chapelFallbackText" style="display:none; font-weight:bold; color:var(--accent); font-size:0.85rem; margin-bottom:4px;">Chapel Library ↗</span>
-      <p class="chapel-caption">Explora tratados, libros y literatura confesional en PDF sin costo.</p>
-    </div>
-
-    <!-- Pestañas de Acceso -->
     <div class="auth-tabs">
       <button type="button" class="auth-tab active" id="tabLogin">Iniciar Sesión</button>
       <button type="button" class="auth-tab" id="tabRegister">Registrarse</button>
       <button type="button" class="auth-tab" id="tabGuest">Invitado</button>
     </div>
 
-    <!-- Formulario 1: Iniciar Sesión -->
+    <!-- Formulario Iniciar Sesión -->
     <form id="loginForm">
       <div class="auth-field">
-        <label for="loginNick">Nick o usuario:</label>
+        <label for="loginNick">Nick o Usuario:</label>
         <input type="text" id="loginNick" placeholder="Tu nick registrado" required autocomplete="username">
       </div>
       <div class="auth-field">
         <label for="loginPassword">Contraseña:</label>
         <input type="password" id="loginPassword" placeholder="Tu contraseña" required autocomplete="current-password">
       </div>
-      <button type="submit" class="btn-primary" id="btnLoginSubmit">Entrar a la Sala</button>
+      <button type="submit" class="btn-submit" id="btnLoginSubmit">Entrar a la Sala</button>
     </form>
 
-    <!-- Formulario 2: Registro de Nueva Cuenta -->
+    <!-- Formulario Registro -->
     <form id="registerForm" style="display: none;">
       <div class="auth-field">
-        <label for="regUsername">Nick público deseado:</label>
-        <input type="text" id="regUsername" placeholder="Ej. Calvino_1536" required maxlength="30">
+        <label for="regUsername">Nick público:</label>
+        <input type="text" id="regUsername" placeholder="Ej. Spurgeon_1854" required maxlength="30">
       </div>
       <div class="auth-field">
         <label for="regEmail">Correo electrónico:</label>
@@ -378,19 +259,19 @@
         <label for="regPasswordConfirm">Confirmar contraseña:</label>
         <input type="password" id="regPasswordConfirm" placeholder="Repite la contraseña" required minlength="6" autocomplete="new-password">
       </div>
-      <button type="submit" class="btn-primary" id="btnRegisterSubmit">Crear Cuenta (Novicio)</button>
+      <button type="submit" class="btn-submit" id="btnRegisterSubmit">Crear Cuenta</button>
     </form>
 
-    <!-- Formulario 3: Ingreso como Invitado -->
+    <!-- Formulario Invitado -->
     <form id="guestForm" style="display: none;">
       <div class="auth-field">
         <label for="guestNick">Alias para esta sesión:</label>
         <input type="text" id="guestNick" placeholder="Ej. Oyente_Berea" required maxlength="25">
       </div>
       <div class="auth-field">
-        <label for="guestDoctrine">Postura o trasfondo doctrinal:</label>
+        <label for="guestDoctrine">Trasfondo teológico:</label>
         <select id="guestDoctrine">
-          <option value="Reformada">Reformado(a)</option>
+          <option value="Reformada" selected>Reformado(a)</option>
           <option value="Presbiteriano">Presbiteriano(a)</option>
           <option value="Bautista Reformado">Bautista Reformado(a)</option>
           <option value="Bautista General">Bautista General</option>
@@ -399,68 +280,29 @@
           <option value="Otro trasfondo">Otro trasfondo</option>
         </select>
       </div>
-      <button type="submit" class="btn-primary">Acceder como Invitado</button>
+      <button type="submit" class="btn-submit">Ingresar como Invitado</button>
     </form>
+  </div>
 
-    <!-- Enlace Inferior al Lector Bíblico con biblia.jpeg -->
-    <section class="bible-reader-link-card" aria-label="Lector bíblico">
-      <a href="biblia.html" class="bible-cover-link" title="Abrir Lector de la Biblia RVR1960">
-        <img src="biblia.jpeg" alt="Santa Biblia Reina-Valera 1960" class="bible-cover-img" onerror="this.src='biblia.jpg';">
-      </a>
-      <a href="biblia.html" class="bible-reader-btn" title="Leer la Biblia en línea">
-        📖 Abrir Lector Bíblico RVR1960
-      </a>
-    </section>
-
-    <div class="footer-note">
-      Soli Deo Gloria &bull; <span>Comunión Doctrinal</span>
-    </div>
-  </main>
+  <footer class="site-footer">
+    <div>«Escudriñad las Escrituras...» — Juan 5:39</div>
+    <div class="soli-deo">Soli Deo Gloria</div>
+  </footer>
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
+
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const VERSES = [
-      { text: "«Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.»", ref: "Efesios 2:8-9 (RVR1960)" },
-      { text: "«Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.»", ref: "2 Timoteo 3:16 (RVR1960)" },
-      { text: "«Porque de él, y por él, y para él, son todas las cosas. A él sea la gloria por los siglos. Amén.»", ref: "Romanos 11:36 (RVR1960)" },
-      { text: "«Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo.»", ref: "Romanos 5:1 (RVR1960)" },
-      { text: "«Porque hay un solo Dios, y un solo mediador entre Dios y los hombres, Jesucristo hombre.»", ref: "1 Timoteo 2:5 (RVR1960)" },
-      { text: "«Escudriñad las Escrituras; porque a vosotros os parece que en ellas tenéis la vida eterna; y ellas son las que dan testimonio de mí.»", ref: "Juan 5:39 (RVR1960)" },
-      { text: "«Sécase la hierba, marchítase la flor; mas la palabra del Dios nuestro permanece para siempre.»", ref: "Isaías 40:8 (RVR1960)" },
-      { text: "«Porque ¿quién te distingue? ¿o qué tienes que no hayas recibido? Y si lo recibiste, ¿por qué te glorías como si no hubieras recibido?»", ref: "1 Corintios 4:7 (RVR1960)" },
-      { text: "«Y estos eran más nobles que los que estaban en Tesalónica, pues recibieron la palabra con toda solicitud, escudriñando cada día las Escrituras para ver si estas cosas eran así.»", ref: "Hechos 17:11 (RVR1960)" },
-      { text: "«A Jehová he puesto siempre delante de mí; porque está a mi diestra, no seré conmovido.»", ref: "Salmos 16:8 (RVR1960)" }
-    ];
-
-    const verseTextEl = document.getElementById('verseText');
-    const verseRefEl = document.getElementById('verseRef');
-    const btnNextVerse = document.getElementById('btnNextVerse');
-    let lastVerseIndex = -1;
-
-    function displayRandomVerse() {
-      let index;
-      do {
-        index = Math.floor(Math.random() * VERSES.length);
-      } while (index === lastVerseIndex && VERSES.length > 1);
-
-      lastVerseIndex = index;
-      const v = VERSES[index];
-      verseTextEl.textContent = v.text;
-      verseRefEl.textContent = v.ref;
-    }
-
-    displayRandomVerse();
-    btnNextVerse.onclick = () => displayRandomVerse();
-
+    // 1. Redirección si ya existe una sesión activa
     async function checkExistingSession() {
-      const savedGuest = localStorage.getItem('guest_user');
-      if (savedGuest) {
+      const guestData = localStorage.getItem('guest_user');
+      if (guestData) {
         window.location.replace('chat.html');
         return;
       }
+
       const { data: { session } } = await client.auth.getSession();
       if (session) {
         window.location.replace('chat.html');
@@ -468,6 +310,7 @@
     }
     checkExistingSession();
 
+    // 2. Control de pestañas
     const tabLogin = document.getElementById('tabLogin');
     const tabRegister = document.getElementById('tabRegister');
     const tabGuest = document.getElementById('tabGuest');
@@ -475,86 +318,99 @@
     const registerForm = document.getElementById('registerForm');
     const guestForm = document.getElementById('guestForm');
 
-    function switchTab(activeBtn, activeForm) {
+    function switchTab(activeBtn, formToShow) {
       [tabLogin, tabRegister, tabGuest].forEach(t => t.classList.remove('active'));
       [loginForm, registerForm, guestForm].forEach(f => f.style.display = 'none');
       activeBtn.classList.add('active');
-      activeForm.style.display = 'block';
+      formToShow.style.display = 'block';
     }
 
     tabLogin.onclick = () => switchTab(tabLogin, loginForm);
     tabRegister.onclick = () => switchTab(tabRegister, registerForm);
     tabGuest.onclick = () => switchTab(tabGuest, guestForm);
 
+    // 3. Iniciar Sesión por Nick
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const nick = document.getElementById('loginNick').value.trim();
       const pass = document.getElementById('loginPassword').value;
-      const submitBtn = document.getElementById('btnLoginSubmit');
+      const btn = document.getElementById('btnLoginSubmit');
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Verificando...";
+      btn.disabled = true;
+      btn.textContent = "Verificando...";
 
       try {
         const { data: userEmail, error: rpcError } = await client.rpc('get_user_email_by_nick', { target_nick: nick });
         if (rpcError || !userEmail) {
-          throw new Error("El nick ingresado no existe. Revisa la ortografía o regístrate.");
+          alert("Nick no encontrado. Revisa la escritura o crea una cuenta.");
+          return;
         }
 
-        const { error: authError } = await client.auth.signInWithPassword({ email: userEmail, password: pass });
+        const { error: authError } = await client.auth.signInWithPassword({
+          email: userEmail,
+          password: pass
+        });
+
         if (authError) {
-          throw new Error("Contraseña incorrecta: " + authError.message);
+          alert("Contraseña incorrecta: " + authError.message);
+        } else {
+          localStorage.removeItem('guest_user');
+          window.location.replace('chat.html');
         }
-
-        localStorage.removeItem('guest_user');
-        window.location.replace('chat.html');
       } catch (err) {
-        alert(err.message);
+        alert("Error de conexión: " + err.message);
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Entrar a la Sala";
+        btn.disabled = false;
+        btn.textContent = "Entrar a la Sala";
       }
     });
 
+    // 4. Registro de Usuario
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('regUsername').value.trim();
       const email = document.getElementById('regEmail').value.trim();
       const pass = document.getElementById('regPassword').value;
       const passConfirm = document.getElementById('regPasswordConfirm').value;
-      const submitBtn = document.getElementById('btnRegisterSubmit');
+      const btn = document.getElementById('btnRegisterSubmit');
 
       if (pass !== passConfirm) {
         return alert("Las contraseñas no coinciden.");
       }
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Creando cuenta...";
+      btn.disabled = true;
+      btn.textContent = "Registrando...";
 
       try {
         const { error } = await client.auth.signUp({
           email: email,
           password: pass,
-          options: { data: { username: username } }
+          options: {
+            data: { username: username }
+          }
         });
 
-        if (error) throw error;
-
-        localStorage.removeItem('guest_user');
-        alert("¡Cuenta registrada con éxito! Ingresando como Novicio...");
-        window.location.replace('chat.html');
+        if (error) {
+          alert(error.message);
+        } else {
+          localStorage.removeItem('guest_user');
+          alert("¡Registro exitoso! Iniciando sesión...");
+          window.location.replace('chat.html');
+        }
       } catch (err) {
-        alert("Error al registrar: " + err.message);
+        alert("Error en el registro: " + err.message);
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Crear Cuenta (Novicio)";
+        btn.disabled = false;
+        btn.textContent = "Crear Cuenta";
       }
     });
 
+    // 5. Ingreso de Invitado
     guestForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const nick = document.getElementById('guestNick').value.trim();
       const doctrine = document.getElementById('guestDoctrine').value;
+
       if (!nick) return;
 
       localStorage.setItem('guest_user', JSON.stringify({
@@ -568,3 +424,5 @@
   </script>
 </body>
 </html>
+
+```
