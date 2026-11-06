@@ -377,7 +377,7 @@
       border-color: var(--accent);
     }
 
-    /* Grupo de Herramientas: [Input] [😀 | GIF | 🖼️ | 🎨] [Enviar] */
+    /* Grupo de Herramientas: [Input] [😀 | GIF | 🖼️ | 📖 | 🎨] [Enviar] */
     .tools-inline-group {
       display: flex;
       align-items: center;
@@ -649,6 +649,34 @@
     .btn-font-reset:hover {
       background: var(--border-color);
       color: var(--text-main);
+    }
+
+    /* Modal de Selección Bíblica */
+    .bible-selector-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 14px;
+    }
+    .bible-selector-body select, .bible-selector-body input {
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subpanel);
+      color: var(--text-main);
+      font-size: 0.86rem;
+      outline: none;
+    }
+    .bible-passage-preview {
+      padding: 10px;
+      background: var(--bg-subpanel);
+      border: 1px dashed var(--border-color);
+      border-radius: 6px;
+      max-height: 120px;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: var(--accent-gold);
     }
 
     /* Barra Lateral */
@@ -1001,6 +1029,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        flex-wrap: wrap;
       }
 
       .btn-send {
@@ -1087,101 +1116,102 @@
       <div class="messages-container" id="messagesContainer"></div>
 
       <div class="chat-input-wrap">
-      <!-- POPUP EMOJIS -->
-      <div class="chat-popup-card" id="popupEmojis">
-        <div class="popup-card-header">
-          <span>✝️ Emojis Bíblicos y Fraternales</span>
-          <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
+        <!-- POPUP EMOJIS -->
+        <div class="chat-popup-card" id="popupEmojis">
+          <div class="popup-card-header">
+            <span>✝️ Emojis Bíblicos y Fraternales</span>
+            <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
+          </div>
+          <div class="popup-emojis-grid" id="emojisGrid"></div>
         </div>
-        <div class="popup-emojis-grid" id="emojisGrid"></div>
-      </div>
 
-      <!-- POPUP GIPHY GIFS -->
-      <div class="chat-popup-card" id="popupGifs">
-        <div class="popup-card-header">
-          <span>🎞️ GIFs con Giphy</span>
-          <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
-        </div>
-        <div class="gif-popup-content">
-          <div class="gif-search-row">
-            <input type="text" id="giphySearchInput" placeholder="Buscar GIF (Amén, Biblia, Alabanza)...">
+        <!-- POPUP GIPHY GIFS -->
+        <div class="chat-popup-card" id="popupGifs">
+          <div class="popup-card-header">
+            <span>🎞️ GIFs con Giphy</span>
+            <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
           </div>
-          <div class="gif-chips-row">
-            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('amen')">Amén 🙏</button>
-            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('bible')">Biblia 📖</button>
-            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('praise')">Alabanza 🙌</button>
-            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('peace')">Paz 🕊️</button>
-            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('reformation')">Reforma 📜</button>
-          </div>
-          <div class="gif-presets-grid" id="gifResultsGrid">
-            <div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">
-              Cargando reacciones...
+          <div class="gif-popup-content">
+            <div class="gif-search-row">
+              <input type="text" id="giphySearchInput" placeholder="Buscar GIF (Amén, Biblia, Alabanza)...">
             </div>
-          </div>
-          <div class="giphy-attribution">Powered by Giphy</div>
-        </div>
-      </div>
-
-      <!-- POPUP FUENTES Y ESTILOS -->
-      <div class="chat-popup-card" id="popupFonts">
-        <div class="popup-card-header">
-          <span>🎨 Formato de Mis Mensajes</span>
-          <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
-        </div>
-        <div class="font-popup-content">
-          <div class="font-field">
-            <label>Tipo de Fuente:</label>
-            <select id="fontSelectFamily">
-              <option value="default" selected>Estándar (Sans-serif)</option>
-              <option value="Georgia, serif">Georgia (Clásica / Serif)</option>
-              <option value="Courier New, monospace">Courier New (Monospace)</option>
-              <option value="Trebuchet MS, sans-serif">Trebuchet Modern</option>
-              <option value="Times New Roman, serif">Times New Roman</option>
-              <option value="Segoe Script, cursive, sans-serif">Manuscrita / Cursiva</option>
-            </select>
-          </div>
-
-          <div class="font-field">
-            <label>Color del Texto:</label>
-            <div class="colors-row" id="colorsPalette">
-              <button type="button" class="color-btn selected" data-c="default" style="background:#f8fafc;" title="Predeterminado"></button>
-              <button type="button" class="color-btn" data-c="#38bdf8" style="background:#38bdf8;" title="Cian"></button>
-              <button type="button" class="color-btn" data-c="#facc15" style="background:#facc15;" title="Dorado"></button>
-              <button type="button" class="color-btn" data-c="#34d399" style="background:#34d399;" title="Esmeralda"></button>
-              <button type="button" class="color-btn" data-c="#f472b6" style="background:#f472b6;" title="Rosa"></button>
-              <button type="button" class="color-btn" data-c="#fb923c" style="background:#fb923c;" title="Naranja"></button>
-              <button type="button" class="color-btn" data-c="#c084fc" style="background:#c084fc;" title="Lavanda"></button>
+            <div class="gif-chips-row">
+              <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('amen')">Amén 🙏</button>
+              <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('bible')">Biblia 📖</button>
+              <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('praise')">Alabanza 🙌</button>
+              <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('peace')">Paz 🕊️</button>
+              <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('reformation')">Reforma 📜</button>
             </div>
+            <div class="gif-presets-grid" id="gifResultsGrid">
+              <div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">
+                Cargando reacciones...
+              </div>
+            </div>
+            <div class="giphy-attribution">Powered by Giphy</div>
           </div>
-
-          <div class="font-field">
-            <label>Tamaño:</label>
-            <select id="fontSelectSize">
-              <option value="default" selected>Normal (100%)</option>
-              <option value="1.08rem">Grande (108%)</option>
-              <option value="1.2rem">Destacado (120%)</option>
-            </select>
-          </div>
-
-          <div class="font-preview" id="fontPreviewArea">Paz y gracia a vosotros</div>
-          <button type="button" class="btn-font-reset" id="btnResetFontOptions">Restablecer Estilo</button>
-        </div>
-      </div>
-
-      <!-- Barra de Envío: [Input] [😀 | GIF | 🖼️ | 🎨] [Enviar] -->
-      <form class="chat-input-bar" id="chatForm">
-        <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea..." autocomplete="off" required maxlength="1000">
-
-        <div class="tools-inline-group">
-          <button type="button" class="btn-tool-action" id="btnToggleEmojis" title="Emojis">😀</button>
-          <button type="button" class="btn-tool-action btn-gif-label" id="btnToggleGifs" title="Enviar GIF">GIF</button>
-          <button type="button" class="btn-tool-action" id="btnUploadImage" title="Enviar imagen">🖼️</button>
-          <button type="button" class="btn-tool-action" id="btnToggleFonts" title="Fuente y Color">🎨</button>
-          <input type="file" id="imageFileInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
         </div>
 
-        <button type="submit" class="btn-send">Enviar</button>
-      </form>
+        <!-- POPUP FUENTES Y ESTILOS -->
+        <div class="chat-popup-card" id="popupFonts">
+          <div class="popup-card-header">
+            <span>🎨 Formato de Mis Mensajes</span>
+            <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
+          </div>
+          <div class="font-popup-content">
+            <div class="font-field">
+              <label>Tipo de Fuente:</label>
+              <select id="fontSelectFamily">
+                <option value="default" selected>Estándar (Sans-serif)</option>
+                <option value="Georgia, serif">Georgia (Clásica / Serif)</option>
+                <option value="Courier New, monospace">Courier New (Monospace)</option>
+                <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Segoe Script, cursive, sans-serif">Manuscrita / Cursiva</option>
+              </select>
+            </div>
+
+            <div class="font-field">
+              <label>Color del Texto:</label>
+              <div class="colors-row" id="colorsPalette">
+                <button type="button" class="color-btn selected" data-c="default" style="background:#f8fafc;" title="Predeterminado"></button>
+                <button type="button" class="color-btn" data-c="#38bdf8" style="background:#38bdf8;" title="Cian"></button>
+                <button type="button" class="color-btn" data-c="#facc15" style="background:#facc15;" title="Dorado"></button>
+                <button type="button" class="color-btn" data-c="#34d399" style="background:#34d399;" title="Esmeralda"></button>
+                <button type="button" class="color-btn" data-c="#f472b6" style="background:#f472b6;" title="Rosa"></button>
+                <button type="button" class="color-btn" data-c="#fb923c" style="background:#fb923c;" title="Naranja"></button>
+                <button type="button" class="color-btn" data-c="#c084fc" style="background:#c084fc;" title="Lavanda"></button>
+              </div>
+            </div>
+
+            <div class="font-field">
+              <label>Tamaño:</label>
+              <select id="fontSelectSize">
+                <option value="default" selected>Normal (100%)</option>
+                <option value="1.08rem">Grande (108%)</option>
+                <option value="1.2rem">Destacado (120%)</option>
+              </select>
+            </div>
+
+            <div class="font-preview" id="fontPreviewArea">Paz y gracia a vosotros</div>
+            <button type="button" class="btn-font-reset" id="btnResetFontOptions">Restablecer Estilo</button>
+          </div>
+        </div>
+
+        <!-- Barra de Envío: [Input] [😀 | GIF | 🖼️ | 📖 | 🎨] [Enviar] -->
+        <form class="chat-input-bar" id="chatForm">
+          <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea..." autocomplete="off" required maxlength="1000">
+
+          <div class="tools-inline-group">
+            <button type="button" class="btn-tool-action" id="btnToggleEmojis" title="Emojis">😀</button>
+            <button type="button" class="btn-tool-action btn-gif-label" id="btnToggleGifs" title="Enviar GIF">GIF</button>
+            <button type="button" class="btn-tool-action" id="btnUploadImage" title="Enviar imagen">🖼️</button>
+            <button type="button" class="btn-tool-action" id="btnOpenBibleModal" title="Compartir texto bíblico (RVR1960 / RVSBT18)">📖</button>
+            <button type="button" class="btn-tool-action" id="btnToggleFonts" title="Fuente y Color">🎨</button>
+            <input type="file" id="imageFileInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+          </div>
+
+          <button type="submit" class="btn-send">Enviar</button>
+        </form>
       </div><!-- /chat-input-wrap -->
     </main>
 
@@ -1193,6 +1223,56 @@
       </div>
       <ul class="user-list" id="onlineUserListDesktop"></ul>
     </aside>
+  </div>
+
+  <!-- MODAL SELECTOR BÍBLICO (RVR1960.json y RVSBT18.json) -->
+  <div class="modal-overlay" id="bibleSelectorModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">📖 Compartir Texto Bíblico</h3>
+        <button type="button" class="btn-close-modal" id="btnCloseBibleModal">&times;</button>
+      </div>
+      <div class="bible-selector-body">
+        <div style="display:flex; gap:8px;">
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Versión:</label>
+            <select id="bibleVersionSelect" style="width:100%; margin-top:4px;">
+              <option value="RVR1960.json" selected>Reina Valera 1960</option>
+              <option value="RVSBT18.json">Reina Valera SBT 2018</option>
+            </select>
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Libro:</label>
+            <select id="bibleBookSelect" style="width:100%; margin-top:4px;">
+              <option value="">Cargando libros...</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Capítulo:</label>
+            <select id="bibleChapterSelect" style="width:100%; margin-top:4px;"></select>
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Versículo Inicial:</label>
+            <input type="number" id="bibleVerseStart" value="1" min="1" style="width:100%; margin-top:4px;">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Final (Opcional):</label>
+            <input type="number" id="bibleVerseEnd" placeholder="Mismo" min="1" style="width:100%; margin-top:4px;">
+          </div>
+        </div>
+
+        <div class="bible-passage-preview" id="biblePreviewText">
+          Selecciona un libro y capítulo para previsualizar el pasaje...
+        </div>
+
+        <button type="button" class="btn-send" id="btnInsertBiblePassage" style="width:100%;">
+          Insertar Pasaje en el Mensaje
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Modal Opciones de Usuario -->
@@ -1496,6 +1576,7 @@
       setupPrivateMessaging();
       initBereanoBot();
       rebuildToolsEngine();
+      initBibleModule();
     }
 
     function updateUserUI() {
@@ -1782,7 +1863,154 @@
     }
 
     // ==========================================
-    // SUBIDA Y ENVÍO DE IMÁGENES LOCALES (Solo Registrados)
+    // MÓDULO BÍBLICO (RVR1960.json / RVSBT18.json)
+    // ==========================================
+    const bibleCache = {};
+    let currentBibleData = null;
+
+    function initBibleModule() {
+      const btnOpen = document.getElementById('btnOpenBibleModal');
+      const btnClose = document.getElementById('btnCloseBibleModal');
+      const modal = document.getElementById('bibleSelectorModal');
+      const versionSelect = document.getElementById('bibleVersionSelect');
+      const bookSelect = document.getElementById('bibleBookSelect');
+      const chapterSelect = document.getElementById('bibleChapterSelect');
+      const verseStartInput = document.getElementById('bibleVerseStart');
+      const verseEndInput = document.getElementById('bibleVerseEnd');
+      const btnInsert = document.getElementById('btnInsertBiblePassage');
+
+      btnOpen.onclick = (e) => {
+        e.stopPropagation();
+        closeAllToolPopups();
+        modal.classList.add('open');
+        loadBibleVersion(versionSelect.value);
+      };
+
+      btnClose.onclick = () => modal.classList.remove('open');
+
+      versionSelect.onchange = () => loadBibleVersion(versionSelect.value);
+      bookSelect.onchange = () => updateBibleChapters();
+      chapterSelect.onchange = () => updateBibleVersePreview();
+      verseStartInput.oninput = () => updateBibleVersePreview();
+      verseEndInput.oninput = () => updateBibleVersePreview();
+
+      btnInsert.onclick = () => {
+        const preview = document.getElementById('biblePreviewText').textContent.trim();
+        if (preview && !preview.includes('Selecciona un libro')) {
+          msgInput.value = (msgInput.value ? msgInput.value + ' ' : '') + preview;
+          modal.classList.remove('open');
+          msgInput.focus();
+        }
+      };
+    }
+
+    async function loadBibleVersion(file) {
+      const bookSelect = document.getElementById('bibleBookSelect');
+      bookSelect.innerHTML = '<option value="">Cargando versión...</option>';
+
+      try {
+        if (!bibleCache[file]) {
+          const res = await fetch(file);
+          if (!res.ok) throw new Error('No se pudo cargar ' + file);
+          bibleCache[file] = await res.json();
+        }
+        currentBibleData = bibleCache[file];
+        populateBibleBooks();
+      } catch (err) {
+        console.error(err);
+        bookSelect.innerHTML = '<option value="">Error al cargar versión</option>';
+        document.getElementById('biblePreviewText').textContent = 'Asegúrate de que ' + file + ' se encuentre en la misma carpeta.';
+      }
+    }
+
+    function populateBibleBooks() {
+      const bookSelect = document.getElementById('bibleBookSelect');
+      bookSelect.innerHTML = '';
+      if (!currentBibleData) return;
+
+      const books = Array.isArray(currentBibleData) ? currentBibleData : (currentBibleData.books || Object.keys(currentBibleData));
+
+      books.forEach((b, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = typeof b === 'string' ? b : (b.name || b.book || `Libro ${idx+1}`);
+        bookSelect.appendChild(opt);
+      });
+
+      updateBibleChapters();
+    }
+
+    function getSelectedBookObject() {
+      if (!currentBibleData) return null;
+      const idx = document.getElementById('bibleBookSelect').value;
+      if (Array.isArray(currentBibleData)) return currentBibleData[idx];
+      if (currentBibleData.books) return currentBibleData.books[idx];
+      const keys = Object.keys(currentBibleData);
+      return currentBibleData[keys[idx]];
+    }
+
+    function updateBibleChapters() {
+      const chapterSelect = document.getElementById('bibleChapterSelect');
+      chapterSelect.innerHTML = '';
+      const bookObj = getSelectedBookObject();
+      if (!bookObj) return;
+
+      const chapters = Array.isArray(bookObj) ? bookObj : (bookObj.chapters || Object.keys(bookObj));
+      const total = Array.isArray(chapters) ? chapters.length : Object.keys(chapters).length;
+
+      for (let i = 1; i <= total; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `Capítulo ${i}`;
+        chapterSelect.appendChild(opt);
+      }
+
+      updateBibleVersePreview();
+    }
+
+    function updateBibleVersePreview() {
+      const bookSelect = document.getElementById('bibleBookSelect');
+      const chapterSelect = document.getElementById('bibleChapterSelect');
+      const start = parseInt(document.getElementById('bibleVerseStart').value, 10) || 1;
+      const endVal = parseInt(document.getElementById('bibleVerseEnd').value, 10);
+      const preview = document.getElementById('biblePreviewText');
+
+      const bookObj = getSelectedBookObject();
+      if (!bookObj) return;
+
+      const bookName = bookSelect.options[bookSelect.selectedIndex]?.textContent || 'Pasaje';
+      const chapNum = chapterSelect.value || 1;
+      const chapters = Array.isArray(bookObj) ? bookObj : (bookObj.chapters || bookObj);
+      const chapObj = chapters[chapNum - 1] || chapters[chapNum];
+
+      if (!chapObj) {
+        preview.textContent = 'Capítulo no disponible.';
+        return;
+      }
+
+      const verses = Array.isArray(chapObj) ? chapObj : (chapObj.verses || chapObj);
+      let extracted = '';
+      const limit = endVal && endVal >= start ? endVal : start;
+
+      for (let v = start; v <= limit; v++) {
+        const verseText = verses[v - 1] || verses[v] || '';
+        if (verseText) {
+          extracted += (extracted ? ' ' : '') + `${v}. ` + (typeof verseText === 'string' ? verseText : (verseText.text || ''));
+        }
+      }
+
+      const ref = limit > start ? `${bookName} ${chapNum}:${start}-${limit}` : `${bookName} ${chapNum}:${start}`;
+      const versionLabel = document.getElementById('bibleVersionSelect').value.includes('1960') ? 'RVR1960' : 'RVSBT18';
+
+      if (extracted) {
+        preview.textContent = `«${extracted.trim()}» (${ref} ${versionLabel})`;
+      } else {
+        preview.textContent = `(${ref} ${versionLabel}) - Versículo no encontrado en el archivo.`;
+      }
+    }
+
+    // ==========================================
+    // SUBIDA Y ENVÍO DE IMÁGENES LOCALES
     // ==========================================
     let isUploadingImage = false;
 
@@ -2222,7 +2450,7 @@
                 partner: partnerNick,
                 lastMsg: lastMsg.text,
                 time: lastMsg.time,
-                hasUnread: lastMsg && lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
+                hasUnread: lastMsg.receiver && lastMsg.receiver.toLowerCase() === myNick && !lastMsg.read
               });
             }
           }
@@ -2601,14 +2829,13 @@
         .subscribe();
     }
 
-    // ENVÍO DE MENSAJES: Robusto, tolerante a fallos y compatible con el esquema de Supabase
+    // ENVÍO DE MENSAJES (Blindado, Flexible y con Respaldo de Columnas)
     document.getElementById('chatForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = document.getElementById('msgInput');
       const text = input.value.trim();
       if (!text) return;
 
-      // Validación para invitados contra inyección manual de GIFs/imágenes
       if (!isRegisteredUser() && looksLikeMediaPayload(text)) {
         appendSystemNotice('🔒 Los GIFs e imágenes solo están disponibles para usuarios registrados.');
         return;
@@ -2622,7 +2849,6 @@
 
       const payloadContent = packageMessagePayload(text);
 
-      // 1. Objeto de renderizado local (lleva el rol para pintarlo en la sala)
       const localMsg = {
         username: currentUser.username,
         role: currentUser.role,
@@ -2634,14 +2860,12 @@
       appendMessage(localMsg);
       playSound('outgoing');
 
-      // 2. Objeto para insertar en Supabase (solo columnas compatibles de la tabla messages)
       const dbInsert = {
         username: currentUser.username,
         content: payloadContent,
         created_at: localMsg.created_at
       };
 
-      // Solo enviar sender_id si es un UUID válido (evita error con 'guest_xyz')
       if (currentUser.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(currentUser.id)) {
         dbInsert.sender_id = currentUser.id;
       }
@@ -2650,14 +2874,13 @@
         const { error } = await client.from('messages').insert([dbInsert]);
         if (error) {
           console.warn("Reintentando inserción básica (username, content):", error.message);
-          // Fallback a columnas universales
           await client.from('messages').insert([{
             username: dbInsert.username,
             content: dbInsert.content
           }]);
         }
       } catch (err) {
-        console.error("Excepción controlada en envío de mensaje:", err);
+        console.error("Error al enviar mensaje:", err);
       }
     });
 
@@ -2679,7 +2902,7 @@
       );
     }
 
-    // Inicialización inmediata de herramientas y de la sesión
+    // Inicializaciones
     rebuildToolsEngine();
     initSession();
   </script>
