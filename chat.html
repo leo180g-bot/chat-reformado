@@ -27,7 +27,7 @@
       --accent-ruby: #fb7185;
       --msg-self: #1e3a8a;
       --msg-other: #1e293b;
-      --msg-system: rgba(30, 41, 59, 0.7);
+      --msg-system: rgba(30, 41, 59, 0.75);
       --msg-bot: #142a42;
       --badge-admin: #ef4444;
       --badge-mod: #3b82f6;
@@ -171,7 +171,7 @@
       color: #fff;
     }
 
-    /* Menú Móvil */
+    /* Menú Desplegable Móvil */
     .menu-container {
       position: relative;
     }
@@ -224,7 +224,7 @@
       color: #ef4444;
     }
 
-    /* Área Principal de Chat */
+    /* Área de Chat */
     .chat-layout {
       flex: 1;
       display: grid;
@@ -340,7 +340,6 @@
       color: var(--text-main);
     }
 
-    /* Imagen GIF en el chat */
     .msg-gif-img {
       max-width: 100%;
       max-height: 220px;
@@ -351,7 +350,7 @@
       background: #000;
     }
 
-    /* Barra de Entrada de Mensajes */
+    /* Barra de Entrada */
     .chat-input-bar {
       padding: 10px 14px;
       background: var(--bg-panel);
@@ -378,7 +377,7 @@
       border-color: var(--accent);
     }
 
-    /* Grupo de Herramientas (Entre el campo de texto y Enviar) */
+    /* Grupo de Herramientas (Entre el campo de texto y el botón Enviar) */
     .tools-inline-group {
       display: flex;
       align-items: center;
@@ -432,7 +431,7 @@
       background: var(--accent-btn-hover);
     }
 
-    /* Paneles Flotantes Reconstruidos */
+    /* Popups Flotantes */
     .chat-popup-card {
       display: none;
       position: absolute;
@@ -445,7 +444,7 @@
       z-index: 70;
       overflow: hidden;
       animation: fadeIn 0.15s ease;
-      width: 310px;
+      width: 330px;
     }
     .chat-popup-card.open {
       display: flex;
@@ -499,19 +498,19 @@
       transform: scale(1.2);
     }
 
-    /* GIFs */
+    /* Giphy GIFs */
     .gif-popup-content {
       padding: 8px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-height: 340px;
+      gap: 6px;
+      max-height: 360px;
     }
-    .gif-input-row {
+    .gif-search-row {
       display: flex;
       gap: 4px;
     }
-    .gif-input-row input {
+    .gif-search-row input {
       flex: 1;
       padding: 7px 10px;
       border-radius: 6px;
@@ -521,15 +520,25 @@
       font-size: 0.8rem;
       outline: none;
     }
-    .btn-gif-send-url {
-      background: var(--accent-btn);
-      border: none;
-      color: #fff;
-      padding: 7px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
+    .gif-chips-row {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .gif-chip-btn {
+      background: var(--bg-subpanel);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 10px;
       cursor: pointer;
+      white-space: nowrap;
+    }
+    .gif-chip-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
     }
     .gif-presets-grid {
       display: grid;
@@ -538,6 +547,7 @@
       overflow-y: auto;
       max-height: 220px;
       padding-right: 2px;
+      min-height: 120px;
     }
     .gif-thumb {
       width: 100%;
@@ -552,6 +562,12 @@
     .gif-thumb:hover {
       transform: scale(1.03);
       border-color: var(--accent);
+    }
+    .giphy-attribution {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-align: right;
+      padding: 0 4px;
     }
 
     /* Fuentes y Colores */
@@ -626,7 +642,7 @@
       color: var(--text-main);
     }
 
-    /* Barra Lateral de Conectados */
+    /* Barra Lateral */
     .online-sidebar {
       background: var(--bg-subpanel);
       display: flex;
@@ -634,7 +650,6 @@
       overflow: hidden;
       border-left: 1px solid var(--border-color);
     }
-
     .sidebar-header {
       padding: 12px 14px;
       border-bottom: 1px solid var(--border-color);
@@ -647,7 +662,6 @@
       align-items: center;
       justify-content: space-between;
     }
-
     .user-list {
       list-style: none;
       margin: 0;
@@ -658,7 +672,6 @@
       gap: 6px;
       flex: 1;
     }
-
     .online-user-item {
       padding: 7px 10px;
       border-radius: 6px;
@@ -674,7 +687,6 @@
     .online-user-item:hover {
       border-color: var(--accent);
     }
-
     .online-status-dot {
       width: 8px;
       height: 8px;
@@ -684,7 +696,7 @@
       margin-right: 6px;
     }
 
-    /* MODALES */
+    /* Modales */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -725,7 +737,6 @@
       align-items: center;
       background: var(--bg-subpanel);
     }
-
     .modal-title {
       margin: 0;
       font-size: 1rem;
@@ -735,7 +746,6 @@
       align-items: center;
       gap: 6px;
     }
-
     .btn-close-modal {
       background: transparent;
       border: none;
@@ -753,7 +763,6 @@
       font-size: 0.9rem;
     }
 
-    /* Perfil de Usuario */
     .user-profile-preview {
       text-align: center;
       margin-bottom: 16px;
@@ -790,7 +799,6 @@
       flex-direction: column;
       gap: 8px;
     }
-
     .btn-action {
       width: 100%;
       padding: 9px 14px;
@@ -822,7 +830,7 @@
       color: #fff;
     }
 
-    /* SISTEMA DE PRIVADOS */
+    /* Sistema de Privados */
     .privates-layout {
       display: flex;
       flex-direction: column;
@@ -959,7 +967,7 @@
       outline: none;
     }
 
-    /* ADAPTACIÓN MÓVIL */
+    /* Adaptación Móvil */
     @media (max-width: 768px) {
       .chat-layout { grid-template-columns: 1fr; }
       .online-sidebar { display: none; }
@@ -969,8 +977,8 @@
       .brand-link span { display: none; }
 
       .chat-popup-card {
-        right: 10px;
-        left: 10px;
+        right: 8px;
+        left: 8px;
         width: auto;
         bottom: calc(100% + 6px);
       }
@@ -997,7 +1005,7 @@
     </div>
 
     <nav class="header-nav">
-      <button type="button" class="btn-sound-toggle active" id="btnSoundToggle" title="Sonidos del chat (activados)">
+      <button type="button" class="btn-sound-toggle active" id="btnSoundToggle" title="Sonidos activados">
         🔊
       </button>
 
@@ -1015,7 +1023,6 @@
       <button type="button" class="btn-header desktop-only" id="btnEditProfileDesktop">👤 Mi Perfil</button>
       <button type="button" class="btn-header btn-logout desktop-only" id="btnLogoutDesktop" title="Cerrar Sesión">🚪 Salir</button>
 
-      <!-- Menú Móvil -->
       <div class="menu-container mobile-only">
         <button type="button" class="btn-header" id="btnToggleMenu" title="Más opciones">☰ Menú</button>
         <div class="dropdown-menu" id="dropdownMenu">
@@ -1028,44 +1035,50 @@
     </nav>
   </header>
 
-  <!-- Cuerpo del Chat -->
+  <!-- Contenedor Principal -->
   <div class="chat-layout">
     <main class="chat-main">
       <div class="messages-container" id="messagesContainer"></div>
 
-      <!-- POPUP 1: EMOJIS (RECONSTRUIDO) -->
+      <!-- POPUP EMOJIS -->
       <div class="chat-popup-card" id="popupEmojis">
         <div class="popup-card-header">
           <span>✝️ Emojis Bíblicos y Fraternales</span>
           <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
         </div>
-        <div class="popup-emojis-grid" id="emojisGrid">
-          <!-- Inyectados por JS -->
-        </div>
+        <div class="popup-emojis-grid" id="emojisGrid"></div>
       </div>
 
-      <!-- POPUP 2: GIFS (RECONSTRUIDO) -->
+      <!-- POPUP GIPHY GIFS -->
       <div class="chat-popup-card" id="popupGifs">
         <div class="popup-card-header">
-          <span>🎞️ Enviar GIF o Reacción</span>
+          <span>🎞️ GIFs con Giphy</span>
           <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
         </div>
         <div class="gif-popup-content">
-          <div class="gif-input-row">
-            <input type="text" id="customGifUrlInput" placeholder="Pegar URL de GIF (https://...gif)">
-            <button type="button" class="btn-gif-send-url" id="btnSendCustomGif">Enviar</button>
+          <div class="gif-search-row">
+            <input type="text" id="giphySearchInput" placeholder="Buscar GIF (Amén, Biblia, Alabanza)...">
           </div>
-          <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Reacciones Cristianas Rápidas:</div>
-          <div class="gif-presets-grid" id="gifPresetsGrid">
-            <!-- Galería curada -->
+          <div class="gif-chips-row">
+            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('amen')">Amén 🙏</button>
+            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('bible')">Biblia 📖</button>
+            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('praise')">Alabanza 🙌</button>
+            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('peace')">Paz 🕊️</button>
+            <button type="button" class="gif-chip-btn" onclick="searchGiphyGifs('reformation')">Reforma 📜</button>
           </div>
+          <div class="gif-presets-grid" id="gifResultsGrid">
+            <div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">
+              Cargando reacciones...
+            </div>
+          </div>
+          <div class="giphy-attribution">Powered by Giphy</div>
         </div>
       </div>
 
-      <!-- POPUP 3: FUENTES Y COLORES (RECONSTRUIDO) -->
+      <!-- POPUP FUENTES Y ESTILOS -->
       <div class="chat-popup-card" id="popupFonts">
         <div class="popup-card-header">
-          <span>🎨 Formato de Mensajes</span>
+          <span>🎨 Formato de Mis Mensajes</span>
           <button type="button" class="btn-close-popup" onclick="closeAllToolPopups()">&times;</button>
         </div>
         <div class="font-popup-content">
@@ -1076,13 +1089,13 @@
               <option value="Georgia, serif">Georgia (Clásica / Serif)</option>
               <option value="Courier New, monospace">Courier New (Monospace)</option>
               <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
-              <option value="Verdana, sans-serif">Verdana</option>
+              <option value="Times New Roman, serif">Times New Roman</option>
               <option value="Segoe Script, cursive, sans-serif">Manuscrita / Cursiva</option>
             </select>
           </div>
 
           <div class="font-field">
-            <label>Color de Texto:</label>
+            <label>Color del Texto:</label>
             <div class="colors-row" id="colorsPalette">
               <button type="button" class="color-btn selected" data-c="default" style="background:#f8fafc;" title="Predeterminado"></button>
               <button type="button" class="color-btn" data-c="#38bdf8" style="background:#38bdf8;" title="Cian"></button>
@@ -1103,15 +1116,12 @@
             </select>
           </div>
 
-          <div class="font-preview" id="fontPreviewArea">
-            Paz y gracia a vosotros
-          </div>
-
+          <div class="font-preview" id="fontPreviewArea">Paz y gracia a vosotros</div>
           <button type="button" class="btn-font-reset" id="btnResetFontOptions">Restablecer Estilo</button>
         </div>
       </div>
 
-      <!-- Barra de Envío: [Input] -> [Emojis | GIFs | Fuentes] -> [Enviar] -->
+      <!-- Barra de Envío: [Input] [😀 | GIF | 🎨] [Enviar] -->
       <form class="chat-input-bar" id="chatForm">
         <input type="text" id="msgInput" placeholder="Escribe un mensaje bíblico o escribe !berea..." autocomplete="off" required maxlength="1000">
 
@@ -1135,7 +1145,7 @@
     </aside>
   </div>
 
-  <!-- MODAL: ACCIONES DE USUARIO -->
+  <!-- Modal Opciones de Usuario -->
   <div class="modal-overlay" id="userActionModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1168,7 +1178,7 @@
     </div>
   </div>
 
-  <!-- MODAL: EDITAR PERFIL -->
+  <!-- Modal Editar Perfil -->
   <div class="modal-overlay" id="editProfileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1208,7 +1218,7 @@
     </div>
   </div>
 
-  <!-- MODAL: MENSAJES PRIVADOS -->
+  <!-- Modal Mensajes Privados -->
   <div class="modal-overlay" id="privatesModal">
     <div class="modal-card" style="max-width:500px;">
       <div class="modal-header">
@@ -1239,7 +1249,7 @@
     </div>
   </div>
 
-  <!-- MODAL: USUARIOS EN LÍNEA (Móvil) -->
+  <!-- Modal Usuarios en Línea (Móvil) -->
   <div class="modal-overlay" id="onlineMobileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1255,6 +1265,7 @@
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
+    const GIPHY_API_KEY = "b4WtjSwJeeaO5vY2rl5P2CwDbmy3aBoc";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null;
@@ -1265,26 +1276,32 @@
     let isInitialPresenceSync = true;
     let soundsEnabled = true;
 
-    // Galería Curada de GIFs
-    const CURATED_GIFS = [
-      { name: "Amén en Oración", url: "https://media.giphy.com/media/l1J9APRq3Kwd79Q7m/giphy.gif" },
-      { name: "Orando con fervor", url: "https://media.giphy.com/media/3orieTfp1MeFLiBQR2/giphy.gif" },
-      { name: "Escudriñando la Biblia", url: "https://media.giphy.com/media/l41lOdm2m76oOHKso/giphy.gif" },
-      { name: "Lectura Bíblica", url: "https://media.giphy.com/media/26FmQgC49a0sTVn0Y/giphy.gif" },
-      { name: "Gloria a Dios", url: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" },
-      { name: "Aplauso y Gozo", url: "https://media.giphy.com/media/13GKP7xGjce5oI/giphy.gif" },
-      { name: "Paloma de la Paz", url: "https://media.giphy.com/media/3o7TKRBB3E7IdVNLm8/giphy.gif" },
-      { name: "Amén y Bendición", url: "https://media.giphy.com/media/26u4lOMA8JKSnL9Uk/giphy.gif" }
-    ];
-
-    // Emojis Bíblicos y de Comunidad
+    // Lista de Emojis
     const EMOJI_LIST = [
       "✝️", "📖", "🙏", "🕊️", "🕯️", "⛪", "👑", "🛡️", "📜", "🙌", "👏", "🤝", "👍", "🫂",
       "🍞", "🍷", "🐑", "🎺", "⚓", "☀️", "❤️", "😀", "😊", "😇", "😌", "🤔", "🧐", "😢",
       "🔥", "✨", "🌟", "🌿", "🌈", "✊", "💡"
     ];
 
-    // Audio
+    // Audio con respaldo sintético Web Audio API
+    let audioCtx = null;
+    function playBeepFallback(freq = 440, type = 'sine', duration = 0.12) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
     const AUDIO_FILES = {
       mencion: new Audio('mencion.mp3'),
       mensaje: new Audio('mensaje.mp3'),
@@ -1296,10 +1313,19 @@
       try {
         let audio = (type === 'private') ? AUDIO_FILES.privado :
                     (type === 'join' || type === 'leave' || type === 'mencion') ? AUDIO_FILES.mencion : AUDIO_FILES.mensaje;
+
         if (audio) {
           audio.currentTime = 0;
           const p = audio.play();
-          if (p && typeof p.catch === 'function') p.catch(() => {});
+          if (p && typeof p.catch === 'function') {
+            p.catch(() => {
+              // Si el archivo no existe o hay restricción, suena el sintetizador
+              if (type === 'private') playBeepFallback(660, 'sine', 0.18);
+              else if (type === 'join') playBeepFallback(520, 'triangle', 0.15);
+              else if (type === 'leave') playBeepFallback(340, 'triangle', 0.15);
+              else playBeepFallback(440, 'sine', 0.1);
+            });
+          }
         }
       } catch (err) {}
     }
@@ -1415,8 +1441,6 @@
       subscribeToMessages();
       setupPrivateMessaging();
       initBereanoBot();
-
-      // Inicializar el nuevo sistema reconstruido
       rebuildToolsEngine();
     }
 
@@ -1431,15 +1455,10 @@
       pillEl.title = `${currentUser.username} (${roleDisplay}) - Ver / editar mi perfil`;
     }
 
-    // ============================================================
-    // SISTEMA RECONSTRUIDO: EMOJIS, GIFS Y FUENTES/COLORES
-    // ============================================================
-    let activeStyleState = {
-      font: 'default',
-      color: 'default',
-      size: 'default'
-    };
-
+    // ==========================================
+    // HERRAMIENTAS: EMOJIS, GIPHY GIFS Y FUENTES
+    // ==========================================
+    let activeStyleState = { font: 'default', color: 'default', size: 'default' };
     try {
       const saved = localStorage.getItem('cd_style_v2');
       if (saved) activeStyleState = { ...activeStyleState, ...JSON.parse(saved) };
@@ -1448,11 +1467,12 @@
     const popupEmojis = document.getElementById('popupEmojis');
     const popupGifs = document.getElementById('popupGifs');
     const popupFonts = document.getElementById('popupFonts');
-
     const btnToggleEmojis = document.getElementById('btnToggleEmojis');
     const btnToggleGifs = document.getElementById('btnToggleGifs');
     const btnToggleFonts = document.getElementById('btnToggleFonts');
     const msgInput = document.getElementById('msgInput');
+    const giphySearchInput = document.getElementById('giphySearchInput');
+    const gifResultsGrid = document.getElementById('gifResultsGrid');
 
     function closeAllToolPopups() {
       popupEmojis.classList.remove('open');
@@ -1473,19 +1493,22 @@
     }
 
     function rebuildToolsEngine() {
-      // 1. Alternadores
+      // 1. Botones de activación
       btnToggleEmojis.onclick = (e) => { e.stopPropagation(); toggleToolPopup(popupEmojis, btnToggleEmojis); };
-      btnToggleGifs.onclick = (e) => { e.stopPropagation(); toggleToolPopup(popupGifs, btnToggleGifs); };
+      btnToggleGifs.onclick = (e) => {
+        e.stopPropagation();
+        toggleToolPopup(popupGifs, btnToggleGifs);
+        if (popupGifs.classList.contains('open')) searchGiphyGifs('amen');
+      };
       btnToggleFonts.onclick = (e) => { e.stopPropagation(); toggleToolPopup(popupFonts, btnToggleFonts); };
 
-      // Cerrar al hacer clic fuera
       document.addEventListener('click', (e) => {
         if (!e.target.closest('.chat-popup-card') && !e.target.closest('.tools-inline-group')) {
           closeAllToolPopups();
         }
       });
 
-      // 2. Construir Emojis
+      // 2. Cargar Emojis
       const emojisGrid = document.getElementById('emojisGrid');
       emojisGrid.innerHTML = '';
       EMOJI_LIST.forEach(emoji => {
@@ -1500,44 +1523,19 @@
         emojisGrid.appendChild(btn);
       });
 
-      // 3. Construir Galería de GIFs
-      const gifGrid = document.getElementById('gifPresetsGrid');
-      gifGrid.innerHTML = '';
-      CURATED_GIFS.forEach(g => {
-        const img = document.createElement('img');
-        img.src = g.url;
-        img.alt = g.name;
-        img.title = `Enviar: ${g.name}`;
-        img.className = 'gif-thumb';
-        img.loading = 'lazy';
-        img.referrerPolicy = 'no-referrer';
-        img.onclick = () => {
-          sendDirectGifMessage(g.url);
-          closeAllToolPopups();
-        };
-        gifGrid.appendChild(img);
-      });
-
-      document.getElementById('btnSendCustomGif').onclick = () => {
-        const customUrl = document.getElementById('customGifUrlInput').value.trim();
-        if (customUrl) {
-          sendDirectGifMessage(customUrl);
-          document.getElementById('customGifUrlInput').value = '';
-          closeAllToolPopups();
-        }
+      // 3. Buscador Giphy
+      let searchTimeout = null;
+      giphySearchInput.oninput = () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          const q = giphySearchInput.value.trim();
+          searchGiphyGifs(q || 'amen');
+        }, 400);
       };
 
-      document.getElementById('customGifUrlInput').onkeydown = (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          document.getElementById('btnSendCustomGif').click();
-        }
-      };
-
-      // 4. Construir Fuentes y Colores
+      // 4. Fuentes y Colores
       const fontSelect = document.getElementById('fontSelectFamily');
       const sizeSelect = document.getElementById('fontSelectSize');
-      const previewArea = document.getElementById('fontPreviewArea');
       const colorBtns = document.querySelectorAll('.color-btn');
 
       fontSelect.value = activeStyleState.font;
@@ -1554,15 +1552,8 @@
         };
       });
 
-      fontSelect.onchange = (e) => {
-        activeStyleState.font = e.target.value;
-        saveAndApplyStyle();
-      };
-
-      sizeSelect.onchange = (e) => {
-        activeStyleState.size = e.target.value;
-        saveAndApplyStyle();
-      };
+      fontSelect.onchange = (e) => { activeStyleState.font = e.target.value; saveAndApplyStyle(); };
+      sizeSelect.onchange = (e) => { activeStyleState.size = e.target.value; saveAndApplyStyle(); };
 
       document.getElementById('btnResetFontOptions').onclick = () => {
         activeStyleState = { font: 'default', color: 'default', size: 'default' };
@@ -1586,17 +1577,48 @@
       msgInput.setSelectionRange(nextPos, nextPos);
     }
 
-    function saveAndApplyStyle() {
+    // Consulta en vivo a la API de Giphy
+    async function searchGiphyGifs(query) {
+      gifResultsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">Buscando en Giphy...</div>`;
       try {
-        localStorage.setItem('cd_style_v2', JSON.stringify(activeStyleState));
-      } catch (e) {}
+        const url = `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=16&rating=g`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-      // Aplicar estilo al input de escritura
+        gifResultsGrid.innerHTML = '';
+        if (!data.data || data.data.length === 0) {
+          gifResultsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">No se encontraron GIFs.</div>`;
+          return;
+        }
+
+        data.data.forEach(item => {
+          const gifUrl = item.images.fixed_height_small?.url || item.images.fixed_height?.url || item.images.original?.url;
+          if (!gifUrl) return;
+
+          const img = document.createElement('img');
+          img.src = gifUrl;
+          img.alt = item.title || 'GIF';
+          img.className = 'gif-thumb';
+          img.loading = 'lazy';
+          img.referrerPolicy = 'no-referrer';
+          img.onclick = () => {
+            sendDirectGifMessage(gifUrl);
+            closeAllToolPopups();
+          };
+          gifResultsGrid.appendChild(img);
+        });
+      } catch (err) {
+        gifResultsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:var(--accent-ruby); font-size:0.8rem;">Error al conectar con Giphy.</div>`;
+      }
+    }
+
+    function saveAndApplyStyle() {
+      try { localStorage.setItem('cd_style_v2', JSON.stringify(activeStyleState)); } catch (e) {}
+
       msgInput.style.fontFamily = activeStyleState.font !== 'default' ? activeStyleState.font : '';
       msgInput.style.color = activeStyleState.color !== 'default' ? activeStyleState.color : '';
       msgInput.style.fontSize = activeStyleState.size !== 'default' ? activeStyleState.size : '';
 
-      // Actualizar previsualización
       const previewArea = document.getElementById('fontPreviewArea');
       if (previewArea) {
         previewArea.style.fontFamily = activeStyleState.font !== 'default' ? activeStyleState.font : '';
@@ -1618,16 +1640,13 @@
     function parseIncomingPayload(raw) {
       if (!raw) return { isGif: false, text: '', styleAttr: '' };
 
-      // 1. Detección de GIF empaquetado o URL directa
       const gifMatch = String(raw).match(/^\[gif:(https?:\/\/[^\]]+)\]$/i);
-      if (gifMatch) {
-        return { isGif: true, gifUrl: gifMatch[1] };
-      }
+      if (gifMatch) return { isGif: true, gifUrl: gifMatch[1] };
+
       if (/^https?:\/\/\S+\.(?:gif|webp)(?:\?\S*)?$/i.test(String(raw).trim())) {
         return { isGif: true, gifUrl: String(raw).trim() };
       }
 
-      // 2. Detección de Estilos empaquetados
       const styleMatch = String(raw).match(/^\[style:([^;]*);([^;]*);([^\]]*)\]([\s\S]*?)\[\/style\]$/);
       if (styleMatch) {
         const font = styleMatch[1];
@@ -1640,11 +1659,7 @@
         if (color && color !== 'default') rules.push(`color:${color}`);
         if (size && size !== 'default') rules.push(`font-size:${size}`);
 
-        return {
-          isGif: false,
-          text: contentText,
-          styleAttr: rules.length ? `style="${rules.join(';')}"` : ''
-        };
+        return { isGif: false, text: contentText, styleAttr: rules.length ? `style="${rules.join(';')}"` : '' };
       }
 
       return { isGif: false, text: raw, styleAttr: '' };
@@ -1666,9 +1681,9 @@
       await client.from('messages').insert([newMsg]);
     }
 
-    // ============================================================
-    // PRESENCIA Y NOTIFICACIONES DE ENTRADA / SALIDA
-    // ============================================================
+    // ==========================================
+    // PRESENCIA Y CONTROL EN LÍNEA
+    // ==========================================
     function setupPresence() {
       const myNickLower = currentUser.username.trim().toLowerCase();
 
@@ -1680,7 +1695,7 @@
         .on('presence', { event: 'sync' }, () => {
           const state = presenceChannel.presenceState();
           const activeKeys = Object.keys(state);
-          const totalOnline = activeKeys.length + 1; // +1 BereanoBot siempre presente
+          const totalOnline = activeKeys.length + 1; // Incluye a BereanoBot
 
           document.getElementById('onlineCountBadge').textContent = totalOnline;
           document.getElementById('onlineCountDesktop').textContent = totalOnline;
@@ -1741,13 +1756,8 @@
       desktopList.innerHTML = '';
       mobileList.innerHTML = '';
 
-      // BereanoBot integrado en línea
-      const botData = {
-        username: 'BereanoBot 📖',
-        role: 'bot',
-        doctrine: 'Reformada Confesional',
-        isBot: true
-      };
+      // BereanoBot siempre presente en línea
+      const botData = { username: 'BereanoBot 📖', role: 'bot', doctrine: 'Reformada Confesional', isBot: true };
       desktopList.appendChild(createOnlineUserElement(botData, false, false));
       mobileList.appendChild(createOnlineUserElement(botData, false, true));
 
@@ -1779,7 +1789,7 @@
       return li;
     }
 
-    // Modal Opciones de Usuario
+    // Modal de Opciones de Usuario
     function openUserActionModal(targetUser) {
       selectedTargetUser = targetUser;
 
@@ -1818,10 +1828,7 @@
       document.getElementById('userActionModal').classList.add('open');
     }
 
-    document.getElementById('btnCloseActionModal').onclick = () => {
-      document.getElementById('userActionModal').classList.remove('open');
-    };
-
+    document.getElementById('btnCloseActionModal').onclick = () => document.getElementById('userActionModal').classList.remove('open');
     document.getElementById('btnStartPrivateChat').onclick = () => {
       document.getElementById('userActionModal').classList.remove('open');
       if (selectedTargetUser) startPrivateChatWith(selectedTargetUser.username);
@@ -1829,13 +1836,13 @@
 
     document.getElementById('btnMuteUser').onclick = () => {
       if (!selectedTargetUser) return;
-      alert(`Se ha silenciado a ${selectedTargetUser.username}.`);
+      alert(`Se ha silenciado temporalmente a ${selectedTargetUser.username}.`);
       document.getElementById('userActionModal').classList.remove('open');
     };
 
     document.getElementById('btnKickUser').onclick = () => {
       if (!selectedTargetUser) return;
-      if (confirm(`¿Expulsar a ${selectedTargetUser.username}?`)) {
+      if (confirm(`¿Expulsar a ${selectedTargetUser.username} de la sala?`)) {
         appendSystemNotice(`👢 El usuario ${selectedTargetUser.username} ha sido expulsado.`);
         document.getElementById('userActionModal').classList.remove('open');
       }
@@ -1875,9 +1882,7 @@
     document.getElementById('btnEditProfileDesktop').onclick = openEditProfileModal;
     document.getElementById('btnEditProfileMobile').onclick = openEditProfileModal;
     document.getElementById('userPill').onclick = openEditProfileModal;
-    document.getElementById('btnCloseProfileModal').onclick = () => {
-      document.getElementById('editProfileModal').classList.remove('open');
-    };
+    document.getElementById('btnCloseProfileModal').onclick = () => document.getElementById('editProfileModal').classList.remove('open');
 
     document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1919,9 +1924,9 @@
       alert("Perfil actualizado correctamente.");
     });
 
-    // ============================================================
-    // SISTEMA DE MENSAJES PRIVADOS
-    // ============================================================
+    // ==========================================
+    // MENSAJES PRIVADOS
+    // ==========================================
     const privatesModal = document.getElementById('privatesModal');
     const privatesContactsView = document.getElementById('privatesContactsView');
     const privatesChatView = document.getElementById('privatesChatView');
@@ -1939,27 +1944,19 @@
       showPrivatesContactsView();
     };
 
-    document.getElementById('btnClosePrivatesModal').onclick = () => {
-      privatesModal.classList.remove('open');
-    };
-
+    document.getElementById('btnClosePrivatesModal').onclick = () => privatesModal.classList.remove('open');
     btnBackToContacts.onclick = () => showPrivatesContactsView();
 
     btnDeleteConversation.onclick = () => {
       if (!activePrivatePartner) return;
-      deletePrivateConversation(activePrivatePartner);
-    };
-
-    function deletePrivateConversation(partnerNick) {
-      if (!partnerNick) return;
-      if (confirm(`¿Eliminar los mensajes privados con "${partnerNick}"?`)) {
-        const key = getPrivateStorageKey(partnerNick);
+      if (confirm(`¿Eliminar los mensajes privados con "${activePrivatePartner}"?`)) {
+        const key = getPrivateStorageKey(activePrivatePartner);
         localStorage.removeItem(key);
         activePrivatePartner = null;
         showPrivatesContactsView();
         checkUnreadPrivatesTotal();
       }
-    }
+    };
 
     function checkUnreadPrivatesTotal() {
       const convs = getPrivateConversationsIndex();
@@ -2051,7 +2048,10 @@
 
         div.querySelector('.btn-delete-contact').onclick = (e) => {
           e.stopPropagation();
-          deletePrivateConversation(c.partner);
+          const key = getPrivateStorageKey(c.partner);
+          localStorage.removeItem(key);
+          showPrivatesContactsView();
+          checkUnreadPrivatesTotal();
         };
 
         privatesContactList.appendChild(div);
@@ -2189,11 +2189,9 @@
         document.getElementById('onlineUserListDesktop').scrollIntoView({ behavior: 'smooth' });
       }
     };
-    document.getElementById('btnCloseOnlineMobileModal').onclick = () => {
-      document.getElementById('onlineMobileModal').classList.remove('open');
-    };
+    document.getElementById('btnCloseOnlineMobileModal').onclick = () => document.getElementById('onlineMobileModal').classList.remove('open');
 
-    // Menú Móvil Hamburguesa
+    // Menú Hamburguesa Móvil
     const btnToggleMenu = document.getElementById('btnToggleMenu');
     const dropdownMenu = document.getElementById('dropdownMenu');
     if (btnToggleMenu) {
@@ -2203,7 +2201,9 @@
       };
     }
 
-    // BereanoBot
+    // ==========================================
+    // BEREANOBOT
+    // ==========================================
     function initBereanoBot() {
       setTimeout(() => {
         appendBotMessage(`¡Gracia y paz, **${currentUser.username}**! Soy **BereanoBot 📖**. Puedes consultar pasajes bíblicos o teología con: \`!berea\`, \`!versiculo\`, \`!solas\`, \`!1689\`, \`!westminster\` o \`!dort\`.`);
@@ -2215,7 +2215,7 @@
 
       if (lower === '!berea' || lower === '!ayuda') {
         appendBotMessage(`**Comandos de BereanoBot 📖:**
-• \`!versiculo\` : Entrega un pasaje de edificación.
+• \`!versiculo\` : Entrega un pasaje bíblico de edificación.
 • \`!solas\` : Explica las Cinco Solas de la Reforma.
 • \`!1689\` : Resumen de la Confesión Bautista de 1689.
 • \`!westminster\` : Resumen de la Confesión de Westminster.
@@ -2299,9 +2299,9 @@
         .replace(/\n/g, '<br>');
     }
 
-    // ============================================================
+    // ==========================================
     // MENSAJES PÚBLICOS
-    // ============================================================
+    // ==========================================
     const messagesContainer = document.getElementById('messagesContainer');
 
     function appendMessage(msg) {
@@ -2385,7 +2385,6 @@
       const isCmd = checkBereanoBotCommands(text, currentUser.username);
       if (isCmd) return;
 
-      // Empaquetar payload estilizado
       const payloadContent = packageMessagePayload(text);
 
       const newMsg = {
