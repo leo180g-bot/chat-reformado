@@ -712,11 +712,28 @@
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // SISTEMA DE COMPARTIR EL SITIO
-    const SHARE_DATA = {
+    // SISTEMA DE COMPARTIR EL SITIO (Versión Web con imagen + URL + hashtags y Móvil con hashtags)
+    const SITE_URL = "https://chat-reformado.vercel.app/";
+    const IMAGE_URL = "https://chat-reformado.vercel.app/logo.jpeg";
+    const HASHTAGS = "#ComunionDoctrinal #TeologiaReformada #EstudioBiblico #CincoSolas #ReformaProtestante #FeCristiana";
+
+    // Formato enriquecido para redes sociales en Web
+    const WEB_SHARE_POST = `✝️ Comunión Doctrinal | Chat Cristiano y Estudio Bíblico Reformado
+
+Únete a nuestra comunidad en vivo para el estudio bíblico fraternal, diálogo teológico y confesiones históricas de fe (1689, Westminster, Dort).
+
+🔗 Sitio web: ${SITE_URL}
+🖼️ Imagen: ${IMAGE_URL}
+
+${HASHTAGS}`;
+
+    // Datos para versión móvil (Web Share API) con hashtags incluidos
+    const MOBILE_SHARE_DATA = {
       title: "Comunión Doctrinal | Chat Cristiano y Estudio Bíblico Reformado",
-      text: "Te invito a unirte a Comunión Doctrinal: comunidad de estudio bíblico, confesiones de fe y chat cristiano en tiempo real.",
-      url: "https://chat-reformado.vercel.app/"
+      text: `Te invito a unirte a Comunión Doctrinal: comunidad de estudio bíblico, confesiones de fe y chat cristiano en tiempo real.
+
+${HASHTAGS}`,
+      url: SITE_URL
     };
 
     function showToast(msg) {
@@ -725,15 +742,17 @@
       if (toast && toastMsg) {
         toastMsg.textContent = msg;
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2800);
+        setTimeout(() => toast.classList.remove('show'), 3000);
       }
     }
 
     async function handleShareSite() {
-      // Si el navegador soporta Web Share API (móviles y navegadores modernos)
-      if (navigator.share) {
+      const isMobileDevice = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent) || window.innerWidth <= 860;
+
+      // 1. En dispositivos móviles con soporte nativo de compartir
+      if (isMobileDevice && navigator.share) {
         try {
-          await navigator.share(SHARE_DATA);
+          await navigator.share(MOBILE_SHARE_DATA);
           return;
         } catch (err) {
           if (err.name !== 'AbortError') {
@@ -744,28 +763,37 @@
         }
       }
 
-      // Fallback: copiar enlace al portapapeles
+      // 2. En versión WEB de escritorio (o si el móvil no soporta navigator.share):
+      // Copia el formato completo con Imagen, URL y Hashtags listo para redes sociales
+      const textToCopy = isMobileDevice 
+        ? `${MOBILE_SHARE_DATA.text}
+${SITE_URL}`
+        : WEB_SHARE_POST;
+
       if (navigator.clipboard && navigator.clipboard.writeText) {
         try {
-          await navigator.clipboard.writeText(SHARE_DATA.url);
-          showToast("¡Enlace copiado al portapapeles!");
+          await navigator.clipboard.writeText(textToCopy);
+          showToast("¡Texto con imagen, URL y hashtags copiado para redes!");
           return;
         } catch (err) {
           console.warn("Fallo Clipboard API:", err);
         }
       }
 
-      // Fallback clásico con input temporal
+      // Fallback clásico con textarea temporal (soporta saltos de línea)
       try {
-        const tempInput = document.createElement("input");
-        tempInput.value = SHARE_DATA.url;
-        document.body.appendChild(tempInput);
-        tempInput.select();
+        const tempArea = document.createElement("textarea");
+        tempArea.value = textToCopy;
+        tempArea.style.position = "fixed";
+        tempArea.style.left = "-9999px";
+        document.body.appendChild(tempArea);
+        tempArea.focus();
+        tempArea.select();
         document.execCommand("copy");
-        document.body.removeChild(tempInput);
-        showToast("¡Enlace copiado al portapapeles!");
+        document.body.removeChild(tempArea);
+        showToast("¡Texto con imagen, URL y hashtags copiado para redes!");
       } catch (e) {
-        prompt("Copia este enlace para compartir:", SHARE_DATA.url);
+        prompt("Copia este texto para compartir en redes:", textToCopy);
       }
     }
 
