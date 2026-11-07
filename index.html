@@ -125,7 +125,14 @@
       white-space: nowrap;
     }
 
-    .btn-refresh-verse {
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-banner-action {
       background: transparent;
       border: 1px solid var(--border-color);
       color: var(--text-muted);
@@ -135,10 +142,21 @@
       border-radius: 4px;
       transition: all 0.2s;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .btn-refresh-verse:hover {
+    .btn-banner-action:hover {
       background: var(--border-color);
       color: var(--accent);
+    }
+    .btn-share-highlight {
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--accent);
+    }
+    .btn-share-highlight:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
     }
 
     /* BARRA DE MENÚ MÓVIL SUPERIOR (Visible sólo en móviles) */
@@ -186,11 +204,16 @@
       gap: 4px;
       transition: all 0.15s;
       white-space: nowrap;
+      cursor: pointer;
     }
     .mobile-quick-btn:hover, .mobile-quick-btn:active {
       background: var(--accent-btn);
       color: #fff;
       border-color: var(--accent);
+    }
+    .mobile-share-btn {
+      color: var(--accent-gold);
+      border-color: rgba(250, 204, 21, 0.35);
     }
 
     /* Contenedor Principal Panorámico (Web) */
@@ -232,8 +255,8 @@
 
     .resources-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
     }
 
     .resource-card {
@@ -254,7 +277,7 @@
     }
 
     .chapel-logo {
-      max-width: 130px;
+      max-width: 120px;
       width: 100%;
       height: auto;
       border-radius: 4px;
@@ -275,6 +298,7 @@
       background: var(--bg-subpanel);
       border: 1px solid var(--border-color);
       transition: all 0.15s;
+      cursor: pointer;
     }
     .resource-btn:hover {
       background: var(--accent-btn);
@@ -397,6 +421,53 @@
       border-top: 1px solid var(--border-color);
       background: rgba(11, 17, 32, 0.9);
       flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .footer-share-link {
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      border: none;
+      font-size: 0.78rem;
+      font-family: inherit;
+      padding: 0;
+    }
+    .footer-share-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Toast flotante de notificación */
+    .share-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0284c7;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .share-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
 
     /* VERSIÓN MÓVIL */
@@ -488,6 +559,9 @@
       <a href="https://www.chapellibrary.org/" target="_blank" rel="noopener noreferrer" class="mobile-quick-btn" title="Ir a Chapel Library">
         📚 Chapel
       </a>
+      <button type="button" class="mobile-quick-btn mobile-share-btn btn-share-trigger" title="Compartir Comunidad">
+        🔗 Compartir
+      </button>
     </div>
   </nav>
 
@@ -498,7 +572,12 @@
       <p class="verse-quote" id="verseText">Cargando pasaje...</p>
       <span class="verse-reference" id="verseRef">—</span>
     </div>
-    <button type="button" class="btn-refresh-verse" id="btnNextVerse" title="Cargar otro pasaje">🔄 Cambiar</button>
+    <div class="banner-actions">
+      <button type="button" class="btn-banner-action btn-share-highlight btn-share-trigger" title="Compartir este sitio">
+        🔗 Compartir
+      </button>
+      <button type="button" class="btn-banner-action" id="btnNextVerse" title="Cargar otro pasaje">🔄 Cambiar</button>
+    </div>
   </header>
 
   <!-- Contenedor Principal Panorámico -->
@@ -532,6 +611,14 @@
             <img src="logo_chapel.png" alt="Chapel Library" class="chapel-logo" onerror="this.style.display='none';">
           </a>
           <span class="resource-desc">Tratados y literatura confesional</span>
+        </div>
+
+        <!-- Tarjeta 4: Compartir Sitio -->
+        <div class="resource-card">
+          <button type="button" class="resource-btn btn-share-trigger" title="Compartir el sitio">
+            🔗 Compartir
+          </button>
+          <span class="resource-desc">Invita a otros hermanos al estudio</span>
         </div>
       </div>
     </section>
@@ -609,13 +696,86 @@
   </main>
 
   <footer class="footer-bar">
-    Soli Deo Gloria &bull; <span>Comunión Doctrinal</span>
+    <span>Soli Deo Gloria &bull; Comunión Doctrinal</span>
+    <span>&bull;</span>
+    <button type="button" class="footer-share-link btn-share-trigger">🔗 Compartir sitio</button>
   </footer>
+
+  <!-- Toast de Notificación -->
+  <div id="shareToast" class="share-toast" role="status" aria-live="polite">
+    <span>✅</span>
+    <span id="shareToastMsg">¡Enlace copiado al portapapeles!</span>
+  </div>
 
   <script>
     const SUPABASE_URL = "https://axggsuhdurllzisrzpam.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_POBDb2OUFVVFcldLXTNY2Q_lt0xMeax";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // SISTEMA DE COMPARTIR EL SITIO
+    const SHARE_DATA = {
+      title: "Comunión Doctrinal | Chat Cristiano y Estudio Bíblico Reformado",
+      text: "Te invito a unirte a Comunión Doctrinal: comunidad de estudio bíblico, confesiones de fe y chat cristiano en tiempo real.",
+      url: "https://chat-reformado.vercel.app/"
+    };
+
+    function showToast(msg) {
+      const toast = document.getElementById('shareToast');
+      const toastMsg = document.getElementById('shareToastMsg');
+      if (toast && toastMsg) {
+        toastMsg.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+      }
+    }
+
+    async function handleShareSite() {
+      // Si el navegador soporta Web Share API (móviles y navegadores modernos)
+      if (navigator.share) {
+        try {
+          await navigator.share(SHARE_DATA);
+          return;
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.warn("Fallo Web Share:", err);
+          } else {
+            return; // Cancelado por el usuario
+          }
+        }
+      }
+
+      // Fallback: copiar enlace al portapapeles
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(SHARE_DATA.url);
+          showToast("¡Enlace copiado al portapapeles!");
+          return;
+        } catch (err) {
+          console.warn("Fallo Clipboard API:", err);
+        }
+      }
+
+      // Fallback clásico con input temporal
+      try {
+        const tempInput = document.createElement("input");
+        tempInput.value = SHARE_DATA.url;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        showToast("¡Enlace copiado al portapapeles!");
+      } catch (e) {
+        prompt("Copia este enlace para compartir:", SHARE_DATA.url);
+      }
+    }
+
+    // Conectar todos los botones de compartir
+    document.querySelectorAll('.btn-share-trigger').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleShareSite();
+      });
+    });
 
     const VERSES = [
       { text: "«Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe.»", ref: "Efesios 2:8-9" },
