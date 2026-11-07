@@ -410,6 +410,15 @@
       color: var(--accent);
       background: rgba(56, 189, 248, 0.15);
     }
+    .msg-delete-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      opacity: 0.45;
+      padding: 0 2px;
+    }
+    .msg-delete-btn:hover { opacity: 1; }
     .btn-tool-action.locked {
       opacity: 0.45;
     }
@@ -1120,6 +1129,7 @@
         <span class="badge-count" id="privatesUnreadBadge">0</span>
       </button>
 
+      <button type="button" class="btn-header desktop-only" id="btnModLog" title="Registro de moderación" style="display:none;">🛡️ Registro</button>
       <a href="confesiones.html" class="btn-header desktop-only" title="Confesiones de Fe">📜 Confesiones</a>
       <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="btn-header desktop-only" title="Abrir Lector Bíblico">📖 Biblia</a>
       <button type="button" class="btn-header desktop-only btn-share-site-trigger" title="Compartir este sitio">🔗 Compartir</button>
@@ -1129,6 +1139,7 @@
       <div class="menu-container mobile-only">
         <button type="button" class="btn-header" id="btnToggleMenu" title="Más opciones">☰ Menú</button>
         <div class="dropdown-menu" id="dropdownMenu">
+          <button type="button" class="dropdown-item" id="btnModLogMobile" style="display:none;">🛡️ Registro de moderación</button>
           <button type="button" class="dropdown-item" id="btnEditProfileMobile">👤 Mi Perfil</button>
           <a href="confesiones.html" class="dropdown-item">📜 Confesiones</a>
           <a href="biblia.html" target="_blank" rel="noopener noreferrer" class="dropdown-item">📖 Lector Bíblico</a>
@@ -1277,11 +1288,25 @@
 
           <div id="adminActionSection" style="display:none; flex-direction:column; gap:8px; margin-top:6px;">
             <div style="font-size:0.75rem; color:var(--accent-ruby); font-weight:700; text-transform:uppercase;">Herramientas de Moderación</div>
-            <button type="button" class="btn-action action-admin" id="btnMuteUser">🔇 Silenciar 1 hora</button>
-            <button type="button" class="btn-action action-admin" id="btnUnmuteUser" style="display:none;">🔊 Quitar silencio</button>
-            <button type="button" class="btn-action action-admin" id="btnKickUser">👢 Expulsar de la Sala (Kick)</button>
-            <button type="button" class="btn-action action-admin" id="btnClearUserMsgs">🗑️ Borrar Mensajes Recientes</button>
-            <button type="button" class="btn-action action-admin" id="btnChangeRole" style="display:none;">👑 Cambiar Rango / Rol</button>
+            <select id="modDuration" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-subpanel); color:var(--text-main); font-size:0.85rem;">
+              <option value="10">10 minutos</option>
+              <option value="60" selected>1 hora</option>
+              <option value="1440">24 horas</option>
+              <option value="10080" data-admin-only>7 días</option>
+              <option value="0" data-admin-only>Permanente</option>
+            </select>
+            <input type="text" id="modReason" placeholder="Motivo (opcional)" maxlength="120" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-subpanel); color:var(--text-main); font-size:0.85rem;">
+            <button type="button" class="btn-action action-admin" id="btnMuteUser">🔇 Silenciar</button>
+            <button type="button" class="btn-action action-admin" id="btnKickUser">🚫 Vetar de la sala</button>
+            <button type="button" class="btn-action action-admin" id="btnUnmuteUser" style="display:none;">🔊 Quitar sanción</button>
+            <button type="button" class="btn-action action-admin" id="btnClearUserMsgs">🗑️ Borrar todos sus mensajes</button>
+            <select id="roleSelect" style="display:none; width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-subpanel); color:var(--text-main); font-size:0.85rem;">
+              <option value="novice">Novicio</option>
+              <option value="member">Miembro</option>
+              <option value="moderator">Moderador</option>
+              <option value="admin">Administrador</option>
+            </select>
+            <button type="button" class="btn-action action-admin" id="btnChangeRole" style="display:none;">👑 Aplicar rol</button>
           </div>
         </div>
       </div>
@@ -1289,6 +1314,18 @@
   </div>
 
   <!-- Modal Editar Perfil -->
+  <div class="modal-overlay" id="modLogModal">
+    <div class="modal-card" style="max-width:560px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🛡️ Registro de moderación</h3>
+        <button type="button" class="btn-close-modal" id="btnCloseModLog">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modLogList" style="display:flex; flex-direction:column; gap:8px; max-height:60vh; overflow-y:auto; font-size:0.82rem;"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="editProfileModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -1526,7 +1563,7 @@
       if (r.includes('nov') || r.includes('novato')) return 'novice';
       if (r.includes('invitado') || r.includes('guest')) return 'guest';
       if (r.includes('bot')) return 'bot';
-      return r;
+      return 'novice';
     }
 
     function getRoleDisplayName(role) {
@@ -1595,7 +1632,7 @@
           } catch (e) {}
         }
 
-        const rawRole = (profile && (profile.role || profile.rol)) ? (profile.role || profile.rol) : (session.user.user_metadata?.role || 'novice');
+        const rawRole = (profile && (profile.role || profile.rol)) ? (profile.role || profile.rol) : 'novice';
         currentUser = {
           id: authUserId,
           username: (profile && profile.username) ? profile.username : (authUserNick || 'Hermano'),
@@ -1609,6 +1646,7 @@
 
       updateUserUI();
       applyMediaRestrictions();
+      applyStaffUI();
       setupPresence();
       loadRecentMessages().finally(announceMuteIfAny);
       setupModerationChannel();
@@ -1858,33 +1896,65 @@
     }
 
     // ==========================================
-    // SILENCIO DE USUARIOS (1 hora, lo aplica el servidor)
+    // SANCIONES (silencio y veto) Y HERRAMIENTAS DE MODERACIÓN
     // ==========================================
-    const MUTE_MINUTES = 60;
-    let muteUntilMs = 0;
+    const PERMANENT_MS = Date.UTC(9000, 0, 1);
+    let muteUntilMs = 0;          // fin de la sanción activa (0 = ninguna)
+    let restrictionKind = null;   // 'mute' | 'ban'
+    let restrictionReason = '';
     let moderationChannel = null;
+
+    function isStaffUser() {
+      return !!currentUser && (currentUser.role === 'admin' || currentUser.role === 'moderator');
+    }
 
     function formatClock(msOrIso) {
       return new Date(msOrIso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
+    function formatUntil(ms) {
+      if (ms >= PERMANENT_MS) return 'de forma permanente';
+      const far = ms - Date.now() > 12 * 3600 * 1000;
+      const txt = far
+        ? new Date(ms).toLocaleString([], { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+        : formatClock(ms);
+      return 'hasta ' + txt;
+    }
+
     function muteMessage() {
-      return `🔇 Estás silenciado hasta las ${formatClock(muteUntilMs)}. Podrás volver a escribir entonces.`;
+      const reason = restrictionReason ? ` Motivo: ${restrictionReason}.` : '';
+      if (restrictionKind === 'ban') return `🚫 Estás vetado de la sala ${formatUntil(muteUntilMs)}.${reason}`;
+      return `🔇 Estás silenciado ${formatUntil(muteUntilMs)}.${reason}`;
     }
 
     async function refreshMuteStatus() {
       if (!currentUser) return 0;
       try {
-        const { data, error } = await client.rpc('mute_status', { p_username: currentUser.username });
-        if (!error) muteUntilMs = data ? new Date(data).getTime() : 0;
+        const { data, error } = await client.rpc('restriction_status', { p_username: currentUser.username });
+        if (!error) {
+          if (data && data.ends_at) {
+            muteUntilMs = new Date(data.ends_at).getTime();
+            restrictionKind = data.kind || 'mute';
+            restrictionReason = data.reason || '';
+          } else {
+            muteUntilMs = 0;
+            restrictionKind = null;
+            restrictionReason = '';
+          }
+        }
       } catch (e) {}
+      syncBanScreen();
       return muteUntilMs;
     }
 
-    // ¿Sigue silenciado este usuario? (consulta al servidor por si un moderador ya le quitó el silencio)
+    // ¿Sigue sancionado este usuario? (consulta al servidor por si un moderador ya levantó la sanción)
     async function checkMuted() {
       if (!currentUser) return false;
-      if (muteUntilMs && Date.now() >= muteUntilMs) muteUntilMs = 0;
+      if (muteUntilMs && Date.now() >= muteUntilMs) {
+        muteUntilMs = 0;
+        restrictionKind = null;
+        syncBanScreen();
+      }
       if (!muteUntilMs) return false;
       await refreshMuteStatus();
       return muteUntilMs > Date.now();
@@ -1892,7 +1962,7 @@
 
     async function announceMuteIfAny() {
       await refreshMuteStatus();
-      if (muteUntilMs > Date.now()) appendSystemNotice(muteMessage());
+      if (muteUntilMs > Date.now() && restrictionKind !== 'ban') appendSystemNotice(muteMessage());
     }
 
     // Si el servidor rechaza un mensaje: se quita de la pantalla y se explica el motivo
@@ -1900,46 +1970,148 @@
       console.error('Error al enviar mensaje:', error);
       if (msgDiv) msgDiv.remove();
       await refreshMuteStatus();
-      if (muteUntilMs > Date.now()) appendSystemNotice(muteMessage());
-      else appendSystemNotice('⚠️ No se pudo enviar el mensaje. Inténtalo de nuevo.');
+      if (muteUntilMs > Date.now() && restrictionKind !== 'ban') appendSystemNotice(muteMessage());
+      else if (!(muteUntilMs > Date.now())) appendSystemNotice('⚠️ No se pudo enviar el mensaje. Inténtalo de nuevo.');
     }
 
-    // Aviso en vivo al usuario afectado (el estado real siempre se confirma con el servidor)
+    // ---- Pantalla de veto ----
+    function syncBanScreen() {
+      if (restrictionKind === 'ban' && muteUntilMs > Date.now()) showBanScreen();
+      else hideBanScreen();
+    }
+
+    function showBanScreen() {
+      let overlay = document.getElementById('banOverlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'banOverlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(5,8,16,0.97);display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;color:var(--text-main);';
+        overlay.innerHTML = `
+          <div style="max-width:420px;display:flex;flex-direction:column;gap:14px;align-items:center;">
+            <div style="font-size:2.6rem;">🚫</div>
+            <h2 style="margin:0;font-size:1.25rem;">Has sido vetado de la sala</h2>
+            <p id="banText" style="margin:0;color:var(--text-muted);line-height:1.5;"></p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+              <button type="button" class="btn-header" id="banRetry">Comprobar de nuevo</button>
+              <button type="button" class="btn-header" id="banHome">Volver al inicio</button>
+            </div>
+          </div>`;
+        document.body.appendChild(overlay);
+        document.getElementById('banRetry').onclick = () => refreshMuteStatus();
+        document.getElementById('banHome').onclick = () => window.location.replace('index.html');
+        if (presenceChannel) presenceChannel.untrack();
+      }
+      document.getElementById('banText').textContent = muteMessage().replace(/^🚫\s*/, '');
+    }
+
+    async function hideBanScreen() {
+      const overlay = document.getElementById('banOverlay');
+      if (!overlay) return;
+      overlay.remove();
+      if (presenceChannel && currentUser) {
+        try {
+          await presenceChannel.track({
+            user_id: currentUser.id,
+            username: currentUser.username,
+            role: currentUser.role,
+            doctrine: currentUser.doctrine,
+            online_at: new Date().toISOString()
+          });
+        } catch (e) {}
+      }
+    }
+
+    // ---- Avisos en vivo (el estado real siempre se confirma con el servidor) ----
+    function isEventForMe(payload) {
+      return !!(payload && payload.target && currentUser &&
+        String(payload.target).trim().toLowerCase() === currentUser.username.trim().toLowerCase());
+    }
+
     function setupModerationChannel() {
       moderationChannel = client.channel('moderation_events');
       moderationChannel
-        .on('broadcast', { event: 'mute_changed' }, async ({ payload }) => {
-          if (!payload || !payload.target || !currentUser) return;
-          if (String(payload.target).trim().toLowerCase() !== currentUser.username.trim().toLowerCase()) return;
-          const wasMuted = muteUntilMs > Date.now();
+        .on('broadcast', { event: 'restriction_changed' }, async ({ payload }) => {
+          if (!isEventForMe(payload)) return;
+          const before = muteUntilMs > Date.now() ? restrictionKind : null;
           await refreshMuteStatus();
-          const isMuted = muteUntilMs > Date.now();
-          if (isMuted && !wasMuted) appendSystemNotice('🔇 Un moderador te ha silenciado por 1 hora. ' + muteMessage());
-          else if (!isMuted && wasMuted) appendSystemNotice('🔊 Un moderador te quitó el silencio. Ya puedes escribir de nuevo.');
+          const now = muteUntilMs > Date.now() ? restrictionKind : null;
+          if (now === 'mute' && before !== 'mute') appendSystemNotice(muteMessage());
+          else if (!now && before) appendSystemNotice('🔊 Un moderador levantó tu sanción. Ya puedes escribir de nuevo.');
+        })
+        .on('broadcast', { event: 'profile_changed' }, async ({ payload }) => {
+          if (!isEventForMe(payload)) return;
+          await refreshMyRole();
         })
         .subscribe();
     }
 
-    function notifyMuteChange(targetNick) {
-      if (moderationChannel) {
-        moderationChannel.send({ type: 'broadcast', event: 'mute_changed', payload: { target: targetNick } });
-      }
+    function notifyRestrictionChange(targetNick) {
+      if (moderationChannel) moderationChannel.send({ type: 'broadcast', event: 'restriction_changed', payload: { target: targetNick } });
+    }
+
+    function notifyProfileChange(targetNick) {
+      if (moderationChannel) moderationChannel.send({ type: 'broadcast', event: 'profile_changed', payload: { target: targetNick } });
+    }
+
+    // ---- Rol propio: se relee del servidor cuando un administrador lo cambia ----
+    async function refreshMyRole() {
+      if (!currentUser || currentUser.role === 'guest') return;
+      try {
+        const { data } = await client.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+        if (!data) return;
+        const newRole = normalizeRole(data.role || data.rol);
+        if (newRole === currentUser.role) return;
+        currentUser.role = newRole;
+        userRolesCache[currentUser.username.toLowerCase()] = newRole;
+        updateUserUI();
+        applyStaffUI();
+        applyMediaRestrictions();
+        if (presenceChannel) {
+          await presenceChannel.track({
+            user_id: currentUser.id,
+            username: currentUser.username,
+            role: currentUser.role,
+            doctrine: currentUser.doctrine,
+            online_at: new Date().toISOString()
+          });
+        }
+        appendSystemNotice(`👑 Tu rol ahora es: ${getRoleDisplayName(newRole)}.`);
+      } catch (e) {}
+    }
+
+    // ---- Interfaz del equipo de moderación ----
+    function applyStaffUI() {
+      const showBtn = isStaffUser() ? '' : 'none';
+      document.getElementById('btnModLog').style.display = showBtn;
+      document.getElementById('btnModLogMobile').style.display = showBtn;
+      const isAdminUser = !!currentUser && currentUser.role === 'admin';
+      const sel = document.getElementById('modDuration');
+      sel.querySelectorAll('option[data-admin-only]').forEach(o => { o.hidden = !isAdminUser; o.disabled = !isAdminUser; });
+      if (sel.selectedOptions[0] && sel.selectedOptions[0].disabled) sel.value = '60';
     }
 
     async function updateMuteButtons(targetUser, isBot) {
-      const btnMute = document.getElementById('btnMuteUser');
       const btnUnmute = document.getElementById('btnUnmuteUser');
-      btnMute.style.display = 'block';
       btnUnmute.style.display = 'none';
-      const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
-      if (isBot || !isStaff) return;
+      if (isBot || !isStaffUser()) return;
       try {
-        const { data } = await client.rpc('mute_status', { p_username: targetUser.username });
+        const { data } = await client.rpc('restriction_status', { p_username: targetUser.username });
         if (selectedTargetUser !== targetUser) return; // el modal cambió mientras se consultaba
-        const muted = data && new Date(data).getTime() > Date.now();
-        btnMute.style.display = muted ? 'none' : 'block';
-        btnUnmute.style.display = muted ? 'block' : 'none';
+        const active = data && data.ends_at && new Date(data.ends_at).getTime() > Date.now();
+        if (active) {
+          btnUnmute.textContent = data.kind === 'ban' ? '✅ Levantar veto' : '🔊 Quitar silencio';
+          btnUnmute.style.display = 'block';
+        }
       } catch (e) {}
+    }
+
+    async function deleteMessageById(div) {
+      const id = div.dataset.msgId;
+      if (!id) return;
+      if (!confirm('¿Borrar este mensaje para todos los usuarios?')) return;
+      const { error } = await client.rpc('delete_message', { p_id: id });
+      if (error) { alert('No se pudo borrar el mensaje: ' + error.message); return; }
+      div.remove();
     }
 
     // ==========================================
@@ -2073,8 +2245,10 @@
     }
 
     async function sendMediaMessage(content, extraFields = {}) {
-      const newMsg = {
-        sender_id: currentUser.id,
+      if (await checkMuted()) { appendSystemNotice(muteMessage()); return; }
+
+      // Objeto para mostrar en pantalla (incluye el rol)
+      const localMsg = {
         username: currentUser.username,
         role: currentUser.role,
         content: content,
@@ -2082,10 +2256,21 @@
         created_at: new Date().toISOString()
       };
 
-      if (await checkMuted()) { appendSystemNotice(muteMessage()); return; }
-      const msgDiv = appendMessage(newMsg);
+      // Objeto para la base de datos: mismo criterio que el envío de texto
+      // (sin "role" y con sender_id solo si es un UUID válido)
+      const dbInsert = {
+        username: currentUser.username,
+        content: content,
+        ...extraFields,
+        created_at: localMsg.created_at
+      };
+      if (currentUser.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(currentUser.id)) {
+        dbInsert.sender_id = currentUser.id;
+      }
+
+      const msgDiv = appendMessage(localMsg);
       playSound('outgoing');
-      const { error } = await client.from('messages').insert([newMsg]);
+      const { error } = await client.from('messages').insert([dbInsert]);
       if (error) await handleSendError(error, msgDiv);
     }
 
@@ -2412,7 +2597,12 @@
         btnBotAction.style.display = 'none';
         const isStaff = currentUser.role === 'admin' || currentUser.role === 'moderator';
         adminSection.style.display = isStaff ? 'flex' : 'none';
-        document.getElementById('btnChangeRole').style.display = currentUser.role === 'admin' ? 'block' : 'none';
+        const isAdminUser = currentUser.role === 'admin';
+        document.getElementById('btnChangeRole').style.display = isAdminUser ? 'block' : 'none';
+        const roleSel = document.getElementById('roleSelect');
+        roleSel.style.display = isAdminUser ? 'block' : 'none';
+        const nr = normalizeRole(targetUser.role);
+        if ([...roleSel.options].some(o => o.value === nr)) roleSel.value = nr;
       }
 
       document.getElementById('userActionModal').classList.add('open');
@@ -2425,61 +2615,106 @@
       if (selectedTargetUser) startPrivateChatWith(selectedTargetUser.username);
     };
 
-    document.getElementById('btnMuteUser').onclick = async () => {
+    function closeUserActionModal() {
+      document.getElementById('userActionModal').classList.remove('open');
+    }
+
+    async function applySanction(kind) {
       if (!selectedTargetUser) return;
       const nick = selectedTargetUser.username;
-      document.getElementById('userActionModal').classList.remove('open');
-      const { data, error } = await client.rpc('mute_user', { target_nick: nick, p_minutes: MUTE_MINUTES });
-      if (error) {
-        alert('No se pudo silenciar: ' + error.message);
-        return;
-      }
-      appendSystemNotice(`🔇 ${nick} fue silenciado por 1 hora (hasta las ${formatClock(data)}).`);
-      notifyMuteChange(nick);
-    };
+      const sel = document.getElementById('modDuration');
+      const minutes = parseInt(sel.value, 10);
+      const durationText = sel.options[sel.selectedIndex].text.toLowerCase();
+      const reason = document.getElementById('modReason').value.trim();
+      if (kind === 'ban' && !confirm(`¿Vetar a ${nick} de la sala (${durationText})? No podrá escribir y se le sacará de la sala.`)) return;
+      closeUserActionModal();
+      const { data, error } = await client.rpc('sanction_user', {
+        target_nick: nick, p_kind: kind, p_minutes: minutes, p_reason: reason || null
+      });
+      if (error) { alert('No se pudo aplicar la sanción: ' + error.message); return; }
+      document.getElementById('modReason').value = '';
+      const untilMs = new Date(data.ends_at).getTime();
+      appendSystemNotice(`${kind === 'ban' ? '🚫' : '🔇'} ${nick} fue ${kind === 'ban' ? 'vetado' : 'silenciado'} ${formatUntil(untilMs)}.`);
+      notifyRestrictionChange(nick);
+    }
+
+    document.getElementById('btnMuteUser').onclick = () => applySanction('mute');
+    document.getElementById('btnKickUser').onclick = () => applySanction('ban');
 
     document.getElementById('btnUnmuteUser').onclick = async () => {
       if (!selectedTargetUser) return;
       const nick = selectedTargetUser.username;
-      document.getElementById('userActionModal').classList.remove('open');
-      const { error } = await client.rpc('unmute_user', { target_nick: nick });
-      if (error) {
-        alert('No se pudo quitar el silencio: ' + error.message);
+      closeUserActionModal();
+      const { error } = await client.rpc('lift_sanction', { target_nick: nick });
+      if (error) { alert('No se pudo levantar la sanción: ' + error.message); return; }
+      appendSystemNotice(`🔊 Se levantó la sanción de ${nick}.`);
+      notifyRestrictionChange(nick);
+    };
+
+    document.getElementById('btnClearUserMsgs').onclick = async () => {
+      if (!selectedTargetUser) return;
+      const nick = selectedTargetUser.username;
+      if (!confirm(`¿Borrar TODOS los mensajes de ${nick}? Se eliminarán para todos los usuarios y no se puede deshacer.`)) return;
+      closeUserActionModal();
+      const { data, error } = await client.rpc('delete_user_messages', { target_nick: nick });
+      if (error) { alert('No se pudieron borrar los mensajes: ' + error.message); return; }
+      document.querySelectorAll('.message-item').forEach(el => {
+        const sender = el.querySelector('.msg-sender');
+        if (sender && sender.textContent.trim().toLowerCase() === nick.toLowerCase()) el.remove();
+      });
+      appendSystemNotice(`🗑️ Se borraron ${data} mensaje(s) de ${nick}.`);
+    };
+
+    document.getElementById('btnChangeRole').onclick = async () => {
+      if (!selectedTargetUser) return;
+      const nick = selectedTargetUser.username;
+      const sel = document.getElementById('roleSelect');
+      const newRole = sel.value;
+      const label = sel.options[sel.selectedIndex].text;
+      if (!confirm(`¿Cambiar el rol de ${nick} a "${label}"?`)) return;
+      closeUserActionModal();
+      const { error } = await client.rpc('change_role', { target_nick: nick, p_role: newRole });
+      if (error) { alert('No se pudo cambiar el rol: ' + error.message); return; }
+      userRolesCache[nick.toLowerCase()] = newRole;
+      appendSystemNotice(`👑 El rol de ${nick} ahora es ${label}.`);
+      notifyProfileChange(nick);
+    };
+
+    // Registro de moderación (solo equipo)
+    const MOD_ACTION_LABELS = {
+      mute: 'silenció a',
+      ban: 'vetó a',
+      lift: 'levantó la sanción de',
+      delete_message: 'borró un mensaje de',
+      delete_user_messages: 'borró todos los mensajes de',
+      change_role: 'cambió el rol de'
+    };
+
+    async function openModLog() {
+      const list = document.getElementById('modLogList');
+      list.innerHTML = '<div style="color:var(--text-muted);">Cargando…</div>';
+      document.getElementById('modLogModal').classList.add('open');
+      document.getElementById('dropdownMenu').classList.remove('show');
+      const { data, error } = await client.rpc('get_moderation_log', { p_limit: 60 });
+      if (error) { list.textContent = 'No se pudo cargar el registro: ' + error.message; return; }
+      if (!data || !data.length) {
+        list.innerHTML = '<div style="color:var(--text-muted);">Aún no hay acciones registradas.</div>';
         return;
       }
-      appendSystemNotice(`🔊 Se quitó el silencio a ${nick}.`);
-      notifyMuteChange(nick);
-    };
+      list.innerHTML = data.map(r => {
+        const when = new Date(r.created_at).toLocaleString([], { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        const label = MOD_ACTION_LABELS[r.action] || r.action;
+        return `<div style="padding:8px 10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-subpanel);">
+          <div style="color:var(--text-muted);font-size:0.72rem;">${escapeHTML(when)}</div>
+          <div><strong>${escapeHTML(r.actor_name || '?')}</strong> ${escapeHTML(label)} <strong>${escapeHTML(r.target_name || '')}</strong></div>
+          ${r.details ? `<div style="color:var(--text-muted);font-size:0.76rem;">${escapeHTML(r.details)}</div>` : ''}
+        </div>`;
+      }).join('');
+    }
 
-    document.getElementById('btnKickUser').onclick = () => {
-      if (!selectedTargetUser) return;
-      if (confirm(`¿Expulsar a ${selectedTargetUser.username} de la sala?`)) {
-        appendSystemNotice(`👢 El usuario ${selectedTargetUser.username} ha sido expulsado.`);
-        document.getElementById('userActionModal').classList.remove('open');
-      }
-    };
-
-    document.getElementById('btnClearUserMsgs').onclick = () => {
-      if (!selectedTargetUser) return;
-      if (confirm(`¿Eliminar los mensajes visibles de ${selectedTargetUser.username}?`)) {
-        document.querySelectorAll('.message-item').forEach(el => {
-          const sender = el.querySelector('.msg-sender');
-          if (sender && sender.textContent.trim().toLowerCase() === selectedTargetUser.username.toLowerCase()) {
-            el.remove();
-          }
-        });
-        document.getElementById('userActionModal').classList.remove('open');
-      }
-    };
-
-    document.getElementById('btnChangeRole').onclick = () => {
-      if (!selectedTargetUser) return;
-      const nuevo = prompt(`Cambiar rol a (novice, member, moderator, admin):`, selectedTargetUser.role || 'novice');
-      if (nuevo) {
-        alert(`Rol de ${selectedTargetUser.username} actualizado.`);
-        document.getElementById('userActionModal').classList.remove('open');
-      }
-    };
+    document.getElementById('btnModLog').onclick = openModLog;
+    document.getElementById('btnModLogMobile').onclick = openModLog;
+    document.getElementById('btnCloseModLog').onclick = () => document.getElementById('modLogModal').classList.remove('open');
 
     // Modal Editar Perfil
     function openEditProfileModal() {
@@ -2934,6 +3169,7 @@
         parsed = { isGif: true, gifUrl: msg.image_url };
       }
 
+      const hasMsgId = msg.id !== undefined && msg.id !== null;
       let bodyHtml = '';
       if (parsed.isGif && effectiveRole === 'guest') {
         bodyHtml = `<em style="color:var(--text-muted);">🔒 Contenido multimedia no disponible para invitados.</em>`;
@@ -2949,9 +3185,14 @@
           <span class="msg-sender" data-nick="${escapeHTML(senderNick)}">${escapeHTML(senderNick)}</span>
           <span class="msg-role-tag role-${effectiveRole}">${roleDisplay}</span>
           <span class="msg-time">${timeStr}</span>
+          ${(isStaffUser() && hasMsgId) ? '<button type="button" class="msg-delete-btn" title="Borrar mensaje para todos">🗑️</button>' : ''}
         </div>
         <div class="msg-body" ${parsed.styleAttr || ''}>${bodyHtml}</div>
       `;
+
+      if (hasMsgId) div.dataset.msgId = String(msg.id);
+      const delBtn = div.querySelector('.msg-delete-btn');
+      if (delBtn) delBtn.onclick = (ev) => { ev.stopPropagation(); deleteMessageById(div); };
 
       div.querySelector('.msg-sender').onclick = () => {
         openUserActionModal({
@@ -2988,6 +3229,12 @@
           if (payload.new.username.toLowerCase() !== currentUser.username.toLowerCase()) {
             appendMessage(payload.new);
           }
+        })
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
+          const id = payload.old && payload.old.id;
+          if (id === undefined || id === null) return;
+          const el = messagesContainer.querySelector(`.message-item[data-msg-id="${CSS.escape(String(id))}"]`);
+          if (el) el.remove();
         })
         .subscribe();
     }
